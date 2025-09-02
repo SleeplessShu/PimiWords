@@ -2,23 +2,31 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="?attr/colorPrimary"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <ImageButton
+    <Button
         android:id="@+id/match8"
         android:layout_width="0dp"
         android:layout_height="80dp"
         android:layout_marginHorizontal="40dp"
         android:layout_marginVertical="20dp"
-        android:background="@drawable/ic_crown"
+        android:backgroundTint="?attr/colorOnPrimary"
+        android:text="Match6"
+        android:textAllCaps="false"
+        android:textColor="?attr/colorPrimary"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-    <ImageButton
+    <Button
         android:id="@+id/b2"
         android:layout_width="0dp"
         android:layout_height="80dp"
         android:layout_marginHorizontal="40dp"
         android:layout_marginVertical="20dp"
+        android:backgroundTint="?attr/colorOnPrimary"
+        android:text="RightOrWrong"
+        android:textAllCaps="false"
+        android:textColor="?attr/colorPrimary"
         app:layout_constraintTop_toBottomOf="@id/match8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
