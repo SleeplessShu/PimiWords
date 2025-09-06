@@ -13,9 +13,11 @@ import com.sleeplessdog.matchthewords.game.domain.models.WordCategory
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
 import com.sleeplessdog.matchthewords.game.presentation.models.GameSettings
 import com.sleeplessdog.matchthewords.game.presentation.models.GameState
+import com.sleeplessdog.matchthewords.game.presentation.models.GameType
 import com.sleeplessdog.matchthewords.game.presentation.models.IngameWordsState
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
 import com.sleeplessdog.matchthewords.game.presentation.models.MatchState
+import com.sleeplessdog.matchthewords.game.presentation.models.TfQuestion
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
 import com.sleeplessdog.matchthewords.utils.SupportFunctions
 import kotlinx.coroutines.launch
@@ -40,6 +42,10 @@ class GameViewModel(
     private val _ingameWordsState = MutableLiveData(IngameWordsState())
     val ingameWordsState: LiveData<IngameWordsState> get() = _ingameWordsState
 
+    private val _tfQuestion = MutableLiveData<TfQuestion>()
+    val tfQuestion: LiveData<TfQuestion> get() = _tfQuestion
+
+    private val usedTfIndices = mutableSetOf<Int>()
     private var score: Int = 0
     private var lives: Int = 3
     private var difficultLevel: Int = 18
@@ -56,6 +62,12 @@ class GameViewModel(
     init {
         onMatchSettings()
     }
+
+    fun setGame(gameType: GameType) {
+        _gameState.value = _gameState.value?.copy(gameType = gameType)
+    }
+
+
     //MATCH SETTINGS
 
     // Переключение языка для первой группы
@@ -90,13 +102,15 @@ class GameViewModel(
 
     //Переключение сложности
     fun switchDifficultLevel(isNext: Boolean) {
-        val nextDifficult = supportFunctions.switchItem(_gameSettings.value?.difficult, difficult, isNext)
+        val nextDifficult =
+            supportFunctions.switchItem(_gameSettings.value?.difficult, difficult, isNext)
         updateDifficult(nextDifficult)
     }
 
     //Переключение категории слов
     fun switchWordsCategory(isNext: Boolean) {
-        val nextCategory = supportFunctions.switchItem(_gameSettings.value?.category, categories, isNext)
+        val nextCategory =
+            supportFunctions.switchItem(_gameSettings.value?.category, categories, isNext)
         updateCategory(nextCategory)
     }
 
@@ -226,7 +240,6 @@ class GameViewModel(
     }
 
 
-
     private fun clearSelectedList() {
         _ingameWordsState.value = _ingameWordsState.value?.copy(
             selectedWords = emptyList()
@@ -297,11 +310,80 @@ class GameViewModel(
         onLoading()
         setupScoreLivesDifficult()
         loadWordsFromDatabase {
-            loadNextPage()
-            handler.postDelayed({
-                _gameState.value = _gameState.value?.copy(state = GameState.GAME)
-            }, DELAY_LOADING)
+            when (_gameState.value?.gameType ?: GameType.MATCH8) {
+                GameType.MATCH8 -> {
+                    loadNextPage()
+                    handler.postDelayed({
+                        _gameState.value = _gameState.value?.copy(state = GameState.GAME)
+                    }, DELAY_LOADING)
+                }
+
+                GameType.TRUEorFALSE -> {
+                    prepareTrueFalse()
+                    handler.postDelayed({
+                        _gameState.value = _gameState.value?.copy(state = GameState.GAME)
+                    }, DELAY_LOADING)
+                }
+            }
         }
+    }
+
+    private fun prepareTrueFalse() {
+        correctGuessesCounter = 0
+        score = 0
+        usedTfIndices.clear()
+        nextTfQuestion()
+    }
+
+    private fun nextTfQuestion() {
+        if (usedTfIndices.size >= pairsFromDatabase.size) {
+            onGameEnd()
+            return
+        }
+
+        // выбираем ещё неиспользованную исходную пару
+        val available = pairsFromDatabase.indices.filterNot { it in usedTfIndices }
+        if (available.isEmpty()) { onGameEnd(); return }
+        val baseIndex = available.random()
+        val (wordA, wordB) = pairsFromDatabase[baseIndex]
+
+        // с 50% шансом показываем правильный перевод, иначе — неверный из другой пары
+        val showCorrect = (0..1).random() == 0
+        val translation = if (showCorrect || pairsFromDatabase.size == 1) {
+            wordB
+        } else {
+            // берём перевод из другой пары, чтобы точно был wrong
+            val otherIndices = available.filter { it != baseIndex }
+            val wrongIndex = if (otherIndices.isNotEmpty()) otherIndices.random()
+            else pairsFromDatabase.indices.first { it != baseIndex }
+            pairsFromDatabase[wrongIndex].second
+        }
+
+        _tfQuestion.value = TfQuestion(
+            word = wordA,
+            translation = translation,
+            isCorrect = showCorrect
+        )
+    }
+
+    fun onTrueClicked() = handleTfAnswer(true)
+    fun onFalseClicked() = handleTfAnswer(false)
+
+    private fun handleTfAnswer(userThinksTrue: Boolean) {
+        val q = _tfQuestion.value ?: return
+        if (userThinksTrue == q.isCorrect) {
+            reactOnCorrect()
+            correctGuessesCounter++
+        } else {
+            reactOnError()
+        }
+
+        // помечаем исходную пару как «пройденную» независимо от ответа
+        val baseIndex = pairsFromDatabase.indexOfFirst { it.first.id == q.word.id }
+        if (baseIndex >= 0) usedTfIndices += baseIndex
+
+        // следующий вопрос
+        handler.postDelayed({ nextTfQuestion() }, DELAY_BUTTON_REACTION)
     }
 
 
@@ -310,7 +392,9 @@ class GameViewModel(
         val todaysScore = scoreInteractor.getTodaysResult()
         handler.postDelayed({
             _gameState.value = _gameState.value?.copy(
-                state = GameState.END_OF_GAME, lives = lives, todaysScore = supportFunctions.getScoreAsString(todaysScore)
+                state = GameState.END_OF_GAME,
+                lives = lives,
+                todaysScore = supportFunctions.getScoreAsString(todaysScore)
             )
             scoreInteractor.updateTodaysResult(score)
         }, DELAY_LOADING)
@@ -331,8 +415,11 @@ class GameViewModel(
         score = 0
         correctGuessesCounter = 0
         currentPage = 0
-        difficultLevel = supportFunctions.getGameDifficult(_gameSettings.value?.difficult ?: DifficultLevel.MEDIUM)
-        lives = supportFunctions.getLivesCount(_gameSettings.value?.difficult ?: DifficultLevel.MEDIUM)
+        difficultLevel = supportFunctions.getGameDifficult(
+            _gameSettings.value?.difficult ?: DifficultLevel.MEDIUM
+        )
+        lives =
+            supportFunctions.getLivesCount(_gameSettings.value?.difficult ?: DifficultLevel.MEDIUM)
     }
 
 
@@ -384,8 +471,6 @@ class GameViewModel(
 
      */
 
-
-
     fun loadNextPage() {
         if (currentPage * pageSize >= pairsFromDatabase.size) {
             onGameEnd()
@@ -418,8 +503,6 @@ class GameViewModel(
             emptyList()
         }
     }
-
-
 
 
     private companion object {

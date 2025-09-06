@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.GameSelectFragmentBinding
+import com.sleeplessdog.matchthewords.game.presentation.models.GameType
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GameSelectFragment : Fragment() {
@@ -31,9 +31,11 @@ class GameSelectFragment : Fragment() {
 
     private fun setupObservers() {
         binding.match8.setOnClickListener {
-            findNavController().navigate(R.id.action_gameSelectFragment_to_gameFragment)
+            goToGameSettings(GameType.MATCH8)
         }
-        binding.b2.setOnClickListener { showToast() }
+        binding.trueOrFalse.setOnClickListener {
+            goToGameSettings(GameType.TRUEorFALSE)
+        }
         binding.b3.setOnClickListener { showToast() }
         binding.b4.setOnClickListener { showToast() }
         binding.b5.setOnClickListener { showToast() }
@@ -43,6 +45,13 @@ class GameSelectFragment : Fragment() {
         Toast.makeText(requireContext(), "game under construction", Toast.LENGTH_SHORT)
             .show()
     }
+
+    private fun goToGameSettings(gameType: GameType) {
+        val dir = GameSelectFragmentDirections
+            .actionGameSelectFragmentToGameFragment(gameType)
+        findNavController().navigate(dir)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

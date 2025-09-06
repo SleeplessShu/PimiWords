@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/b2"
+        android:id="@+id/trueOrFalse"
         android:layout_width="0dp"
         android:layout_height="80dp"
         android:layout_marginHorizontal="40dp"
@@ -42,7 +42,7 @@
         android:backgroundTint="?attr/colorOnPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/b2" />
+        app:layout_constraintTop_toBottomOf="@id/trueOrFalse" />
 
     <Button
         android:id="@+id/b4"
