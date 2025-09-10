@@ -14,6 +14,12 @@
         android:id="@+id/gameFragment"
         android:name="com.sleeplessdog.matchthewords.game.presentation.GameFragment"
         android:label="GameFragment" >
+
+        <action
+            android:id="@+id/action_gameFragment_to_GameSelectFragment"
+            app:destination="@id/gameSelectFragment"
+            app:popUpToInclusive="true"/>
+
         <action
             android:id="@+id/action_gameFragment_to_scoreFragment"
             app:destination="@id/scoreFragment"

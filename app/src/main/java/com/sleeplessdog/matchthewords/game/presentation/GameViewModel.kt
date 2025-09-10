@@ -63,6 +63,8 @@ class GameViewModel(
         onMatchSettings()
     }
 
+    //GAME SELECT
+
     fun setGame(gameType: GameType) {
         _gameState.value = _gameState.value?.copy(gameType = gameType)
     }
@@ -343,7 +345,9 @@ class GameViewModel(
 
         // выбираем ещё неиспользованную исходную пару
         val available = pairsFromDatabase.indices.filterNot { it in usedTfIndices }
-        if (available.isEmpty()) { onGameEnd(); return }
+        if (available.isEmpty()) {
+            onGameEnd(); return
+        }
         val baseIndex = available.random()
         val (wordA, wordB) = pairsFromDatabase[baseIndex]
 
@@ -360,9 +364,7 @@ class GameViewModel(
         }
 
         _tfQuestion.value = TfQuestion(
-            word = wordA,
-            translation = translation,
-            isCorrect = showCorrect
+            word = wordA, translation = translation, isCorrect = showCorrect
         )
     }
 
@@ -502,6 +504,66 @@ class GameViewModel(
         } else {
             emptyList()
         }
+    }
+
+    fun resetStats() {
+        // стопаем все отложенные задачи
+        handler.removeCallbacksAndMessages(null)
+
+        // внутренняя игровая статика
+        score = 0
+        correctGuessesCounter = 0
+        currentPage = 0
+        usedTfIndices.clear()
+        pairsFromDatabase = emptyList()
+
+        // восстановим производные от текущих настроек (их не трогаем)
+        difficultLevel = supportFunctions.getGameDifficult(
+            _gameSettings.value?.difficult ?: DifficultLevel.MEDIUM
+        )
+        lives = supportFunctions.getLivesCount(
+            _gameSettings.value?.difficult ?: DifficultLevel.MEDIUM
+        )
+
+        // очистим UI-состояния раунда
+        _ingameWordsState.value = IngameWordsState(
+            selectedWords = emptyList(),
+            errorWords = emptyList(),
+            correctWords = emptyList(),
+            usedWords = emptyList()
+        )
+        // ВАЖНО: не посылаем null, чтобы не уронить наблюдателя во фрагменте
+        // _tfQuestion.value = null  // <- убрано
+        _wordsPairs.value = emptyList()
+
+        // верхнее состояние
+        _gameState.value = _gameState.value?.copy(
+            state = GameState.MATCH_SETTINGS,
+            lives = lives,
+            score = supportFunctions.getScoreAsString(score)
+        ) ?: MatchState(
+            state = GameState.MATCH_SETTINGS,
+            lives = lives,
+            score = supportFunctions.getScoreAsString(score)
+        )
+    }
+
+    fun resetAll() {
+        // сначала чистим стату/рантайм
+        resetStats()
+
+        // теперь сбрасываем настройки на дефолт
+        _gameSettings.value = GameSettings()
+
+        // и приводим MatchState к дефолту
+        val defLives = supportFunctions.getLivesCount(DifficultLevel.MEDIUM)
+        difficultLevel = supportFunctions.getGameDifficult(DifficultLevel.MEDIUM)
+        lives = defLives
+        _gameState.value = MatchState(
+            state = GameState.MATCH_SETTINGS,
+            lives = defLives,
+            score = supportFunctions.getScoreAsString(0)
+        )
     }
 
 

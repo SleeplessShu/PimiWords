@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.GameFragmentBinding
@@ -17,7 +18,7 @@ import com.sleeplessdog.matchthewords.game.presentation.fragments.TrueOrFalseFra
 import com.sleeplessdog.matchthewords.game.presentation.fragments.WordsMatchingFragment
 import com.sleeplessdog.matchthewords.game.presentation.models.GameState
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
-import com.sleeplessdog.matchthewords.game.presentation.models.MatchState
+import com.sleeplessdog.matchthewords.gameSelect.presentation.GameSelectFragmentDirections
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GameFragment : Fragment() {
@@ -58,6 +59,7 @@ class GameFragment : Fragment() {
                         .replace(R.id.flFragmentContainer, MatchSettingsFragment()).commit()
                     binding.tvHeader.setText(R.string.state_title_match_settings)
                     binding.statsBlock.isVisible = false
+                    binding.buttonBack.isVisible = true
                 }
 
                 GameState.LOADING -> {
@@ -65,12 +67,14 @@ class GameFragment : Fragment() {
                         .replace(R.id.flFragmentContainer, LoadingFragment()).commit()
                     binding.tvHeader.setText(R.string.state_title_loading)
                     binding.statsBlock.isVisible = false
+                    binding.buttonBack.isVisible = false
                 }
 
                 GameState.GAME -> {
                     launchGame()
                     binding.tvHeader.setText(R.string.empty)
                     binding.statsBlock.isVisible = true
+                    binding.buttonBack.isVisible = true
                 }
 
                 GameState.END_OF_GAME -> {
@@ -78,6 +82,7 @@ class GameFragment : Fragment() {
                         .replace(R.id.flFragmentContainer, EndGameFragment()).commit()
                     binding.tvHeader.setText(R.string.empty)
                     binding.statsBlock.isVisible = false
+                    binding.buttonBack.isVisible = false
                 }
             }
         }
@@ -85,9 +90,31 @@ class GameFragment : Fragment() {
             binding.tvScores.setText(gameState.score)
             setHearts(gameState.lives)
         }
+
+        binding.buttonBack.setOnClickListener {
+            val gameState = viewModel.gameState.value?.state ?: GameState.GAME
+            when (gameState) {
+                GameState.GAME -> returnToMatchSettings()
+                GameState.MATCH_SETTINGS -> returnToGameSelect()
+                else -> returnToGameSelect()
+            }
+        }
     }
 
-    private fun launchGame(){
+    private fun returnToMatchSettings() {
+        viewModel.resetStats()
+        childFragmentManager.beginTransaction()
+            .replace(R.id.flFragmentContainer, MatchSettingsFragment()).commit()
+    }
+
+    private fun returnToGameSelect() {
+        viewModel.resetAll()
+        val dir = GameFragmentDirections
+            .actionGameFragmentToGameSelectFragment()
+        findNavController().navigate(dir)
+    }
+
+    private fun launchGame() {
         val gameType = viewModel.gameState.value?.gameType ?: GameType.MATCH8
         when (gameType) {
             GameType.MATCH8 -> {

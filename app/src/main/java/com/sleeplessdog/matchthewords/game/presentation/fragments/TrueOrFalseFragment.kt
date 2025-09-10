@@ -37,6 +37,7 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
 
     private fun setupObservers(){
         parentViewModel.tfQuestion.observe(viewLifecycleOwner) { q ->
+            if (q == null) return@observe
             binding.tWord.text = q.word.text
             binding.tTranslate.text = q.translation.text
         }
