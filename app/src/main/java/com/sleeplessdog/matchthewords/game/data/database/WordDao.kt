@@ -5,22 +5,47 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Update
 import com.sleeplessdog.matchthewords.game.data.WordEntity
-import com.sleeplessdog.matchthewords.game.domain.models.WordCategory
-
 
 @Dao
 interface WordDao {
 
-    @Query("SELECT * FROM A1 WHERE category = :category COLLATE NOCASE LIMIT 36")
-    suspend fun getWordsByCategory(category: WordCategory): List<WordEntity>
+    // 1) Конкретная категория И конкретный уровень (без лимита), в случайном порядке
+    @Query("""
+        SELECT * FROM words
+        WHERE category = :category COLLATE NOCASE
+          AND level    = :level    COLLATE NOCASE
+        ORDER BY RANDOM()
+    """)
+    suspend fun getByCategoryAndLevel(category: String, level: String): List<WordEntity>
 
-    @Query("SELECT * FROM A1 ORDER BY RANDOM() LIMIT :wordsNeeded")
+    // 2) Конкретная категория И ЛЮБОЙ уровень (все уровни), в случайном порядке
+    @Query("""
+        SELECT * FROM words
+        WHERE category = :category COLLATE NOCASE
+        ORDER BY RANDOM()
+    """)
+    suspend fun getByCategoryAllLevels(category: String): List<WordEntity>
+
+    // 3) ЛЮБАЯ категория И конкретный уровень (все категории), в случайном порядке
+    @Query("""
+        SELECT * FROM words
+        WHERE level = :level COLLATE NOCASE
+        ORDER BY RANDOM()
+    """)
+    suspend fun getAllCategoriesByLevel(level: String): List<WordEntity>
+
+    // 4) ЛЮБАЯ категория И ЛЮБОЙ уровень — конкретное количество, в случайном порядке
+    @Query("""
+        SELECT * FROM words
+        ORDER BY RANDOM()
+        LIMIT :limit
+    """)
+    suspend fun getAny(limit: Int): List<WordEntity>
+
+    // Дополнительно: рандом из любых (если где-то уже используется)
+    @Query("SELECT * FROM words ORDER BY RANDOM() LIMIT :wordsNeeded")
     suspend fun getRandom(wordsNeeded: Int): List<WordEntity>
-
-
-
 
     @Update
     suspend fun updateWord(wordEntity: WordEntity)
-
 }

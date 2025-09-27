@@ -42,12 +42,18 @@ class GameInteractorImpl(private val repository: DatabaseInteractor) : GameInter
     }
 
     override fun getWordForLanguage(entity: WordEntity, lang: Language): Word {
+        val id = entity.id ?: -1
         return when (lang) {
-            Language.ENGLISH -> Word(entity.id, entity.english, Language.ENGLISH)
-            Language.SPANISH -> Word(entity.id, entity.spanish, Language.SPANISH)
-            Language.RUSSIAN -> Word(entity.id, entity.russian, Language.RUSSIAN)
-            Language.FRENCH -> Word(entity.id, entity.french, Language.FRENCH)
-            Language.GERMAN -> Word(entity.id, entity.german, Language.GERMAN)
+            Language.ENGLISH -> Word(id, entity.english, Language.ENGLISH)
+            Language.SPANISH -> entity.spanish?.let { Word(id, it, Language.SPANISH) }
+                ?: Word.invalid(Language.SPANISH)
+            Language.RUSSIAN -> entity.russian?.let { Word(id, it, Language.RUSSIAN) }
+                ?: Word.invalid(Language.RUSSIAN)
+            Language.FRENCH -> entity.french?.let { Word(id, it, Language.FRENCH) }
+                ?: Word.invalid(Language.FRENCH)
+            Language.GERMAN -> entity.german?.let { Word(id, it, Language.GERMAN) }
+                ?: Word.invalid(Language.GERMAN)
         }
     }
+
 }

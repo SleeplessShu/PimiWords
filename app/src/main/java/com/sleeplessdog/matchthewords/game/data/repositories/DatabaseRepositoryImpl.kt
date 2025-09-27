@@ -7,7 +7,6 @@ import com.sleeplessdog.matchthewords.game.domain.models.WordCategory
 import com.sleeplessdog.matchthewords.game.domain.repositories.DatabaseRepository
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
 
-
 class DatabaseRepositoryImpl(private val wordDao: WordDao) : DatabaseRepository {
 
     override suspend fun getWordsPack(
@@ -17,47 +16,44 @@ class DatabaseRepositoryImpl(private val wordDao: WordDao) : DatabaseRepository 
         difficultLevel: Int,
         category: WordCategory
     ): List<WordEntity> {
-        var dataBaseResponse = emptyList<WordEntity>()
-        if (category == WordCategory.RANDOM) {
-           dataBaseResponse = getRandom(difficultLevel)
-        } else {
-            dataBaseResponse = wordDao.getWordsByCategory(category)
-            dataBaseResponse = adaptForConditions(dataBaseResponse, difficultLevel)
+
+        val isAnyCategory = category == WordCategory.RANDOM
+        val isAnyLevel = level == LanguageLevel.RANDOM
+
+        val fromDb: List<WordEntity> = when {
+            isAnyCategory && isAnyLevel -> wordDao.getAny(difficultLevel)
+
+            isAnyCategory -> wordDao.getAllCategoriesByLevel(level.name)
+
+            isAnyLevel -> wordDao.getByCategoryAllLevels(category.name)
+
+            else -> wordDao.getByCategoryAndLevel(category.name, level.name)
         }
-        return dataBaseResponse
+
+        return adaptForConditions(fromDb, difficultLevel)
     }
 
-    suspend fun getRandom(wordsNeeded: Int): List<WordEntity> {
-        val additionalWords = wordDao.getRandom(wordsNeeded)
-        return additionalWords
-    }
+    private suspend fun getRandom(wordsNeeded: Int): List<WordEntity> =
+        wordDao.getRandom(wordsNeeded)
 
     override suspend fun updateUsedWordsStatistic(wordEntity: WordEntity) {
         wordDao.updateWord(wordEntity)
     }
 
-
     private suspend fun adaptForConditions(
         dataBaseResponse: List<WordEntity>,
         difficultLevel: Int
     ): List<WordEntity> {
+        if (difficultLevel <= 0) return emptyList()
 
-        // Перемешиваем элементы
-        val shuffledList = dataBaseResponse.shuffled()
+        val shuffled = dataBaseResponse.shuffled()
 
-        return if (shuffledList.size >= difficultLevel) {
-            // Если хватает слов, обрезаем до нужного количества
-            shuffledList.take(difficultLevel)
+        return if (shuffled.size >= difficultLevel) {
+            shuffled.take(difficultLevel)
         } else {
-            // Если слов меньше, запрашиваем недостающие
-            val missingCount = difficultLevel - shuffledList.size
-            val additionalWords = getRandom(missingCount)
-
-            // Объединяем текущие слова и недостающие
-            (shuffledList + additionalWords).take(difficultLevel)
+            val missing = difficultLevel - shuffled.size
+            val additional = getRandom(missing)
+            (shuffled + additional).take(difficultLevel)
         }
     }
-
-
-
 }

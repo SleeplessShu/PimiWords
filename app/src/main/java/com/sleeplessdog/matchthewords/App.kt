@@ -22,23 +22,13 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
-        Log.d("DEBUG", "onCreate: ${appContext.getDatabasePath("dictionary_default.db")}")
         startKoin {
             androidContext(this@App)
             modules(dataModule, domainModule, presentationModule)
         }
-        deleteExistingDatabase(appContext, "dictionary.db")
-
         FirebaseAppCheck.getInstance().installAppCheckProviderFactory(
             DebugAppCheckProviderFactory.getInstance()
         )
-
-        databaseSelector()
-
-
-
-
-
         val settingsInteractor: SettingsInteractor = getKoin().get()
         val isNightModeOn = settingsInteractor.getThemeSettings()
         AppCompatDelegate.setDefaultNightMode(
@@ -46,6 +36,7 @@ class App : Application() {
         )
 
     }
+
     private fun deleteExistingDatabase(context: Context, dbName: String) {
         val dbPath = context.getDatabasePath(dbName)
         if (dbPath.exists()) {
@@ -55,26 +46,25 @@ class App : Application() {
     }
 
     private fun databaseSelector() {
-        val dbFile = File(applicationContext.filesDir, "latest_db.db")
-        if (dbFile.exists()) {
-            val targetFile = File(applicationContext.getDatabasePath("latest_db.db").path)
-            if (!targetFile.exists()) {
-                dbFile.copyTo(targetFile, overwrite = true)
-            }
-            database = Room.databaseBuilder(
-                applicationContext,
-                AppDatabase::class.java,
-                "latest_db.db"
-            ).build()
+        val dbsDir = applicationContext.getDatabasePath("stub").parentFile!!
+        dbsDir.mkdirs()
+
+        val filesDb = File(applicationContext.filesDir, "latest_db.db")
+        if (filesDb.exists()) {
+            val target = applicationContext.getDatabasePath("latest_db.db")
+            // всегда обновляем, если файлы отличаются (или просто overwrite = true)
+            filesDb.copyTo(target, overwrite = true)
+            database = Room.databaseBuilder(appContext, AppDatabase::class.java, "latest_db.db")
+                .build()
+            Log.d("DEBUG", "DB -> latest_db.db (copied from filesDir)")
         } else {
-            database = Room.databaseBuilder(
-                applicationContext,
-                AppDatabase::class.java,
-                "dictionary_default.db"
-            ).createFromAsset("databases/dictionary_default.db")
+            // не удаляем каждую загрузку! убери вызов deleteExistingDatabase
+            database = Room.databaseBuilder(appContext, AppDatabase::class.java, "dictionary.db")
+                .createFromAsset("databases/dictionary_default.db")
                 .build()
         }
     }
+
 
     companion object {
 

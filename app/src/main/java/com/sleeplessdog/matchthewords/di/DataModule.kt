@@ -1,12 +1,13 @@
 package com.sleeplessdog.matchthewords
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Handler
 import androidx.room.Room
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
-import com.sleeplessdog.matchthewords.di.provideDatabaseName
 import com.sleeplessdog.matchthewords.game.data.database.AppDatabase
+import com.sleeplessdog.matchthewords.game.data.database.resolveAssetDatabase
 import com.sleeplessdog.matchthewords.game.data.repositories.DatabaseRepositoryImpl
 import com.sleeplessdog.matchthewords.game.data.repositories.ScoreRepositoryImpl
 import com.sleeplessdog.matchthewords.game.domain.repositories.DatabaseRepository
@@ -24,7 +25,10 @@ import com.sleeplessdog.matchthewords.settings.domain.repositories.SharingReposi
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
+
+
 val dataModule = module {
+
     single {
         FirebaseDatabase.getInstance("https://match-the-words-d26c2-default-rtdb.europe-west1.firebasedatabase.app")
     }
@@ -56,29 +60,30 @@ val dataModule = module {
     }
     single { get<AppDatabase>().wordDao() }
 
-    single {
-        val dbName = provideDatabaseName(get())
-
-        val builder = Room.databaseBuilder(
-            get(), AppDatabase::class.java, dbName
-        )
-
-        if (dbName == "dictionary.db") {
-            builder.createFromAsset("databases/dictionary_default.db")
-        }
-
-        builder.build()
+    single(named("db_prefs")) {
+        App.appContext.getSharedPreferences("db_prefs", Context.MODE_PRIVATE)
     }
+
+    single {
+        val dbName = "dictionary.db"
+        val ctx: Context = get()
+
+        val sel = resolveAssetDatabase(ctx) // получаем и путь, и дату
+
+        val prefs: SharedPreferences = get(qualifier = named("db_prefs"))
+        prefs.edit().putString("local_db_date", sel.date).apply()
+
+        Room.databaseBuilder(ctx, AppDatabase::class.java, dbName)
+            .createFromAsset(sel.assetPath)
+            .build()
+    }
+
 
     single(named("scoreStore")) {
         App.appContext.getSharedPreferences("ScoreHistory", Context.MODE_PRIVATE)
     }
     single<ScoreRepository> {
         ScoreRepositoryImpl(get(named("scoreStore")), get())
-    }
-
-    single(named("db_prefs")) {
-        App.appContext.getSharedPreferences("db_prefs", Context.MODE_PRIVATE)
     }
 
     single<ServerDateRepository> {
