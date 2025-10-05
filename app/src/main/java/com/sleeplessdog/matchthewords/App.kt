@@ -4,24 +4,29 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.room.Room
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
 import com.sleeplessdog.matchthewords.di.domainModule
 import com.sleeplessdog.matchthewords.di.presentationModule
 import com.sleeplessdog.matchthewords.game.data.database.AppDatabase
 import com.sleeplessdog.matchthewords.settings.domain.api.SettingsInteractor
-
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.java.KoinJavaComponent.getKoin
 import java.io.File
-
+import java.io.PrintWriter
+import java.io.StringWriter
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
+        deleteAllDatabases(appContext)
+
+        setCrashHandler()
+
         startKoin {
             androidContext(this@App)
             modules(dataModule, domainModule, presentationModule)
@@ -37,31 +42,57 @@ class App : Application() {
 
     }
 
-    private fun deleteExistingDatabase(context: Context, dbName: String) {
-        val dbPath = context.getDatabasePath(dbName)
-        if (dbPath.exists()) {
-            dbPath.delete()
-            Log.d("DEBUG", "Старая база данных удалена.")
+    private fun deleteAllDatabases(context: Context) {
+        val dbDir = File(context.applicationInfo.dataDir, "databases")
+        if (dbDir.exists() && dbDir.isDirectory) {
+            dbDir.listFiles()?.forEach { dbFile ->
+                if (dbFile.isFile) {
+                    val deleted = dbFile.delete()
+                    Log.d("DEBUG", "Удалена база: ${dbFile.name}, ok=$deleted")
+                }
+            }
         }
     }
 
-    private fun databaseSelector() {
-        val dbsDir = applicationContext.getDatabasePath("stub").parentFile!!
-        dbsDir.mkdirs()
+    private fun setCrashHandler() {
+        val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
+        Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+            try {
+                val sw = StringWriter()
+                throwable.printStackTrace(PrintWriter(sw))
+                val stackTrace = sw.toString()
 
-        val filesDb = File(applicationContext.filesDir, "latest_db.db")
-        if (filesDb.exists()) {
-            val target = applicationContext.getDatabasePath("latest_db.db")
-            // всегда обновляем, если файлы отличаются (или просто overwrite = true)
-            filesDb.copyTo(target, overwrite = true)
-            database = Room.databaseBuilder(appContext, AppDatabase::class.java, "latest_db.db")
-                .build()
-            Log.d("DEBUG", "DB -> latest_db.db (copied from filesDir)")
-        } else {
-            // не удаляем каждую загрузку! убери вызов deleteExistingDatabase
-            database = Room.databaseBuilder(appContext, AppDatabase::class.java, "dictionary.db")
-                .createFromAsset("databases/dictionary_default.db")
-                .build()
+                val ts = SimpleDateFormat(
+                    "yyyy-MM-dd HH:mm:ss", Locale.US
+                ).format(System.currentTimeMillis())
+                val header = buildString {
+                    appendLine("=== Crash ===")
+                    appendLine("Time      : $ts")
+                    appendLine("Thread    : ${thread.name} (${thread.id})")
+                    appendLine("Device    : ${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}")
+                    appendLine("SDK       : ${android.os.Build.VERSION.SDK_INT}")
+                    appendLine("------------------------------")
+                }
+
+                // пишем (append)
+                openFileOutput(CRASH_FILE, MODE_APPEND).use { fos ->
+                    fos.write((header + stackTrace + "\n\n").toByteArray())
+                }
+
+                // ставим флаг
+                getSharedPreferences(PREFS, MODE_PRIVATE).edit().putBoolean(KEY_HAS_CRASH, true)
+                    .apply()
+
+                Log.e("CRASH", stackTrace)
+            } catch (e: Exception) {
+                Log.e("CRASH", "Failed to save crash", e)
+            } finally {
+                // передаём дальше в системный/дефолтный хендлер
+                defaultHandler?.uncaughtException(thread, throwable) ?: run {
+                    android.os.Process.killProcess(android.os.Process.myPid())
+                    System.exit(1)
+                }
+            }
         }
     }
 
@@ -71,5 +102,19 @@ class App : Application() {
         lateinit var database: AppDatabase
         lateinit var appContext: Context
             private set
+
+        private const val CRASH_FILE = "crash_log.txt"
+        private const val PREFS = "crash_prefs"
+        private const val KEY_HAS_CRASH = "has_crash"
+
+        fun crashFilePath(): String = appContext.filesDir.resolve(CRASH_FILE).absolutePath
+
+        fun clearCrashFlag() {
+            appContext.getSharedPreferences(PREFS, MODE_PRIVATE).edit()
+                .putBoolean(KEY_HAS_CRASH, false).apply()
+        }
+
+        fun hasCrash(): Boolean =
+            appContext.getSharedPreferences(PREFS, MODE_PRIVATE).getBoolean(KEY_HAS_CRASH, false)
     }
 }

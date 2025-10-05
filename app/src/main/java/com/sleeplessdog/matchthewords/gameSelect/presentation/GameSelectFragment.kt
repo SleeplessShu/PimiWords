@@ -36,9 +36,12 @@ class GameSelectFragment : Fragment() {
         binding.trueOrFalse.setOnClickListener {
             goToGameSettings(GameType.TRUEorFALSE)
         }
-        binding.b3.setOnClickListener { showToast() }
-        binding.b4.setOnClickListener { showToast() }
-        binding.b5.setOnClickListener { showToast() }
+        binding.b3.setOnClickListener {
+            goToGameSettings(GameType.OneOfFour)
+        }
+        binding.b4.setOnClickListener {
+            goToGameSettings(GameType.WriteTheWord)
+        }
     }
 
     private fun showToast() {

@@ -215,7 +215,7 @@ class GameViewModel(
     }
 
 
-    private fun reactOnError() {
+    fun reactOnError() {
         removeScoreAndLive()
         _gameState.postValue(
             _gameState.value?.copy(
@@ -224,7 +224,7 @@ class GameViewModel(
         )
     }
 
-    private fun reactOnCorrect() {
+    fun reactOnCorrect() {
         addScoreAndLive()
         _gameState.postValue(
             _gameState.value?.copy(
@@ -321,7 +321,21 @@ class GameViewModel(
                 }
 
                 GameType.TRUEorFALSE -> {
-                    prepareTrueFalse()
+                    startTrueFalse()
+                    handler.postDelayed({
+                        _gameState.value = _gameState.value?.copy(state = GameState.GAME)
+                    }, DELAY_LOADING)
+                }
+
+                GameType.OneOfFour -> {
+                    startOneOfFour()
+                    handler.postDelayed({
+                        _gameState.value = _gameState.value?.copy(state = GameState.GAME)
+                    }, DELAY_LOADING)
+                }
+
+                GameType.WriteTheWord -> {
+                    startWriteTheWord()
                     handler.postDelayed({
                         _gameState.value = _gameState.value?.copy(state = GameState.GAME)
                     }, DELAY_LOADING)
@@ -330,7 +344,19 @@ class GameViewModel(
         }
     }
 
-    private fun prepareTrueFalse() {
+    private fun startWriteTheWord() {
+        _wordsPairs.value = pairsFromDatabase
+        correctGuessesCounter = 0
+        score = 0
+    }
+
+    private fun startOneOfFour() {
+        _wordsPairs.value = pairsFromDatabase
+        correctGuessesCounter = 0
+        score = 0
+    }
+
+    private fun startTrueFalse() {
         correctGuessesCounter = 0
         score = 0
         usedTfIndices.clear()

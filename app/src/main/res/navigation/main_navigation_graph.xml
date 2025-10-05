@@ -10,6 +10,7 @@
         android:name="com.sleeplessdog.matchthewords.settings.presentation.SettingsFragment"
         android:label="settings_fragment"
         tools:layout="@layout/settings_fragment" />
+
     <fragment
         android:id="@+id/gameFragment"
         android:name="com.sleeplessdog.matchthewords.game.presentation.GameFragment"

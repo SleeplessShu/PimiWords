@@ -3,6 +3,8 @@ package com.sleeplessdog.matchthewords.di
 import android.os.Handler
 import android.os.Looper
 import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
+import com.sleeplessdog.matchthewords.game.presentation.OneOfFourViewModel
+import com.sleeplessdog.matchthewords.game.presentation.WriteTheWordViewModel
 import com.sleeplessdog.matchthewords.score.presentation.ScoreViewModel
 import com.sleeplessdog.matchthewords.settings.presentation.DatabaseViewModel
 import com.sleeplessdog.matchthewords.settings.presentation.SettingsViewModel
@@ -29,6 +31,14 @@ val presentationModule = module {
 
     viewModel() {
         DatabaseViewModel(get(), get())
+    }
+
+    viewModel() {
+        OneOfFourViewModel()
+    }
+
+    viewModel() {
+        WriteTheWordViewModel()
     }
 
     single { SupportFunctions() }

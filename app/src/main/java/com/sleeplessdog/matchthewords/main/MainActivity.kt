@@ -1,11 +1,14 @@
 package com.sleeplessdog.matchthewords.main
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.sleeplessdog.matchthewords.App
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.ActivityMainBinding
+import kotlin.jvm.java
 
 class MainActivity: AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -21,5 +24,9 @@ class MainActivity: AppCompatActivity() {
 
         val bottomNavigationView = binding.bottomNavigationView
         bottomNavigationView.setupWithNavController(navController)
+
+        if (App.hasCrash()) {
+            startActivity(Intent(this, CrashLogActivity::class.java))
+        }
     }
 }

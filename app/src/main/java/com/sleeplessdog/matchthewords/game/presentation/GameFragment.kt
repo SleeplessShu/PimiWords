@@ -14,8 +14,10 @@ import com.sleeplessdog.matchthewords.databinding.GameFragmentBinding
 import com.sleeplessdog.matchthewords.game.presentation.fragments.EndGameFragment
 import com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment
 import com.sleeplessdog.matchthewords.game.presentation.fragments.MatchSettingsFragment
+import com.sleeplessdog.matchthewords.game.presentation.fragments.OneOfFourFragment
 import com.sleeplessdog.matchthewords.game.presentation.fragments.TrueOrFalseFragment
 import com.sleeplessdog.matchthewords.game.presentation.fragments.WordsMatchingFragment
+import com.sleeplessdog.matchthewords.game.presentation.fragments.WriteTheWordFragment
 import com.sleeplessdog.matchthewords.game.presentation.models.GameState
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
 import com.sleeplessdog.matchthewords.gameSelect.presentation.GameSelectFragmentDirections
@@ -126,6 +128,14 @@ class GameFragment : Fragment() {
                 childFragmentManager.beginTransaction()
                     .replace(R.id.flFragmentContainer, TrueOrFalseFragment()).commit()
             }
+
+            GameType.OneOfFour -> {
+                childFragmentManager.beginTransaction()
+                    .replace(R.id.flFragmentContainer, OneOfFourFragment()).commit()
+            }
+
+            GameType.WriteTheWord -> childFragmentManager.beginTransaction()
+                .replace(R.id.flFragmentContainer, WriteTheWordFragment()).commit()
         }
     }
 
