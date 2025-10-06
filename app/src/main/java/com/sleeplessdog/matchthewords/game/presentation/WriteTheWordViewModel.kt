@@ -1,6 +1,5 @@
 package com.sleeplessdog.matchthewords.game.presentation
 
-import androidx.annotation.CheckResult
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,14 +14,14 @@ class WriteTheWordViewModel : ViewModel() {
     private val _ui = MutableLiveData(WriteTheWordUi())
     val ui: LiveData<WriteTheWordUi> = _ui
 
-    private val _events = MutableLiveData<AnswerEvent>()
-    val events: LiveData<AnswerEvent> = _events
+    private val _events = MutableLiveData<Boolean>()
+    val events: LiveData<Boolean> = _events
 
     // текущие данные раунда
     private var target = ""
     private var letters: MutableList<WriteTheWordLetterUi> = mutableListOf()
 
-    fun startRound(prompt: String, translation: String) {
+    fun createPair(prompt: String, translation: String) {
         target = translation
         letters = translation.mapIndexed { i, c -> WriteTheWordLetterUi(i, c) }
             .shuffled()
@@ -75,7 +74,7 @@ class WriteTheWordViewModel : ViewModel() {
         val state = _ui.value ?: return
         val ok = state.input.equals(target, ignoreCase = false)
         _ui.value = state.copy(locked = true)
-        _events.value = if (ok) AnswerEvent.CORRECT else AnswerEvent.WRONG
+        _events.value = if (ok) true else false
     }
 
     fun next() { // вызвать из фрагмента после анимации/задержки

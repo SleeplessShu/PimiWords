@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "389611247142",
+    "project_id": "match-the-words-d26c2",
+    "storage_bucket": "match-the-words-d26c2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:389611247142:android:cb59094b3a15d6d5c5b8e7",
+        "android_client_info": {
+          "package_name": "com.sleeplessdog.matchthewords"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFV9fJ_bV2EPAX6wX68CFQhVZaArWhdFI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
