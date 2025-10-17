@@ -1,4 +1,4 @@
-package com.sleeplessdog.matchthewords.game.presentation.fragments
+package com.sleeplessdog.matchthewords.game.presentation.ingameFragments
 
 import android.os.Bundle
 import android.util.Log
@@ -73,7 +73,6 @@ class WordsMatchingFragment : Fragment(R.layout.words_matching_fragment) {
         }
 
         childVM.state.observe(viewLifecycleOwner) { state ->
-            Log.d("DEBUG", "setupObservers: ${state.usedWords}")
             adapter.updateSelectedWords(state.selectedWords)
             adapter.updateErrorWords(state.errorWords)
             adapter.updateCorrectWords(state.correctWords)
@@ -81,14 +80,7 @@ class WordsMatchingFragment : Fragment(R.layout.words_matching_fragment) {
         }
 
         childVM.events.observe(viewLifecycleOwner) { e ->
-            when (e) {
-                AnswerEvent.CORRECT -> parentVM.reactOnCorrect()
-                AnswerEvent.WRONG   -> parentVM.reactOnError()
-            }
-        }
-
-        childVM.completed.observe(viewLifecycleOwner) { done ->
-            if (done == true) parentVM.onGameEnd()
+            parentVM.onGameEvent(e)
         }
     }
 }

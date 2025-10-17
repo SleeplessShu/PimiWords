@@ -1,54 +1,59 @@
-package com.sleeplessdog.matchthewords.game.presentation.fragments
+package com.sleeplessdog.matchthewords.game.presentation.ingameFragments
 
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.sleeplessdog.matchthewords.game.presentation.interfaces.GameEvent
+import com.sleeplessdog.matchthewords.game.presentation.interfaces.InGameLogic
 import com.sleeplessdog.matchthewords.game.presentation.models.AnswerEvent
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
 import com.sleeplessdog.matchthewords.game.presentation.models.WriteTheWordLetterUi
 import com.sleeplessdog.matchthewords.game.presentation.models.WriteTheWordUi
 import com.sleeplessdog.matchthewords.utils.TimeReactionConstants
 
-class WriteTheWordViewModel : ViewModel() {
+class WriteTheWordViewModel : ViewModel(), InGameLogic {
+
+    // === контракт игр: только GameEvent наружу ===
+    override val events = MutableLiveData<GameEvent>()
 
     private val handler = Handler(Looper.getMainLooper())
 
     private var pool: List<Pair<Word, Word>> = emptyList()
-    private var used = mutableSetOf<Int>()
+    private var usedIndices = mutableSetOf<Int>()
 
     private val _ui = MutableLiveData(WriteTheWordUi())
     val ui: LiveData<WriteTheWordUi> = _ui
 
-    private val _events = MutableLiveData<AnswerEvent>()
-    val events: LiveData<AnswerEvent> = _events
-
-    private val _completed = MutableLiveData(false)
-    val completed: LiveData<Boolean> = _completed
-
     // текущие данные вопроса
+    private var currentIds: List<Int> = emptyList()
     private var targetRaw = ""          // исходный перевод (как пришёл)
     private var targetClean = ""        // часть ДО '/' (обрезанная)
     private var letters: MutableList<WriteTheWordLetterUi> = mutableListOf()
 
-    fun setPool(pairs: List<Pair<Word, Word>>) {
+    override fun setPool(pairs: List<Pair<Word, Word>>) {
         pool = pairs
-        used.clear()
-        _completed.value = false
+        usedIndices.clear()
         nextQuestion()
     }
 
     private fun nextQuestion() {
-        if (pool.isEmpty() || used.size >= pool.size) {
-            _completed.value = true; return
+        if (pool.isEmpty() || usedIndices.size >= pool.size) {
+            events.value = GameEvent.Completed
+            return
         }
-        val available = pool.indices.filterNot { it in used }
-        if (available.isEmpty()) { _completed.value = true; return }
+        val available = pool.indices.filterNot { it in usedIndices }
+        if (available.isEmpty()) {
+            events.value = GameEvent.Completed
+            return
+        }
 
         val index = available.random()
-        used += index
+        usedIndices += index
+
         val (word, translationWord) = pool[index]
+        currentIds = listOf(word.id)
         createPair(prompt = word.text, translation = translationWord.text)
     }
 
@@ -119,8 +124,7 @@ class WriteTheWordViewModel : ViewModel() {
         val ok = state.input.equals(targetClean, ignoreCase = true)
 
         _ui.value = state.copy(locked = true)
-        _events.value = if (ok) AnswerEvent.CORRECT else AnswerEvent.WRONG
-
+        events.value = if (ok) GameEvent.Correct(currentIds) else GameEvent.Wrong(currentIds)
         handler.postDelayed({ nextQuestion() }, TimeReactionConstants.NEXT_QUESTION)
     }
 

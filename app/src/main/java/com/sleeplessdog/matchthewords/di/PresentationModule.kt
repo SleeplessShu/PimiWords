@@ -3,10 +3,10 @@ package com.sleeplessdog.matchthewords.di
 import android.os.Handler
 import android.os.Looper
 import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
-import com.sleeplessdog.matchthewords.game.presentation.fragments.OneOfFourViewModel
-import com.sleeplessdog.matchthewords.game.presentation.fragments.TrueOrFalseViewModel
-import com.sleeplessdog.matchthewords.game.presentation.fragments.WordsMatchingViewModel
-import com.sleeplessdog.matchthewords.game.presentation.fragments.WriteTheWordViewModel
+import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.OneOfFourViewModel
+import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.TrueOrFalseViewModel
+import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.WordsMatchingViewModel
+import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.WriteTheWordViewModel
 import com.sleeplessdog.matchthewords.score.presentation.ScoreViewModel
 import com.sleeplessdog.matchthewords.settings.presentation.DatabaseViewModel
 import com.sleeplessdog.matchthewords.settings.presentation.SettingsViewModel

@@ -1,11 +1,12 @@
-package com.sleeplessdog.matchthewords.game.presentation.fragments
+package com.sleeplessdog.matchthewords.game.presentation.ingameFragments
 
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sleeplessdog.matchthewords.game.presentation.models.AnswerEvent
+import com.sleeplessdog.matchthewords.game.presentation.interfaces.GameEvent
+import com.sleeplessdog.matchthewords.game.presentation.interfaces.InGameLogic
 import com.sleeplessdog.matchthewords.game.presentation.models.ButtonState
 import com.sleeplessdog.matchthewords.game.presentation.models.GameUiOOF
 import com.sleeplessdog.matchthewords.game.presentation.models.OneOfFourQuestion
@@ -15,38 +16,28 @@ import com.sleeplessdog.matchthewords.utils.TimeReactionConstants
 
 class OneOfFourViewModel(
     val shuffleFunctions: ShuffleFunctions
-) : ViewModel() {
+) : ViewModel(), InGameLogic {
 
     private val handler = Handler(Looper.getMainLooper())
 
+    override val events = MutableLiveData<GameEvent>()
+
     // Пул доступных пар: всё, что использовали в вопросе (база + 3 ложных), выбывает
-    private val available = mutableListOf<Pair<Word, Word>>()
+    private val questions = mutableListOf<Pair<Word, Word>>()
 
     // UI
     private val _ui = MutableLiveData(GameUiOOF())
     val ui: LiveData<GameUiOOF> get() = _ui
 
-    private val _answerEvents = MutableLiveData<AnswerEvent>()
-    val answerEvents: LiveData<AnswerEvent> get() = _answerEvents
-
-    private val _completed = MutableLiveData(false)
-    val completed: LiveData<Boolean> get() = _completed
-
     // текущее состояние вопроса
     private var current: OneOfFourQuestion? = null
-
-    // текущее состояние вопроса
-    private var currentCorrectSecondId: Int = -1
-    private var currentOptionSeconds: List<Word> = emptyList()
-    private var lastConsumedFirstIds: Set<Int> = emptySet()
 
     // защита от отложенных коллбеков после перехода к новому вопросу
     private var questionSeq: Int = 0
 
-    fun setPool(pairs: List<Pair<Word, Word>>) {
-        available.clear()
-        available.addAll(pairs)
-        _completed.value = false
+    override fun setPool(pairs: List<Pair<Word, Word>>) {
+        questions.clear()
+        questions.addAll(pairs)
         nextQuestion()
     }
 
@@ -58,9 +49,9 @@ class OneOfFourViewModel(
         val q = current ?: return
         val picked = q.optionsSecond.getOrNull(buttonIndex) ?: return
         val isCorrect = picked.id == q.correctSecondId
-
+        val wordsIds = listOf(picked.id, q.correctSecondId)
         if (isCorrect) {
-            _answerEvents.value = AnswerEvent.CORRECT
+            events.value = GameEvent.Correct(wordsIds)
             paintAndLock(buttonIndex)
             val seq = questionSeq
             handler.postDelayed({
@@ -69,7 +60,7 @@ class OneOfFourViewModel(
                 }
             }, TimeReactionConstants.REACTION)
         } else {
-            _answerEvents.value = AnswerEvent.WRONG
+            events.value = GameEvent.Wrong(wordsIds)
             // подсветить красным
             val newStates = (_ui.value?.states ?: List(4) { ButtonState.DEFAULT }).toMutableList()
             newStates[buttonIndex] = ButtonState.ERROR
@@ -90,9 +81,9 @@ class OneOfFourViewModel(
     }
 
     private fun nextQuestion() {
-        val built = shuffleFunctions.makeOneOfFourQuestion(available)
+        val built = shuffleFunctions.makeOneOfFourQuestion(questions)
         if (built == null) {
-            _completed.value = true
+            events.value = GameEvent.Completed
             current = null
             return
         }
@@ -115,7 +106,7 @@ class OneOfFourViewModel(
 
     private fun consumeAndNext(q: OneOfFourQuestion) {
         if (q.consumedFirstIds.isNotEmpty()) {
-            available.removeAll { q.consumedFirstIds.contains(it.first.id) }
+            questions.removeAll { q.consumedFirstIds.contains(it.first.id) }
         }
         current = null
         nextQuestion()

@@ -11,17 +11,16 @@ import com.sleeplessdog.matchthewords.game.domain.api.GameInteractor
 import com.sleeplessdog.matchthewords.game.domain.api.ScoreInteractor
 import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.game.domain.models.WordCategory
+import com.sleeplessdog.matchthewords.game.presentation.interfaces.GameEvent
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
 import com.sleeplessdog.matchthewords.game.presentation.models.GameSettings
 import com.sleeplessdog.matchthewords.game.presentation.models.GameState
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
-import com.sleeplessdog.matchthewords.game.presentation.models.IngameWordsState
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
 import com.sleeplessdog.matchthewords.game.presentation.models.MatchState
+import com.sleeplessdog.matchthewords.game.presentation.models.SessionStats
 import com.sleeplessdog.matchthewords.game.presentation.models.StatsState
-import com.sleeplessdog.matchthewords.game.presentation.models.TfQuestion
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
-import com.sleeplessdog.matchthewords.game.presentation.models.WtWQuestion
 import com.sleeplessdog.matchthewords.utils.GamePrices
 import com.sleeplessdog.matchthewords.utils.SupportFunctions
 import com.sleeplessdog.matchthewords.utils.TimeReactionConstants
@@ -60,6 +59,8 @@ class GameViewModel(
     private var score = 0
     private var lives = 3
     private var difficultLevel = 18
+    private val sessionCorrectIds = linkedSetOf<Int>()
+    private val sessionWrongIds   = linkedSetOf<Int>()
 
     // кеш загруженных пар
     private var allPairs: List<Pair<Word, Word>> = emptyList()
@@ -186,6 +187,20 @@ class GameViewModel(
         score -= GamePrices.MISTAKE_PRICE
     }
 
+    fun onGameEvent(ev: GameEvent) {
+        when (ev) {
+            is GameEvent.Correct -> {
+                sessionCorrectIds.addAll(ev.wordsIds)
+                reactOnCorrect()
+            }
+            is GameEvent.Wrong -> {
+               sessionWrongIds.addAll(ev.wordsIds)
+                reactOnError()
+            }
+            GameEvent.Completed -> onGameEnd()
+        }
+    }
+
     // ------------ Загрузка пар ------------
     private fun loadWordsFromDatabase(onSuccess: () -> Unit) {
         viewModelScope.launch {
@@ -205,6 +220,11 @@ class GameViewModel(
     // ------------ Конец игры/сброс ------------
     fun onGameEnd() {
         onLoading()
+
+        val stats = SessionStats(
+            correctIds = sessionCorrectIds.toList(),
+            mistakeIds = sessionWrongIds.toList()
+        )
         val todaysScore = scoreInteractor.getTodaysResult()
         handler.postDelayed({
             _gameState.value = _gameState.value?.copy(
@@ -214,6 +234,7 @@ class GameViewModel(
                 lives = lives,
                 todaysScore = supportFunctions.getScoreAsString(todaysScore)
             )
+            gameInteractor.putRoundStats(stats)
             scoreInteractor.updateTodaysResult(score)
         }, TimeReactionConstants.LOADING)
     }

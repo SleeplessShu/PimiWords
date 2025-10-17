@@ -14,13 +14,12 @@ import com.sleeplessdog.matchthewords.databinding.GameFragmentBinding
 import com.sleeplessdog.matchthewords.game.presentation.fragments.EndGameFragment
 import com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment
 import com.sleeplessdog.matchthewords.game.presentation.fragments.MatchSettingsFragment
-import com.sleeplessdog.matchthewords.game.presentation.fragments.OneOfFourFragment
-import com.sleeplessdog.matchthewords.game.presentation.fragments.TrueOrFalseFragment
-import com.sleeplessdog.matchthewords.game.presentation.fragments.WordsMatchingFragment
-import com.sleeplessdog.matchthewords.game.presentation.fragments.WriteTheWordFragment
+import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.OneOfFourFragment
+import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.TrueOrFalseFragment
+import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.WordsMatchingFragment
+import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.WriteTheWordFragment
 import com.sleeplessdog.matchthewords.game.presentation.models.GameState
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
-import com.sleeplessdog.matchthewords.gameSelect.presentation.GameSelectFragmentDirections
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GameFragment : Fragment() {

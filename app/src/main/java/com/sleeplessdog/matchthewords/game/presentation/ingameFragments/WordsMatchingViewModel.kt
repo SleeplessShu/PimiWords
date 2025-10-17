@@ -1,4 +1,4 @@
-package com.sleeplessdog.matchthewords.game.presentation.fragments
+package com.sleeplessdog.matchthewords.game.presentation.ingameFragments
 
 import android.os.Handler
 import android.os.Looper
@@ -6,6 +6,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.sleeplessdog.matchthewords.game.presentation.interfaces.GameEvent
+import com.sleeplessdog.matchthewords.game.presentation.interfaces.InGameLogic
 import com.sleeplessdog.matchthewords.game.presentation.models.AnswerEvent
 import com.sleeplessdog.matchthewords.game.presentation.models.IngameWordsState
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
@@ -13,8 +15,11 @@ import com.sleeplessdog.matchthewords.utils.ShuffleFunctions
 import com.sleeplessdog.matchthewords.utils.TimeReactionConstants
 
 class WordsMatchingViewModel(
-    private val shuffleFunctions: ShuffleFunctions
-) : ViewModel() {
+    private val shuffleFunctions: ShuffleFunctions,
+    private val pageSize : Int = 6
+) : ViewModel(), InGameLogic {
+
+    override val events = MutableLiveData<GameEvent>()
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -22,7 +27,6 @@ class WordsMatchingViewModel(
     private var allPairs: List<Pair<Word, Word>> = emptyList()
 
     // Пагинация
-    private val pageSize = 6
     private var currentPage = 0
     private var currentPagePairs: List<Pair<Word, Word>> = emptyList()
 
@@ -46,38 +50,10 @@ class WordsMatchingViewModel(
     private val _pagePairs = MutableLiveData<List<Pair<Word, Word>>>()
     val pagePairs: LiveData<List<Pair<Word, Word>>> = _pagePairs
 
-    private val _events = MutableLiveData<AnswerEvent>()
-    val events: LiveData<AnswerEvent> = _events
 
-    // Закончен весь пул?
-    private val _completed = MutableLiveData(false)
-    val completed: LiveData<Boolean> = _completed
-
-    fun setPool(all: List<Pair<Word, Word>>) {
+    override fun setPool(all: List<Pair<Word, Word>>) {
         allPairs = all
         openPage(0)
-    }
-
-    private fun openPage(page: Int) {
-        if (allPairs.isEmpty()) { _completed.value = true; return }
-
-        val from = page * pageSize
-        if (from >= allPairs.size) { _completed.value = true; return }
-
-        val to = (from + pageSize).coerceAtMost(allPairs.size)
-        currentPagePairs = allPairs.subList(from, to)
-        currentPage = page
-        matchedIdsOnPage.clear()
-
-        _state.value = IngameWordsState(
-            selectedWords = emptyList(),
-            errorWords = emptyList(),
-            correctWords = emptyList(),
-            usedWords = emptyList(),
-            locked = false
-        )
-        val shuffledPairs = shuffleFunctions.shufflePairs(currentPagePairs)
-        _pagePairs.value = shuffledPairs
     }
 
     fun onWordClick(clickedWord: Word) {
@@ -105,12 +81,37 @@ class WordsMatchingViewModel(
         }
     }
 
+    private fun openPage(page: Int) {
+        if (allPairs.isEmpty()) { events.value = GameEvent.Completed; return }
+
+        val from = page * pageSize
+        if (from >= allPairs.size) { events.value = GameEvent.Completed; return }
+
+        val to = (from + pageSize).coerceAtMost(allPairs.size)
+        currentPagePairs = allPairs.subList(from, to)
+        currentPage = page
+        matchedIdsOnPage.clear()
+
+        _state.value = IngameWordsState(
+            selectedWords = emptyList(),
+            errorWords = emptyList(),
+            correctWords = emptyList(),
+            usedWords = emptyList(),
+            locked = false
+        )
+        val shuffledPairs = shuffleFunctions.shufflePairs(currentPagePairs)
+        _pagePairs.value = shuffledPairs
+    }
+
+
+
     private fun checkPair(a: Word, b: Word) {
         val s = _state.value ?: return
+        val wordsIds = listOf(a.id, b.id)
         if (a.id == b.id) {
             Log.d("DEBUG", "PAIR IS CORRECT: $a $b")
             // правильная пара — подсветим, залочим клики, начислим и готовим перенос
-            _events.value = AnswerEvent.CORRECT
+            events.value = GameEvent.Correct(wordsIds)
             val id = a.id
             matchedIdsOnPage += id
 
@@ -140,7 +141,7 @@ class WordsMatchingViewModel(
             }, TimeReactionConstants.REACTION)
         } else {
             // ошибка — подсветка и сброс
-            _events.value = AnswerEvent.WRONG
+            events.value = GameEvent.Wrong(wordsIds)
             _state.value = s.copy(
                 selectedWords = emptyList(),
                 errorWords = listOf(a, b),
@@ -151,7 +152,6 @@ class WordsMatchingViewModel(
                 _state.value = cur.copy(errorWords = emptyList(), locked = false)
             }, TimeReactionConstants.REACTION)
         }
-        Log.d("DEBUG", "usedWordsLIST: ${_state.value?.usedWords}")
     }
 
     override fun onCleared() {

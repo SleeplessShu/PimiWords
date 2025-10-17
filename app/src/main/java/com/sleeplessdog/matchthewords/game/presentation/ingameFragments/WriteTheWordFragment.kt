@@ -1,4 +1,4 @@
-package com.sleeplessdog.matchthewords.game.presentation.fragments
+package com.sleeplessdog.matchthewords.game.presentation.ingameFragments
 
 
 import android.os.Bundle
@@ -7,6 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.WriteTheWordFragmentBinding
 import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
@@ -37,10 +41,10 @@ class WriteTheWordFragment : Fragment(R.layout.write_the_word_fragment) {
         )
         binding.rvLetters.adapter = adapter
 
-        val flex = com.google.android.flexbox.FlexboxLayoutManager(requireContext()).apply {
-            flexDirection = com.google.android.flexbox.FlexDirection.ROW
-            flexWrap = com.google.android.flexbox.FlexWrap.WRAP
-            justifyContent = com.google.android.flexbox.JustifyContent.CENTER
+        val flex = FlexboxLayoutManager(requireContext()).apply {
+            flexDirection = FlexDirection.ROW
+            flexWrap = FlexWrap.WRAP
+            justifyContent = JustifyContent.CENTER
         }
         binding.rvLetters.layoutManager = flex
 
@@ -70,17 +74,8 @@ class WriteTheWordFragment : Fragment(R.layout.write_the_word_fragment) {
             binding.btnCheck.isEnabled = !ui.locked && ui.input.isNotEmpty()
         }
 
-
-        childVM.events.observe(viewLifecycleOwner) { ev ->
-            when (ev) {
-                AnswerEvent.CORRECT -> parentVM.reactOnCorrect()
-                AnswerEvent.WRONG   -> parentVM.reactOnError()
-            }
-        }
-
-
-        childVM.completed.observe(viewLifecycleOwner) { done ->
-            if (done == true) parentVM.onGameEnd()
+        childVM.events.observe(viewLifecycleOwner) { e ->
+            parentVM.onGameEvent(e)
         }
 
         binding.btnBackspace.setOnClickListener { childVM.onBackspace() }

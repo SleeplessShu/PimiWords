@@ -7,9 +7,8 @@ import com.sleeplessdog.matchthewords.game.domain.api.GameInteractor
 import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.game.domain.models.WordCategory
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
+import com.sleeplessdog.matchthewords.game.presentation.models.SessionStats
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
-
-import kotlin.random.Random
 
 class GameInteractorImpl(private val repository: DatabaseInteractor) : GameInteractor {
 
@@ -45,6 +44,11 @@ class GameInteractorImpl(private val repository: DatabaseInteractor) : GameInter
             Language.GERMAN -> entity.german?.let { Word(id, it, Language.GERMAN) }
                 ?: Word.invalid(Language.GERMAN)
         }
+    }
+
+    override fun putRoundStats(stats: SessionStats) {
+        Log.d("DEBUG", "CorrectIds: ${stats.correctIds}")
+        Log.d("DEBUG", "MistakeIds: ${stats.mistakeIds}")
     }
 
 }

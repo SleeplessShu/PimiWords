@@ -1,4 +1,4 @@
-package com.sleeplessdog.matchthewords.game.presentation.fragments
+package com.sleeplessdog.matchthewords.game.presentation.ingameFragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.GameOneOfFourBinding
 import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
-import com.sleeplessdog.matchthewords.game.presentation.models.AnswerEvent
 import com.sleeplessdog.matchthewords.game.presentation.models.ButtonState
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -17,8 +16,8 @@ import kotlin.getValue
 
 class OneOfFourFragment : Fragment(R.layout.game_one_of_four) {
 
-    private val parentViewModel: GameViewModel by sharedViewModel(owner = { requireParentFragment() })
-    private val oneOfFourViewModel: OneOfFourViewModel by viewModel()
+    private val parentVM: GameViewModel by sharedViewModel(owner = { requireParentFragment() })
+    private val childVM: OneOfFourViewModel by viewModel()
 
     private var _binding: GameOneOfFourBinding? = null
     private val binding get() = _binding!!
@@ -33,16 +32,15 @@ class OneOfFourFragment : Fragment(R.layout.game_one_of_four) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Пул пар приходит от родителя (как и в других играх)
-        parentViewModel.wordsPairs.observe(viewLifecycleOwner) { pairs ->
+        parentVM.wordsPairs.observe(viewLifecycleOwner) { pairs ->
             if (!pairs.isNullOrEmpty()) {
-                oneOfFourViewModel.setPool(pairs)
+                childVM.setPool(pairs)
                 binding.root.isVisible = true
             }
         }
 
         // Рендер UI вопроса
-        oneOfFourViewModel.ui.observe(viewLifecycleOwner) { ui ->
+        childVM.ui.observe(viewLifecycleOwner) { ui ->
             binding.original.text = ui.originalText
             val buttons = listOf(binding.b1, binding.b2, binding.b3, binding.b4)
             buttons.forEachIndexed { i, b ->
@@ -52,24 +50,15 @@ class OneOfFourFragment : Fragment(R.layout.game_one_of_four) {
             }
         }
 
-        // Очки/жизни отдаются в родителя
-        oneOfFourViewModel.answerEvents.observe(viewLifecycleOwner) { ev ->
-            when (ev) {
-                AnswerEvent.CORRECT -> parentViewModel.reactOnCorrect()
-                AnswerEvent.WRONG   -> parentViewModel.reactOnError()
-            }
-        }
-
-        // Финал — просим родителя закончить игру
-        oneOfFourViewModel.completed.observe(viewLifecycleOwner) { done ->
-            if (done == true) parentViewModel.onGameEnd()
+        childVM.events.observe(viewLifecycleOwner) { e ->
+            parentVM.onGameEvent(e)
         }
 
         // Клики
-        binding.b1.setOnClickListener { oneOfFourViewModel.onAnswerClick(0) }
-        binding.b2.setOnClickListener { oneOfFourViewModel.onAnswerClick(1) }
-        binding.b3.setOnClickListener { oneOfFourViewModel.onAnswerClick(2) }
-        binding.b4.setOnClickListener { oneOfFourViewModel.onAnswerClick(3) }
+        binding.b1.setOnClickListener { childVM.onAnswerClick(0) }
+        binding.b2.setOnClickListener { childVM.onAnswerClick(1) }
+        binding.b3.setOnClickListener { childVM.onAnswerClick(2) }
+        binding.b4.setOnClickListener { childVM.onAnswerClick(3) }
     }
 
     private fun getBackgroundRes(state: ButtonState?): Int = when (state) {
