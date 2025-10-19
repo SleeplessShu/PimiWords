@@ -8,7 +8,7 @@
         <item name="android:windowLightNavigationBar">false</item>
         <item name="android:colorBackground">?attr/colorPrimary</item>
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/day_darkGreen</item> <!-- Кнопки -->
+        <item name="colorPrimary">@color/dark_background</item> <!-- Кнопки -->
         <item name="colorOnPrimary">@color/day_lightGreen</item> <!-- Текст -->
         <item name="colorOnSecondary">@color/day_background</item>
         <!-- Secondary brand color. -->

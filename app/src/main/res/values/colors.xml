@@ -16,25 +16,16 @@
     <color name="bluegreen">#125359</color>
     <color name="black_0.25">#401A1B22</color>
 
-<!--
-    <color name="black">#1A1B22</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="white_0.25">#40FFFFFF</color>
-    <color name="blue">#3772E7</color>
-    <color name="blueLight">#9FBBF3</color>
-    <color name="grey">#AEAFB4</color>
-    <color name="greyLight">#E6E8EB</color>
-    <color name="darkblue">#111D35</color>
-    <color name="bluegreen">#125359</color>
-    <color name="bluegreen2">#01272A</color>
-    <color name="darkorange">#BF3F03</color>
-    <color name="dark_red">#BE1250</color>
-    <color name="peach">#FF9D81</color>
-    <color name="yellow">#F3EF7D</color>
-    <color name="lime">#A8E72E</color>
+    <!--TEST-->
+    <color name="test">#F0057E</color>
 
-    <color name="heart_border">#BE1250</color>
-    <color name="heart_infill_full">#BE1250</color>
-    <color name="heart_infill_empty">#125359</color>
--->
+
+    <!--NEW_PALETTE-->
+    <!--TEXT-->
+    <color name="dark_text_default">#E4DBC2</color>
+    <color name="dark_text_selected">#2B2B29</color>
+    <color name="dark_text_used">#353535</color>
+
+    <!--INTERFACE-->
+    <color name="dark_background">#252525</color>
 </resources>

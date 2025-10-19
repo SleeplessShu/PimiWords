@@ -1,110 +1,126 @@
 package com.sleeplessdog.matchthewords.game.presentation.holders
 
-import android.content.Context
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.matchthewords.game.presentation.models.ButtonState
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
 
 class WordsMatchingAdapter(
     private var wordsPairs: List<Pair<Word, Word>> = emptyList(),
     private var selectedWords: List<Word> = emptyList(),
     private var errorWords: List<Word> = emptyList(),
-    private var usedWords: List<Word> = emptyList(),
-    private var correctWords: List<Word> = emptyList(),
-
+    private var usedWords: Set<Int> = emptySet(),
+    private var correctWords: Set<Int> = emptySet(),
     private val onWordClick: (Word) -> Unit,
-
-    private val context: Context
-
 ) : RecyclerView.Adapter<ViewHolderWordsMatching>() {
 
+    private data class StatePayload(
+        val selected: List<Word>?,
+        val error: List<Word>,
+        val used: Set<Int>?,
+        val correct: Set<Int>?,
+    )
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderWordsMatching {
-        val binding = LayoutInflater.from(parent.context).inflate(R.layout.words_pair, parent, false)
-        return ViewHolderWordsMatching(binding)
-
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.words_pair, parent, false)
+        return ViewHolderWordsMatching(view)
     }
-
-
-    override fun onBindViewHolder(holder: ViewHolderWordsMatching, position: Int) {
-
-
-        val (origin, translate) = wordsPairs[position]
-        holder.origin.text = origin.text
-        holder.origin.setBackgroundResource(
-            getBackground(origin)
-        )
-        holder.origin.setTextColor(
-            getTextColor(origin)
-        )
-        holder.origin.isEnabled = origin !in usedWords
-        holder.origin.setOnClickListener { onWordClick(origin) }
-        holder.translate.text = translate.text
-        holder.translate.setBackgroundResource(
-            getBackground(translate)
-        )
-        holder.translate.setTextColor(
-            getTextColor(translate)
-        )
-        holder.translate.isEnabled = translate !in usedWords
-        holder.translate.setOnClickListener { onWordClick(translate) }
-    }
-
 
     override fun getItemCount(): Int = wordsPairs.size
 
-    private fun getBackground(word: Word): Int {
-        return when (word) {
-            in selectedWords -> R.drawable.word_background_selected
-            in errorWords -> R.drawable.word_background_error
-            in usedWords -> R.drawable.word_background_used
-            in correctWords -> R.drawable.word_background_correct
-            else -> R.drawable.word_background_default
+    override fun onBindViewHolder(holder: ViewHolderWordsMatching, position: Int) {
+        bindFull(holder, position)
+    }
+
+    override fun onBindViewHolder(
+        holder: ViewHolderWordsMatching,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        if (payloads.isEmpty()) {
+            bindFull(holder, position)
+        } else {
+            val (origin, translate) = wordsPairs[position]
+            applyState(holder, origin, isLeft = true)
+            applyState(holder, translate, isLeft = false)
         }
     }
 
-    private fun getTextColor(word: Word): Int {
-        return when (word) {
-            in usedWords -> ContextCompat.getColor(context, R.color.black_0_25)
-            else -> ContextCompat.getColor(context, R.color.day_darkGreen)
-        }
+    private fun bindFull(holder: ViewHolderWordsMatching, position: Int) {
+        val (origin, translate) = wordsPairs[position]
+
+        // текст
+        holder.origin.text = origin.text
+        holder.translate.text = translate.text
+
+        // клики
+        holder.origin.setOnClickListener { onWordClick(origin) }
+        holder.translate.setOnClickListener { onWordClick(translate) }
+
+        // состояние
+        applyState(holder, origin, isLeft = true)
+        applyState(holder, translate, isLeft = false)
     }
 
-    // Обновление списка слов
+    private fun applyState(holder: ViewHolderWordsMatching, word: Word, isLeft: Boolean) {
+        val view = if (isLeft) holder.origin else holder.translate
+        val state = stateFor(word)
+        val ctx = holder.itemView.context
+
+        view.setBackgroundResource(state.backgroundRes)
+        view.isEnabled = state.enabled
+        view.setTextColor(ContextCompat.getColor(ctx, state.textColorRes))
+    }
+
+    /** Единый маппинг слова → состояние. */
+    private fun stateFor(word: Word): ButtonState = when {
+        isError(word) -> ButtonState.ERROR
+        word.id in usedWords    -> ButtonState.DISABLED
+        word.id in correctWords -> ButtonState.CORRECT
+        isSelected(word) -> ButtonState.SELECTED
+        else            -> ButtonState.DEFAULT
+    }
+
+    private fun isError(word: Word): Boolean =
+        errorWords.any { it === word }
+
+    private fun isSelected(word: Word): Boolean =
+        selectedWords.any { it === word }
+
+    // --- публичные апдейты ---
+
     fun updateWordsList(newWordsPairs: List<Pair<Word, Word>>) {
         wordsPairs = newWordsPairs
         notifyDataSetChanged()
     }
 
-    // Обновление выделенных слов
-    fun updateSelectedWords(newSelectedWords: List<Word>) {
-        selectedWords = newSelectedWords
-        notifyDataSetChanged()
+    fun updateSelectedWords(newSelected: List<Word>) {
+        selectedWords = newSelected
+        notifyDataSetChanged() }
+
+    fun updateErrorWords(newError: List<Word>) {
+        errorWords = newError
+        notifyStatesChanged()
     }
 
-    // Обновление слов с ошибками
-    fun updateErrorWords(newErrorWords: List<Word>) {
-        errorWords = newErrorWords
-        notifyDataSetChanged()
+    fun updateCorrectWords(newCorrect: List<Word>) {
+        correctWords = newCorrect.map { it.id }.toSet()
+        notifyStatesChanged()
     }
 
-    fun updateCorrectWords(newCorrectWords: List<Word>) {
-        correctWords = newCorrectWords
-        notifyDataSetChanged()
+    fun updateUsedWords(newUsed: List<Word>) {
+        usedWords = newUsed.map { it.id }.toSet()
+        notifyStatesChanged()
     }
 
-    fun updateUsedWords(newUsedWords: List<Word>) {
-        usedWords = newUsedWords
-        notifyDataSetChanged()
-    }
-
-    fun Context.getThemeColor(attr: Int): Int {
-        val typedValue = TypedValue()
-        theme.resolveAttribute(attr, typedValue, true)
-        return typedValue.data
+    private fun notifyStatesChanged() {
+        val payload = StatePayload(selectedWords, errorWords, usedWords, correctWords)
+        for (i in 0 until itemCount) {
+            notifyItemChanged(i, payload)
+        }
     }
 }
-

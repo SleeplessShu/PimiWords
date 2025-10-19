@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.sleeplessdog.matchthewords.R
@@ -39,14 +40,17 @@ class OneOfFourFragment : Fragment(R.layout.game_one_of_four) {
             }
         }
 
-        // Рендер UI вопроса
         childVM.ui.observe(viewLifecycleOwner) { ui ->
             binding.original.text = ui.originalText
             val buttons = listOf(binding.b1, binding.b2, binding.b3, binding.b4)
             buttons.forEachIndexed { i, b ->
+                val state = ui.states.getOrNull(i) ?: ButtonState.DEFAULT
                 b.text = ui.options.getOrNull(i) ?: ""
-                b.isEnabled = !ui.locked && ui.states.getOrNull(i) != ButtonState.DISABLED
-                b.background = requireContext().getDrawable(getBackgroundRes(ui.states.getOrNull(i)))
+                b.isEnabled = !ui.locked && state.enabled
+                b.setBackgroundResource(getBackgroundRes(state))
+                val color = androidx.core.content.ContextCompat.getColor(requireContext(),
+                    state.textColorRes)
+                b.setTextColor(color)
             }
         }
 
@@ -61,12 +65,9 @@ class OneOfFourFragment : Fragment(R.layout.game_one_of_four) {
         binding.b4.setOnClickListener { childVM.onAnswerClick(3) }
     }
 
-    private fun getBackgroundRes(state: ButtonState?): Int = when (state) {
-        ButtonState.ERROR   -> R.drawable.word_background_error
-        ButtonState.CORRECT -> R.drawable.word_background_correct
-        ButtonState.DISABLED -> R.drawable.word_background_used
-        else -> R.drawable.word_background_default
-    }
+    private fun getBackgroundRes(state: ButtonState?) =
+        state?.backgroundRes ?: R.drawable.word_background_default
+
 
     override fun onDestroyView() {
         super.onDestroyView()

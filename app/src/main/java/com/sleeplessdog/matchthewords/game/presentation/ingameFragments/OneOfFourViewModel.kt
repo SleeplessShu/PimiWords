@@ -46,6 +46,10 @@ class OneOfFourViewModel(
         if (state.locked) return
         if (buttonIndex !in 0..3) return
 
+        // новая проверка на локальный стейт кнопки
+        val btnState = state.states.getOrNull(buttonIndex) ?: ButtonState.DEFAULT
+        if (!btnState.enabled) return
+
         val q = current ?: return
         val picked = q.optionsSecond.getOrNull(buttonIndex) ?: return
         val isCorrect = picked.id == q.correctSecondId
@@ -61,12 +65,10 @@ class OneOfFourViewModel(
             }, TimeReactionConstants.REACTION)
         } else {
             events.value = GameEvent.Wrong(wordsIds)
-            // подсветить красным
             val newStates = (_ui.value?.states ?: List(4) { ButtonState.DEFAULT }).toMutableList()
             newStates[buttonIndex] = ButtonState.ERROR
             _ui.value = _ui.value?.copy(states = newStates)
 
-            // через секунду — DISABLED (если вопрос не сменился и не залочен)
             val seq = questionSeq
             handler.postDelayed({
                 if (questionSeq != seq) return@postDelayed

@@ -51,7 +51,6 @@ class WordsMatchingFragment : Fragment(R.layout.words_matching_fragment) {
 
     private fun setupUI() {
         adapter = WordsMatchingAdapter(
-            context = App.appContext,
             onWordClick = {word: Word -> childVM.onWordClick(word)}
         )
         binding.rvWordsList.layoutManager = LinearLayoutManager(requireContext())
