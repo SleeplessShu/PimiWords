@@ -4,6 +4,5 @@ enum class DifficultLevel {
     EASY,
     MEDIUM,
     HARD,
-    EXPERT,
-    SURVIVAL
+    EXPERT
 }

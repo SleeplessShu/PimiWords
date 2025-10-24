@@ -1,17 +1,11 @@
 package com.sleeplessdog.matchthewords.di
 
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.storage.FirebaseStorage
-import com.sleeplessdog.matchthewords.game.domain.api.DatabaseInteractor
-import com.sleeplessdog.matchthewords.game.domain.api.GameInteractor
+import com.sleeplessdog.matchthewords.game.data.repositories.WordsDatabase
 import com.sleeplessdog.matchthewords.game.domain.api.ScoreInteractor
-import com.sleeplessdog.matchthewords.game.domain.interactors.DatabaseInteractorImpl
-import com.sleeplessdog.matchthewords.game.domain.interactors.GameInteractorImpl
 import com.sleeplessdog.matchthewords.game.domain.interactors.ScoreInteractorImpl
+import com.sleeplessdog.matchthewords.game.domain.interactors.WordsController
 import com.sleeplessdog.matchthewords.server.domain.ServerDateInteractor
 import com.sleeplessdog.matchthewords.server.domain.ServerDateInteractorImpl
-import com.sleeplessdog.matchthewords.server.domain.ServerDbInteractor
-import com.sleeplessdog.matchthewords.server.domain.ServerDbInteractorImpl
 import com.sleeplessdog.matchthewords.settings.domain.api.SettingsInteractor
 import com.sleeplessdog.matchthewords.settings.domain.api.SharingInteractor
 import com.sleeplessdog.matchthewords.settings.domain.interactors.SettingsInteractorImpl
@@ -28,13 +22,6 @@ val domainModule = module {
         SettingsInteractorImpl(get())
     }
 
-    single <DatabaseInteractor>{
-        DatabaseInteractorImpl(get())
-    }
-
-    single <GameInteractor>{
-       GameInteractorImpl(get())
-    }
 
     single <ScoreInteractor> {
         ScoreInteractorImpl(get())
@@ -42,5 +29,9 @@ val domainModule = module {
 
     single <ServerDateInteractor> {
         ServerDateInteractorImpl(get())
+    }
+
+    single <WordsController> {
+        WordsController(get())
     }
 }

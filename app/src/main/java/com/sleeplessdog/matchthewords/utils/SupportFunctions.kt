@@ -38,11 +38,10 @@ class SupportFunctions() {
 
      fun getGameDifficult(difficultLevel: DifficultLevel): Int {
         return when (difficultLevel) {
-            DifficultLevel.EASY -> 18
+            DifficultLevel.EASY -> 12
             DifficultLevel.MEDIUM -> 24
             DifficultLevel.HARD -> 48
-            DifficultLevel.EXPERT -> 96
-            DifficultLevel.SURVIVAL -> 192
+            DifficultLevel.EXPERT -> 48
         }
     }
 
@@ -52,7 +51,6 @@ class SupportFunctions() {
             DifficultLevel.MEDIUM -> 3
             DifficultLevel.HARD -> 2
             DifficultLevel.EXPERT -> 1
-            DifficultLevel.SURVIVAL -> 1
         }
     }
 }

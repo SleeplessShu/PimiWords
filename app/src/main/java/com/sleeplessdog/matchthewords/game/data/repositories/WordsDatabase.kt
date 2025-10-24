@@ -4,16 +4,12 @@ import com.sleeplessdog.matchthewords.game.data.WordEntity
 import com.sleeplessdog.matchthewords.game.data.database.WordDao
 import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.game.domain.models.WordCategory
-import com.sleeplessdog.matchthewords.game.domain.repositories.DatabaseRepository
-import com.sleeplessdog.matchthewords.game.presentation.models.Language
 
-class DatabaseRepositoryImpl(private val wordDao: WordDao) : DatabaseRepository {
+class WordsDatabase(private val wordDao: WordDao){
 
-    override suspend fun getWordsPack(
-        language1: Language,
-        language2: Language,
+    suspend fun getWordsPack(
         level: LanguageLevel,
-        difficultLevel: Int,
+        wordsNeeded: Int,
         category: WordCategory
     ): List<WordEntity> {
 
@@ -21,7 +17,7 @@ class DatabaseRepositoryImpl(private val wordDao: WordDao) : DatabaseRepository 
         val isAnyLevel = level == LanguageLevel.RANDOM
 
         val fromDb: List<WordEntity> = when {
-            isAnyCategory && isAnyLevel -> wordDao.getAny(difficultLevel)
+            isAnyCategory && isAnyLevel -> wordDao.getAny(wordsNeeded)
 
             isAnyCategory -> wordDao.getAllCategoriesByLevel(level.name)
 
@@ -30,13 +26,13 @@ class DatabaseRepositoryImpl(private val wordDao: WordDao) : DatabaseRepository 
             else -> wordDao.getByCategoryAndLevel(category.name, level.name)
         }
 
-        return adaptForConditions(fromDb, difficultLevel)
+        return adaptForConditions(fromDb, wordsNeeded)
     }
 
     private suspend fun getRandom(wordsNeeded: Int): List<WordEntity> =
         wordDao.getRandom(wordsNeeded)
 
-    override suspend fun updateUsedWordsStatistic(wordEntity: WordEntity) {
+    suspend fun updateUsedWordsStatistic(wordEntity: WordEntity) {
         wordDao.updateWord(wordEntity)
     }
 

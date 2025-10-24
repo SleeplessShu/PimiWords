@@ -8,9 +8,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.sleeplessdog.matchthewords.game.data.database.AppDatabase
 import com.sleeplessdog.matchthewords.game.data.database.resolveAssetDatabase
-import com.sleeplessdog.matchthewords.game.data.repositories.DatabaseRepositoryImpl
+import com.sleeplessdog.matchthewords.game.data.repositories.WordsDatabase
 import com.sleeplessdog.matchthewords.game.data.repositories.ScoreRepositoryImpl
-import com.sleeplessdog.matchthewords.game.domain.repositories.DatabaseRepository
 import com.sleeplessdog.matchthewords.game.domain.repositories.ScoreRepository
 import com.sleeplessdog.matchthewords.server.data.ServerDateRepositoryImpl
 import com.sleeplessdog.matchthewords.server.domain.ServerDateRepository
@@ -49,8 +48,8 @@ val dataModule = module {
     single<ExternalNavigatorRepository> {
         ExternalNavigatorRepositoryImpl(get())
     }
-    single<DatabaseRepository> {
-        DatabaseRepositoryImpl(get())
+    single< WordsDatabase> {
+        WordsDatabase(get())
     }
     factory<Handler> {
         Handler()
