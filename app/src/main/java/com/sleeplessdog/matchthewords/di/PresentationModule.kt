@@ -27,7 +27,7 @@ val presentationModule = module {
     }
 
     viewModel {
-        GameViewModel(get(), get(), get(), get())
+        GameViewModel( get(), get(), get(), get() )
     }
 
     viewModel {

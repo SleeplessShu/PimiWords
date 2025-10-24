@@ -28,4 +28,24 @@
 
     <!--INTERFACE-->
     <color name="dark_background">#252525</color>
+
+    <color name="black">#252525</color>
+    <color name="dark_gray">#2B2B29</color>
+    <color name="white">#E4DBC2</color>
+
+    <color name="gray_01">#2B2A2A</color>
+    <color name="gray_02">#353535</color>
+    <color name="gray_03">#6D6B65</color>
+
+    <color name="green_primary">#00AE6A</color>
+    <color name="green_secondary">#038D57</color>
+    <color name="yellow_primary">#E0B74F</color>
+    <color name="yellow_secondary">#C5A144</color>
+    <color name="orange_primary">#FF894A</color>
+    <color name="red_primary">#F26155</color>
+    <color name="red_secondary">#E75246</color>
+
+
+
+
 </resources>
