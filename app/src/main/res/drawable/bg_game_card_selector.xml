@@ -1,0 +1,18 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- выбранная карточка -->
+    <item android:state_selected="true"
+        android:drawable="@drawable/bg_game_card_selected" />
+
+    <!-- нажата (pressed), но не зафиксирована -->
+    <item android:state_pressed="true"
+        android:drawable="@drawable/bg_game_card_selected" />
+
+    <!-- дефолтное состояние -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="24dp" />
+            <solid android:color="@color/dark_gray" />
+        </shape>
+    </item>
+</selector>

@@ -44,7 +44,7 @@
         tools:text="умный" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/b3"
+        android:id="@+id/multiChoise"
         android:layout_marginTop="20dp"
         style="@style/Words_style"
         android:layout_width="0dp"
@@ -57,7 +57,7 @@
         tools:text="умный" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/b4"
+        android:id="@+id/writeTheWord"
         style="@style/Words_style"
         android:layout_width="0dp"
         android:layout_height="68dp"
@@ -65,7 +65,7 @@
         android:background="@drawable/word_background_default"
         android:textColor="?attr/colorOnPrimary"
 app:layout_constraintEnd_toEndOf="@id/original"
-        app:layout_constraintTop_toTopOf="@id/b3"
+        app:layout_constraintTop_toTopOf="@id/multiChoise"
         tools:text="умный" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

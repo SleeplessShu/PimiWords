@@ -67,6 +67,13 @@
     <!--basic things-->
     <string name="app_name">Spanish words</string>
 
+    <!--games select fragment-->
+    <string name="select_game">Выбрать игру</string>
+    <string name="MTW">Matching\nThe Words</string>
+    <string name="ROW">Right\nor Wrong</string>
+    <string name="MC">Multi\nChoice</string>
+    <string name="WTW">Write\nThe Word</string>
+
     <!--bottom menu-->
     <string name="games">Games</string>
     <string name="score">Score</string>

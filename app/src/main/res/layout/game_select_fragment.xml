@@ -6,7 +6,7 @@
     android:backgroundTint="?attr/colorPrimary">
 
     <Button
-        android:id="@+id/match8"
+        android:id="@+id/match6"
         android:layout_width="0dp"
         android:layout_height="80dp"
         android:layout_marginHorizontal="40dp"
@@ -31,10 +31,10 @@
         android:textColor="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/match8" />
+        app:layout_constraintTop_toBottomOf="@id/match6" />
 
     <Button
-        android:id="@+id/b3"
+        android:id="@+id/multiChoise"
         android:layout_width="0dp"
         android:layout_height="80dp"
         android:layout_marginHorizontal="40dp"
@@ -48,7 +48,7 @@
         app:layout_constraintTop_toBottomOf="@id/trueOrFalse" />
 
     <Button
-        android:id="@+id/b4"
+        android:id="@+id/writeTheWord"
         android:layout_width="0dp"
         android:layout_height="80dp"
         android:layout_marginHorizontal="40dp"
@@ -59,7 +59,7 @@
         android:backgroundTint="?attr/colorOnPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/b3" />
+        app:layout_constraintTop_toBottomOf="@id/multiChoise" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

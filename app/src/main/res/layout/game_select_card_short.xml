@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="128dp"
+    android:padding="16dp"
+    android:clickable="true"
+    android:focusable="true"
+
+    android:background="@drawable/bg_game_card_selector"
+    android:foreground="@drawable/bg_game_card_ripple">
+
+    <!-- внутренний блок, который мы будем центрировать целиком -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/contentBlock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- иконка -->
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:scaleType="fitCenter"
+            android:duplicateParentState="true"
+            android:src="@drawable/game_mtw_icon_normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- текст -->
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:duplicateParentState="true"
+
+            android:gravity="center"
+            android:text="@string/MTW"
+            android:textColor="@color/game_option_title_color"
+
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/murs_gothic_wide_dark"
+            android:lineSpacingExtra="2dp"
+            android:maxLines="3"
+
+            app:layout_constraintTop_toBottomOf="@id/icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+     />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
