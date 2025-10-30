@@ -1,6 +1,9 @@
 package com.sleeplessdog.matchthewords.game.presentation.holders
 
+import android.R.attr.visible
+import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -67,14 +70,33 @@ class WordsMatchingAdapter(
     }
 
     private fun applyState(holder: ViewHolderWordsMatching, word: Word, isLeft: Boolean) {
-        val view = if (isLeft) holder.origin else holder.translate
+        val btn = if (isLeft) holder.origin else holder.translate
+        val pimi = if (isLeft) holder.originPimi else holder.translatePimi
         val state = stateFor(word)
         val ctx = holder.itemView.context
 
-        view.setBackgroundResource(state.backgroundRes)
-        view.isEnabled = state.enabled
-        view.setTextColor(ContextCompat.getColor(ctx, state.textColorRes))
+        // фон + enabled + основной цвет
+        btn.setBackgroundResource(state.backgroundRes)
+        btn.isEnabled = state.enabled
+        btn.setTextColor(ContextCompat.getColor(ctx, state.textColorRes))
+
+        // доп. логика для used
+        val isUsed = word.id in usedWords
+        if (isUsed) {
+            // текст “прячем”
+            // вариант 1: прозрачный
+            // btn.setTextColor(Color.TRANSPARENT)
+
+            // вариант 2: цвет фона кнопки (если фон тёмный):
+            btn.setTextColor(Color.TRANSPARENT) // подбери свой
+
+            // показываем pimi
+            pimi.visibility = View.VISIBLE
+        } else {
+            pimi.visibility = View.GONE
+        }
     }
+
 
     /** Единый маппинг слова → состояние. */
     private fun stateFor(word: Word): ButtonState = when {
