@@ -43,7 +43,6 @@ class ScoreFragment : Fragment() {
 
     private fun setupObservers(){
         viewModel.scoreResults.observe(viewLifecycleOwner) { newData ->
-            Log.d("DEBUG", "SCOREDATA: $newData")
             adapter.updateData(newData) // Обновляем данные адаптера
         }
 

@@ -26,10 +26,8 @@ class DatabaseViewModel(
             _state.postValue(DbUpdateState.Loading)
 
             val localDate = dateManager.getLocalDbDate()
-            Log.d("DEBUG", "checkForDatabaseUpdate: $localDate")
 
             val result = interactor.checkForUpdate(localDate)
-            Log.d("DEBUG",  "checkForDatabaseUpdate: $result")
                 if (result.isSuccess) {
                 val serverDate = result.getOrNull()
                 if (serverDate != null) {

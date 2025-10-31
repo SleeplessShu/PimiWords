@@ -109,8 +109,6 @@ class WordsMatchingViewModel(
         val s = _state.value ?: return
         val wordsIds = listOf(a.id, b.id)
         if (a.id == b.id) {
-            Log.d("DEBUG", "PAIR IS CORRECT: $a $b")
-            // правильная пара — подсветим, залочим клики, начислим и готовим перенос
             events.value = GameEvent.Correct(wordsIds)
             val id = a.id
             matchedIdsOnPage += id
@@ -127,7 +125,6 @@ class WordsMatchingViewModel(
                 val newUsed = cur.usedWords.toMutableList().apply {
                     add(a); add(b)
                 }
-                Log.d("DEBUG", "usedWords: $a $b")
                 _state.value = cur.copy(
                     correctWords = emptyList(),
                     usedWords = newUsed,

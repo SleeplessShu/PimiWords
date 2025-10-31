@@ -1,24 +1,36 @@
 package com.sleeplessdog.matchthewords.gameSelect.presentation
 
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.animation.doOnEnd
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.GameSelectV2FragmentBinding
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
-import com.sleeplessdog.matchthewords.gameSelect.controller.GameOptionViewLong
-import com.sleeplessdog.matchthewords.gameSelect.controller.GameOptionViewShort
+import com.sleeplessdog.matchthewords.game.presentation.models.Language
+import com.sleeplessdog.matchthewords.gameSelect.controller.LanguageAdapter
+import com.sleeplessdog.matchthewords.gameSelect.controller.toFlagLargeRes
+import com.sleeplessdog.matchthewords.gameSelect.controller.toFlagSmallRes
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GameSelectFragment : Fragment() {
     private val viewModel: GameSelectViewModel by viewModel()
     private var _binding: GameSelectV2FragmentBinding? = null
     private val binding: GameSelectV2FragmentBinding get() = _binding!!
+    private lateinit var langAdapter: LanguageAdapter
+
+    // текущий UI язык и язык игры (то, что надо исключить)
+    private var currentUiLang: Language = Language.RUSSIAN
+    private var currentGameLang: Language = Language.SPANISH
+    private var isLangShown = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -29,12 +41,12 @@ class GameSelectFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupButtonsInfill()
+        setupGameCards()
+        setupLanguageList()
         setupObservers()
-
     }
 
-    private fun setupButtonsInfill() {
+    private fun setupGameCards() {
         binding.match6.setup(
             title = getString(R.string.MTW),
             iconNormalRes = R.drawable.game_mtw_icon_normal,
@@ -58,7 +70,6 @@ class GameSelectFragment : Fragment() {
 
         binding.match6.setOnClickListener {
             selectOnly(binding.match6)
-            Log.d("DEBUG", "click: m6")
             goToGameSettings(GameType.MATCH8)
         }
         binding.trueOrFalse.setOnClickListener {
@@ -82,8 +93,104 @@ class GameSelectFragment : Fragment() {
         binding.writeTheWord.setSelectedState(selected === binding.writeTheWord)
     }
 
+    private fun setupLanguageList() {
+        langAdapter = LanguageAdapter { picked ->
+            currentUiLang = picked
+            binding.languageSelect.setImageResource(picked.toFlagLargeRes())
+            toggleLanguages(false)
+        }
+
+        binding.rvLanguages.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = langAdapter
+        }
+
+        langAdapter.submit(
+            all = Language.entries,
+            selectedLang = null,
+            gameLang = currentGameLang
+        )
+    }
+
     private fun setupObservers() {
-        binding.languageSelect.setOnClickListener { showToast() }
+        binding.languageSelect.setOnClickListener {
+            val isVisible = binding.rvLanguages.visibility == View.VISIBLE
+            toggleLanguages(!isVisible)
+        }
+
+        binding.languagesBackground.setOnClickListener {
+            toggleLanguages(false)
+        }
+        binding.languageSelect.setOnClickListener {
+            toggleLanguages(!isLangShown)
+        }
+
+        /*binding.logo.setOnLongClickListener {
+            true
+            showToast()
+        }*/
+    }
+
+    private fun toggleLanguages(show: Boolean) {
+        val bg = binding.languagesBackground
+        val rv = binding.rvLanguages
+
+        if (show) {
+            if (isLangShown) return
+            isLangShown = true
+
+            // обновляем список (фильтруем текущий и игровой)
+            langAdapter.submit(
+                all = Language.entries,
+                selectedLang = currentUiLang,
+                gameLang = currentGameLang
+            )
+
+            // фон
+            bg.visibility = View.VISIBLE
+            bg.alpha = 0f
+            bg.animate()
+                .alpha(1f)
+                .setDuration(200)
+                .start()
+
+            // список
+            rv.visibility = View.VISIBLE
+            rv.alpha = 0f
+            rv.scaleY = 0f
+            rv.pivotY = 0f // раскрываем сверху
+            rv.animate()
+                .alpha(1f)
+                .scaleY(1f)
+                .setDuration(200)
+                .withEndAction {
+                    // после анимации ничего не надо, он уже с нормальной высотой
+                }
+                .start()
+
+        } else {
+            if (!isLangShown) return
+            isLangShown = false
+
+            // список
+            rv.animate()
+                .alpha(0f)
+                .scaleY(0f)
+                .setDuration(200)
+                .withEndAction {
+                    rv.visibility = View.GONE
+                }
+                .start()
+
+            // фон
+            bg.animate()
+                .alpha(0f)
+                .setDuration(200)
+                .withEndAction {
+                    bg.visibility = View.GONE
+                }
+                .start()
+        }
     }
 
     private fun showToast() {
@@ -92,7 +199,6 @@ class GameSelectFragment : Fragment() {
     }
 
     private fun goToGameSettings(gameType: GameType) {
-        Log.d("DEBUG", "goToGameSettings: $gameType")
         val dir = GameSelectFragmentDirections
             .actionGameSelectFragmentToGameFragment(gameType)
         findNavController().navigate(dir)

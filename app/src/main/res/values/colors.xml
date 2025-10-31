@@ -27,6 +27,8 @@
     <color name="dark_text_used">#353535</color>
 
     <!--INTERFACE-->
+
+    <color name="opaque">#A2313131</color>
     <color name="dark_background">#252525</color>
 
     <color name="black">#252525</color>

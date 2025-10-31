@@ -29,7 +29,6 @@ class ScoreViewModel(
                     score = supportFunctions.getScoreAsString(score)
                 )
             }
-            Log.d("DEBUG", "observeScoreChanges: ${_scoreResults.value}")
             _scoreResults.postValue(updatedScoreList)
         }
     }
