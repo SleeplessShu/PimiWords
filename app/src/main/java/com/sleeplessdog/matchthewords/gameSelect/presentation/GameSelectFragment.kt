@@ -1,13 +1,11 @@
 package com.sleeplessdog.matchthewords.gameSelect.presentation
 
-import android.animation.ValueAnimator
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.animation.doOnEnd
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,7 +15,6 @@ import com.sleeplessdog.matchthewords.game.presentation.models.GameType
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
 import com.sleeplessdog.matchthewords.gameSelect.controller.LanguageAdapter
 import com.sleeplessdog.matchthewords.gameSelect.controller.toFlagLargeRes
-import com.sleeplessdog.matchthewords.gameSelect.controller.toFlagSmallRes
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GameSelectFragment : Fragment() {
@@ -26,9 +23,8 @@ class GameSelectFragment : Fragment() {
     private val binding: GameSelectV2FragmentBinding get() = _binding!!
     private lateinit var langAdapter: LanguageAdapter
 
-    // текущий UI язык и язык игры (то, что надо исключить)
     private var currentUiLang: Language = Language.RUSSIAN
-    private var currentGameLang: Language = Language.SPANISH
+    private var currentStudyLang: Language = Language.ENGLISH
     private var isLangShown = false
 
 
@@ -41,9 +37,46 @@ class GameSelectFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupLanguages()
+        setupLanguageButton()
         setupGameCards()
         setupLanguageList()
         setupObservers()
+    }
+    private fun onLangPicked(picked: Language) {
+        langAdapter.setSelected(picked)
+        currentStudyLang = picked
+        binding.languageSelect.setImageResource(picked.toFlagLargeRes())
+        saveLanguages(currentUiLang, currentStudyLang)
+        binding.rvLanguages.postDelayed({
+            toggleLanguages(false)
+        }, 150)
+    }
+
+    private fun setupLanguageList() {
+        langAdapter = LanguageAdapter { picked ->
+            onLangPicked(picked)
+        }
+
+        binding.rvLanguages.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = langAdapter
+        }
+
+        langAdapter.submit(
+            all = Language.entries,
+            uiLang = currentUiLang,
+            studyLang = currentStudyLang
+        )
+    }
+
+    private fun setupLanguageButton() {
+        binding.languageSelect.setOnClickListener {
+            toggleLanguages(!isLangShown)
+        }
+        binding.languagesBackground.setOnClickListener {
+            toggleLanguages(false)
+        }
     }
 
     private fun setupGameCards() {
@@ -93,24 +126,7 @@ class GameSelectFragment : Fragment() {
         binding.writeTheWord.setSelectedState(selected === binding.writeTheWord)
     }
 
-    private fun setupLanguageList() {
-        langAdapter = LanguageAdapter { picked ->
-            currentUiLang = picked
-            binding.languageSelect.setImageResource(picked.toFlagLargeRes())
-            toggleLanguages(false)
-        }
 
-        binding.rvLanguages.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = langAdapter
-        }
-
-        langAdapter.submit(
-            all = Language.entries,
-            selectedLang = null,
-            gameLang = currentGameLang
-        )
-    }
 
     private fun setupObservers() {
         binding.languageSelect.setOnClickListener {
@@ -139,74 +155,86 @@ class GameSelectFragment : Fragment() {
             if (isLangShown) return
             isLangShown = true
 
-            // обновляем список (фильтруем текущий и игровой)
+            // всегда перед показом — актуальный список
             langAdapter.submit(
                 all = Language.entries,
-                selectedLang = currentUiLang,
-                gameLang = currentGameLang
+                uiLang = currentUiLang,
+                studyLang = currentStudyLang
             )
 
-            // фон
             bg.visibility = View.VISIBLE
             bg.alpha = 0f
-            bg.animate()
-                .alpha(1f)
-                .setDuration(200)
-                .start()
+            bg.animate().alpha(1f).setDuration(200).start()
 
-            // список
             rv.visibility = View.VISIBLE
             rv.alpha = 0f
             rv.scaleY = 0f
-            rv.pivotY = 0f // раскрываем сверху
+            rv.pivotY = 0f
             rv.animate()
                 .alpha(1f)
                 .scaleY(1f)
                 .setDuration(200)
-                .withEndAction {
-                    // после анимации ничего не надо, он уже с нормальной высотой
-                }
                 .start()
 
         } else {
             if (!isLangShown) return
             isLangShown = false
 
-            // список
             rv.animate()
                 .alpha(0f)
                 .scaleY(0f)
                 .setDuration(200)
-                .withEndAction {
-                    rv.visibility = View.GONE
-                }
+                .withEndAction { rv.visibility = View.GONE }
                 .start()
 
-            // фон
             bg.animate()
                 .alpha(0f)
                 .setDuration(200)
-                .withEndAction {
-                    bg.visibility = View.GONE
-                }
+                .withEndAction { bg.visibility = View.GONE }
                 .start()
         }
     }
 
     private fun showToast() {
-        Toast.makeText(requireContext(), "game under construction", Toast.LENGTH_SHORT)
-            .show()
+        Toast.makeText(requireContext(), "game under construction", Toast.LENGTH_SHORT).show()
     }
 
     private fun goToGameSettings(gameType: GameType) {
-        val dir = GameSelectFragmentDirections
-            .actionGameSelectFragmentToGameFragment(gameType)
+        val dir = GameSelectFragmentDirections.actionGameSelectFragmentToGameFragment(gameType)
         findNavController().navigate(dir)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun setupLanguages() {
+        val (ui, study) = loadLanguages()
+        currentUiLang = ui
+        currentStudyLang = study
+        binding.languageSelect.setImageResource(currentStudyLang.toFlagLargeRes())
+    }
+
+    private fun saveLanguages(ui: Language, study: Language) {
+        val prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit()
+            .putString(KEY_UI_LANG, ui.name)
+            .putString(KEY_GAME_LANG, study.name)
+            .apply()
+    }
+
+    private fun loadLanguages(): Pair<Language, Language> {
+        val prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val ui = prefs.getString(KEY_UI_LANG, Language.RUSSIAN.name)!!
+        val study = prefs.getString(KEY_GAME_LANG, Language.ENGLISH.name)!!
+        return Language.valueOf(ui) to Language.valueOf(study)
+    }
+
+    private companion object {
+        const val PREFS_NAME = "app_prefs"
+        const val KEY_UI_LANG = "ui_lang"
+        const val KEY_GAME_LANG = "game_lang"
     }
 
 }

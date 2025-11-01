@@ -1,5 +1,6 @@
 package com.sleeplessdog.matchthewords.gameSelect.controller
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,17 +18,20 @@ class LanguageAdapter(
 
     private val items = mutableListOf<Language>()
     private var selected: Language? = null
-    private var gameLanguage: Language? = null
 
     fun submit(
         all: List<Language>,
-        selectedLang: Language?,
-        gameLang: Language?
+        uiLang: Language,
+        studyLang: Language
     ) {
-        selected = selectedLang
-        gameLanguage = gameLang
+        selected = studyLang
         items.clear()
-        items.addAll(all.filter { it != selectedLang && it != gameLang })
+        items.addAll(all.filter { it != uiLang })
+        notifyDataSetChanged()
+    }
+
+    fun setSelected(lang: Language) {
+        selected = lang
         notifyDataSetChanged()
     }
 
@@ -49,15 +53,14 @@ class LanguageAdapter(
         private val title = view.findViewById<TextView>(R.id.tvTitle)
 
         fun bind(lang: Language) {
-            root.isSelected = (lang == selected) // если хочешь подсветку того, что сейчас выбрали
+            root.isSelected = (lang == selected)
             title.text = lang.toTitle()
             flag.setImageResource(lang.toFlagSmallRes())
-            root.setOnClickListener {
-                onClick(lang)
-            }
+            root.setOnClickListener { onClick(lang) }
         }
     }
 }
+
 fun Language.toTitle(): String = when (this) {
     Language.ENGLISH -> "Английский"
     Language.SPANISH -> "Испанский"

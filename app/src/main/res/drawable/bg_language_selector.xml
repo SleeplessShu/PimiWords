@@ -7,6 +7,13 @@
         </shape>
     </item>
 
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="16dp" />
+            <solid android:color="@color/green_secondary" />
+        </shape>
+    </item>
+
     <!-- обычный -->
     <item>
         <shape android:shape="rectangle">
