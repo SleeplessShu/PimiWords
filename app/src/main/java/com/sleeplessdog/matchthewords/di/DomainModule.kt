@@ -1,6 +1,5 @@
 package com.sleeplessdog.matchthewords.di
 
-import com.sleeplessdog.matchthewords.game.data.repositories.WordsDatabase
 import com.sleeplessdog.matchthewords.game.domain.api.ScoreInteractor
 import com.sleeplessdog.matchthewords.game.domain.interactors.ScoreInteractorImpl
 import com.sleeplessdog.matchthewords.game.domain.interactors.WordsController

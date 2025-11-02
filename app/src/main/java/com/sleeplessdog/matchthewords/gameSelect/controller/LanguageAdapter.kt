@@ -19,14 +19,10 @@ class LanguageAdapter(
     private val items = mutableListOf<Language>()
     private var selected: Language? = null
 
-    fun submit(
-        all: List<Language>,
-        uiLang: Language,
-        studyLang: Language
-    ) {
-        selected = studyLang
+    fun submit(langs: List<Language>, selected: Language?) {
         items.clear()
-        items.addAll(all.filter { it != uiLang })
+        items.addAll(langs)
+        this.selected = selected
         notifyDataSetChanged()
     }
 

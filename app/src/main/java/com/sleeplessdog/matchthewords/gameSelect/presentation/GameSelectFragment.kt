@@ -18,66 +18,49 @@ import com.sleeplessdog.matchthewords.gameSelect.controller.toFlagLargeRes
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GameSelectFragment : Fragment() {
+
     private val viewModel: GameSelectViewModel by viewModel()
     private var _binding: GameSelectV2FragmentBinding? = null
-    private val binding: GameSelectV2FragmentBinding get() = _binding!!
-    private lateinit var langAdapter: LanguageAdapter
+    private val binding get() = _binding!!
 
-    private var currentUiLang: Language = Language.RUSSIAN
-    private var currentStudyLang: Language = Language.ENGLISH
+    private lateinit var langAdapter: LanguageAdapter
     private var isLangShown = false
 
-
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = GameSelectV2FragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupLanguages()
+        setupLanguageList()
         setupLanguageButton()
         setupGameCards()
-        setupLanguageList()
         setupObservers()
-    }
-    private fun onLangPicked(picked: Language) {
-        langAdapter.setSelected(picked)
-        currentStudyLang = picked
-        binding.languageSelect.setImageResource(picked.toFlagLargeRes())
-        saveLanguages(currentUiLang, currentStudyLang)
-        binding.rvLanguages.postDelayed({
-            toggleLanguages(false)
-        }, 150)
     }
 
     private fun setupLanguageList() {
         langAdapter = LanguageAdapter { picked ->
-            onLangPicked(picked)
+            // говорим VM
+            viewModel.onLanguagePicked(picked)
+            // подсветка
+            langAdapter.setSelected(picked)
+            // закрыть с задержкой
+            binding.rvLanguages.postDelayed({
+                toggleLanguages(false)
+            }, 150)
         }
 
         binding.rvLanguages.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = langAdapter
         }
-
-        langAdapter.submit(
-            all = Language.entries,
-            uiLang = currentUiLang,
-            studyLang = currentStudyLang
-        )
     }
 
-    private fun setupLanguageButton() {
-        binding.languageSelect.setOnClickListener {
-            toggleLanguages(!isLangShown)
-        }
-        binding.languagesBackground.setOnClickListener {
-            toggleLanguages(false)
-        }
-    }
 
     private fun setupGameCards() {
         binding.match6.setup(
@@ -103,19 +86,19 @@ class GameSelectFragment : Fragment() {
 
         binding.match6.setOnClickListener {
             selectOnly(binding.match6)
-            goToGameSettings(GameType.MATCH8)
+            viewModel.onGamePicked(GameType.MATCH8)
         }
         binding.trueOrFalse.setOnClickListener {
             selectOnly(binding.trueOrFalse)
-            goToGameSettings(GameType.TRUEorFALSE)
+            viewModel.onGamePicked(GameType.TRUEorFALSE)
         }
         binding.multiChoise.setOnClickListener {
             selectOnly(binding.multiChoise)
-            goToGameSettings(GameType.OneOfFour)
+            viewModel.onGamePicked(GameType.OneOfFour)
         }
         binding.writeTheWord.setOnClickListener {
             selectOnly(binding.writeTheWord)
-            goToGameSettings(GameType.WriteTheWord)
+            viewModel.onGamePicked(GameType.WriteTheWord)
         }
     }
 
@@ -126,25 +109,42 @@ class GameSelectFragment : Fragment() {
         binding.writeTheWord.setSelectedState(selected === binding.writeTheWord)
     }
 
-
-
     private fun setupObservers() {
-        binding.languageSelect.setOnClickListener {
-            val isVisible = binding.rvLanguages.visibility == View.VISIBLE
-            toggleLanguages(!isVisible)
+        viewModel.availableLanguages.observe(viewLifecycleOwner) { langs ->
+            val selected = viewModel.studyLanguage.value
+            langAdapter.submit(langs, selected)
         }
 
-        binding.languagesBackground.setOnClickListener {
-            toggleLanguages(false)
+        // выбранный язык (большой флаг)
+        viewModel.studyLanguage.observe(viewLifecycleOwner) { study ->
+            binding.languageSelect.setImageResource(study.toFlagLargeRes())
+            // можно тут же подсветить, если список открыт
+            if (isLangShown) {
+                langAdapter.setSelected(study)
+            }
         }
+
+        viewModel.uiLanguage.observe(viewLifecycleOwner) {
+            // сейчас ты не показываешь UI-флаг — можно игнорить
+        }
+
+        viewModel.navigateToGame.observe(viewLifecycleOwner) { type ->
+            if (type != null) {
+                val dir =
+                    GameSelectFragmentDirections.actionGameSelectFragmentToGameFragment(type)
+                findNavController().navigate(dir)
+                viewModel.onNavigateConsumed()
+            }
+        }
+    }
+
+    private fun setupLanguageButton() {
         binding.languageSelect.setOnClickListener {
             toggleLanguages(!isLangShown)
         }
-
-        /*binding.logo.setOnLongClickListener {
-            true
-            showToast()
-        }*/
+        binding.languagesBackground.setOnClickListener {
+            toggleLanguages(false)
+        }
     }
 
     private fun toggleLanguages(show: Boolean) {
@@ -154,13 +154,6 @@ class GameSelectFragment : Fragment() {
         if (show) {
             if (isLangShown) return
             isLangShown = true
-
-            // всегда перед показом — актуальный список
-            langAdapter.submit(
-                all = Language.entries,
-                uiLang = currentUiLang,
-                studyLang = currentStudyLang
-            )
 
             bg.visibility = View.VISIBLE
             bg.alpha = 0f
@@ -175,7 +168,6 @@ class GameSelectFragment : Fragment() {
                 .scaleY(1f)
                 .setDuration(200)
                 .start()
-
         } else {
             if (!isLangShown) return
             isLangShown = false
@@ -195,46 +187,9 @@ class GameSelectFragment : Fragment() {
         }
     }
 
-    private fun showToast() {
-        Toast.makeText(requireContext(), "game under construction", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun goToGameSettings(gameType: GameType) {
-        val dir = GameSelectFragmentDirections.actionGameSelectFragmentToGameFragment(gameType)
-        findNavController().navigate(dir)
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-    private fun setupLanguages() {
-        val (ui, study) = loadLanguages()
-        currentUiLang = ui
-        currentStudyLang = study
-        binding.languageSelect.setImageResource(currentStudyLang.toFlagLargeRes())
-    }
-
-    private fun saveLanguages(ui: Language, study: Language) {
-        val prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit()
-            .putString(KEY_UI_LANG, ui.name)
-            .putString(KEY_GAME_LANG, study.name)
-            .apply()
-    }
-
-    private fun loadLanguages(): Pair<Language, Language> {
-        val prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val ui = prefs.getString(KEY_UI_LANG, Language.RUSSIAN.name)!!
-        val study = prefs.getString(KEY_GAME_LANG, Language.ENGLISH.name)!!
-        return Language.valueOf(ui) to Language.valueOf(study)
-    }
-
-    private companion object {
-        const val PREFS_NAME = "app_prefs"
-        const val KEY_UI_LANG = "ui_lang"
-        const val KEY_GAME_LANG = "game_lang"
-    }
-
 }
