@@ -15,8 +15,8 @@ class SharingRepositoryImpl(private val context: Context) : SharingRepository {
     override fun getSupportEmailData(): EmailData {
         return EmailData(
             context.getString(R.string.supportEmail),
-            context.getString(R.string.mailToSupportSubject),
-            context.getString(R.string.mailToSupportText)
+            context.getString(R.string.empty),
+            context.getString(R.string.empty)
         )
     }
 
