@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.GameTrueOrFalseBinding
@@ -19,6 +20,8 @@ import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
 import com.sleeplessdog.matchthewords.game.presentation.models.TOFButtonState
 import com.sleeplessdog.matchthewords.game.presentation.models.TfQuestionUi
 import com.sleeplessdog.matchthewords.game.presentation.parentControllers.SwipeTouchListener
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -154,8 +157,10 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
         isRight: Boolean,
         pressedButton: TofButton = if (isRight) btnTrue else btnFalse
     ) {
+        if (isLocked) return
         isLocked = true
-        // подготовим nextCard (как у тебя было)
+
+        // подготовка nextCard
         val preview = childVM.peekNext()
         if (preview != null) {
             bindCard(nextCard, preview)
@@ -165,34 +170,33 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
             }
         }
 
-        // окрасим активную карточку
         val ok = (isRight == currentIsCorrect)
         val color = if (ok) R.color.green_primary else R.color.red_primary
+
         (topCard.background?.mutate())?.let { d ->
             DrawableCompat.setTint(d, colorWithAlpha(requireContext().getColor(color), 0.6f))
             topCard.background = d
         }
 
-        // только на нажатой кнопке показываем результат
-        pressedButton.applyState(if (ok) TOFButtonState.RESULT_CORRECT
-        else TOFButtonState.RESULT_WRONG)
+        pressedButton.applyState(if (ok) TOFButtonState.RESULT_CORRECT else TOFButtonState.RESULT_WRONG)
 
-        // другая кнопка возвращается в DEFAULT (если вдруг была в PRESSED)
         val other = if (pressedButton.isTrue) btnFalse else btnTrue
         other.applyState(TOFButtonState.DEFAULT)
 
-        // анимации карточек
-        animateParallelSwap(isRight) {
-            if (isRight) childVM.onTrueClicked() else childVM.onFalseClicked()
-            childVM.advanceNow()
+        viewLifecycleOwner.lifecycleScope.launch {
+            delay(PAUSE_BEFORE_REACTION)
 
-            // сбросить кнопки к DEFAULT для следующего вопроса
-            btnTrue.applyState(TOFButtonState.DEFAULT)
-            btnFalse.applyState(TOFButtonState.DEFAULT)
+            animateParallelSwap(isRight) {
+                if (isRight) childVM.onTrueClicked() else childVM.onFalseClicked()
+                childVM.advanceNow()
 
-            swapCards()
-            attachSwipeTo(topCard)
-            isLocked = false
+                btnTrue.applyState(TOFButtonState.DEFAULT)
+                btnFalse.applyState(TOFButtonState.DEFAULT)
+
+                swapCards()
+                attachSwipeTo(topCard)
+                isLocked = false
+            }
         }
     }
 
@@ -255,6 +259,8 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
         icon.imageTintList = ColorStateList.valueOf(requireContext().getColor(tint))
         root.translationY = state.offsetY
     }
-
+private companion object {
+    const val PAUSE_BEFORE_REACTION = 200L
+}
 }
 
