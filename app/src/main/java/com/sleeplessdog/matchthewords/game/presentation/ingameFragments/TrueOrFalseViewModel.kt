@@ -49,7 +49,8 @@ class TrueOrFalseViewModel (
         events.value = if (ok) GameEvent.Correct(wordsIds) else GameEvent.Wrong(wordsIds)
         _ui.value = _ui.value?.copy(locked = true)
 
-        handler.postDelayed({ nextQuestion() }, TimeReactionConstants.NEXT_QUESTION)
+        // РАНЬШЕ: handler.postDelayed({ nextQuestion() }, ...)
+        // ТЕПЕРЬ: не вызываем; фрагмент дергает advanceNow() после анимаций.
     }
 
     private fun nextQuestion() {
@@ -62,6 +63,13 @@ class TrueOrFalseViewModel (
         val q = questions[index++]
         _ui.value = q.copy(locked = false)
     }
+
+    fun peekNext(): TfQuestionUi? = questions.getOrNull(index) // НЕ меняет индекс
+
+    fun advanceNow() { // подтверждаем переход к peekNext
+        nextQuestion()
+    }
+
 
     override fun onCleared() {
         handler.removeCallbacksAndMessages(null)

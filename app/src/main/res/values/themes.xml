@@ -3,25 +3,13 @@
 
     <style name="Theme.MatchTheWords" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:statusBarColor">?attr/colorPrimary</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:navigationBarColor">?attr/colorPrimary</item>
-        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowLightNavigationBar">false</item>
         <item name="android:colorBackground">?attr/colorPrimary</item>
 
-
-    <item name="colorPrimary">@color/day_background</item>
-
-    <item name="colorOnPrimary">@color/day_lightGreen</item>
-        <item name="colorOnSecondary">@color/day_darkGreen</item>
-        <!--
-        <item name="colorPrimaryVariant">@color/grey</item>
-    <item name="colorSecondary">@color/blue</item>
-    <item name="colorSecondaryVariant">@color/white</item>
-    <item name="colorSwitcherTop">@color/grey</item>
-    <item name="colorSwitcherBottom">@color/greyLight</item>
-    <item name="colorTextInputFont">@color/grey</item>
-    <item name="colorTextInputBackground">@color/greyLight</item>
-    <item name="colorButtonPlayerBackground">@color/black_0.25</item>
-    -->
-</style>
+        <item name="colorPrimary">@color/black</item> <!-- Кнопки -->
+        <item name="colorOnPrimary">@color/day_lightGreen</item> <!-- Текст -->
+        <item name="colorOnSecondary">@color/day_background</item>
+    </style>
 </resources>

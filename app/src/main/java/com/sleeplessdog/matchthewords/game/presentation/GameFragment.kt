@@ -1,8 +1,10 @@
 package com.sleeplessdog.matchthewords.game.presentation
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.TouchDelegate
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -22,6 +24,7 @@ import com.sleeplessdog.matchthewords.game.presentation.models.GameState
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
 import com.sleeplessdog.matchthewords.game.presentation.parentControllers.HeartsController
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.math.roundToInt
 
 class GameFragment : Fragment() {
     private lateinit var heartsController: HeartsController
@@ -97,6 +100,7 @@ class GameFragment : Fragment() {
             binding.progressBar.setProgress(stats.progress)
             setHearts(stats.lives)
         }
+        binding.buttonBack.expandTouchAreaByFactor(6f)
 
         binding.buttonBack.setOnClickListener {
             val gameState = viewModel.gameState.value?.state ?: GameState.GAME
@@ -146,5 +150,18 @@ class GameFragment : Fragment() {
 
     private fun setHearts(heartsQuantity: Int) {
         heartsController.render(heartsQuantity)
+    }
+
+    fun View.expandTouchAreaByFactor(factor: Float) {
+        val parentView = parent as? View ?: return
+        if (factor <= 1f) return
+        parentView.post {
+            val rect = Rect()
+            getHitRect(rect)
+            val addX = ((rect.width() * (factor - 1f)) / 2f).roundToInt()
+            val addY = ((rect.height() * (factor - 1f)) / 2f).roundToInt()
+            rect.inset(-addX, -addY)               // расширяем область
+            parentView.touchDelegate = TouchDelegate(rect, this)
+        }
     }
 }
