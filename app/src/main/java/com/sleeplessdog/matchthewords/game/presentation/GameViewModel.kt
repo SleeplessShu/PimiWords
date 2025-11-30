@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.material.color.utilities.Score.score
 import com.sleeplessdog.matchthewords.game.data.repositories.AppPrefs
 import com.sleeplessdog.matchthewords.game.domain.api.ScoreInteractor
 import com.sleeplessdog.matchthewords.game.domain.interactors.WordsController
@@ -56,6 +57,9 @@ class GameViewModel(
     // Пул пар для конкретного раунда/страницы — его потребляют ВСЕ дочерние VM
     private val _wordsPairs = MutableLiveData<List<Pair<Word, Word>>>()
     val wordsPairs: LiveData<List<Pair<Word, Word>>> = _wordsPairs
+
+    private val _showExitDialogEvent = MutableLiveData<Unit>()
+    val showExitDialogEvent: LiveData<Unit> = _showExitDialogEvent
 
     // Техническое
     private val handler = Handler(Looper.getMainLooper())
@@ -349,6 +353,15 @@ class GameViewModel(
         currentStep = 0
         emitStats()
     }
+
+    fun showGameExitQuestion() {
+        _showExitDialogEvent.value = Unit
+    }
+
+    fun confirmExitGame() {
+        resetAll()
+    }
+
 
     fun resetStats() {
         handler.removeCallbacksAndMessages(null)

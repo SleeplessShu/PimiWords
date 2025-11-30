@@ -37,9 +37,13 @@
 
     <color name="pink">#E91E63</color>
 
+    <color name="gray_tilda">#3F3F3F</color>
     <color name="gray_01">#2B2A2A</color>
     <color name="gray_02">#353535</color>
     <color name="gray_03">#6D6B65</color>
+
+
+    <color name="black_primary">#212121</color>
 
     <color name="green_primary">#00AE6A</color>
     <color name="green_secondary">#038D57</color>

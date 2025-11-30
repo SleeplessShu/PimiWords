@@ -193,6 +193,15 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="Text.H2.Simple" parent="">
+        <item name="android:fontFamily">@font/murs_gothic_wide_dark</item>
+        <item name="android:textSize">26sp</item>
+        <item name="android:lineHeight">30sp</item>
+        <item name="android:fontWeight">800</item>
+        <item name="android:letterSpacing">0.03</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <!-- H-3 Headline Small — 20/24 -->
     <style name="Text.H3.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
         <item name="android:fontFamily">@font/murs_gothic_wide_dark</item>

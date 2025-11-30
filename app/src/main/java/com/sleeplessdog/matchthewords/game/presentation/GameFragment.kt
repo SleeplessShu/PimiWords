@@ -2,7 +2,6 @@ package com.sleeplessdog.matchthewords.game.presentation
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.TouchDelegate
 import android.view.View
@@ -11,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.GameFragmentBinding
 import com.sleeplessdog.matchthewords.game.presentation.fragments.EndGameFragment
@@ -34,6 +34,8 @@ class GameFragment : Fragment() {
     private var _binding: GameFragmentBinding? = null
     private val binding: GameFragmentBinding get() = _binding!!
 
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -53,9 +55,51 @@ class GameFragment : Fragment() {
         heartsController = HeartsController(
             listOf(binding.heart1, binding.heart2, binding.heart3)
         )
+        setupBottomSheet()
         setupObservers()
     }
 
+    private fun setupBottomSheet() {
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheetExit.root)
+        bottomSheetBehavior.isHideable = true
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    binding.overlay.visibility = View.GONE
+                } else {
+                    binding.overlay.visibility = View.VISIBLE
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
+                val alpha = (slideOffset + 1) / 2
+                val newAlpha = if (slideOffset < 0) {
+                    slideOffset + 1
+                } else {
+                    1f
+                }
+
+                binding.overlay.alpha = newAlpha
+            }
+        })
+
+        // 4. Обработка нажатия на Overlay (чтобы закрыть шторку тапом мимо)
+        binding.overlay.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+
+        binding.bottomSheetExit.btnStay.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        binding.bottomSheetExit.btnExit.setOnClickListener {
+            //bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            returnToGameSelect()
+        }
+    }
 
     private fun setupObservers() {
 
@@ -105,12 +149,19 @@ class GameFragment : Fragment() {
         binding.buttonBack.setOnClickListener {
             val gameState = viewModel.gameState.value?.state ?: GameState.GAME
             when (gameState) {
-                GameState.GAME -> returnToMatchSettings()
-                GameState.MATCH_SETTINGS -> returnToGameSelect()
+                GameState.GAME -> viewModel.showGameExitQuestion()
                 else -> returnToGameSelect()
             }
         }
+
+        viewModel.showExitDialogEvent.observe(viewLifecycleOwner) {
+            showExitBottomSheet()
+        }
     }
+    private fun showExitBottomSheet() {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
 
     private fun returnToMatchSettings() {
         viewModel.resetStats()

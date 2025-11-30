@@ -44,6 +44,12 @@
     <string name="tof_wrong">Неправильно</string>
 
 
+    <!--Exitgame Bottomshit-->
+    <string name="exit_game_title">Точно хочешь\nвыйти из игры?</string>
+    <string name="exit_game_subtitle">Прогресс игры не сохранится</string>
+    <string name="action_stay">Остаться</string>
+    <string name="action_exit">Выйти из игры</string>
+
     <!--settings menu-->
     <string name="settings_menu">Настройки</string>
     <string name="switchDarkTheme">Dark theme</string>
