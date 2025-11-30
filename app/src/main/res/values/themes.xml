@@ -2,11 +2,11 @@
 <resources>
 
     <style name="Theme.MatchTheWords" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="android:statusBarColor">@color/black_primary</item>
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:navigationBarColor">?attr/colorPrimary</item>
+        <item name="android:navigationBarColor">@color/black_primary</item>
         <item name="android:windowLightNavigationBar">false</item>
-        <item name="android:colorBackground">?attr/colorPrimary</item>
+        <item name="android:colorBackground">@color/black_primary</item>
 
         <item name="colorPrimary">@color/black</item> <!-- Кнопки -->
         <item name="colorOnPrimary">@color/day_lightGreen</item> <!-- Текст -->
