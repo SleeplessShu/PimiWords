@@ -1,6 +1,5 @@
 <resources>
     <!-- TITLES -->
-    <!-- TITLES -->
     <string name="title_application_name">PimiMatch</string>
     <string name="app_name">Pimi</string>
 
@@ -10,14 +9,12 @@
     <string name="state_title_result">Очки</string>
     <string name="state_title_match_settings">Настройки матча</string>
 
-
     <string name="empty">     </string>
 
     <!-- endgame fragment -->
     <string name="end_game_phrase_win">Победа!</string>
     <string name="end_game_phrase_loose">Провал!</string>
     <string name="score_text">Счёт %d очков</string>
-
     <string name="button_text_start_game">New Game</string>
     <string name="button_text_new_game">NEW_GAME</string>
     <string name="button_text_restart_round">Перезапуск</string>
@@ -88,7 +85,6 @@
     <string name="save">Сохранить</string>
 
     <string name="game_name">Games name</string>
-
 
     <string name="cat_animals">Животные</string>
     <string name="cat_food">Еда</string>
