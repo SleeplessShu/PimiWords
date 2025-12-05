@@ -15,8 +15,8 @@ class GameOptionViewShort @JvmOverloads constructor(
 
     private val binding = GameSelectCardShortBinding.inflate(LayoutInflater.from(context), this, true)
 
-    private var iconNormal: Int = R.drawable.icon
-    private var iconSelected: Int = R.drawable.icon
+    private var iconNormal: Int = R.drawable.ic_launcher_foreground
+    private var iconSelected: Int = R.drawable.ic_launcher_foreground
 
     init {
         setSelectedState(false)

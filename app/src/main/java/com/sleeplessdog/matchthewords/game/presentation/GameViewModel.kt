@@ -38,11 +38,6 @@ class GameViewModel(
     private val getSelectedCategoriesUC: GetSelectedCategoriesUC
 ) : ViewModel() {
 
-    private val languages = Language.entries.toTypedArray()
-    private val levels = LanguageLevel.entries.toTypedArray()
-    private val categories = WordsCategoriesList.entries.toTypedArray()
-    private val difficult = DifficultLevel.entries.toTypedArray()
-
     // Верхнее состояние экрана игры
     private val _gameState = MutableLiveData(MatchState())
     val gameState: LiveData<MatchState> = _gameState
@@ -83,67 +78,6 @@ class GameViewModel(
     // ------------ Game select ------------
     fun setGame(gameType: GameType) {
         _gameState.value = _gameState.value?.copy(gameType = gameType)
-    }
-
-
-    // ------------ Match settings ------------
-    fun switchLanguage1(isNext: Boolean) {
-        val nextLanguage =
-            SupportFunctions.switchItem(_gameSettings.value?.language1, languages, isNext)
-        if (nextLanguage == _gameSettings.value?.language2) {
-            val adjustedLanguage = SupportFunctions.switchItem(nextLanguage, languages, isNext)
-            updateLanguage1(adjustedLanguage)
-        } else {
-            updateLanguage1(nextLanguage)
-        }
-    }
-
-    fun switchLanguage2(isNext: Boolean) {
-        val nextLanguage =
-            SupportFunctions.switchItem(_gameSettings.value?.language2, languages, isNext)
-        if (nextLanguage == _gameSettings.value?.language1) {
-            val adjustedLanguage = SupportFunctions.switchItem(nextLanguage, languages, isNext)
-            updateLanguage2(adjustedLanguage)
-        } else {
-            updateLanguage2(nextLanguage)
-        }
-    }
-
-    fun switchWordsLevel(isNext: Boolean) {
-//        val nextLevel = SupportFunctions.switchItem(_gameSettings.value?.level, levels, isNext)
-//        updateLevel(nextLevel)
-    }
-
-    fun switchDifficultLevel(isNext: Boolean) {
-        val nextDifficult =
-            SupportFunctions.switchItem(_gameSettings.value?.difficult, difficult, isNext)
-        updateDifficult(nextDifficult)
-    }
-
-    fun switchWordsCategory(isNext: Boolean) {
-//        val nextCategory =
-//            SupportFunctions.switchItem(_gameSettings.value?.category, categories, isNext)
-//        updateCategory(nextCategory)
-    }
-
-    fun updateLanguage1(newLanguage: Language) {
-        _gameSettings.value = _gameSettings.value?.copy(language1 = newLanguage)
-    }
-
-    fun updateLanguage2(newLanguage: Language) {
-        _gameSettings.value = _gameSettings.value?.copy(language2 = newLanguage)
-    }
-
-    fun updateLevel(newLevel: LanguageLevel) {
-//        _gameSettings.value = _gameSettings.value?.copy(level = newLevel)
-    }
-
-    fun updateCategory(newCategory: WordsCategoriesList) {
-//        _gameSettings.value = _gameSettings.value?.copy(category = newCategory)
-    }
-
-    fun updateDifficult(newDifficult: DifficultLevel) {
-        _gameSettings.value = _gameSettings.value?.copy(difficult = newDifficult)
     }
 
     // ------------ Навигация по экрану ------------

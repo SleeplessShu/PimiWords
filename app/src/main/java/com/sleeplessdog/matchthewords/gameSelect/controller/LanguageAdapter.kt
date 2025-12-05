@@ -64,18 +64,18 @@ fun Language.toTitle(): String = when (this) {
 }
 
 fun Language.toFlagSmallRes(): Int = when (this) {
-    Language.ENGLISH -> R.drawable.language_flag_british_s
-    Language.SPANISH -> R.drawable.language_flag_spanish_s
-    Language.RUSSIAN -> R.drawable.language_flag_russian_s
-    Language.FRENCH  -> R.drawable.language_flag_french_s
-    Language.GERMAN  -> R.drawable.language_flag_german_s
+    Language.ENGLISH -> R.drawable.ic_language_flag_british_s
+    Language.SPANISH -> R.drawable.ic_language_flag_spanish_s
+    Language.RUSSIAN -> R.drawable.ic_language_flag_russian_s
+    Language.FRENCH  -> R.drawable.ic_language_flag_french_s
+    Language.GERMAN  -> R.drawable.ic_language_flag_german_s
 }
 
 fun Language.toFlagLargeRes(): Int = when (this) {
-    Language.ENGLISH -> R.drawable.language_flag_british_l
-    Language.SPANISH -> R.drawable.language_flag_spanish_l
-    Language.RUSSIAN -> R.drawable.language_flag_russian_l
-    Language.FRENCH  -> R.drawable.language_flag_french_l
-    Language.GERMAN  -> R.drawable.language_flag_german_l
+    Language.ENGLISH -> R.drawable.ic_language_flag_british_l
+    Language.SPANISH -> R.drawable.ic_language_flag_spanish_l
+    Language.RUSSIAN -> R.drawable.ic_language_flag_russian_l
+    Language.FRENCH  -> R.drawable.ic_language_flag_french_l
+    Language.GERMAN  -> R.drawable.ic_language_flag_german_l
 }
 

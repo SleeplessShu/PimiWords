@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sleeplessdog.matchthewords.game.presentation.interfaces.GameEvent
 import com.sleeplessdog.matchthewords.game.presentation.interfaces.InGameLogic
-import com.sleeplessdog.matchthewords.game.presentation.models.AnswerEvent
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
 import com.sleeplessdog.matchthewords.game.presentation.models.WriteTheWordLetterUi
 import com.sleeplessdog.matchthewords.game.presentation.models.WriteTheWordUi
@@ -21,6 +20,7 @@ class WriteTheWordViewModel : ViewModel(), InGameLogic {
     private val handler = Handler(Looper.getMainLooper())
 
     private var pool: List<Pair<Word, Word>> = emptyList()
+
     private var usedIndices = mutableSetOf<Int>()
 
     private val _ui = MutableLiveData(WriteTheWordUi())

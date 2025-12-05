@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- выбранная -->
     <item android:state_selected="true"
-        android:drawable="@drawable/game_wtw_icon_selected" />
+        android:drawable="@drawable/ic_game_mtw_selected" />
     <!-- обычная -->
-    <item android:drawable="@drawable/game_wtw_icon_normal" />
+    <item android:drawable="@drawable/ic_game_mtw_normal" />
 </selector>

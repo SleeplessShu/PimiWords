@@ -1,14 +1,11 @@
 package com.sleeplessdog.matchthewords.game.presentation.fragments
 
 import android.app.Application
-import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.game.data.repositories.AppPrefs
 import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.game.domain.models.WordCategory
@@ -47,7 +44,6 @@ class SettingsViewModel(
     private val _uiLanguageList = MutableLiveData<List<Language>>()
     val uiLanguageList: LiveData<List<Language>> = _uiLanguageList
 
-    // Список для выбора языка изучения
     private val _studyLanguageList = MutableLiveData<List<Language>>()
     val studyLanguageList: LiveData<List<Language>> = _studyLanguageList
 
@@ -74,8 +70,7 @@ class SettingsViewModel(
 
         viewModelScope.launch {
             combine(
-                observeFeaturedUC(limit = 8),
-                observeAllGroupedUC()
+                observeFeaturedUC(limit = 8), observeAllGroupedUC()
             ) { featured, grouped ->
                 val toUi: (WordCategory) -> CategoryUi = { m ->
                     val uiLang = _uiLanguage.value ?: appPrefs.getUiLanguage()
@@ -93,27 +88,19 @@ class SettingsViewModel(
 
                 val allDomain = userDomain + defaultDomain
 
-                // сортировка: сначала выбранные, потом юзерские, потом по order/title
-                val featuredDomain = allDomain.sortedWith(
-                    compareByDescending<WordCategory> { it.isSelected }
-                        .thenByDescending { it.isUser }
-                        .thenBy { it.orderInBlock }
-                        .thenBy { it.titleKey }
-                ).take(FEATURED_LIMIT)
+                val featuredDomain =
+                    allDomain.sortedWith(compareByDescending<WordCategory> { it.isSelected }.thenByDescending { it.isUser }
+                        .thenBy { it.orderInBlock }.thenBy { it.titleKey }).take(FEATURED_LIMIT)
 
                 CategoriesUiState(
                     featured = featuredDomain.map(toUi),
-                    user      = userDomain.map(toUi),
-                    defaults  = defaultDomain.map(toUi),
-                    loading   = false
+                    user = userDomain.map(toUi),
+                    defaults = defaultDomain.map(toUi),
+                    loading = false
                 )
-            }
-                .catch { _state.value = _state.value.copy(loading = false, error = it) }
+            }.catch { _state.value = _state.value.copy(loading = false, error = it) }
                 .collect { _state.value = it }
         }
-        Log.d("DEBUG", "groups: ${_levels.value}")
-        Log.d("DEBUG", "lang: ${_levels.value}")
-        Log.d("DEBUG", "diff: ${_difficulty.value}")
     }
 
     fun onToggle(key: String) = viewModelScope.launch {
@@ -137,6 +124,7 @@ class SettingsViewModel(
                 appPrefs.save(newLang, study)
                 rebuild(newLang, study)
             }
+
             LanguageAdapterState.STUDY -> {
                 val ui = _uiLanguage.value ?: Language.RUSSIAN
                 _studyLanguage.value = newLang
@@ -146,7 +134,7 @@ class SettingsViewModel(
         }
     }
 
-    fun loadDifficulty(){
+    fun loadDifficulty() {
         _difficulty.value = appPrefs.getDifficulty()
     }
 
@@ -157,18 +145,15 @@ class SettingsViewModel(
 
     fun loadLevels() {
         val stored = appPrefs.getLevels()
-        // если пусто → дефолт A1
         _levels.value = stored.ifEmpty { setOf(LanguageLevel.A1) }
     }
 
     fun toggleLevel(level: LanguageLevel) {
         val current = _levels.value ?: setOf(LanguageLevel.A1)
 
-        val new =
-            if (current.contains(level)) current - level
-            else current + level
+        val new = if (current.contains(level)) current - level
+        else current + level
 
-        // если пусто — игнорируем действие (или показываем тост)
         if (new.isEmpty()) {
             Toast.makeText(app, "Надо выбрать хотя бы один", Toast.LENGTH_LONG).show()
             return
@@ -177,13 +162,13 @@ class SettingsViewModel(
         _levels.value = new
         appPrefs.saveLevels(new)
     }
+
     private fun rebuild(ui: Language, study: Language) {
         _uiLanguageList.value = Language.entries.filter { it != study }
         _studyLanguageList.value = Language.entries.filter { it != ui }
     }
 
-private companion object {
-    val FEATURED_LIMIT = 8
-}
-
+    private companion object {
+        val FEATURED_LIMIT = 8
+    }
 }
