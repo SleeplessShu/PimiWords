@@ -1,7 +1,6 @@
 package com.sleeplessdog.matchthewords.game.domain.usecase
 
 import com.sleeplessdog.matchthewords.game.domain.models.WordCategory
-import com.sleeplessdog.matchthewords.game.domain.models.WordsCategoriesList
 import com.sleeplessdog.matchthewords.game.domain.repositories.WordCategoriesRepository
 import kotlinx.coroutines.flow.first
 
@@ -37,7 +36,6 @@ class GetSelectedCategoriesUC(
         val grouped = repo.observeAllGrouped().first()
         val all = grouped.user + grouped.defaults
 
-        // просто отдаем выбранные; если их нет — пустой список (значит "любой")
         return all.filter { it.isSelected }
     }
 }

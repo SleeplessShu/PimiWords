@@ -22,7 +22,7 @@
             android:paddingTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/lightning_1"
+            android:src="@drawable/ic_game_lightning_1"
             app:tint="@color/selector_options_button_ic"
             android:duplicateParentState="true"
             app:layout_constraintStart_toStartOf="parent"

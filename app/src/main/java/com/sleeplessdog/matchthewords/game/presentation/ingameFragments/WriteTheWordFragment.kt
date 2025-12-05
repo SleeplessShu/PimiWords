@@ -15,7 +15,6 @@ import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.WriteTheWordFragmentBinding
 import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
 import com.sleeplessdog.matchthewords.game.presentation.holders.LettersAdapter
-import com.sleeplessdog.matchthewords.game.presentation.models.AnswerEvent
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -47,7 +46,6 @@ class WriteTheWordFragment : Fragment(R.layout.write_the_word_fragment) {
             justifyContent = JustifyContent.CENTER
         }
         binding.rvLetters.layoutManager = flex
-
         setupObservers()
     }
 

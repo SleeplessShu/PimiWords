@@ -5,16 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/light"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/game_end_pimi_victory_light"
-        app:layout_constraintBottom_toBottomOf="@id/pimi"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvAnnouncement" />
-
     <TextView
         android:id="@+id/tvResult"
         android:layout_width="wrap_content"
@@ -50,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="52dp"
-        android:src="@drawable/game_end_pimi_victory"
+        android:src="@drawable/pimi_game_end_victory"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvAnnouncement" />

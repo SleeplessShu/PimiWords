@@ -5,7 +5,7 @@
     android:layout_height="48dp"
     android:layout_margin="6dp"
     android:foreground="?attr/selectableItemBackground"
-    android:background="@drawable/word_background_default">
+    android:background="@drawable/bg_card_default">
 
     <TextView
         android:id="@+id/tLetter"

@@ -1,14 +1,11 @@
 package com.sleeplessdog.matchthewords.game.presentation.parentControllers
 
-import android.R.attr.startX
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.graphics.drawable.DrawableCompat
 import com.sleeplessdog.matchthewords.R
 import kotlin.math.abs
-import kotlin.math.min
 
 class SwipeTouchListener(
     private val card: View,

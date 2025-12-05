@@ -235,7 +235,7 @@
             android:id="@+id/rv_LanguageList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_lang_panel"
+            android:background="@drawable/bg_language_panel_r24"
             android:clipToPadding="false"
             android:overScrollMode="never"
             android:paddingTop="24dp"
@@ -262,7 +262,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/empty"
-        android:src="@drawable/language_flag_spanish_s"
+        android:src="@drawable/ic_language_flag_spanish_s"
         app:layout_constraintBottom_toBottomOf="@id/settingsHeader"
         app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintTop_toTopOf="@id/settingsHeader" />
@@ -273,7 +273,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:contentDescription="@string/empty"
-        android:src="@drawable/language_flag_spanish_s"
+        android:src="@drawable/ic_language_flag_spanish_s"
         app:layout_constraintBottom_toBottomOf="@id/settingsHeader"
         app:layout_constraintEnd_toEndOf="@id/rightBorder"
         app:layout_constraintTop_toTopOf="@id/settingsHeader" />

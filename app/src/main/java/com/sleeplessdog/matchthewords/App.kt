@@ -9,10 +9,8 @@ import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
 import com.sleeplessdog.matchthewords.di.domainModule
 import com.sleeplessdog.matchthewords.di.presentationModule
 import com.sleeplessdog.matchthewords.game.data.database.AppDatabase
-import com.sleeplessdog.matchthewords.settings.domain.api.SettingsInteractor
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
-import org.koin.java.KoinJavaComponent.getKoin
 import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -35,12 +33,6 @@ class App : Application() {
         FirebaseAppCheck.getInstance().installAppCheckProviderFactory(
             DebugAppCheckProviderFactory.getInstance()
         )
-        val settingsInteractor: SettingsInteractor = getKoin().get()
-        val isNightModeOn = settingsInteractor.getThemeSettings()
-        AppCompatDelegate.setDefaultNightMode(
-            if (isNightModeOn) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
-        )
-
     }
 
     private fun deleteAllDatabases(context: Context) {

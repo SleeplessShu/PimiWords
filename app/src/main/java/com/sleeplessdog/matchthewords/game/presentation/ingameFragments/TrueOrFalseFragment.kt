@@ -13,7 +13,6 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.button.MaterialButton
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.GameTrueOrFalseBinding
 import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
@@ -24,7 +23,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 
 class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
@@ -44,9 +42,7 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
     private var currentIsCorrect: Boolean = false
 
     private data class TofButton(
-        val root: View,
-        val icon: ImageView,
-        val isTrue: Boolean
+        val root: View, val icon: ImageView, val isTrue: Boolean
     )
 
     private lateinit var btnTrue: TofButton
@@ -71,15 +67,15 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
         nextCard.visibility = View.INVISIBLE
 
         // кнопки
-        btnTrue  = TofButton(binding.btnTrue,  binding.icTrue,  isTrue = true)
+        btnTrue = TofButton(binding.btnTrue, binding.icTrue, isTrue = true)
         btnFalse = TofButton(binding.btnFalse, binding.icFalse, isTrue = false)
 
         // клики
-        binding.btnTrue.setOnClickListener  { onButtonPressed(btnTrue,  true)  }
+        binding.btnTrue.setOnClickListener { onButtonPressed(btnTrue, true) }
         binding.btnFalse.setOnClickListener { onButtonPressed(btnFalse, false) }
 
         // визуальный "press" при удержании (не мешаем клику)
-        setPressTouch(binding.btnTrue,  btnTrue)
+        setPressTouch(binding.btnTrue, btnTrue)
         setPressTouch(binding.btnFalse, btnFalse)
 
         attachSwipeTo(topCard)
@@ -106,7 +102,6 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
     }
 
 
-
     private fun setupObservers() {
         parentVM.wordsPairs.observe(viewLifecycleOwner) { pool ->
             if (pool.isNullOrEmpty()) return@observe
@@ -120,7 +115,7 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
 
             // заполняем АКТИВНУЮ карточку (topCard)
             bindCard(topCard, ui)
-            topCard.background = requireContext().getDrawable(R.drawable.bg_tof_card_r16)
+            topCard.background = requireContext().getDrawable(R.drawable.bg_tof_card_r24)
             btnTrue.applyState(TOFButtonState.DEFAULT)
             btnFalse.applyState(TOFButtonState.DEFAULT)
             isLocked = ui.locked
@@ -136,25 +131,22 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
         wordView(card).text = model.word.text
         translateView(card).text = model.shownTranslation.text
         // дефолтный фон
-        card.background = requireContext().getDrawable(R.drawable.bg_tof_card_r16)
+        card.background = requireContext().getDrawable(R.drawable.bg_tof_card_r24)
     }
 
     private fun attachSwipeTo(card: View) {
         card.setOnTouchListener(
             SwipeTouchListener(
-                card = card,
-                wouldBeCorrect = { isRight -> isRight == currentIsCorrect },
-                onSwipeRightCommit = { commitAnswer(true,  pressedButton = btnTrue)  },
-                onSwipeLeftCommit  = { commitAnswer(false, pressedButton = btnFalse) },
-                canSwipe = { childVM.ui.value?.locked == false }
-            )
-        )
+            card = card,
+            wouldBeCorrect = { isRight -> isRight == currentIsCorrect },
+            onSwipeRightCommit = { commitAnswer(true, pressedButton = btnTrue) },
+            onSwipeLeftCommit = { commitAnswer(false, pressedButton = btnFalse) },
+            canSwipe = { childVM.ui.value?.locked == false }))
     }
 
 
     private fun commitAnswer(
-        isRight: Boolean,
-        pressedButton: TofButton = if (isRight) btnTrue else btnFalse
+        isRight: Boolean, pressedButton: TofButton = if (isRight) btnTrue else btnFalse
     ) {
         if (isLocked) return
         isLocked = true
@@ -203,23 +195,13 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
         val dir = if (isRight) 1 else -1
 
         // top уезжает
-        topCard.animate()
-            .translationX(dir * topCard.width.toFloat())
-            .translationY(-topCard.height * 0.35f)
-            .rotation(dir * 35f)
-            .alpha(0f)
-            .setDuration(220)
+        topCard.animate().translationX(dir * topCard.width.toFloat())
+            .translationY(-topCard.height * 0.35f).rotation(dir * 35f).alpha(0f).setDuration(220)
             .start()
 
         // next въезжает
-        nextCard.animate()
-            .alpha(1f)
-            .translationY(0f)
-            .scaleX(1f)
-            .scaleY(1f)
-            .setDuration(220)
-            .withEndAction(end)
-            .start()
+        nextCard.animate().alpha(1f).translationY(0f).scaleX(1f).scaleY(1f).setDuration(220)
+            .withEndAction(end).start()
     }
 
     private fun swapCards() {
@@ -230,7 +212,7 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
             rotation = 0f
             alpha = 1f
             visibility = View.INVISIBLE
-            background = requireContext().getDrawable(R.drawable.bg_tof_card_r16)
+            background = requireContext().getDrawable(R.drawable.bg_tof_card_r24)
             setOnTouchListener(null)
         }
         // поменять ссылки
@@ -242,7 +224,9 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
     // утилита для альфы
     private fun colorWithAlpha(color: Int, alpha: Float): Int {
         val a = (alpha.coerceIn(0f, 1f) * 255).toInt()
-        val r = Color.red(color); val g = Color.green(color); val b = Color.blue(color)
+        val r = Color.red(color);
+        val g = Color.green(color);
+        val b = Color.blue(color)
         return Color.argb(a, r, g, b)
     }
 
@@ -258,8 +242,9 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
         icon.imageTintList = ColorStateList.valueOf(requireContext().getColor(tint))
         root.translationY = state.offsetY
     }
-private companion object {
-    const val PAUSE_BEFORE_REACTION = 200L
-}
+
+    private companion object {
+        const val PAUSE_BEFORE_REACTION = 200L
+    }
 }
 

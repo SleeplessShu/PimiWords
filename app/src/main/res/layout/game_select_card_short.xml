@@ -10,7 +10,7 @@
     android:focusable="true"
 
     android:background="@drawable/bg_game_card_selector"
-    android:foreground="@drawable/bg_game_card_ripple">
+    android:foreground="@drawable/ef_ripple_r24_white">
 
     <!-- внутренний блок, который мы будем центрировать целиком -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,7 +29,7 @@
             android:layout_height="70dp"
             android:scaleType="fitCenter"
             android:duplicateParentState="true"
-            android:src="@drawable/game_mtw_icon_normal"
+            android:src="@drawable/ic_game_mtw_normal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>

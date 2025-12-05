@@ -8,29 +8,29 @@ enum class ButtonState(
     val enabled: Boolean
 ) {
     SELECTED(
-        backgroundRes = R.drawable.cardwords_selected,
+        backgroundRes = R.drawable.bg_card_selected,
         textColorRes  = R.color.dark_text_selected, // яркий читаемый
         enabled       = true
     ),
 
     ERROR(
-        backgroundRes = R.drawable.cardwords_error,
+        backgroundRes = R.drawable.bg_card_error,
         textColorRes  = R.color.dark_text_selected, // яркий читаемый
         enabled       = false
     ),
 
     CORRECT(
-        backgroundRes = R.drawable.cardwords_correct,
+        backgroundRes = R.drawable.bg_card_correct,
         textColorRes  = R.color.dark_text_selected,
         enabled       = false
     ),
     DISABLED(
-        backgroundRes = R.drawable.cardwards_default,
+        backgroundRes = R.drawable.bg_card_default,
         textColorRes  = R.color.dark_text_used,     // приглушённый
         enabled       = false
     ),
     DEFAULT(
-        backgroundRes = R.drawable.cardwards_default,
+        backgroundRes = R.drawable.bg_card_default,
         textColorRes  = R.color.dark_text_default,  // обычный
         enabled       = true
     )
