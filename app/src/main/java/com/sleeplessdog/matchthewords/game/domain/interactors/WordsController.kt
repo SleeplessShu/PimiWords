@@ -20,9 +20,7 @@ class WordsController(private val repository: WordsDatabase) {
     ): List<Pair<Word, Word>> {
         Log.d("DEBUG", "controller: $categories, $levels,  $wordsNeeded")
         val wordsList = repository.getWordsPack(
-            levels = levels,
-            wordsNeeded = wordsNeeded,
-            categories = categories
+            levels = levels, wordsNeeded = wordsNeeded, categories = categories
         )
 
         return wordsList.map { wordEntity ->
@@ -30,30 +28,36 @@ class WordsController(private val repository: WordsDatabase) {
         }
     }
 
-     fun toWordPair(wordEntity: WordEntity, original: Language, translate: Language): Pair<Word, Word> {
+    fun toWordPair(
+        wordEntity: WordEntity, original: Language, translate: Language
+    ): Pair<Word, Word> {
         val word1 = getWordForLanguage(wordEntity, original)
         val word2 = getWordForLanguage(wordEntity, translate)
         return Pair(word1, word2)
     }
 
-     fun getWordForLanguage(entity: WordEntity, lang: Language): Word {
+    fun getWordForLanguage(entity: WordEntity, lang: Language): Word {
         val id = entity.id ?: -1
         return when (lang) {
             Language.ENGLISH -> Word(id, entity.english, Language.ENGLISH)
             Language.SPANISH -> entity.spanish?.let { Word(id, it, Language.SPANISH) }
                 ?: Word.invalid(Language.SPANISH)
+
             Language.RUSSIAN -> entity.russian?.let { Word(id, it, Language.RUSSIAN) }
                 ?: Word.invalid(Language.RUSSIAN)
-            Language.FRENCH -> entity.french?.let { Word(id, it, Language.FRENCH) }
-                ?: Word.invalid(Language.FRENCH)
-            Language.GERMAN -> entity.german?.let { Word(id, it, Language.GERMAN) }
-                ?: Word.invalid(Language.GERMAN)
+
+            Language.FRENCH -> entity.french?.let { Word(id, it, Language.FRENCH) } ?: Word.invalid(
+                Language.FRENCH
+            )
+
+            Language.GERMAN -> entity.german?.let { Word(id, it, Language.GERMAN) } ?: Word.invalid(
+                Language.GERMAN
+            )
         }
     }
 
-     fun putRoundStats(stats: SessionStats) {
+    fun putRoundStats(stats: SessionStats) {
         Log.d("DEBUG", "CorrectIds: ${stats.correctIds}")
         Log.d("DEBUG", "MistakeIds: ${stats.mistakeIds}")
     }
-
 }

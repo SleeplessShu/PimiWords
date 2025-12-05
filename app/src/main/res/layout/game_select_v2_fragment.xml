@@ -28,7 +28,7 @@
         android:layout_marginVertical="20dp"
         app:layout_constraintEnd_toEndOf="@id/rightBorder"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/language_flag_spanish_l" />
+        app:srcCompat="@drawable/ic_language_flag_spanish_l" />
 
     <!-- лого -->
     <ImageView
@@ -38,7 +38,7 @@
         app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintTop_toTopOf="@id/languageSelect"
         app:layout_constraintBottom_toBottomOf="@id/languageSelect"
-        app:srcCompat="@drawable/logo" />
+        app:srcCompat="@drawable/ic_app_name" />
 
 
 
@@ -117,7 +117,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:background="@drawable/bg_lang_panel"
+        android:background="@drawable/bg_language_panel_r24"
         android:paddingTop="24dp"
         android:paddingBottom="12dp"
         android:clipToPadding="false"

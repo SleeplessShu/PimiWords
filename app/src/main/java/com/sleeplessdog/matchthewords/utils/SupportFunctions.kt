@@ -4,7 +4,6 @@ package com.sleeplessdog.matchthewords.utils
 import android.content.Context
 import android.content.res.Configuration
 import android.util.Log
-import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
@@ -14,7 +13,6 @@ import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.game.presentation.models.CategoryUi
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
-import com.sleeplessdog.matchthewords.game.presentation.models.Word
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -23,14 +21,6 @@ import java.util.Locale
 import kotlin.random.Random
 
 object SupportFunctions {
-    fun <T> switchItem(currentItem: T?, items: Array<T>, isNext: Boolean): T {
-        val currentIndex = items.indexOf(currentItem).takeIf { it != -1 } ?: 0
-        return if (isNext) {
-            items[(currentIndex + 1) % items.size]
-        } else {
-            items[(currentIndex - 1 + items.size) % items.size]
-        }
-    }
 
     fun getCurrentDate(): String {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())

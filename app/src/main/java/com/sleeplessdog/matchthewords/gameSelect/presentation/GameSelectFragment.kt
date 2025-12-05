@@ -1,18 +1,15 @@
 package com.sleeplessdog.matchthewords.gameSelect.presentation
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.GameSelectV2FragmentBinding
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
-import com.sleeplessdog.matchthewords.game.presentation.models.Language
 import com.sleeplessdog.matchthewords.gameSelect.controller.LanguageAdapter
 import com.sleeplessdog.matchthewords.gameSelect.controller.toFlagLargeRes
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -62,23 +59,23 @@ class GameSelectFragment : Fragment() {
     private fun setupGameCards() {
         binding.match6.setup(
             title = getString(R.string.MTW),
-            iconNormalRes = R.drawable.game_mtw_icon_normal,
-            iconSelectedRes = R.drawable.game_mtw_icon_selected
+            iconNormalRes = R.drawable.ic_game_mtw_normal,
+            iconSelectedRes = R.drawable.ic_game_mtw_selected
         )
         binding.trueOrFalse.setup(
             title = getString(R.string.ROW),
-            iconNormalRes = R.drawable.game_row_icon_normal,
-            iconSelectedRes = R.drawable.game_row_icon_selected
+            iconNormalRes = R.drawable.ic_game_row_normal,
+            iconSelectedRes = R.drawable.ic_game_row_selected
         )
         binding.multiChoise.setup(
             title = getString(R.string.MC),
-            iconNormalRes = R.drawable.game_mc_icon_normal,
-            iconSelectedRes = R.drawable.game_mc_icon_selected
+            iconNormalRes = R.drawable.ic_game_mc_normal,
+            iconSelectedRes = R.drawable.ic_game_mc_selected
         )
         binding.writeTheWord.setup(
             title = getString(R.string.WTW),
-            iconNormalRes = R.drawable.game_wtw_icon_normal,
-            iconSelectedRes = R.drawable.game_wtw_icon_selected
+            iconNormalRes = R.drawable.ic_game_wtw_normal,
+            iconSelectedRes = R.drawable.ic_game_wtw_selected
         )
 
         binding.match6.setOnClickListener {
@@ -183,7 +180,6 @@ class GameSelectFragment : Fragment() {
                 .start()
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

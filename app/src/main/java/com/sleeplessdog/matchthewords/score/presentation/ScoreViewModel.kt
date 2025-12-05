@@ -14,7 +14,6 @@ class ScoreViewModel(
     private val _scoreResults = MutableLiveData<List<GameResult>>()
     val scoreResults: LiveData<List<GameResult>> get() = _scoreResults
 
-
     init {
         observeScoreChanges()
     }

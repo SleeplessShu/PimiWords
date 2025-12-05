@@ -11,7 +11,6 @@ import com.sleeplessdog.matchthewords.databinding.EndGameFragmentBinding
 import com.sleeplessdog.matchthewords.game.presentation.GameFragmentDirections
 import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EndGameFragment : Fragment(R.layout.end_game_fragment) {
     private val parentViewModel: GameViewModel by sharedViewModel(owner = { requireParentFragment() })
@@ -56,12 +55,10 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
         parentViewModel.statsState.observe(viewLifecycleOwner) { state ->
             if (state.lives == 0) {
                 binding.tvResult.setText(R.string.end_game_phrase_loose)
-                binding.pimi.setImageResource(R.drawable.game_end_pimi_fail)
-                binding.light.setImageResource(R.drawable.game_end_pimi_victory_light)
+                binding.pimi.setImageResource(R.drawable.pimi_game_end_fail)
             } else {
                 binding.tvResult.setText(R.string.end_game_phrase_win)
-                binding.pimi.setImageResource(R.drawable.game_end_pimi_victory)
-                binding.light.setImageResource(R.drawable.game_end_pimi_victory_light)
+                binding.pimi.setImageResource(R.drawable.pimi_game_end_victory)
             }
             val score = state.score.toIntOrNull() ?: 0
             val scoreText = getString(R.string.score_text, score)

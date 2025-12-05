@@ -7,7 +7,7 @@
     android:background="@drawable/bg_game_card_selector"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="@drawable/bg_game_card_ripple"
+    android:foreground="@drawable/ef_ripple_r24_white"
     android:minHeight="128dp"
     android:padding="16dp">
 
@@ -30,7 +30,7 @@
             android:duplicateParentState="true"
             android:scaleType="fitCenter"
 
-            android:src="@drawable/game_mtw_icon_normal"
+            android:src="@drawable/ic_game_mtw_normal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

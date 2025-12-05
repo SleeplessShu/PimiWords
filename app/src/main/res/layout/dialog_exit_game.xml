@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_bottom_sheet"
+    android:background="@drawable/bg_bottom_sheet_corner_r24"
     android:gravity="center"
     android:orientation="vertical"
     android:clickable="true"
@@ -17,7 +17,7 @@
         android:layout_marginTop="12dp"
         android:paddingTop="28dp"
         android:scaleType="fitCenter"
-        android:background="@drawable/tilda" />
+        android:background="@drawable/ic_bottom_sheet_handle_bar" />
 
     <ImageView
         android:id="@+id/ivExitIcon"
@@ -27,7 +27,7 @@
         android:layout_marginBottom="16dp"
         android:paddingTop="28dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/pimi_exit_game" />
+        android:src="@drawable/pimi_game_exit" />
     <!-- Замените src на вашу картинку -->
 
     <!-- Текст 1: Заголовок -->

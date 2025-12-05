@@ -6,19 +6,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.flexbox.FlexboxLayout
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.ItemDifficultyCardBinding
 import com.sleeplessdog.matchthewords.databinding.SettingsFragmentBinding
 import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
-
 import com.sleeplessdog.matchthewords.game.presentation.models.CategoryUi
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
 import com.sleeplessdog.matchthewords.gameSelect.controller.LanguageAdapter
 import com.sleeplessdog.matchthewords.gameSelect.controller.toFlagSmallRes
 import com.sleeplessdog.matchthewords.utils.SupportFunctions
-
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 enum class LanguageAdapterState {
@@ -73,28 +70,28 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         cardExpert = binding.cardExpert
 
         with(binding.cardEasy) {
-            ivIcon.setImageResource(R.drawable.lightning_1)
+            ivIcon.setImageResource(R.drawable.ic_game_lightning_1)
             tvTitle.setText(R.string.difficulty_easy)
             tvSubtitle.setText(R.string.difficulty_easy_words)
             root.setOnClickListener {  vm.onDifficultyPicked(DifficultLevel.EASY) }
         }
 
         with(binding.cardMedium) {
-            ivIcon.setImageResource(R.drawable.lightning_2)
+            ivIcon.setImageResource(R.drawable.ic_game_lightning_2)
             tvTitle.setText(R.string.difficulty_medium)
             tvSubtitle.setText(R.string.difficulty_medium_words)
             root.setOnClickListener {  vm.onDifficultyPicked(DifficultLevel.MEDIUM) }
         }
 
         with(binding.cardHard) {
-            ivIcon.setImageResource(R.drawable.lightning_3)
+            ivIcon.setImageResource(R.drawable.ic_game_lightning_3)
             tvTitle.setText(R.string.difficulty_hard)
             tvSubtitle.setText(R.string.difficulty_hard_words)
             root.setOnClickListener {  vm.onDifficultyPicked(DifficultLevel.HARD) }
         }
 
         with(binding.cardExpert) {
-            ivIcon.setImageResource(R.drawable.lightning_4)
+            ivIcon.setImageResource(R.drawable.ic_game_lightning_4)
             tvTitle.setText(R.string.difficulty_expert)
             tvSubtitle.setText(R.string.difficulty_expert_words)
             root.setOnClickListener {  vm.onDifficultyPicked(DifficultLevel.EXPERT) }
@@ -291,6 +288,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         }
         hideBg()
     }
+
     private fun renderGroup(group: FlexboxLayout, items: List<CategoryUi>) {
         group.removeAllViews()
         items.forEach { item ->
@@ -308,8 +306,6 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
                 val key = chip.tag as? String ?: chip.text.toString() // лучше хранить key в tag
                 if (chip.isChecked) key else null
             }
-
-        // складываем теги; при создании чипа поставь tag = item.key
         return (collect(binding.cgUserCategories) + collect(binding.cgDefaultCategories)).toSet()
     }
 
@@ -317,7 +313,6 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         val root = binding.rootTopics
         if (root.visibility == View.VISIBLE) return
 
-        // показываем корень
         root.alpha = 0f
         root.visibility = View.VISIBLE
         root.animate()
@@ -325,7 +320,6 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
             .setDuration(150)
             .start()
 
-        // фон — мягкий фейд-ин
         binding.topicsBackground.apply {
             alpha = 0f
             animate()
@@ -334,7 +328,6 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
                 .start()
         }
 
-        // контент (хедер + список + кнопки) — легкий слайд вверх + фейд-ин
         val contentViews = listOf(
             binding.header,
             binding.categoriesScroll,
@@ -356,7 +349,6 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         val root = binding.rootTopics
         if (root.visibility != View.VISIBLE) return
 
-        // фон — фейд-аут
         binding.topicsBackground.animate()
             .alpha(0f)
             .setDuration(200)
@@ -371,7 +363,6 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         var finished = 0
         val total = contentViews.size
 
-        // контент — фейд-аут + слайд вниз
         contentViews.forEach { view ->
             view.animate()
                 .alpha(0f)
@@ -380,10 +371,8 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
                 .withEndAction {
                     finished++
                     if (finished == total) {
-                        // полностью скрываем оверлей после анимации
                         root.visibility = View.GONE
 
-                        // сбрасываем стейты, чтобы при следующем показе всё было ок
                         contentViews.forEach { v ->
                             v.alpha = 1f
                             v.translationY = 0f

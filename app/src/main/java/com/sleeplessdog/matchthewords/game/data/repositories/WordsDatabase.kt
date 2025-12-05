@@ -6,12 +6,10 @@ import com.sleeplessdog.matchthewords.game.data.database.WordDao
 import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.game.domain.models.WordsCategoriesList
 
-class WordsDatabase(private val wordDao: WordDao){
+class WordsDatabase(private val wordDao: WordDao) {
 
     suspend fun getWordsPack(
-        levels: Set<LanguageLevel>,
-        wordsNeeded: Int,
-        categories: Set<WordsCategoriesList>
+        levels: Set<LanguageLevel>, wordsNeeded: Int, categories: Set<WordsCategoriesList>
     ): List<WordEntity> {
         Log.d("DEBUG", "getWordsPack: ${levels}  $categories")
         val isAnyLevel = levels.isEmpty()
@@ -21,22 +19,16 @@ class WordsDatabase(private val wordDao: WordDao){
         val categoryNames = categories.map { it.key }
 
         val fromDb: List<WordEntity> = when {
-            isAnyCategory && isAnyLevel ->
-                wordDao.getAny(wordsNeeded)
+            isAnyCategory && isAnyLevel -> wordDao.getAny(wordsNeeded)
 
-            isAnyCategory ->
-                wordDao.getAllCategoriesByLevels(levelNames)
+            isAnyCategory -> wordDao.getAllCategoriesByLevels(levelNames)
 
-            isAnyLevel ->
-                wordDao.getByCategoriesAllLevels(categoryNames)
+            isAnyLevel -> wordDao.getByCategoriesAllLevels(categoryNames)
 
-            else ->
-                wordDao.getByCategoriesAndLevels(categoryNames, levelNames)
+            else -> wordDao.getByCategoriesAndLevels(categoryNames, levelNames)
         }
         return adaptForConditions(fromDb, wordsNeeded)
-
     }
-
 
 
     private suspend fun getRandom(wordsNeeded: Int): List<WordEntity> =
@@ -47,8 +39,7 @@ class WordsDatabase(private val wordDao: WordDao){
     }
 
     private suspend fun adaptForConditions(
-        dataBaseResponse: List<WordEntity>,
-        difficultLevel: Int
+        dataBaseResponse: List<WordEntity>, difficultLevel: Int
     ): List<WordEntity> {
         if (difficultLevel <= 0) return emptyList()
 

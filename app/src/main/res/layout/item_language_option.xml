@@ -10,12 +10,12 @@
     android:background="@drawable/bg_language_selector"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="@drawable/bg_game_card_ripple"
+    android:foreground="@drawable/ef_ripple_r24_white"
     >
 
     <ImageView
         android:id="@+id/ivFlagUi"
-        android:src="@drawable/language_flag_spanish_s"
+        android:src="@drawable/ic_language_flag_spanish_s"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
