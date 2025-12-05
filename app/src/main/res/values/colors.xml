@@ -24,10 +24,9 @@
     <color name="gray_02">#353535</color>
     <color name="gray_03">#6D6B65</color>
     <color name="gray_04">#2e2e2e</color>
+    <color name="gray_05">#2B2B2B</color>
     <color name="gray_06">#282828</color>
-
     <color name="black_primary">#212121</color>
-
     <color name="green_primary">#00AE6A</color>
     <color name="green_secondary">#038D57</color>
     <color name="yellow_primary">#E0B74F</color>
