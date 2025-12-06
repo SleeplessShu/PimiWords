@@ -1,4 +1,4 @@
-package com.sleeplessdog.matchthewords.gameSelect.controller
+package com.sleeplessdog.matchthewords.game.presentation.controller
 
 import android.view.LayoutInflater
 import android.view.View

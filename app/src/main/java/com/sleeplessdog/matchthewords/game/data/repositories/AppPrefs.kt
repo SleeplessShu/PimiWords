@@ -1,11 +1,18 @@
 package com.sleeplessdog.matchthewords.game.data.repositories
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 
 interface AppPrefs {
+
+    fun observeUiLanguage(): Flow<Language>
+    fun observeStudyLanguage(): Flow<Language>
     fun getUiLanguage(): Language
     fun getStudyLanguage(): Language
     fun save(ui: Language, study: Language)
@@ -24,6 +31,31 @@ class AppPrefsImpl(
     private val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
     // ---------- LANGS ----------
+    override fun observeUiLanguage(): Flow<Language> = callbackFlow {
+        trySend(getUiLanguage())
+
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == KEY_UI_LANG) {
+                trySend(getUiLanguage())
+            }
+        }
+
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+        awaitClose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
+    }
+
+    override fun observeStudyLanguage(): Flow<Language> = callbackFlow {
+        trySend(getStudyLanguage())
+
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == KEY_STUDY_LANG) {
+                trySend(getStudyLanguage())
+            }
+        }
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+        awaitClose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
+    }
+
     override fun getUiLanguage(): Language {
         val name = prefs.getString(KEY_UI_LANG, Language.RUSSIAN.name)
         return safeLang(name, Language.RUSSIAN)

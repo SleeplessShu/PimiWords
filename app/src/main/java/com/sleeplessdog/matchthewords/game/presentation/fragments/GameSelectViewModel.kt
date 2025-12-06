@@ -1,11 +1,13 @@
-package com.sleeplessdog.matchthewords.gameSelect.presentation
+package com.sleeplessdog.matchthewords.game.presentation.fragments
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sleeplessdog.matchthewords.game.data.repositories.AppPrefs
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
+import kotlinx.coroutines.launch
 
 class GameSelectViewModel(
     private val appPrefs: AppPrefs
@@ -24,10 +26,15 @@ class GameSelectViewModel(
     val navigateToGame: LiveData<GameType?> = _navigateToGame
 
     init {
+        viewModelScope.launch {
+            viewModelScope.launch {
+                appPrefs.observeStudyLanguage().collect { newLanguage ->
+                    _studyLanguage.value = newLanguage
+                }
+            }
+        }
         val ui = appPrefs.getUiLanguage()
         val study = appPrefs.getStudyLanguage()
-        _uiLanguage.value = ui
-        _studyLanguage.value = study
         rebuild(ui, study)
     }
 

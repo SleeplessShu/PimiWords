@@ -40,11 +40,6 @@
         app:layout_constraintBottom_toBottomOf="@id/languageSelect"
         app:srcCompat="@drawable/ic_app_name" />
 
-
-
-
-
-
     <!-- заголовок -->
     <TextView
         android:id="@+id/gameSelect"
@@ -58,7 +53,7 @@
         app:layout_constraintTop_toBottomOf="@id/languageSelect" />
 
     <!-- БОЛЬШАЯ КАРТОЧКА Matching The Words -->
-    <com.sleeplessdog.matchthewords.gameSelect.controller.GameOptionViewLong
+    <com.sleeplessdog.matchthewords.game.presentation.controller.GameOptionViewLong
         android:id="@+id/match6"
 
         android:layout_width="0dp"
@@ -69,7 +64,7 @@
         app:layout_constraintTop_toBottomOf="@id/gameSelect" />
 
     <!-- ПЕРВАЯ КАРТОЧКА ВО ВТОРОМ РЯДУ -->
-    <com.sleeplessdog.matchthewords.gameSelect.controller.GameOptionViewShort
+    <com.sleeplessdog.matchthewords.game.presentation.controller.GameOptionViewShort
         android:id="@+id/trueOrFalse"
 
         android:layout_width="0dp"
@@ -81,7 +76,7 @@
         app:layout_constraintTop_toBottomOf="@id/match6" />
 
     <!-- ВТОРАЯ КАРТОЧКА ВО ВТОРОМ РЯДУ -->
-    <com.sleeplessdog.matchthewords.gameSelect.controller.GameOptionViewShort
+    <com.sleeplessdog.matchthewords.game.presentation.controller.GameOptionViewShort
         android:id="@+id/multiChoise"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -92,7 +87,7 @@
         app:layout_constraintTop_toBottomOf="@id/match6" />
 
     <!-- НИЖНЯЯ ШИРОКАЯ КАРТОЧКА -->
-    <com.sleeplessdog.matchthewords.gameSelect.controller.GameOptionViewLong
+    <com.sleeplessdog.matchthewords.game.presentation.controller.GameOptionViewLong
         android:id="@+id/writeTheWord"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -101,30 +96,63 @@
         app:layout_constraintEnd_toEndOf="@id/rightBorder"
         app:layout_constraintTop_toBottomOf="@id/multiChoise" />
 
-    <ImageView
-        android:id="@+id/languagesBackground"
-        android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/languageSelectRoot"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="@id/gameSelect"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@color/opaque"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/languageSelect">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvLanguages"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:background="@drawable/bg_language_panel_r24"
-        android:paddingTop="24dp"
-        android:paddingBottom="12dp"
-        android:clipToPadding="false"
-        android:overScrollMode="never"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/languageSelect" />
+        <ImageView
+            android:id="@+id/languagesBackground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@color/opaque"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/languagesBackgroundSolid"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/bg_language_select_r24_solid"
+            app:layout_constraintBottom_toBottomOf="@id/rvLanguages"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_LanguageList"
+            style="@style/Text.H2.HeadlineLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="12dp"
+            android:gravity="center"
+            android:text="@string/std_language"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvLanguages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_LanguageList" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

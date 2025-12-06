@@ -193,8 +193,8 @@
         android:layout_height="0dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/rightBorder"
-        app:layout_constraintStart_toStartOf="@id/leftBorder"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/settingsHeader">
 
         <ImageView
@@ -211,7 +211,7 @@
             android:id="@+id/languagesBackgroundSolid"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:src="@color/black"
+            android:src="@drawable/bg_language_select_r24_solid"
             app:layout_constraintBottom_toBottomOf="@id/rv_LanguageList"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -235,11 +235,10 @@
             android:id="@+id/rv_LanguageList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_language_panel_r24"
             android:clipToPadding="false"
             android:overScrollMode="never"
             android:paddingTop="24dp"
-            android:paddingBottom="12dp"
+            android:paddingBottom="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_LanguageList" />
@@ -262,7 +261,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/empty"
-        android:src="@drawable/ic_language_flag_spanish_s"
+        android:src="@drawable/ic_language_flag_spanish_l"
         app:layout_constraintBottom_toBottomOf="@id/settingsHeader"
         app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintTop_toTopOf="@id/settingsHeader" />
@@ -273,7 +272,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:contentDescription="@string/empty"
-        android:src="@drawable/ic_language_flag_spanish_s"
+        android:src="@drawable/ic_language_flag_spanish_l"
         app:layout_constraintBottom_toBottomOf="@id/settingsHeader"
         app:layout_constraintEnd_toEndOf="@id/rightBorder"
         app:layout_constraintTop_toTopOf="@id/settingsHeader" />

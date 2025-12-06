@@ -35,7 +35,7 @@
 
     <fragment
         android:id="@+id/gameSelectFragment"
-        android:name="com.sleeplessdog.matchthewords.gameSelect.presentation.GameSelectFragment"
+        android:name="com.sleeplessdog.matchthewords.game.presentation.fragments.GameSelectFragment"
         android:label="GameSelectFragment" >
         <action
             android:id="@+id/action_gameSelectFragment_to_gameFragment"

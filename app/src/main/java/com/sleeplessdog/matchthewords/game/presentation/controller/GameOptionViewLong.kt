@@ -1,4 +1,4 @@
-package com.sleeplessdog.matchthewords.gameSelect.controller
+package com.sleeplessdog.matchthewords.game.presentation.controller
 
 import android.content.Context
 import android.graphics.drawable.StateListDrawable
@@ -7,13 +7,13 @@ import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.sleeplessdog.matchthewords.R
-import com.sleeplessdog.matchthewords.databinding.GameSelectCardShortBinding
+import com.sleeplessdog.matchthewords.databinding.GameSelectCardLongBinding
 
-class GameOptionViewShort @JvmOverloads constructor(
+class GameOptionViewLong @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyle: Int = 0
 ) : ConstraintLayout(context, attrs, defStyle) {
 
-    private val binding = GameSelectCardShortBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = GameSelectCardLongBinding.inflate(LayoutInflater.from(context), this, true)
 
     private var iconNormal: Int = R.drawable.ic_launcher_foreground
     private var iconSelected: Int = R.drawable.ic_launcher_foreground

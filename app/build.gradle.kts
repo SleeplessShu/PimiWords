@@ -8,6 +8,13 @@ plugins {
     id("kotlin-kapt")
     alias(libs.plugins.compose.compiler)
     id("com.google.gms.google-services")
+    id("io.gitlab.arturbosch.detekt") version "1.23.4"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
 }
 
 android {

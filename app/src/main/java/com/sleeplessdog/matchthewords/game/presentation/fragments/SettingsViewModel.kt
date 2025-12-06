@@ -59,6 +59,18 @@ class SettingsViewModel(
     val state: StateFlow<CategoriesUiState> = _state
 
     init {
+        viewModelScope.launch {
+            appPrefs.observeStudyLanguage().collect { newLanguage ->
+                _studyLanguage.value = newLanguage
+            }
+        }
+
+        viewModelScope.launch {
+            appPrefs.observeUiLanguage().collect { newLanguage ->
+                _uiLanguage.value = newLanguage
+            }
+        }
+
         val ui = appPrefs.getUiLanguage()
         val study = appPrefs.getStudyLanguage()
         _uiLanguage.value = ui
