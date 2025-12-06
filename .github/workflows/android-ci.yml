@@ -31,10 +31,10 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run build
-        run: ./gradlew build
+        run: ./gradlew build --stacktrace --info
 
       - name: Run ktlint
-        run: ./gradlew ktlintCheck
+        run: ./gradlew ktlintCheck --stacktrace
 
       - name: Run detekt
-        run: ./gradlew detekt
+        run: ./gradlew detekt --stacktrace
