@@ -3,7 +3,7 @@ name: Android CI
 on:
   pull_request:
   push:
-    branches: [ "dev" ]
+    branches: [ "master" ]
 
 jobs:
   build:
@@ -33,3 +33,4 @@ jobs:
 
       - name: Run build
         run: ./gradlew build
+
