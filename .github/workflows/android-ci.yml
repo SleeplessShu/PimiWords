@@ -30,17 +30,16 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Run build
-        run: ./gradlew build --stacktrace --info
-
       - name: Run ktlint
-        run: ./gradlew ktlintCheck --stacktrace
+        run: ./gradlew ktlintCheck
 
       - name: Run detekt
-        run: ./gradlew detekt --stacktrace
+        run: ./gradlew detekt
 
       - name: Upload detekt SARIF
-        if: always()
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: app/build/reports/detekt/detekt.sarif
+
+      - name: Run build
+        run: ./gradlew build
