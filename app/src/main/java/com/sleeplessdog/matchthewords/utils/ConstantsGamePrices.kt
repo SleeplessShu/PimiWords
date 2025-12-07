@@ -15,5 +15,4 @@ object ConstantsGamePrices {
 
     const val WRITE_WORD_DIVIDER_LIST = 6
     const val ONE_OF_FOUR_MULTIPLIER  = 4
-
 }

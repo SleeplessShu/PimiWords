@@ -22,6 +22,7 @@ import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.WriteThe
 import com.sleeplessdog.matchthewords.game.presentation.models.GameState
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
 import com.sleeplessdog.matchthewords.game.presentation.parentControllers.HeartsController
+import com.sleeplessdog.matchthewords.utils.ConstantsApp.TOUCH_EXPAND_FACTOR
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.roundToInt
 
@@ -62,7 +63,8 @@ class GameFragment : Fragment() {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheetExit.root)
         bottomSheetBehavior.isHideable = true
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                     binding.overlay.visibility = View.GONE
@@ -95,7 +97,6 @@ class GameFragment : Fragment() {
         }
 
         binding.bottomSheetExit.btnExit.setOnClickListener {
-            //bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             returnToGameSelect()
         }
     }
@@ -134,7 +135,7 @@ class GameFragment : Fragment() {
             binding.progressBar.setProgress(stats.progress)
             setHearts(stats.lives)
         }
-        binding.buttonBack.expandTouchAreaByFactor(6f)
+        binding.buttonBack.expandTouchAreaByFactor(TOUCH_EXPAND_FACTOR)
 
         binding.buttonBack.setOnClickListener {
             val gameState = viewModel.gameState.value?.state ?: GameState.GAME
@@ -148,14 +149,14 @@ class GameFragment : Fragment() {
             showExitBottomSheet()
         }
     }
+
     private fun showExitBottomSheet() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun returnToGameSelect() {
         viewModel.resetAll()
-        val dir = GameFragmentDirections
-            .actionGameFragmentToGameSelectFragment()
+        val dir = GameFragmentDirections.actionGameFragmentToGameSelectFragment()
         findNavController().navigate(dir)
     }
 

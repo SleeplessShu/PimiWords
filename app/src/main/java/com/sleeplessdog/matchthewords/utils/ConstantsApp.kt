@@ -59,4 +59,11 @@ object ConstantsApp {
     const val HEART_SHOW_DURATION_MS = 250L
     const val HEART_HIDE_DURATION_MS = 200L
 
+    const val TOUCH_EXPAND_FACTOR = 6f
+
+    const val SWIPE_DRAG_LIMIT = 280f
+    const val SWIPE_COMMIT_THRESHOLD = 140f
+    const val SWIPE_MAX_ROTATION = 15f
+    const val SWIPE_VERTICAL_TRANSLATION_FACTOR = 0.12f
+    const val SWIPE_RESET_DURATION_MS = 180L
 }

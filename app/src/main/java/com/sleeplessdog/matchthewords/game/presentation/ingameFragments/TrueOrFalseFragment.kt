@@ -140,7 +140,6 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
         card.setOnTouchListener(
             SwipeTouchListener(
                 card = card,
-                wouldBeCorrect = { isRight -> isRight == currentIsCorrect },
                 onSwipeRightCommit = { commitAnswer(true, pressedButton = btnTrue) },
                 onSwipeLeftCommit = { commitAnswer(false, pressedButton = btnFalse) },
                 canSwipe = { childVM.ui.value?.locked == false })

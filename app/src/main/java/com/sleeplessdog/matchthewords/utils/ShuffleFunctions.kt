@@ -30,7 +30,8 @@ class ShuffleFunctions {
         return indices.map { input[it] }
     }
 
-    fun buildTrueFalseSetOnce(input: List<Pair<Word, Word>>, shuffleQuestionsOrder: Boolean = true): List<TfQuestionUi> {
+    fun buildTrueFalseSetOnce(input: List<Pair<Word, Word>>,
+                              shuffleQuestionsOrder: Boolean = true): List<TfQuestionUi> {
         if (input.isEmpty()) return emptyList()
 
         val mid = input.size / MIN_VARIANTS_COUNT_TOF
@@ -78,15 +79,15 @@ class ShuffleFunctions {
         val baseIdx = rnd.nextInt(available.size)
         val base = available[baseIdx]
 
-        val otherIdxs = (available.indices - baseIdx).shuffled(rnd).take(WRONG_ANSWERS)
+        val otherIdxs = (available.indices - baseIdx)
+            .shuffled(rnd)
+            .take(WRONG_ANSWERS)
 
-        val wrongPairs = if (otherIdxs.size < WRONG_ANSWERS) {
-            emptyList()
-        } else {
+        val wrongPairs = if (otherIdxs.size == WRONG_ANSWERS) {
             otherIdxs.map { available[it] }
-        }
-
-        if (wrongPairs.isEmpty()) return null
+        } else {
+            null
+        } ?: return null
 
         val consumed = (listOf(base) + wrongPairs)
             .map { it.first.id }
