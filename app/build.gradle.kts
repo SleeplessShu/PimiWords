@@ -17,6 +17,15 @@ detekt {
     allRules = false
 }
 
+tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+    reports {
+        sarif.required.set(true)
+        xml.required.set(false)
+        html.required.set(false)
+        txt.required.set(false)
+    }
+}
+
 android {
     namespace = "com.sleeplessdog.matchthewords"
     compileSdk = 35
