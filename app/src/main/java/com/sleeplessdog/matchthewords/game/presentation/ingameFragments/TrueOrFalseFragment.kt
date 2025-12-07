@@ -263,4 +263,3 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
         root.translationY = state.offsetY
     }
 }
-

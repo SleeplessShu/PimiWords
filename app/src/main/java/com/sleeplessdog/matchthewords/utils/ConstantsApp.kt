@@ -6,7 +6,6 @@ object ConstantsApp {
     const val EMPTY_ALPHA = 0f
     const val ZERO_SCALE = 0f
     const val FULL_SCALE = 1f
-
     const val INVALID_ID = -1
     const val FEATURED_LIMIT = 8
 
@@ -18,7 +17,9 @@ object ConstantsApp {
     const val SWIPE_VERTICAL_FACTOR = 0.35f
     const val SWIPE_ROTATION_DEGREES = 35f
     const val CARD_SWAP_DURATION_MS = 220L
-
     const val RESULT_HIGHLIGHT_ALPHA = 0.6f
     const val COLOR_MAX_CHANNEL = 255
+    const val ANIMATION_DURATION_FOREGROUND = 150L
+    const val ANIMATION_DURATION_BACKGROUND = 200L
+    const val TOPICS_MENU_CONTENT_OFFSET_Y = 40f
 }

@@ -16,6 +16,7 @@ import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageMenuM
 import com.sleeplessdog.matchthewords.game.presentation.controller.toFlagLargeRes
 import com.sleeplessdog.matchthewords.game.presentation.models.CategoryUi
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
+import com.sleeplessdog.matchthewords.utils.ConstantsApp
 import com.sleeplessdog.matchthewords.utils.SupportFunctions
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -57,7 +58,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         setupObservers()
     }
 
-    private fun setupLanguageMenuManager(){
+    private fun setupLanguageMenuManager() {
         languageMenuManager = LanguageMenuManager(
             root = binding.languageSelectRoot,
             bg = binding.languagesBackground,
@@ -169,7 +170,8 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         }
 
         binding.btnShowAllCategories.setOnClickListener {
-            preselected = vm.state.value.user.plus(vm.state.value.defaults).filter { it.isSelected }
+            preselected = vm.state.value.user.plus(vm.state.value.defaults)
+                .filter { it.isSelected }
                 .map { it.key }.toSet()
             showTopicsMenu()
         }
@@ -212,7 +214,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
             langAdapter.setSelected(picked)
             binding.rvLanguageList.postDelayed({
                 languageMenuManager.hide()
-            }, 150)
+            }, ConstantsApp.ANIMATION_DURATION_FOREGROUND)
         }
 
         binding.rvLanguageList.apply {
@@ -259,52 +261,75 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         val root = binding.rootTopics
         if (root.visibility == View.VISIBLE) return
 
-        root.alpha = 0f
+        root.alpha = ConstantsApp.ZERO_SCALE
         root.visibility = View.VISIBLE
-        root.animate().alpha(1f).setDuration(150).start()
+        root.animate()
+            .alpha(ConstantsApp.FULL_ALPHA)
+            .setDuration(ConstantsApp.ANIMATION_DURATION_FOREGROUND)
+            .start()
 
         binding.topicsBackground.apply {
-            alpha = 0f
-            animate().alpha(1f).setDuration(200).start()
+            alpha = ConstantsApp.ZERO_SCALE
+            animate()
+                .alpha(ConstantsApp.FULL_ALPHA)
+                .setDuration(ConstantsApp.ANIMATION_DURATION_BACKGROUND)
+                .start()
         }
 
         val contentViews = listOf(
-            binding.header, binding.categoriesScroll, binding.bottomButtons
+            binding.header,
+            binding.categoriesScroll,
+            binding.bottomButtons
         )
 
         contentViews.forEach { view ->
-            view.alpha = 0f
-            view.translationY = 40f
-            view.animate().alpha(1f).translationY(0f).setDuration(200).start()
+            view.alpha = ConstantsApp.ZERO_SCALE
+            view.translationY = ConstantsApp.TOPICS_MENU_CONTENT_OFFSET_Y
+            view.animate()
+                .alpha(ConstantsApp.FULL_ALPHA)
+                .translationY(ConstantsApp.ZERO_SCALE)
+                .setDuration(ConstantsApp.ANIMATION_DURATION_BACKGROUND)
+                .start()
         }
     }
+
 
     private fun hideTopicsMenu() {
         val root = binding.rootTopics
         if (root.visibility != View.VISIBLE) return
 
-        binding.topicsBackground.animate().alpha(0f).setDuration(200).start()
+        binding.topicsBackground.animate()
+            .alpha(ConstantsApp.ZERO_SCALE)
+            .setDuration(ConstantsApp.ANIMATION_DURATION_BACKGROUND)
+            .start()
 
         val contentViews = listOf(
-            binding.header, binding.categoriesScroll, binding.bottomButtons
+            binding.header,
+            binding.categoriesScroll,
+            binding.bottomButtons
         )
 
-        var finished = 0
+        var finished = ConstantsApp.INVALID_ID + 1
         val total = contentViews.size
 
         contentViews.forEach { view ->
-            view.animate().alpha(0f).translationY(40f).setDuration(200).withEndAction {
-                finished++
-                if (finished == total) {
-                    root.visibility = View.GONE
+            view.animate()
+                .alpha(ConstantsApp.ZERO_SCALE)
+                .translationY(ConstantsApp.TOPICS_MENU_CONTENT_OFFSET_Y)
+                .setDuration(ConstantsApp.ANIMATION_DURATION_BACKGROUND)
+                .withEndAction {
+                    finished++
+                    if (finished == total) {
+                        root.visibility = View.GONE
 
-                    contentViews.forEach { v ->
-                        v.alpha = 1f
-                        v.translationY = 0f
+                        contentViews.forEach { v ->
+                            v.alpha = ConstantsApp.FULL_ALPHA
+                            v.translationY = ConstantsApp.ZERO_SCALE
+                        }
+                        binding.topicsBackground.alpha = ConstantsApp.FULL_ALPHA
                     }
-                    binding.topicsBackground.alpha = 1f
                 }
-            }.start()
+                .start()
         }
     }
 
