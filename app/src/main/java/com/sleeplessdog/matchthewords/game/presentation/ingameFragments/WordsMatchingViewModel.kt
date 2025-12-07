@@ -10,7 +10,7 @@ import com.sleeplessdog.matchthewords.game.presentation.interfaces.InGameLogic
 import com.sleeplessdog.matchthewords.game.presentation.models.IngameWordsState
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
 import com.sleeplessdog.matchthewords.utils.ShuffleFunctions
-import com.sleeplessdog.matchthewords.utils.TimeReactionConstants
+import com.sleeplessdog.matchthewords.utils.ConstantsTimeReaction
 
 class WordsMatchingViewModel(
     private val shuffleFunctions: ShuffleFunctions,
@@ -133,7 +133,7 @@ class WordsMatchingViewModel(
                 if (matchedIdsOnPage.size >= currentPagePairs.size) {
                     openPage(currentPage + 1)
                 }
-            }, TimeReactionConstants.REACTION)
+            }, ConstantsTimeReaction.REACTION)
         } else {
             // ошибка — подсветка и сброс
             events.value = GameEvent.Wrong(wordsIds)
@@ -145,7 +145,7 @@ class WordsMatchingViewModel(
             handler.postDelayed({
                 val cur = _state.value ?: return@postDelayed
                 _state.value = cur.copy(errorWords = emptyList(), locked = false)
-            }, TimeReactionConstants.REACTION)
+            }, ConstantsTimeReaction.REACTION)
         }
     }
 

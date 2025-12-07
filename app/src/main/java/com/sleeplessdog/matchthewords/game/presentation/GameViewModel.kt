@@ -7,11 +7,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.material.color.utilities.Score.score
 import com.sleeplessdog.matchthewords.game.data.repositories.AppPrefs
 import com.sleeplessdog.matchthewords.game.domain.api.ScoreInteractor
 import com.sleeplessdog.matchthewords.game.domain.interactors.WordsController
-import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.game.domain.models.WordsCategoriesList
 import com.sleeplessdog.matchthewords.game.domain.usecase.GetSelectedCategoriesUC
 import com.sleeplessdog.matchthewords.game.presentation.interfaces.GameEvent
@@ -19,15 +17,14 @@ import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
 import com.sleeplessdog.matchthewords.game.presentation.models.GameSettings
 import com.sleeplessdog.matchthewords.game.presentation.models.GameState
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
-import com.sleeplessdog.matchthewords.game.presentation.models.Language
 import com.sleeplessdog.matchthewords.game.presentation.models.MatchState
 import com.sleeplessdog.matchthewords.game.presentation.models.SessionStats
 import com.sleeplessdog.matchthewords.game.presentation.models.StatsState
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
 import com.sleeplessdog.matchthewords.game.presentation.parentControllers.ProgressController
-import com.sleeplessdog.matchthewords.utils.GamePrices
+import com.sleeplessdog.matchthewords.utils.ConstantsGamePrices
 import com.sleeplessdog.matchthewords.utils.SupportFunctions
-import com.sleeplessdog.matchthewords.utils.TimeReactionConstants
+import com.sleeplessdog.matchthewords.utils.ConstantsTimeReaction
 import kotlinx.coroutines.launch
 
 class GameViewModel(
@@ -139,7 +136,7 @@ class GameViewModel(
 
             handler.postDelayed({
                 _gameState.value = _gameState.value?.copy(state = GameState.GAME)
-            }, TimeReactionConstants.LOADING)
+            }, ConstantsTimeReaction.LOADING)
         }
     }
 
@@ -185,7 +182,7 @@ class GameViewModel(
     }
 
     private fun addScoreAndLive() {
-        score += GamePrices.ANSWER_PRICE
+        score += ConstantsGamePrices.ANSWER_PRICE
         if (lives < 3) {
             lives++
         }
@@ -196,7 +193,7 @@ class GameViewModel(
         if (lives <= 0) {
             onGameEnd()
         }
-        score -= GamePrices.MISTAKE_PRICE
+        score -= ConstantsGamePrices.MISTAKE_PRICE
     }
 
     fun onGameEvent(ev: GameEvent) {
@@ -260,7 +257,7 @@ class GameViewModel(
             )
             wordsController.putRoundStats(stats)
             scoreInteractor.updateTodaysResult(score)
-        }, TimeReactionConstants.LOADING)
+        }, ConstantsTimeReaction.LOADING)
     }
 
     fun restartGame() {

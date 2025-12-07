@@ -10,7 +10,7 @@ import com.sleeplessdog.matchthewords.game.presentation.interfaces.InGameLogic
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
 import com.sleeplessdog.matchthewords.game.presentation.models.WriteTheWordLetterUi
 import com.sleeplessdog.matchthewords.game.presentation.models.WriteTheWordUi
-import com.sleeplessdog.matchthewords.utils.TimeReactionConstants
+import com.sleeplessdog.matchthewords.utils.ConstantsTimeReaction
 
 class WriteTheWordViewModel : ViewModel(), InGameLogic {
 
@@ -125,7 +125,7 @@ class WriteTheWordViewModel : ViewModel(), InGameLogic {
 
         _ui.value = state.copy(locked = true)
         events.value = if (ok) GameEvent.Correct(currentIds) else GameEvent.Wrong(currentIds)
-        handler.postDelayed({ nextQuestion() }, TimeReactionConstants.NEXT_QUESTION)
+        handler.postDelayed({ nextQuestion() }, ConstantsTimeReaction.NEXT_QUESTION)
     }
 
     override fun onCleared() {

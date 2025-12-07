@@ -12,7 +12,7 @@ import com.sleeplessdog.matchthewords.game.presentation.models.GameUiOOF
 import com.sleeplessdog.matchthewords.game.presentation.models.OneOfFourQuestion
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
 import com.sleeplessdog.matchthewords.utils.ShuffleFunctions
-import com.sleeplessdog.matchthewords.utils.TimeReactionConstants
+import com.sleeplessdog.matchthewords.utils.ConstantsTimeReaction
 
 class OneOfFourViewModel(
     val shuffleFunctions: ShuffleFunctions
@@ -62,7 +62,7 @@ class OneOfFourViewModel(
                 if (questionSeq == seq) {
                     consumeAndNext(q)
                 }
-            }, TimeReactionConstants.REACTION)
+            }, ConstantsTimeReaction.REACTION)
         } else {
             events.value = GameEvent.Wrong(wordsIds)
             val newStates = (_ui.value?.states ?: List(4) { ButtonState.DEFAULT }).toMutableList()
@@ -78,7 +78,7 @@ class OneOfFourViewModel(
                     st[buttonIndex] = ButtonState.DISABLED
                     _ui.value = cur.copy(states = st)
                 }
-            }, TimeReactionConstants.DISABLE)
+            }, ConstantsTimeReaction.DISABLE)
         }
     }
 

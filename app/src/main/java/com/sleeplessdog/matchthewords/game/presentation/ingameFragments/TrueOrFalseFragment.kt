@@ -19,6 +19,8 @@ import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
 import com.sleeplessdog.matchthewords.game.presentation.models.TOFButtonState
 import com.sleeplessdog.matchthewords.game.presentation.models.TfQuestionUi
 import com.sleeplessdog.matchthewords.game.presentation.parentControllers.SwipeTouchListener
+import com.sleeplessdog.matchthewords.utils.ConstantsApp
+import com.sleeplessdog.matchthewords.utils.ConstantsTimeReaction
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -137,11 +139,12 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
     private fun attachSwipeTo(card: View) {
         card.setOnTouchListener(
             SwipeTouchListener(
-            card = card,
-            wouldBeCorrect = { isRight -> isRight == currentIsCorrect },
-            onSwipeRightCommit = { commitAnswer(true, pressedButton = btnTrue) },
-            onSwipeLeftCommit = { commitAnswer(false, pressedButton = btnFalse) },
-            canSwipe = { childVM.ui.value?.locked == false }))
+                card = card,
+                wouldBeCorrect = { isRight -> isRight == currentIsCorrect },
+                onSwipeRightCommit = { commitAnswer(true, pressedButton = btnTrue) },
+                onSwipeLeftCommit = { commitAnswer(false, pressedButton = btnFalse) },
+                canSwipe = { childVM.ui.value?.locked == false })
+        )
     }
 
 
@@ -157,7 +160,10 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
             bindCard(nextCard, preview)
             nextCard.apply {
                 visibility = View.VISIBLE
-                alpha = 0f; translationY = 24f; scaleX = 0.98f; scaleY = 0.98f
+                alpha = ConstantsApp.EMPTY_ALPHA;
+                translationY = ConstantsApp.CARD_PREVIEW_TRANSLATION_Y;
+                scaleX = ConstantsApp.CARD_PREVIEW_SCALE;
+                scaleY = ConstantsApp.CARD_PREVIEW_SCALE
             }
         }
 
@@ -165,7 +171,11 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
         val color = if (ok) R.color.green_primary else R.color.red_primary
 
         (topCard.background?.mutate())?.let { d ->
-            DrawableCompat.setTint(d, colorWithAlpha(requireContext().getColor(color), 0.6f))
+            DrawableCompat.setTint(
+                d, colorWithAlpha(
+                    requireContext().getColor(color), ConstantsApp.RESULT_HIGHLIGHT_ALPHA
+                )
+            )
             topCard.background = d
         }
 
@@ -175,7 +185,7 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
         other.applyState(TOFButtonState.DEFAULT)
 
         viewLifecycleOwner.lifecycleScope.launch {
-            delay(PAUSE_BEFORE_REACTION)
+            delay(ConstantsTimeReaction.PAUSE_BEFORE_REACTION)
 
             animateParallelSwap(isRight) {
                 if (isRight) childVM.onTrueClicked() else childVM.onFalseClicked()
@@ -196,39 +206,49 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
 
         // top уезжает
         topCard.animate().translationX(dir * topCard.width.toFloat())
-            .translationY(-topCard.height * 0.35f).rotation(dir * 35f).alpha(0f).setDuration(220)
-            .start()
+            .translationY(-topCard.height * ConstantsApp.SWIPE_VERTICAL_FACTOR)
+            .rotation(dir * ConstantsApp.SWIPE_ROTATION_DEGREES).alpha(ConstantsApp.EMPTY_ALPHA)
+            .setDuration(ConstantsApp.CARD_SWAP_DURATION_MS).start()
 
         // next въезжает
-        nextCard.animate().alpha(1f).translationY(0f).scaleX(1f).scaleY(1f).setDuration(220)
-            .withEndAction(end).start()
+        nextCard.animate().alpha(ConstantsApp.FULL_ALPHA).translationY(ConstantsApp.ZERO_SCALE)
+            .scaleX(ConstantsApp.FULL_SCALE).scaleY(ConstantsApp.FULL_SCALE)
+            .setDuration(ConstantsApp.CARD_SWAP_DURATION_MS).withEndAction(end).start()
     }
+
 
     private fun swapCards() {
         // вернуть старую topCard в исходное невидимое состояние — станет «next»
         topCard.apply {
-            translationX = 0f
-            translationY = 0f
-            rotation = 0f
-            alpha = 1f
+            translationX = ConstantsApp.ZERO_SCALE
+            translationY = ConstantsApp.ZERO_SCALE
+            rotation = ConstantsApp.ZERO_SCALE
+            alpha = ConstantsApp.FULL_ALPHA
             visibility = View.INVISIBLE
             background = requireContext().getDrawable(R.drawable.bg_tof_card_r24)
             setOnTouchListener(null)
         }
+
         // поменять ссылки
         val tmp = topCard
         topCard = nextCard
         nextCard = tmp
     }
 
+
     // утилита для альфы
     private fun colorWithAlpha(color: Int, alpha: Float): Int {
-        val a = (alpha.coerceIn(0f, 1f) * 255).toInt()
-        val r = Color.red(color);
-        val g = Color.green(color);
+        val a = (alpha.coerceIn(
+            ConstantsApp.EMPTY_ALPHA, ConstantsApp.FULL_ALPHA
+        ) * ConstantsApp.COLOR_MAX_CHANNEL).toInt()
+
+        val r = Color.red(color)
+        val g = Color.green(color)
         val b = Color.blue(color)
+
         return Color.argb(a, r, g, b)
     }
+
 
     private fun TofButton.applyState(state: TOFButtonState) {
         root.setBackgroundResource(state.backgroundRes)
@@ -241,10 +261,6 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
         }
         icon.imageTintList = ColorStateList.valueOf(requireContext().getColor(tint))
         root.translationY = state.offsetY
-    }
-
-    private companion object {
-        const val PAUSE_BEFORE_REACTION = 200L
     }
 }
 

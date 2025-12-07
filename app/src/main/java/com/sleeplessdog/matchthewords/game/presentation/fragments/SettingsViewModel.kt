@@ -18,6 +18,8 @@ import com.sleeplessdog.matchthewords.game.presentation.models.CategoriesUiState
 import com.sleeplessdog.matchthewords.game.presentation.models.CategoryUi
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
+import com.sleeplessdog.matchthewords.utils.ConstantsApp
+import com.sleeplessdog.matchthewords.utils.ConstantsApp.FEATURED_LIMIT
 import com.sleeplessdog.matchthewords.utils.SupportFunctions.drawableIdByName
 import com.sleeplessdog.matchthewords.utils.SupportFunctions.stringByName
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -82,7 +84,7 @@ class SettingsViewModel(
 
         viewModelScope.launch {
             combine(
-                observeFeaturedUC(limit = 8), observeAllGroupedUC()
+                observeFeaturedUC(ConstantsApp.FEATURED_LIMIT), observeAllGroupedUC()
             ) { featured, grouped ->
                 val toUi: (WordCategory) -> CategoryUi = { m ->
                     val uiLang = _uiLanguage.value ?: appPrefs.getUiLanguage()
@@ -101,8 +103,11 @@ class SettingsViewModel(
                 val allDomain = userDomain + defaultDomain
 
                 val featuredDomain =
-                    allDomain.sortedWith(compareByDescending<WordCategory> { it.isSelected }.thenByDescending { it.isUser }
-                        .thenBy { it.orderInBlock }.thenBy { it.titleKey }).take(FEATURED_LIMIT)
+                    allDomain.sortedWith(compareByDescending<WordCategory> { it.isSelected }
+                        .thenByDescending { it.isUser }
+                        .thenBy { it.orderInBlock }
+                        .thenBy { it.titleKey })
+                        .take(FEATURED_LIMIT)
 
                 CategoriesUiState(
                     featured = featuredDomain.map(toUi),
@@ -178,9 +183,5 @@ class SettingsViewModel(
     private fun rebuild(ui: Language, study: Language) {
         _uiLanguageList.value = Language.entries.filter { it != study }
         _studyLanguageList.value = Language.entries.filter { it != ui }
-    }
-
-    private companion object {
-        val FEATURED_LIMIT = 8
     }
 }

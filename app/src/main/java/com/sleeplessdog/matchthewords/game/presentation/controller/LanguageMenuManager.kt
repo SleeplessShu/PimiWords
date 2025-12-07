@@ -3,8 +3,9 @@ package com.sleeplessdog.matchthewords.game.presentation.controller
 import android.view.View
 import android.widget.TextView
 import androidx.core.view.isVisible
+import com.sleeplessdog.matchthewords.utils.ConstantsApp
 
-class LanguageMenuManager (
+class LanguageMenuManager(
     private val root: View,              // binding.languageSelectRoot
     private val bg: View,                // binding.languagesBackground
     private val bgSolid: View,           // binding.languagesBackgroundSolid
@@ -25,7 +26,7 @@ class LanguageMenuManager (
      */
     fun show(titleResId: Int, onUpdateData: () -> Unit) {
         // Если уже открыто и полностью видно - закрываем (режим toggle)
-        if (root.isVisible && root.alpha == 1f) {
+        if (root.isVisible && root.alpha == ConstantsApp.FULL_ALPHA) {
             hide()
             return
         }
@@ -38,14 +39,11 @@ class LanguageMenuManager (
 
         // 3. Анимация появления меню
         root.visibility = View.VISIBLE
-        root.alpha = 0f
-        root.scaleY = 0f
-        root.pivotY = 0f
-        root.animate()
-            .alpha(1f)
-            .scaleY(1f)
-            .setDuration(200)
-            .start()
+        root.alpha = ConstantsApp.EMPTY_ALPHA
+        root.scaleY = ConstantsApp.ZERO_SCALE
+        root.pivotY = ConstantsApp.ZERO_SCALE
+        root.animate().alpha(ConstantsApp.FULL_ALPHA).scaleY(ConstantsApp.FULL_SCALE)
+            .setDuration(ConstantsApp.FADE_IN_DURATION_MS).start()
 
         // 4. Анимация фона
         showBgIfNeeded()
@@ -53,12 +51,9 @@ class LanguageMenuManager (
 
     fun hide() {
         if (root.isVisible) {
-            root.animate()
-                .alpha(0f)
-                .scaleY(0f)
-                .setDuration(200)
-                .withEndAction { root.visibility = View.GONE }
-                .start()
+            root.animate().alpha(ConstantsApp.EMPTY_ALPHA).scaleY(ConstantsApp.ZERO_SCALE)
+                .setDuration(ConstantsApp.FADE_IN_DURATION_MS)
+                .withEndAction { root.visibility = View.GONE }.start()
         }
         hideBg()
     }
@@ -66,23 +61,27 @@ class LanguageMenuManager (
     private fun showBgIfNeeded() {
         if (!bg.isVisible) {
             bg.visibility = View.VISIBLE
-            bg.alpha = 0f
-            bg.animate().alpha(1f).setDuration(200).start()
+            bg.alpha = ConstantsApp.EMPTY_ALPHA
+            bg.animate().alpha(ConstantsApp.FULL_ALPHA)
+                .setDuration(ConstantsApp.FADE_IN_DURATION_MS).start()
         }
         if (!bgSolid.isVisible) {
             bgSolid.visibility = View.VISIBLE
-            bgSolid.alpha = 0f
-            bgSolid.animate().alpha(1f).setDuration(200).start()
+            bgSolid.alpha = ConstantsApp.EMPTY_ALPHA
+            bgSolid.animate().alpha(ConstantsApp.FULL_ALPHA)
+                .setDuration(ConstantsApp.FADE_IN_DURATION_MS).start()
         }
     }
 
     private fun hideBg() {
         if (bg.isVisible) {
-            bg.animate().alpha(0f).setDuration(200)
+            bg.animate().alpha(ConstantsApp.EMPTY_ALPHA)
+                .setDuration(ConstantsApp.FADE_IN_DURATION_MS)
                 .withEndAction { bg.visibility = View.GONE }.start()
         }
         if (bgSolid.isVisible) {
-            bgSolid.animate().alpha(0f).setDuration(200)
+            bgSolid.animate().alpha(ConstantsApp.EMPTY_ALPHA)
+                .setDuration(ConstantsApp.FADE_IN_DURATION_MS)
                 .withEndAction { bgSolid.visibility = View.GONE }.start()
         }
     }
