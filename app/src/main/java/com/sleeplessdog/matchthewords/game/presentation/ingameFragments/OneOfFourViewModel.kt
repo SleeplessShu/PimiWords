@@ -5,14 +5,17 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sleeplessdog.matchthewords.game.presentation.interfaces.GameEvent
 import com.sleeplessdog.matchthewords.game.presentation.interfaces.InGameLogic
 import com.sleeplessdog.matchthewords.game.presentation.models.ButtonState
 import com.sleeplessdog.matchthewords.game.presentation.models.GameUiOOF
 import com.sleeplessdog.matchthewords.game.presentation.models.OneOfFourQuestion
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
-import com.sleeplessdog.matchthewords.utils.ShuffleFunctions
 import com.sleeplessdog.matchthewords.utils.ConstantsTimeReaction
+import com.sleeplessdog.matchthewords.utils.ShuffleFunctions
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class OneOfFourViewModel(
     val shuffleFunctions: ShuffleFunctions
@@ -45,40 +48,51 @@ class OneOfFourViewModel(
         val state = _ui.value ?: return
         if (state.locked) return
         if (buttonIndex !in 0..3) return
-
-        // новая проверка на локальный стейт кнопки
         val btnState = state.states.getOrNull(buttonIndex) ?: ButtonState.DEFAULT
         if (!btnState.enabled) return
-
         val q = current ?: return
         val picked = q.optionsSecond.getOrNull(buttonIndex) ?: return
         val isCorrect = picked.id == q.correctSecondId
         val wordsIds = listOf(picked.id, q.correctSecondId)
         if (isCorrect) {
-            events.value = GameEvent.Correct(wordsIds)
-            paintAndLock(buttonIndex)
-            val seq = questionSeq
-            handler.postDelayed({
-                if (questionSeq == seq) {
-                    consumeAndNext(q)
-                }
-            }, ConstantsTimeReaction.REACTION)
+            reactOnCorrect(wordsIds, buttonIndex, q)
         } else {
-            events.value = GameEvent.Wrong(wordsIds)
-            val newStates = (_ui.value?.states ?: List(4) { ButtonState.DEFAULT }).toMutableList()
-            newStates[buttonIndex] = ButtonState.ERROR
-            _ui.value = _ui.value?.copy(states = newStates)
+            reactOnWrong(wordsIds, buttonIndex)
+        }
+    }
 
-            val seq = questionSeq
-            handler.postDelayed({
-                if (questionSeq != seq) return@postDelayed
-                val cur = _ui.value ?: return@postDelayed
-                val st = cur.states.toMutableList()
-                if (!cur.locked && st.getOrNull(buttonIndex) == ButtonState.ERROR) {
-                    st[buttonIndex] = ButtonState.DISABLED
-                    _ui.value = cur.copy(states = st)
-                }
-            }, ConstantsTimeReaction.DISABLE)
+    private fun reactOnCorrect(wordsIds: List<Int>, buttonIndex: Int, q: OneOfFourQuestion) {
+        events.value = GameEvent.Correct(wordsIds)
+        paintAndLock(buttonIndex)
+        val seq = questionSeq
+
+        viewModelScope.launch {
+            delay(ConstantsTimeReaction.REACTION)
+            if (questionSeq == seq) {
+                consumeAndNext(q)
+            }
+        }
+    }
+
+    private fun reactOnWrong(wordsIds: List<Int>, buttonIndex: Int) {
+        events.value = GameEvent.Wrong(wordsIds)
+        val newStates = (_ui.value?.states ?: List(4) { ButtonState.DEFAULT }).toMutableList()
+        newStates[buttonIndex] = ButtonState.ERROR
+        _ui.value = _ui.value?.copy(states = newStates)
+        val seq = questionSeq
+
+        viewModelScope.launch {
+            delay(ConstantsTimeReaction.REACTION)
+
+            if (questionSeq != seq) return@launch
+
+            val cur = _ui.value ?: return@launch
+            val st = cur.states.toMutableList()
+
+            if (!cur.locked && st.getOrNull(buttonIndex) == ButtonState.ERROR) {
+                st[buttonIndex] = ButtonState.DISABLED
+                _ui.value = cur.copy(states = st)
+            }
         }
     }
 

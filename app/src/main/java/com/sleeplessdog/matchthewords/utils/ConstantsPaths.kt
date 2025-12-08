@@ -10,5 +10,11 @@ object ConstantsPaths {
     const val DICTIONARY_NAME = "dictionary.db"
     const val THEME_PREFERENCES = "themePreferences"
     const val NIGHT_MODE = "NightMode"
-    const val FIREBASE_PATH = "https://match-the-words-d26c2-default-rtdb.europe-west1.firebasedatabase.app"
+    const val FIREBASE_PATH =
+        "https://match-the-words-d26c2-default-rtdb.europe-west1.firebasedatabase.app"
+    const val PREFS_NAME = "app_prefs"
+    const val KEY_UI_LANG = "ui_lang"
+    const val KEY_STUDY_LANG = "study_lang"
+    const val KEY_LEVELS = "levels"
+    const val KEY_DIFFICULTY = "difficulty"
 }

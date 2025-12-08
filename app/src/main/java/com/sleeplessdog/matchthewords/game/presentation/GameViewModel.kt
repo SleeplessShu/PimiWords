@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sleeplessdog.matchthewords.game.data.repositories.AppPrefs
+import com.sleeplessdog.matchthewords.game.data.repositories.LanguagePrefs
 import com.sleeplessdog.matchthewords.game.domain.api.ScoreInteractor
 import com.sleeplessdog.matchthewords.game.domain.interactors.WordsController
 import com.sleeplessdog.matchthewords.game.domain.models.WordsCategoriesList
@@ -37,6 +38,7 @@ class GameViewModel(
     private val progressController: ProgressController,
     private val scoreInteractor: ScoreInteractor,
     private val appPrefs: AppPrefs,
+    private val languagePrefs: LanguagePrefs,
     private val getSelectedCategoriesUC: GetSelectedCategoriesUC
 ) : ViewModel() {
 
@@ -91,8 +93,8 @@ class GameViewModel(
         }.toSet()
 
         // 2. Читаем префы
-        val interfaceLang = appPrefs.getUiLanguage()
-        val studyLang = appPrefs.getStudyLanguage()
+        val interfaceLang = languagePrefs.getUiLanguage()
+        val studyLang = languagePrefs.getStudyLanguage()
         val difficultLevel = appPrefs.getDifficulty()
         val wordsLevel = appPrefs.getLevels()
 

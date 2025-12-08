@@ -24,52 +24,63 @@ class SwipeTouchListener(
     override fun onTouch(v: View, event: MotionEvent): Boolean {
         if (!canSwipe()) return false
 
-        when (event.actionMasked) {
+        return when (event.actionMasked) {
+
             MotionEvent.ACTION_DOWN -> {
                 downX = event.rawX
                 downY = event.rawY
                 isSwiping = false
-                return true
+                true
             }
 
             MotionEvent.ACTION_MOVE -> {
                 val dx = event.rawX - downX
                 val dy = event.rawY - downY
-                if (!isSwiping && abs(dy) > abs(dx)) return false
-                isSwiping = true
 
-                val clamped = dx.coerceIn(-dragLimit, dragLimit)
-                card.translationX = dx
-                card.translationY = -abs(clamped) * SWIPE_VERTICAL_TRANSLATION_FACTOR
-                card.rotation = (clamped / dragLimit) * maxRotation
-                return true
+                if (!isSwiping && kotlin.math.abs(dy) > kotlin.math.abs(dx)) {
+                    false
+                } else {
+                    isSwiping = true
+
+                    val clamped = dx.coerceIn(
+                        -ConstantsApp.SWIPE_DRAG_LIMIT,
+                        ConstantsApp.SWIPE_DRAG_LIMIT
+                    )
+
+                    card.translationX = dx
+                    card.translationY =
+                        -kotlin.math.abs(clamped) * ConstantsApp.SWIPE_VERTICAL_TRANSLATION_FACTOR
+
+                    card.rotation =
+                        (clamped / ConstantsApp.SWIPE_DRAG_LIMIT) * ConstantsApp.SWIPE_MAX_ROTATION
+
+                    true
+                }
             }
 
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 if (!isSwiping) {
                     reset()
-                    return false
-                }
-                val dx = event.rawX - downX
-                val commitRight = dx > commitThreshold
-                val commitLeft = dx < -commitThreshold
+                    false
+                } else {
+                    val dx = event.rawX - downX
 
-                when {
-                    commitRight -> {
-                        onSwipeRightCommit()
+                    val commitRight = dx > ConstantsApp.SWIPE_COMMIT_THRESHOLD
+                    val commitLeft = dx < -ConstantsApp.SWIPE_COMMIT_THRESHOLD
+
+                    when {
+                        commitRight -> onSwipeRightCommit()
+                        commitLeft -> onSwipeLeftCommit()
+                        else -> reset()
                     }
-
-                    commitLeft -> {
-                        onSwipeLeftCommit()
-                    }
-
-                    else -> reset()
+                    true
                 }
-                return true
             }
+
+            else -> false
         }
-        return false
     }
+
 
     private fun reset() {
         card.animate()
@@ -78,6 +89,5 @@ class SwipeTouchListener(
             .rotation(ConstantsApp.ZERO_SCALE)
             .setDuration(ConstantsApp.SWIPE_RESET_DURATION_MS)
             .start()
-
     }
 }

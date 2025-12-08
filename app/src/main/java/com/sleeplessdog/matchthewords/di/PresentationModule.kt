@@ -4,6 +4,8 @@ import android.os.Handler
 import android.os.Looper
 import com.sleeplessdog.matchthewords.game.data.repositories.AppPrefs
 import com.sleeplessdog.matchthewords.game.data.repositories.AppPrefsImpl
+import com.sleeplessdog.matchthewords.game.data.repositories.LanguagePrefs
+import com.sleeplessdog.matchthewords.game.data.repositories.LanguagePrefsImpl
 import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
 import com.sleeplessdog.matchthewords.game.presentation.fragments.GameSelectViewModel
 import com.sleeplessdog.matchthewords.game.presentation.fragments.SettingsViewModel
@@ -35,6 +37,7 @@ val presentationModule = module {
             progressController = get(),
             scoreInteractor = get(),
             appPrefs = get(),
+            languagePrefs = get(),
             getSelectedCategoriesUC = get()
         )
     }
@@ -71,11 +74,14 @@ val presentationModule = module {
             saveSelectionUC = get(),
             createUserUC = get(),
             app = androidApplication(),
-            appPrefs = get()
+            appPrefs = get(),
+            languagePrefs = get()
         )
     }
 
     single<AppPrefs> { AppPrefsImpl(get()) }
+
+    single<LanguagePrefs> { LanguagePrefsImpl(get()) }
 
     single { ShuffleFunctions() }
 

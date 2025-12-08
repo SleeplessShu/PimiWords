@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sleeplessdog.matchthewords.game.data.repositories.AppPrefs
+import com.sleeplessdog.matchthewords.game.data.repositories.LanguagePrefs
 import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.game.domain.models.WordCategory
 import com.sleeplessdog.matchthewords.game.domain.usecase.CreateUserCategoryUC
@@ -35,7 +36,8 @@ class SettingsViewModel(
     private val saveSelectionUC: SaveSelectionUC,
     private val createUserUC: CreateUserCategoryUC,
     private val app: Application,
-    private val appPrefs: AppPrefs
+    private val appPrefs: AppPrefs,
+    private val languagePrefs: LanguagePrefs,
 ) : ViewModel() {
     private val _uiLanguage = MutableLiveData<Language>()
     val uiLanguage: LiveData<Language> = _uiLanguage
@@ -62,19 +64,19 @@ class SettingsViewModel(
 
     init {
         viewModelScope.launch {
-            appPrefs.observeStudyLanguage().collect { newLanguage ->
+            languagePrefs.observeStudyLanguage().collect { newLanguage ->
                 _studyLanguage.value = newLanguage
             }
         }
 
         viewModelScope.launch {
-            appPrefs.observeUiLanguage().collect { newLanguage ->
+            languagePrefs.observeUiLanguage().collect { newLanguage ->
                 _uiLanguage.value = newLanguage
             }
         }
 
-        val ui = appPrefs.getUiLanguage()
-        val study = appPrefs.getStudyLanguage()
+        val ui = languagePrefs.getUiLanguage()
+        val study = languagePrefs.getStudyLanguage()
         _uiLanguage.value = ui
         _studyLanguage.value = study
         rebuild(ui, study)
@@ -87,7 +89,7 @@ class SettingsViewModel(
                 observeFeaturedUC(ConstantsApp.FEATURED_LIMIT), observeAllGroupedUC()
             ) { featured, grouped ->
                 val toUi: (WordCategory) -> CategoryUi = { m ->
-                    val uiLang = _uiLanguage.value ?: appPrefs.getUiLanguage()
+                    val uiLang = _uiLanguage.value ?: languagePrefs.getUiLanguage()
 
                     CategoryUi(
                         key = m.key,
@@ -135,14 +137,14 @@ class SettingsViewModel(
             LanguageAdapterState.UI -> {
                 val study = _studyLanguage.value ?: Language.SPANISH
                 _uiLanguage.value = newLang
-                appPrefs.save(newLang, study)
+                languagePrefs.saveLanguages(newLang, study)
                 rebuild(newLang, study)
             }
 
             LanguageAdapterState.STUDY -> {
                 val ui = _uiLanguage.value ?: Language.RUSSIAN
                 _studyLanguage.value = newLang
-                appPrefs.save(ui, newLang)
+                languagePrefs.saveLanguages(ui, newLang)
                 rebuild(ui, newLang)
             }
         }

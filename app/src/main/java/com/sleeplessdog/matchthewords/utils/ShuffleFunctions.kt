@@ -74,33 +74,37 @@ class ShuffleFunctions {
         rnd: Random = Random.Default
     ): OneOfFourQuestion? {
 
-        if (available.size < MIN_VARIANTS_COUNT_OOF) return null
+        var result: OneOfFourQuestion? = null
 
-        val baseIdx = rnd.nextInt(available.size)
-        val base = available[baseIdx]
+        if (available.size >= MIN_VARIANTS_COUNT_OOF) {
 
-        val otherIdxs = (available.indices - baseIdx)
-            .shuffled(rnd)
-            .take(WRONG_ANSWERS)
+            val baseIdx = rnd.nextInt(available.size)
+            val base = available[baseIdx]
 
-        val wrongPairs = if (otherIdxs.size == WRONG_ANSWERS) {
-            otherIdxs.map { available[it] }
-        } else {
-            null
-        } ?: return null
+            val otherIdxs = (available.indices - baseIdx)
+                .shuffled(rnd)
+                .take(WRONG_ANSWERS)
 
-        val consumed = (listOf(base) + wrongPairs)
-            .map { it.first.id }
-            .toSet()
+            if (otherIdxs.size == WRONG_ANSWERS) {
 
-        val options = (wrongPairs.map { it.second } + base.second)
-            .shuffled(rnd)
+                val wrongPairs = otherIdxs.map { available[it] }
 
-        return OneOfFourQuestion(
-            originalFirst = base.first,
-            optionsSecond = options,
-            correctSecondId = base.second.id,
-            consumedFirstIds = consumed
-        )
+                val consumed = (listOf(base) + wrongPairs)
+                    .map { it.first.id }
+                    .toSet()
+
+                val options = (wrongPairs.map { it.second } + base.second)
+                    .shuffled(rnd)
+
+                result = OneOfFourQuestion(
+                    originalFirst = base.first,
+                    optionsSecond = options,
+                    correctSecondId = base.second.id,
+                    consumedFirstIds = consumed
+                )
+            }
+        }
+
+        return result
     }
 }

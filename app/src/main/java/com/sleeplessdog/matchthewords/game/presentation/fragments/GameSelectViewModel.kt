@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sleeplessdog.matchthewords.game.data.repositories.AppPrefs
+import com.sleeplessdog.matchthewords.game.data.repositories.LanguagePrefs
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
 import kotlinx.coroutines.launch
 
 class GameSelectViewModel(
-    private val appPrefs: AppPrefs
+    private val languagePrefs: LanguagePrefs,
 ) : ViewModel() {
 
     private val _uiLanguage = MutableLiveData<Language>()
@@ -28,13 +28,13 @@ class GameSelectViewModel(
     init {
         viewModelScope.launch {
             viewModelScope.launch {
-                appPrefs.observeStudyLanguage().collect { newLanguage ->
+                languagePrefs.observeStudyLanguage().collect { newLanguage ->
                     _studyLanguage.value = newLanguage
                 }
             }
         }
-        val ui = appPrefs.getUiLanguage()
-        val study = appPrefs.getStudyLanguage()
+        val ui = languagePrefs.getUiLanguage()
+        val study = languagePrefs.getStudyLanguage()
         rebuild(ui, study)
     }
 
@@ -45,7 +45,7 @@ class GameSelectViewModel(
     fun onLanguagePicked(newStudy: Language) {
         val ui = _uiLanguage.value ?: Language.RUSSIAN
         _studyLanguage.value = newStudy
-        appPrefs.save(ui, newStudy)
+        languagePrefs.saveLanguages(ui, newStudy)
         rebuild(ui, newStudy)
     }
 
@@ -57,4 +57,3 @@ class GameSelectViewModel(
         _navigateToGame.value = null
     }
 }
-
