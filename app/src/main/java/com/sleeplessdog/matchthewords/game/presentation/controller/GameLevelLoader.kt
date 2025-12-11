@@ -16,13 +16,13 @@ class GameLevelLoader(
     private val appPrefs: AppPrefs,
     private val languagePrefs: LanguagePrefs,
     private val wordsController: WordsController,
-    private val getSelectedCategoriesUC: GetSelectedCategoriesUC,
-    private val economyController: GameEconomyController
+    private val getSelectedCategoriesUC: GetSelectedCategoriesUC
 ) {
 
     data class LevelData(
         val settings: GameSettings,
-        val words: List<Pair<Word, Word>>
+        val words: List<Pair<Word, Word>>,
+        val difficultyValue: Int
     )
 
     suspend fun loadLevel(gameType: GameType): LevelData? {
@@ -40,10 +40,11 @@ class GameLevelLoader(
         )
 
         val diffValue = SupportFunctions.getGameDifficult(settings.difficult)
+
         val wordsNeeded = when (gameType) {
             GameType.WriteTheWord -> diffValue / WRITE_WORD_DIVIDER_LIST
-            GameType.OneOfFour    -> diffValue * ONE_OF_FOUR_MULTIPLIER
-            else                  -> diffValue
+            GameType.OneOfFour -> diffValue * ONE_OF_FOUR_MULTIPLIER
+            else -> diffValue
         }
 
         val pairs = wordsController.getWordPairs(
@@ -56,6 +57,6 @@ class GameLevelLoader(
 
         if (pairs.isEmpty()) return null
 
-        return LevelData(settings, pairs)
+        return LevelData(settings, pairs, diffValue)
     }
 }

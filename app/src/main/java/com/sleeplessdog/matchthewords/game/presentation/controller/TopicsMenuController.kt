@@ -7,12 +7,12 @@ import com.google.android.material.chip.Chip
 import com.sleeplessdog.matchthewords.game.presentation.models.CategoryUi
 import com.sleeplessdog.matchthewords.game.presentation.models.TopicsMenuViews
 import com.sleeplessdog.matchthewords.utils.ConstantsApp
-import com.sleeplessdog.matchthewords.utils.SupportFunctions
 
 class TopicsMenuController(
     private val topicsMenuViews: TopicsMenuViews,
     private val getPreselectedKeys: () -> Set<String>,
-    private val onSaveSelection: (Set<String>) -> Unit
+    private val onSaveSelection: (Set<String>) -> Unit,
+    private val featuredController: FeaturedCategoriesController
 ) {
 
     private var preselected: Set<String> = emptySet()
@@ -62,7 +62,7 @@ class TopicsMenuController(
         group.removeAllViews()
         items.forEach { item ->
             group.addView(
-                SupportFunctions.createCategoryChip(group, item).apply {
+                featuredController.createCategoryChip(group, item).apply {
                     isChecked = item.key in preselected || item.isSelected
                 }
             )
@@ -80,8 +80,6 @@ class TopicsMenuController(
 
         return (collect(topicsMenuViews.groupUser) + collect(topicsMenuViews.groupDefault)).toSet()
     }
-
-    // ---------- animations ----------
 
     private fun show() {
         if (topicsMenuViews.root.isVisible) return
@@ -102,7 +100,11 @@ class TopicsMenuController(
                 .start()
         }
 
-        val contentViews = listOf(topicsMenuViews.header, topicsMenuViews.categoriesScroll, topicsMenuViews.bottomButtons)
+        val contentViews = listOf(
+            topicsMenuViews.header,
+            topicsMenuViews.categoriesScroll,
+            topicsMenuViews.bottomButtons
+        )
         contentViews.forEach { view ->
             view.alpha = ConstantsApp.ZERO_SCALE
             view.translationY = ConstantsApp.TOPICS_MENU_CONTENT_OFFSET_Y
@@ -125,7 +127,11 @@ class TopicsMenuController(
             }
             .start()
 
-        val contentViews = listOf(topicsMenuViews.header, topicsMenuViews.categoriesScroll, topicsMenuViews.bottomButtons)
+        val contentViews = listOf(
+            topicsMenuViews.header,
+            topicsMenuViews.categoriesScroll,
+            topicsMenuViews.bottomButtons
+        )
         var finished = 0
         val total = contentViews.size
 

@@ -3,13 +3,7 @@ package com.sleeplessdog.matchthewords.utils
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.ContextCompat
-import com.google.android.material.chip.Chip
 import com.sleeplessdog.matchthewords.R
-import com.sleeplessdog.matchthewords.game.presentation.models.CategoryUi
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
 import com.sleeplessdog.matchthewords.utils.ConstantsApp.DATE_PATTERN
@@ -46,9 +40,9 @@ object SupportFunctions {
             LocalDate.parse(
                 entry.key, dateFormatter
             )
-        } // Преобразуем ключи в LocalDate
-            .toSortedMap(compareByDescending { it }) // Сортируем по убыванию дат
-            .mapKeys { entry -> entry.key.format(dateFormatter) } // Преобразуем обратно ключи в строковый формат
+        }
+            .toSortedMap(compareByDescending { it })
+            .mapKeys { entry -> entry.key.format(dateFormatter) }
     }
 
     fun getGameDifficult(difficultLevel: DifficultLevel): Int {
@@ -90,28 +84,6 @@ object SupportFunctions {
         } else {
             R.drawable.ic_category_miscellaneous
         }
-    }
-
-
-    fun createCategoryChip(parent: ViewGroup, item: CategoryUi): Chip {
-        val ctx = parent.context
-        val chip =
-            LayoutInflater.from(ctx).inflate(R.layout.view_category_chip, parent, false) as Chip
-
-        chip.text = item.title
-        chip.isCheckable = true
-        chip.tag = item.key
-        chip.chipBackgroundColor = ContextCompat.getColorStateList(
-            ctx, R.color.selector_options_button_bg
-        )
-        if (item.iconRes != 0) {
-            chip.chipIcon = AppCompatResources.getDrawable(ctx, item.iconRes)
-            chip.isChipIconVisible = true
-        } else {
-            chip.isChipIconVisible = false
-        }
-
-        return chip
     }
 
     fun Context.withLanguage(lang: Language): Context {

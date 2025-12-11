@@ -11,21 +11,17 @@ import com.sleeplessdog.matchthewords.databinding.SettingsFragmentBinding
 import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevelChips
 import com.sleeplessdog.matchthewords.game.presentation.controller.DifficultyCardController
+import com.sleeplessdog.matchthewords.game.presentation.controller.FeaturedCategoriesController
 import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageAdapter
 import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageLevelController
 import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageMenuController
 import com.sleeplessdog.matchthewords.game.presentation.controller.TopicsMenuController
 import com.sleeplessdog.matchthewords.game.presentation.controller.toFlagLargeRes
-import com.sleeplessdog.matchthewords.game.presentation.models.CategoryUi
+import com.sleeplessdog.matchthewords.game.presentation.models.LanguageAdapterState
 import com.sleeplessdog.matchthewords.game.presentation.models.TopicsMenuViews
 import com.sleeplessdog.matchthewords.utils.ConstantsApp
-import com.sleeplessdog.matchthewords.utils.SupportFunctions
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
-enum class LanguageAdapterState {
-    UI, STUDY
-}
 
 class SettingsFragment : Fragment(R.layout.settings_fragment) {
 
@@ -40,7 +36,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
     private lateinit var levelController: LanguageLevelController
     private lateinit var difficultyController: DifficultyCardController
     private lateinit var topicsController: TopicsMenuController
-
+    private lateinit var featuredController: FeaturedCategoriesController
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = SettingsFragmentBinding.bind(view)
@@ -83,6 +79,11 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
     }
 
     private fun setupTopicsController() {
+        featuredController = FeaturedCategoriesController(
+            chipGroup = binding.cgFeaturedCategories,
+            onToggle = { key -> vm.onToggle(key) }
+        )
+
         topicsController = TopicsMenuController(
             topicsMenuViews = TopicsMenuViews(
                 root = binding.rootTopics,
@@ -98,7 +99,9 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
             ), getPreselectedKeys = {
                 vm.state.value.user.plus(vm.state.value.defaults).filter { it.isSelected }
                     .map { it.key }.toSet()
-            }, onSaveSelection = { keys -> vm.onSave(keys) })
+            }, onSaveSelection = { keys -> vm.onSave(keys) },
+            featuredController
+        )
     }
 
     private fun setupLanguageList() {
@@ -124,7 +127,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
     private fun observeUiState() {
         viewLifecycleOwner.lifecycleScope.launch {
             vm.state.collect { state ->
-                renderFeatured(state.featured)
+                featuredController.render(state.featured)
                 topicsController.updateGroups(
                     user = state.user, defaults = state.defaults
                 )
@@ -166,37 +169,25 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
 
     private fun observeEvents() {
         binding.ivFlagUi.setOnClickListener {
-            currentLangMode = LanguageAdapterState.UI
-
-            languageMenuController.show(R.string.int_language) {
-                val list = vm.uiLanguageList.value ?: emptyList()
-                val selected = vm.uiLanguage.value
-                langAdapter.submit(list, selected)
-                selected?.let { langAdapter.setSelected(it) }
-            }
+            languageMenuController.openMenuForMode(
+                mode = LanguageAdapterState.UI,
+                uiList = vm.uiLanguageList.value,
+                studyList = vm.studyLanguageList.value,
+                uiSelected = vm.uiLanguage.value,
+                studySelected = vm.studyLanguage.value,
+                adapter = langAdapter
+            )
         }
 
         binding.ivFlagStudy.setOnClickListener {
-            currentLangMode = LanguageAdapterState.STUDY
-
-            languageMenuController.show(R.string.std_language) {
-                val list = vm.studyLanguageList.value ?: emptyList()
-                val selected = vm.studyLanguage.value
-                langAdapter.submit(list, selected)
-                selected?.let { langAdapter.setSelected(it) }
-            }
-        }
-    }
-
-    private fun renderFeatured(list: List<CategoryUi>) {
-        val group = binding.cgFeaturedCategories
-        group.removeAllViews()
-
-        list.forEach { item ->
-            val chip = SupportFunctions.createCategoryChip(group, item)
-            chip.isChecked = item.isSelected
-            chip.setOnClickListener { vm.onToggle(item.key) }
-            group.addView(chip)
+            languageMenuController.openMenuForMode(
+                mode = LanguageAdapterState.STUDY,
+                uiList = vm.uiLanguageList.value,
+                studyList = vm.studyLanguageList.value,
+                uiSelected = vm.uiLanguage.value,
+                studySelected = vm.studyLanguage.value,
+                adapter = langAdapter
+            )
         }
     }
 

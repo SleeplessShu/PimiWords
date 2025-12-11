@@ -72,24 +72,29 @@ class OneOfFourViewModel(
     }
 
     private fun buildClickContext(buttonIndex: Int): ClickContext? {
-        val state = _ui.value
-        val q = current
-        val btnState = state?.states?.getOrNull(buttonIndex)
-        val picked = q?.optionsSecond?.getOrNull(buttonIndex)
 
-        if (state != null && !state.locked &&
-            q != null && picked != null &&
-            btnState != null && btnState.enabled &&
-            buttonIndex in MIN_BUTTON_INDEX..MAX_BUTTON_INDEX
-        ) {
-            val isCorrect = picked.id == q.correctSecondId
-            return ClickContext(
-                buttonIndex = buttonIndex,
-                question = q,
-                picked = picked,
-                isCorrect = isCorrect,
-                wordsIds = listOf(picked.id, q.correctSecondId)
-            )
+        _ui.value?.let { state ->
+            current?.let { q ->
+
+                if (state.locked || buttonIndex !in MIN_BUTTON_INDEX..MAX_BUTTON_INDEX) {
+                    return null
+                }
+
+                val picked = q.optionsSecond.getOrNull(buttonIndex)
+                val btnState = state.states.getOrNull(buttonIndex)
+
+                if (picked != null && btnState != null && btnState.enabled) {
+
+                    val isCorrect = picked.id == q.correctSecondId
+                    return ClickContext(
+                        buttonIndex = buttonIndex,
+                        question = q,
+                        picked = picked,
+                        isCorrect = isCorrect,
+                        wordsIds = listOf(picked.id, q.correctSecondId)
+                    )
+                }
+            }
         }
 
         return null

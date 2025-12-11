@@ -1,16 +1,17 @@
 package com.sleeplessdog.matchthewords.game.presentation.ingameFragments
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sleeplessdog.matchthewords.game.presentation.interfaces.GameEvent
 import com.sleeplessdog.matchthewords.game.presentation.interfaces.InGameLogic
 import com.sleeplessdog.matchthewords.game.presentation.models.IngameWordsState
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
 import com.sleeplessdog.matchthewords.utils.ShuffleFunctions
 import com.sleeplessdog.matchthewords.utils.ConstantsTimeReaction
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class WordsMatchingViewModel(
     private val shuffleFunctions: ShuffleFunctions,
@@ -18,8 +19,6 @@ class WordsMatchingViewModel(
 ) : ViewModel(), InGameLogic {
 
     override val events = MutableLiveData<GameEvent>()
-
-    private val handler = Handler(Looper.getMainLooper())
 
     // ВЕСЬ пул пар (все страницы)
     private var allPairs: List<Pair<Word, Word>> = emptyList()
@@ -62,16 +61,12 @@ class WordsMatchingViewModel(
         when (selected.size) {
             0 -> _state.value = s.copy(selectedWords = listOf(clickedWord))
             1 -> {
-                // замена выбора на той же стороне
                 if (clickedWord.language == selected[0].language && clickedWord.id != selected[0].id) {
                     _state.value = s.copy(selectedWords = listOf(clickedWord))
                 }
-                // снятие выбора той же карточкой
                 else if (clickedWord.id == selected[0].id && clickedWord.language == selected[0].language) {
                     _state.value = s.copy(selectedWords = emptyList())
-                }
-                // проверяем пару
-                else {
+                } else {
                     checkPair(selected[0], clickedWord)
                 }
             }
@@ -118,39 +113,41 @@ class WordsMatchingViewModel(
                 locked = true
             )
 
-            handler.postDelayed({
-                val cur = _state.value ?: return@postDelayed
-                val newUsed = cur.usedWords.toMutableList().apply {
-                    add(a); add(b)
-                }
-                _state.value = cur.copy(
-                    correctWords = emptyList(),
-                    usedWords = newUsed,
-                    locked = false
-                )
+            viewModelScope.launch {
+                delay(ConstantsTimeReaction.REACTION)
+                _state.value?.let { cur ->
+                    val newUsed = cur.usedWords.toMutableList().apply {
+                        add(a)
+                        add(b)
+                    }
+                    _state.value = cur.copy(
+                        correctWords = emptyList(),
+                        usedWords = newUsed,
+                        locked = false
+                    )
 
-                // если собраны все пары на странице — следующая страница
-                if (matchedIdsOnPage.size >= currentPagePairs.size) {
-                    openPage(currentPage + 1)
+                    if (matchedIdsOnPage.size >= currentPagePairs.size) {
+                        openPage(currentPage + 1)
+                    }
                 }
-            }, ConstantsTimeReaction.REACTION)
+            }
         } else {
-            // ошибка — подсветка и сброс
             events.value = GameEvent.Wrong(wordsIds)
             _state.value = s.copy(
                 selectedWords = emptyList(),
                 errorWords = listOf(a, b),
                 locked = true
             )
-            handler.postDelayed({
-                val cur = _state.value ?: return@postDelayed
-                _state.value = cur.copy(errorWords = emptyList(), locked = false)
-            }, ConstantsTimeReaction.REACTION)
+            viewModelScope.launch {
+                delay(ConstantsTimeReaction.REACTION)
+                _state.value?.let { cur ->
+                    _state.value = cur.copy(errorWords = emptyList(), locked = false)
+                }
+            }
         }
     }
 
     override fun onCleared() {
-        handler.removeCallbacksAndMessages(null)
         super.onCleared()
     }
 }

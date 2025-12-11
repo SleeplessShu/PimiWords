@@ -3,6 +3,9 @@ package com.sleeplessdog.matchthewords.game.presentation.controller
 import android.view.View
 import android.widget.TextView
 import androidx.core.view.isVisible
+import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.matchthewords.game.presentation.models.Language
+import com.sleeplessdog.matchthewords.game.presentation.models.LanguageAdapterState
 import com.sleeplessdog.matchthewords.utils.ConstantsApp
 
 class LanguageMenuController(
@@ -56,6 +59,26 @@ class LanguageMenuController(
                 .withEndAction { root.visibility = View.GONE }.start()
         }
         hideBg()
+    }
+
+    fun openMenuForMode(
+        mode: LanguageAdapterState,
+        uiList: List<Language>?,
+        studyList: List<Language>?,
+        uiSelected: Language?,
+        studySelected: Language?,
+        adapter: LanguageAdapter
+    ) {
+        val isUi = mode == LanguageAdapterState.UI
+        val titleRes = if (isUi) R.string.int_language else R.string.std_language
+
+        val list = if (isUi) uiList else studyList
+        val selected = if (isUi) uiSelected else studySelected
+
+        this.show(titleRes) {
+            adapter.submit(list ?: emptyList(), selected)
+            selected?.let { adapter.setSelected(it) }
+        }
     }
 
     private fun showBgIfNeeded() {

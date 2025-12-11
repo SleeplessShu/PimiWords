@@ -57,16 +57,15 @@ class WordsMatchingFragment : Fragment(R.layout.words_matching_fragment) {
             }
         }
 
-        // Текущая страница — в адаптер
         childVM.pagePairs.observe(viewLifecycleOwner) { page ->
-            adapter.updateWordsList(page ?: emptyList())
+            adapter.submitList(page ?: emptyList())
         }
 
         childVM.state.observe(viewLifecycleOwner) { state ->
-            adapter.updateSelectedWords(state.selectedWords)
-            adapter.updateErrorWords(state.errorWords)
-            adapter.updateCorrectWords(state.correctWords)
-            adapter.updateUsedWords(state.usedWords)
+            adapter.selectedWords = state.selectedWords
+            adapter.errorWords = state.errorWords
+            adapter.correctWords = state.correctWords.map { it.id }.toSet()
+            adapter.usedWords = state.usedWords.map { it.id }.toSet()
         }
 
         childVM.events.observe(viewLifecycleOwner) { e ->

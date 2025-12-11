@@ -2,62 +2,77 @@ package com.sleeplessdog.matchthewords.game.presentation.holders
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.game.presentation.controller.WordStateResolver
 import com.sleeplessdog.matchthewords.game.presentation.controller.WordViewStateApplier
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
 
 class WordsMatchingAdapter(
-    private var wordsPairs: List<Pair<Word, Word>> = emptyList(),
-    private var selectedWords: List<Word> = emptyList(),
-    private var errorWords: List<Word> = emptyList(),
-    private var usedWords: Set<Int> = emptySet(),
-    private var correctWords: Set<Int> = emptySet(),
     private val onWordClick: (Word) -> Unit,
-) : RecyclerView.Adapter<ViewHolderWordsMatching>() {
+) : ListAdapter<Pair<Word, Word>, ViewHolderWordsMatching>(WordsDiffCallback) {
 
     private val stateResolver = WordStateResolver()
 
-    private data class StatePayload(
-        val selected: List<Word>?,
-        val error: List<Word>,
-        val used: Set<Int>?,
-        val correct: Set<Int>?,
-    )
+    var selectedWords: List<Word> = emptyList()
+        set(value) {
+            if (field == value) return
+            field = value
+            notifyItemRangeChanged(0, itemCount, PAYLOAD_STATE_CHANGED)
+        }
+
+    var errorWords: List<Word> = emptyList()
+        set(value) {
+            if (field == value) return
+            field = value
+            notifyItemRangeChanged(0, itemCount, PAYLOAD_STATE_CHANGED)
+        }
+
+    var usedWords: Set<Int> = emptySet()
+        set(value) {
+            if (field == value) return
+            field = value
+            notifyItemRangeChanged(0, itemCount, PAYLOAD_STATE_CHANGED)
+        }
+
+    var correctWords: Set<Int> = emptySet()
+        set(value) {
+            if (field == value) return
+            field = value
+            notifyItemRangeChanged(0, itemCount, PAYLOAD_STATE_CHANGED)
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderWordsMatching {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.words_pair, parent, false)
         return ViewHolderWordsMatching(view)
     }
 
-    override fun getItemCount(): Int = wordsPairs.size
-
-    override fun onBindViewHolder(holder: ViewHolderWordsMatching, position: Int) {
-        bindFull(holder, position)
-    }
-
     override fun onBindViewHolder(
-        holder: ViewHolderWordsMatching, position: Int, payloads: MutableList<Any>
+        holder: ViewHolderWordsMatching,
+        position: Int,
+        payloads: MutableList<Any>
     ) {
-        if (payloads.isEmpty()) {
-            bindFull(holder, position)
-        } else {
-            val (origin, translate) = wordsPairs[position]
+        if (payloads.contains(PAYLOAD_STATE_CHANGED)) {
+            val (origin, translate) = getItem(position)
             applyState(holder, origin, isLeft = true)
             applyState(holder, translate, isLeft = false)
+        } else {
+            super.onBindViewHolder(holder, position, payloads)
         }
     }
 
-    private fun bindFull(holder: ViewHolderWordsMatching, position: Int) {
-        val (origin, translate) = wordsPairs[position]
+    override fun onBindViewHolder(holder: ViewHolderWordsMatching, position: Int) {
+        val (origin, translate) = getItem(position)
 
         holder.origin.text = origin.text
         holder.translate.text = translate.text
 
+        // Устанавливаем слушатели один раз
         holder.origin.setOnClickListener { onWordClick(origin) }
         holder.translate.setOnClickListener { onWordClick(translate) }
 
+        // Применяем актуальное состояние
         applyState(holder, origin, isLeft = true)
         applyState(holder, translate, isLeft = false)
     }
@@ -66,6 +81,7 @@ class WordsMatchingAdapter(
         val btn = if (isLeft) holder.origin else holder.translate
         val pimi = if (isLeft) holder.originPimi else holder.translatePimi
 
+        // Вычисляем состояние на основе свойств адаптера
         val state = stateResolver.resolve(
             word, selectedWords, errorWords, usedWords, correctWords
         )
@@ -79,35 +95,25 @@ class WordsMatchingAdapter(
         )
     }
 
-    fun updateWordsList(newWordsPairs: List<Pair<Word, Word>>) {
-        wordsPairs = newWordsPairs
-        notifyDataSetChanged()
-    }
+    companion object {
+        private const val PAYLOAD_STATE_CHANGED = "PAYLOAD_STATE_CHANGED"
 
-    fun updateSelectedWords(newSelected: List<Word>) {
-        selectedWords = newSelected
-        notifyDataSetChanged()
-    }
+        private val WordsDiffCallback = object : DiffUtil.ItemCallback<Pair<Word, Word>>() {
+            override fun areItemsTheSame(
+                oldItem: Pair<Word, Word>,
+                newItem: Pair<Word, Word>
+            ): Boolean {
+                // Сравниваем ID слов, чтобы понять, та же ли это пара
+                return oldItem.first.id == newItem.first.id &&
+                        oldItem.second.id == newItem.second.id
+            }
 
-    fun updateErrorWords(newError: List<Word>) {
-        errorWords = newError
-        notifyStatesChanged()
-    }
-
-    fun updateCorrectWords(newCorrect: List<Word>) {
-        correctWords = newCorrect.map { it.id }.toSet()
-        notifyStatesChanged()
-    }
-
-    fun updateUsedWords(newUsed: List<Word>) {
-        usedWords = newUsed.map { it.id }.toSet()
-        notifyStatesChanged()
-    }
-
-    private fun notifyStatesChanged() {
-        val payload = StatePayload(selectedWords, errorWords, usedWords, correctWords)
-        for (i in 0 until itemCount) {
-            notifyItemChanged(i, payload)
+            override fun areContentsTheSame(
+                oldItem: Pair<Word, Word>,
+                newItem: Pair<Word, Word>
+            ): Boolean {
+                return oldItem == newItem
+            }
         }
     }
 }

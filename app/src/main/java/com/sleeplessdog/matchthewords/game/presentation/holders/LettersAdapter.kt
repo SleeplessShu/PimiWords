@@ -22,9 +22,9 @@ class LettersAdapter(
 
     var locked: Boolean = false
         set(value) {
+            if (field == value) return
             field = value
-            // переотрисуем, чтобы мгновенно заблокировать/разблокировать клики
-            notifyDataSetChanged()
+            notifyItemRangeChanged(0, itemCount, PAYLOAD_LOCKED_CHANGED)
         }
 
     private val uiHandler = Handler(Looper.getMainLooper())
@@ -36,13 +36,20 @@ class LettersAdapter(
         return VH(binding) { pos -> handleClickOptimistic(pos) }
     }
 
+    override fun onBindViewHolder(holder: VH, position: Int, payloads: MutableList<Any>) {
+        if (payloads.isNotEmpty() && payloads.contains(PAYLOAD_LOCKED_CHANGED)) {
+            holder.updateLockState(getItem(position), locked)
+        } else {
+            super.onBindViewHolder(holder, position, payloads)
+        }
+    }
+
     override fun onBindViewHolder(holder: VH, position: Int) {
         holder.bind(getItem(position), locked)
     }
 
     private fun handleClickOptimistic(position: Int) {
         val item = currentList.getOrNull(position)
-
 
         if (item == null || locked || item.used ||  position == RecyclerView.NO_POSITION) return
 
@@ -74,7 +81,10 @@ class LettersAdapter(
                 binding.tLetter.text = ""
                 binding.iconSpace.setImageResource(R.drawable.ic_category_abstract)
             }
+            updateLockState(item, locked)
+        }
 
+        fun updateLockState(item: WriteTheWordLetterUi, locked: Boolean) {
             val enabled = !item.used && !locked
             binding.root.isEnabled = enabled
             binding.root.alpha = if (enabled) FULL_ALPHA else HALF_ALPHA_WTW
@@ -82,6 +92,7 @@ class LettersAdapter(
     }
 
     companion object {
+        private const val PAYLOAD_LOCKED_CHANGED = "PAYLOAD_LOCKED_CHANGED"
         private val DIFF = object : DiffUtil.ItemCallback<WriteTheWordLetterUi>() {
             override fun areItemsTheSame(oldItem: WriteTheWordLetterUi, newItem: WriteTheWordLetterUi) =
                 oldItem.id == newItem.id

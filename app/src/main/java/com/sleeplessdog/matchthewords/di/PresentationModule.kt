@@ -8,6 +8,8 @@ import com.sleeplessdog.matchthewords.game.data.repositories.LanguagePrefs
 import com.sleeplessdog.matchthewords.game.data.repositories.LanguagePrefsImpl
 import com.sleeplessdog.matchthewords.game.domain.interactors.SettingsInteractor
 import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
+import com.sleeplessdog.matchthewords.game.presentation.controller.GameLevelLoader
+import com.sleeplessdog.matchthewords.game.presentation.controller.GameSessionController
 import com.sleeplessdog.matchthewords.game.presentation.fragments.GameSelectViewModel
 import com.sleeplessdog.matchthewords.game.presentation.fragments.SettingsViewModel
 import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.OneOfFourViewModel
@@ -28,18 +30,30 @@ val presentationModule = module {
         Handler(Looper.getMainLooper())
     }
 
+    factory {
+        GameLevelLoader(
+            appPrefs = get(),
+            languagePrefs = get(),
+            wordsController = get(),
+            getSelectedCategoriesUC = get()
+        )
+    }
+
+    factory {
+        GameSessionController(
+            wordsController = get(),
+            scoreInteractor = get(),
+            progressController = get()
+        )
+    }
+
     viewModel {
         GameSelectViewModel(get())
     }
 
     viewModel {
         GameViewModel(
-            wordsController = get(),
-            progressController = get(),
-            scoreInteractor = get(),
-            appPrefs = get(),
-            languagePrefs = get(),
-            getSelectedCategoriesUC = get()
+            levelLoader = get(), session = get()
         )
     }
 
@@ -76,7 +90,7 @@ val presentationModule = module {
         )
     }
 
-    single <SettingsInteractor> {
+    single<SettingsInteractor> {
         SettingsInteractor(get(), get(), get(), get(), get())
     }
 

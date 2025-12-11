@@ -15,6 +15,7 @@ import com.sleeplessdog.matchthewords.game.presentation.models.CategoriesUiState
 import com.sleeplessdog.matchthewords.game.presentation.models.CategoryUi
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
+import com.sleeplessdog.matchthewords.game.presentation.models.LanguageAdapterState
 import com.sleeplessdog.matchthewords.utils.ConstantsApp.FEATURED_LIMIT
 import com.sleeplessdog.matchthewords.utils.SupportFunctions.drawableIdByName
 import com.sleeplessdog.matchthewords.utils.SupportFunctions.stringByName

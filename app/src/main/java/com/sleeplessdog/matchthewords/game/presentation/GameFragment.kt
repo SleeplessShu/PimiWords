@@ -85,7 +85,6 @@ class GameFragment : Fragment() {
             }
         })
 
-        // 4. Обработка нажатия на Overlay (чтобы закрыть шторку тапом мимо)
         binding.overlay.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
@@ -154,7 +153,7 @@ class GameFragment : Fragment() {
     }
 
     private fun returnToGameSelect() {
-        viewModel.resetAll()
+        viewModel.resetStats()
         val dir = GameFragmentDirections.actionGameFragmentToGameSelectFragment()
         findNavController().navigate(dir)
     }
