@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sleeplessdog.matchthewords.game.presentation.controller.OneOfFourClickHelper
 import com.sleeplessdog.matchthewords.game.presentation.interfaces.GameEvent
 import com.sleeplessdog.matchthewords.game.presentation.interfaces.InGameLogic
 import com.sleeplessdog.matchthewords.game.presentation.models.ButtonState
@@ -13,8 +14,6 @@ import com.sleeplessdog.matchthewords.game.presentation.models.GameUiOOF
 import com.sleeplessdog.matchthewords.game.presentation.models.OneOfFourQuestion
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
 import com.sleeplessdog.matchthewords.utils.ConstantsConditions.DEFAULT_QUESTION_SEQUENCE
-import com.sleeplessdog.matchthewords.utils.ConstantsConditions.MAX_BUTTON_INDEX
-import com.sleeplessdog.matchthewords.utils.ConstantsConditions.MIN_BUTTON_INDEX
 import com.sleeplessdog.matchthewords.utils.ConstantsConditions.MIN_VARIANTS_COUNT_OOF
 import com.sleeplessdog.matchthewords.utils.ConstantsConditions.ONE_OF_FOUR_SET
 import com.sleeplessdog.matchthewords.utils.ConstantsTimeReaction
@@ -22,7 +21,7 @@ import com.sleeplessdog.matchthewords.utils.ShuffleFunctions
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-private data class ClickContext(
+data class ClickContext(
     val buttonIndex: Int,
     val question: OneOfFourQuestion,
     val picked: Word,
@@ -33,6 +32,8 @@ private data class ClickContext(
 class OneOfFourViewModel(
     val shuffleFunctions: ShuffleFunctions
 ) : ViewModel(), InGameLogic {
+
+    private val clickHelper = OneOfFourClickHelper()
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -58,65 +59,34 @@ class OneOfFourViewModel(
     }
 
     fun onAnswerClick(buttonIndex: Int) {
-        val ctx = buildClickContext(buttonIndex) ?: return
+        val ctx = clickHelper.processClick(_ui.value, current, buttonIndex) ?: return
 
         if (ctx.isCorrect) {
-            reactOnCorrect(
-                wordsIds = ctx.wordsIds, buttonIndex = ctx.buttonIndex, question = ctx.question
-            )
+            reactOnCorrect(ctx)
         } else {
-            reactOnWrong(
-                wordsIds = ctx.wordsIds, buttonIndex = ctx.buttonIndex
-            )
+            reactOnWrong(ctx)
         }
     }
 
-    private fun buildClickContext(buttonIndex: Int): ClickContext? {
-
-        _ui.value?.let { state ->
-            current?.let { q ->
-
-                if (state.locked || buttonIndex !in MIN_BUTTON_INDEX..MAX_BUTTON_INDEX) {
-                    return null
-                }
-
-                val picked = q.optionsSecond.getOrNull(buttonIndex)
-                val btnState = state.states.getOrNull(buttonIndex)
-
-                if (picked != null && btnState != null && btnState.enabled) {
-
-                    val isCorrect = picked.id == q.correctSecondId
-                    return ClickContext(
-                        buttonIndex = buttonIndex,
-                        question = q,
-                        picked = picked,
-                        isCorrect = isCorrect,
-                        wordsIds = listOf(picked.id, q.correctSecondId)
-                    )
-                }
-            }
-        }
-
-        return null
-    }
-
-    private fun reactOnCorrect(wordsIds: List<Int>, buttonIndex: Int, question: OneOfFourQuestion) {
-        events.value = GameEvent.Correct(wordsIds)
-        paintAndLock(buttonIndex)
+    private fun reactOnCorrect(ctx: ClickContext) {
+        events.value = GameEvent.Correct(ctx.wordsIds)
+        paintAndLock(ctx.buttonIndex)
         val seq = questionSeq
 
         viewModelScope.launch {
             delay(ConstantsTimeReaction.REACTION)
             if (questionSeq == seq) {
-                consumeAndNext(question)
+                consumeAndNext(ctx.question)
             }
         }
     }
 
-    private fun reactOnWrong(wordsIds: List<Int>, buttonIndex: Int) {
-        events.value = GameEvent.Wrong(wordsIds)
-        val newStates = (_ui.value?.states ?: List(MIN_VARIANTS_COUNT_OOF) { ButtonState.DEFAULT }).toMutableList()
-        newStates[buttonIndex] = ButtonState.ERROR
+    private fun reactOnWrong(ctx: ClickContext) {
+        events.value = GameEvent.Wrong(ctx.wordsIds)
+        val newStates = (_ui.value?.states ?: List(MIN_VARIANTS_COUNT_OOF) {
+            ButtonState.DEFAULT
+        }).toMutableList()
+        newStates[ctx.buttonIndex] = ButtonState.ERROR
         _ui.value = _ui.value?.copy(states = newStates)
         val seq = questionSeq
 
@@ -128,8 +98,8 @@ class OneOfFourViewModel(
             val cur = _ui.value ?: return@launch
             val st = cur.states.toMutableList()
 
-            if (!cur.locked && st.getOrNull(buttonIndex) == ButtonState.ERROR) {
-                st[buttonIndex] = ButtonState.DISABLED
+            if (!cur.locked && st.getOrNull(ctx.buttonIndex) == ButtonState.ERROR) {
+                st[ctx.buttonIndex] = ButtonState.DISABLED
                 _ui.value = cur.copy(states = st)
             }
         }

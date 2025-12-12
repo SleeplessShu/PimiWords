@@ -15,6 +15,7 @@ import com.sleeplessdog.matchthewords.game.presentation.controller.FeaturedCateg
 import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageAdapter
 import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageLevelController
 import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageMenuController
+import com.sleeplessdog.matchthewords.game.presentation.controller.MenuData
 import com.sleeplessdog.matchthewords.game.presentation.controller.TopicsMenuController
 import com.sleeplessdog.matchthewords.game.presentation.controller.toFlagLargeRes
 import com.sleeplessdog.matchthewords.game.presentation.models.LanguageAdapterState
@@ -171,10 +172,12 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         binding.ivFlagUi.setOnClickListener {
             languageMenuController.openMenuForMode(
                 mode = LanguageAdapterState.UI,
-                uiList = vm.uiLanguageList.value,
-                studyList = vm.studyLanguageList.value,
-                uiSelected = vm.uiLanguage.value,
-                studySelected = vm.studyLanguage.value,
+                data = MenuData(
+                    uiList = vm.uiLanguageList.value,
+                    studyList = vm.studyLanguageList.value,
+                    uiSelected = vm.uiLanguage.value,
+                    studySelected = vm.studyLanguage.value,
+                ),
                 adapter = langAdapter
             )
         }
@@ -182,10 +185,12 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         binding.ivFlagStudy.setOnClickListener {
             languageMenuController.openMenuForMode(
                 mode = LanguageAdapterState.STUDY,
-                uiList = vm.uiLanguageList.value,
-                studyList = vm.studyLanguageList.value,
-                uiSelected = vm.uiLanguage.value,
-                studySelected = vm.studyLanguage.value,
+                data = MenuData(
+                    uiList = vm.uiLanguageList.value,
+                    studyList = vm.studyLanguageList.value,
+                    uiSelected = vm.uiLanguage.value,
+                    studySelected = vm.studyLanguage.value,
+                ),
                 adapter = langAdapter
             )
         }

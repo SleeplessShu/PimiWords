@@ -8,6 +8,13 @@ import com.sleeplessdog.matchthewords.game.presentation.models.Language
 import com.sleeplessdog.matchthewords.game.presentation.models.LanguageAdapterState
 import com.sleeplessdog.matchthewords.utils.ConstantsApp
 
+data class MenuData(
+    val uiList: List<Language>?,
+    val studyList: List<Language>?,
+    val uiSelected: Language?,
+    val studySelected: Language?
+)
+
 class LanguageMenuController(
     private val root: View,              // binding.languageSelectRoot
     private val bg: View,                // binding.languagesBackground
@@ -16,31 +23,21 @@ class LanguageMenuController(
 ) {
 
     init {
-        // Сразу настраиваем закрытие по клику на фон
         val closeListener = View.OnClickListener { hide() }
         bg.setOnClickListener(closeListener)
         bgSolid.setOnClickListener(closeListener)
     }
 
-    /**
-     * Универсальный метод показа
-     * @param titleResId - ID строки заголовка (R.string.std_language и т.д.)
-     * @param onUpdateData - Лямбда, в которой Фрагмент обновит данные адаптера
-     */
     fun show(titleResId: Int, onUpdateData: () -> Unit) {
-        // Если уже открыто и полностью видно - закрываем (режим toggle)
         if (root.isVisible && root.alpha == ConstantsApp.FULL_ALPHA) {
             hide()
             return
         }
 
-        // 1. Устанавливаем заголовок
         titleTv.setText(titleResId)
 
-        // 2. Выполняем обновление данных (вызывается код из фрагмента)
         onUpdateData()
 
-        // 3. Анимация появления меню
         root.visibility = View.VISIBLE
         root.alpha = ConstantsApp.EMPTY_ALPHA
         root.scaleY = ConstantsApp.ZERO_SCALE
@@ -48,7 +45,6 @@ class LanguageMenuController(
         root.animate().alpha(ConstantsApp.FULL_ALPHA).scaleY(ConstantsApp.FULL_SCALE)
             .setDuration(ConstantsApp.FADE_IN_DURATION_MS).start()
 
-        // 4. Анимация фона
         showBgIfNeeded()
     }
 
@@ -63,17 +59,14 @@ class LanguageMenuController(
 
     fun openMenuForMode(
         mode: LanguageAdapterState,
-        uiList: List<Language>?,
-        studyList: List<Language>?,
-        uiSelected: Language?,
-        studySelected: Language?,
+        data: MenuData,
         adapter: LanguageAdapter
     ) {
         val isUi = mode == LanguageAdapterState.UI
         val titleRes = if (isUi) R.string.int_language else R.string.std_language
 
-        val list = if (isUi) uiList else studyList
-        val selected = if (isUi) uiSelected else studySelected
+        val list = if (isUi) data.uiList else data.studyList
+        val selected = if (isUi) data.uiSelected else data.studySelected
 
         this.show(titleRes) {
             adapter.submit(list ?: emptyList(), selected)

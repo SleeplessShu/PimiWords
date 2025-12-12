@@ -51,12 +51,21 @@ class LettersAdapter(
     private fun handleClickOptimistic(position: Int) {
         val item = currentList.getOrNull(position)
 
-        if (item == null || locked || item.used ||  position == RecyclerView.NO_POSITION) return
+        if (!canHandleClick(position, item)) return
 
-        val newItem = item.copy(used = true)
+        val newItem = item!!.copy(used = true)
         val newList = currentList.toMutableList().also { it[position] = newItem }
         submitList(newList)
         uiHandler.postDelayed({ onClick(position) }, PRESS_DELAY_MS)
+    }
+
+    private fun canHandleClick(position: Int, item: WriteTheWordLetterUi?): Boolean {
+        // Проверки выстроены по принципу "раннего выхода"
+        if (locked) return false
+        if (position == RecyclerView.NO_POSITION) return false
+        if (item == null || item.used) return false
+
+        return true
     }
 
     class VH(
