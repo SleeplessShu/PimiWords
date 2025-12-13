@@ -1,9 +1,7 @@
 package com.sleeplessdog.matchthewords.game.presentation.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,53 +14,49 @@ import com.sleeplessdog.matchthewords.game.presentation.models.GameType
 import com.sleeplessdog.matchthewords.utils.ConstantsTimeReaction.LANGUAGE_LIST_CLOSE
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class GameSelectFragment : Fragment() {
+class GameSelectFragment : Fragment(R.layout.game_select_fragment) {
 
     private val viewModel: GameSelectViewModel by viewModel()
-    private var _binding: GameSelectFragmentBinding? = null
-    private val binding get() = _binding!!
+
+    private var binding: GameSelectFragmentBinding? = null
 
     private lateinit var langAdapter: LanguageAdapter
     private lateinit var languageMenuController: LanguageMenuController
     private var isLangShown = false
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        _binding = GameSelectFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = GameSelectFragmentBinding.bind(view)
+        setupLanguageManager()
         setupLanguageList()
         setupLanguageButton()
-        setupLanguageManager()
         setupGameCards()
         setupObservers()
     }
 
     private fun setupLanguageManager() {
+        val b = requireNotNull(binding)
         languageMenuController = LanguageMenuController(
-            root = binding.languageSelectRoot,
-            bg = binding.languagesBackground,
-            bgSolid = binding.languagesBackgroundSolid,
-            titleTv = binding.tvLanguageList
+            root = b.languageSelectRoot,
+            bg = b.languagesBackground,
+            bgSolid = b.languagesBackgroundSolid,
+            titleTv = b.tvLanguageList
         )
     }
 
 
     private fun setupLanguageList() {
+        val b = requireNotNull(binding)
         langAdapter = LanguageAdapter { picked ->
             viewModel.onLanguagePicked(picked)
             langAdapter.setSelected(picked)
 
-            binding.rvLanguages.postDelayed({
+            binding?.rvLanguages?.postDelayed({
                 languageMenuController.hide()
             }, LANGUAGE_LIST_CLOSE)
         }
 
-        binding.rvLanguages.apply {
+        b.rvLanguages.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = langAdapter
         }
@@ -70,50 +64,52 @@ class GameSelectFragment : Fragment() {
 
 
     private fun setupGameCards() {
-        binding.match6.setup(
+        val b = requireNotNull(binding)
+        b.match6.setup(
             title = getString(R.string.MTW),
             iconNormalRes = R.drawable.ic_game_mtw_normal,
             iconSelectedRes = R.drawable.ic_game_mtw_selected
         )
-        binding.trueOrFalse.setup(
+        b.trueOrFalse.setup(
             title = getString(R.string.ROW),
             iconNormalRes = R.drawable.ic_game_row_normal,
             iconSelectedRes = R.drawable.ic_game_row_selected
         )
-        binding.multiChoise.setup(
+        b.multiChoise.setup(
             title = getString(R.string.MC),
             iconNormalRes = R.drawable.ic_game_mc_normal,
             iconSelectedRes = R.drawable.ic_game_mc_selected
         )
-        binding.writeTheWord.setup(
+        b.writeTheWord.setup(
             title = getString(R.string.WTW),
             iconNormalRes = R.drawable.ic_game_wtw_normal,
             iconSelectedRes = R.drawable.ic_game_wtw_selected
         )
 
-        binding.match6.setOnClickListener {
-            selectOnly(binding.match6)
+        b.match6.setOnClickListener {
+            selectOnly(b.match6)
             viewModel.onGamePicked(GameType.MATCH8)
         }
-        binding.trueOrFalse.setOnClickListener {
-            selectOnly(binding.trueOrFalse)
+        b.trueOrFalse.setOnClickListener {
+            selectOnly(b.trueOrFalse)
             viewModel.onGamePicked(GameType.TRUEorFALSE)
         }
-        binding.multiChoise.setOnClickListener {
-            selectOnly(binding.multiChoise)
+        b.multiChoise.setOnClickListener {
+            selectOnly(b.multiChoise)
             viewModel.onGamePicked(GameType.OneOfFour)
         }
-        binding.writeTheWord.setOnClickListener {
-            selectOnly(binding.writeTheWord)
+        b.writeTheWord.setOnClickListener {
+            selectOnly(b.writeTheWord)
             viewModel.onGamePicked(GameType.WriteTheWord)
         }
     }
 
     private fun selectOnly(selected: View) {
-        binding.match6.setSelectedState(selected === binding.match6)
-        binding.trueOrFalse.setSelectedState(selected === binding.trueOrFalse)
-        binding.multiChoise.setSelectedState(selected === binding.multiChoise)
-        binding.writeTheWord.setSelectedState(selected === binding.writeTheWord)
+        val b = requireNotNull(binding)
+        b.match6.setSelectedState(selected === b.match6)
+        b.trueOrFalse.setSelectedState(selected === b.trueOrFalse)
+        b.multiChoise.setSelectedState(selected === b.multiChoise)
+        b.writeTheWord.setSelectedState(selected === b.writeTheWord)
     }
 
     private fun setupObservers() {
@@ -124,7 +120,7 @@ class GameSelectFragment : Fragment() {
 
         // выбранный язык (большой флаг)
         viewModel.studyLanguage.observe(viewLifecycleOwner) { study ->
-            binding.languageSelect.setImageResource(study.toFlagLargeRes())
+            binding?.languageSelect?.setImageResource(study.toFlagLargeRes())
             // можно тут же подсветить, если список открыт
             if (isLangShown) {
                 langAdapter.setSelected(study)
@@ -145,7 +141,7 @@ class GameSelectFragment : Fragment() {
     }
 
     private fun setupLanguageButton() {
-        binding.languageSelect.setOnClickListener {
+        binding?.languageSelect?.setOnClickListener {
             languageMenuController.show(R.string.std_language) {
                 val list = viewModel.availableLanguages.value ?: emptyList()
                 val selected = viewModel.studyLanguage.value
@@ -156,7 +152,7 @@ class GameSelectFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        binding = null
         super.onDestroyView()
-        _binding = null
     }
 }

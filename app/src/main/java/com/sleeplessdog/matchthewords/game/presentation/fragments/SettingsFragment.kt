@@ -27,8 +27,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class SettingsFragment : Fragment(R.layout.settings_fragment) {
 
     private val vm: SettingsViewModel by viewModel()
-    private var _binding: SettingsFragmentBinding? = null
-    private val binding get() = _binding!!
+    private var binding: SettingsFragmentBinding? = null
 
     private var currentLangMode: LanguageAdapterState = LanguageAdapterState.STUDY
 
@@ -40,7 +39,9 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
     private lateinit var featuredController: FeaturedCategoriesController
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        _binding = SettingsFragmentBinding.bind(view)
+        super.onViewCreated(view, savedInstanceState)
+        binding = SettingsFragmentBinding.bind(view)
+
         setupLanguageMenuController()
         setupLevelController()
         setupDifficultyController()
@@ -50,71 +51,73 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
     }
 
     private fun setupLanguageMenuController() {
+        val b = requireNotNull(binding)
         languageMenuController = LanguageMenuController(
-            root = binding.languageSelectRoot,
-            bg = binding.languagesBackground,
-            bgSolid = binding.languagesBackgroundSolid,
-            titleTv = binding.tvLanguageList
+            root = b.languageSelectRoot,
+            bg = b.languagesBackground,
+            bgSolid = b.languagesBackgroundSolid,
+            titleTv = b.tvLanguageList
         )
     }
 
     private fun setupLevelController() {
+        val b = requireNotNull(binding)
         levelController = LanguageLevelController(
             chips = LanguageLevelChips(
-                a1 = binding.btnA1,
-                a2 = binding.btnA2,
-                b1 = binding.btnB1,
-                b2 = binding.btnB2,
-                c1 = binding.btnC1,
-                c2 = binding.btnC2
+                a1 = b.btnA1,
+                a2 = b.btnA2,
+                b1 = b.btnB1,
+                b2 = b.btnB2,
+                c1 = b.btnC1,
+                c2 = b.btnC2
             ), onToggle = { level -> vm.toggleLevel(level) })
     }
 
     private fun setupDifficultyController() {
+        val b = requireNotNull(binding)
         difficultyController = DifficultyCardController(
-            easy = binding.cardEasy,
-            medium = binding.cardMedium,
-            hard = binding.cardHard,
-            expert = binding.cardExpert,
+            easy = b.cardEasy,
+            medium = b.cardMedium,
+            hard = b.cardHard,
+            expert = b.cardExpert,
             onPick = { level -> vm.onDifficultyPicked(level) })
     }
 
     private fun setupTopicsController() {
+        val b = requireNotNull(binding)
         featuredController = FeaturedCategoriesController(
-            chipGroup = binding.cgFeaturedCategories,
-            onToggle = { key -> vm.onToggle(key) }
-        )
+            chipGroup = b.cgFeaturedCategories, onToggle = { key -> vm.onToggle(key) })
 
         topicsController = TopicsMenuController(
             topicsMenuViews = TopicsMenuViews(
-                root = binding.rootTopics,
-                background = binding.topicsBackground,
-                header = binding.header,
-                categoriesScroll = binding.categoriesScroll,
-                bottomButtons = binding.bottomButtons,
-                groupUser = binding.cgUserCategories,
-                groupDefault = binding.cgDefaultCategories,
-                btnShowAll = binding.btnShowAllCategories,
-                btnCancel = binding.btnCancel,
-                btnSave = binding.btnSave
+                root = b.rootTopics,
+                background = b.topicsBackground,
+                header = b.header,
+                categoriesScroll = b.categoriesScroll,
+                bottomButtons = b.bottomButtons,
+                groupUser = b.cgUserCategories,
+                groupDefault = b.cgDefaultCategories,
+                btnShowAll = b.btnShowAllCategories,
+                btnCancel = b.btnCancel,
+                btnSave = b.btnSave
             ), getPreselectedKeys = {
                 vm.state.value.user.plus(vm.state.value.defaults).filter { it.isSelected }
                     .map { it.key }.toSet()
-            }, onSaveSelection = { keys -> vm.onSave(keys) },
-            featuredController
+            }, onSaveSelection = { keys -> vm.onSave(keys) }, featuredController
         )
     }
 
     private fun setupLanguageList() {
+        val b = requireNotNull(binding)
         langAdapter = LanguageAdapter { picked ->
             vm.onLanguagePicked(picked, currentLangMode)
             langAdapter.setSelected(picked)
-            binding.rvLanguageList.postDelayed({
+            b.rvLanguageList.postDelayed({
                 languageMenuController.hide()
             }, ConstantsApp.ANIMATION_DURATION_FOREGROUND)
         }
 
-        binding.rvLanguageList.apply {
+        b.rvLanguageList.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = langAdapter
         }
@@ -126,6 +129,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
     }
 
     private fun observeUiState() {
+        val b = requireNotNull(binding)
         viewLifecycleOwner.lifecycleScope.launch {
             vm.state.collect { state ->
                 featuredController.render(state.featured)
@@ -144,15 +148,15 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         }
 
         vm.studyLanguage.observe(viewLifecycleOwner) { study ->
-            binding.ivFlagStudy.setImageResource(study.toFlagLargeRes())
+            b.ivFlagStudy.setImageResource(study.toFlagLargeRes())
         }
 
         vm.uiLanguage.observe(viewLifecycleOwner) { uiLang ->
-            binding.ivFlagUi.setImageResource(uiLang.toFlagLargeRes())
+            b.ivFlagUi.setImageResource(uiLang.toFlagLargeRes())
         }
 
         vm.uiLanguageList.observe(viewLifecycleOwner) { list ->
-            if (currentLangMode == LanguageAdapterState.UI && binding.rvLanguageList.isVisible) {
+            if (currentLangMode == LanguageAdapterState.UI && b.rvLanguageList.isVisible) {
                 val selected = vm.uiLanguage.value
                 langAdapter.submit(list ?: emptyList(), selected)
                 selected?.let { langAdapter.setSelected(it) }
@@ -160,7 +164,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         }
 
         vm.studyLanguageList.observe(viewLifecycleOwner) { list ->
-            if (currentLangMode == LanguageAdapterState.STUDY && binding.rvLanguageList.isVisible) {
+            if (currentLangMode == LanguageAdapterState.STUDY && b.rvLanguageList.isVisible) {
                 val selected = vm.studyLanguage.value
                 langAdapter.submit(list ?: emptyList(), selected)
                 selected?.let { langAdapter.setSelected(it) }
@@ -169,35 +173,32 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
     }
 
     private fun observeEvents() {
-        binding.ivFlagUi.setOnClickListener {
+        val b = requireNotNull(binding)
+        b.ivFlagUi.setOnClickListener {
             languageMenuController.openMenuForMode(
-                mode = LanguageAdapterState.UI,
-                data = MenuData(
+                mode = LanguageAdapterState.UI, data = MenuData(
                     uiList = vm.uiLanguageList.value,
                     studyList = vm.studyLanguageList.value,
                     uiSelected = vm.uiLanguage.value,
                     studySelected = vm.studyLanguage.value,
-                ),
-                adapter = langAdapter
+                ), adapter = langAdapter
             )
         }
 
-        binding.ivFlagStudy.setOnClickListener {
+        b.ivFlagStudy.setOnClickListener {
             languageMenuController.openMenuForMode(
-                mode = LanguageAdapterState.STUDY,
-                data = MenuData(
+                mode = LanguageAdapterState.STUDY, data = MenuData(
                     uiList = vm.uiLanguageList.value,
                     studyList = vm.studyLanguageList.value,
                     uiSelected = vm.uiLanguage.value,
                     studySelected = vm.studyLanguage.value,
-                ),
-                adapter = langAdapter
+                ), adapter = langAdapter
             )
         }
     }
 
     override fun onDestroyView() {
-        _binding = null
+        binding = null
         super.onDestroyView()
     }
 }

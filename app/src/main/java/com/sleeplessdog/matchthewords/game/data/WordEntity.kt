@@ -13,19 +13,19 @@ import androidx.room.PrimaryKey
     ]
 )
 data class WordEntity(
-    @PrimaryKey val id: Int? = null,        // в БД notNull=false (даже при PK)
-    val english: String,                    // NOT NULL
-    val spanish: String?,                   // NULLABLE
-    val russian: String?,                   // NULLABLE
-    val french: String?,                    // NULLABLE
-    val german: String?,                    // NULLABLE
-    val level: String,                      // NOT NULL
-    val category: String?,                  // NULLABLE
+    @PrimaryKey val id: Int? = null,
+    val english: String,
+    val spanish: String?,
+    val russian: String?,
+    val french: String?,
+    val german: String?,
+    val level: String,
+    val category: String?,
     @ColumnInfo(defaultValue = "0")
-    val correct: Int? = 0,                  // NULLABLE в БД, default 0
+    val correct: Int? = 0,
     @ColumnInfo(defaultValue = "0")
-    val mistake: Int? = 0,                  // NULLABLE в БД, default 0
-    val date: String?,                      // NULLABLE (в БД notNull=false)
+    val mistake: Int? = 0,
+    val date: String?,
     @ColumnInfo(name = "subtype")
-    val subtype: String?                    // В БД есть "subtype", а не "subcategory"
+    val subtype: String?,
 )

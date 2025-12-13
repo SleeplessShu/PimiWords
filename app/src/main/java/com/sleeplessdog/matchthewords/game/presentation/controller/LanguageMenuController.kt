@@ -12,14 +12,14 @@ data class MenuData(
     val uiList: List<Language>?,
     val studyList: List<Language>?,
     val uiSelected: Language?,
-    val studySelected: Language?
+    val studySelected: Language?,
 )
 
 class LanguageMenuController(
-    private val root: View,              // binding.languageSelectRoot
-    private val bg: View,                // binding.languagesBackground
-    private val bgSolid: View,           // binding.languagesBackgroundSolid
-    private val titleTv: TextView        // binding.tvLanguageList
+    private val root: View,
+    private val bg: View,
+    private val bgSolid: View,
+    private val titleTv: TextView,
 ) {
 
     init {
@@ -60,7 +60,7 @@ class LanguageMenuController(
     fun openMenuForMode(
         mode: LanguageAdapterState,
         data: MenuData,
-        adapter: LanguageAdapter
+        adapter: LanguageAdapter,
     ) {
         val isUi = mode == LanguageAdapterState.UI
         val titleRes = if (isUi) R.string.int_language else R.string.std_language
