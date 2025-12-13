@@ -7,17 +7,18 @@ import com.sleeplessdog.matchthewords.server.domain.ServerDateInteractor
 import com.sleeplessdog.matchthewords.server.domain.ServerDateInteractorImpl
 import org.koin.dsl.module
 
-val domainModule = module {
+val domainModule =
+    module {
 
-    single <ScoreInteractor> {
+    single<ScoreInteractor> {
         ScoreInteractorImpl(get())
     }
 
-    single <ServerDateInteractor> {
+    single<ServerDateInteractor> {
         ServerDateInteractorImpl(get())
     }
 
-    single <WordsController> {
+    single<WordsController> {
         WordsController(get())
     }
 }

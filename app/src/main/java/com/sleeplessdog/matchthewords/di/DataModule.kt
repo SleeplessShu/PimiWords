@@ -39,7 +39,8 @@ import com.sleeplessdog.matchthewords.utils.ConstantsPaths.THEME_PREFERENCES
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-val dataModule = module {
+val dataModule =
+    module {
 
     single {
         FirebaseDatabase.getInstance(FIREBASE_PATH)
@@ -56,12 +57,15 @@ val dataModule = module {
     single<WordsDatabase> {
         WordsDatabase(get())
     }
+
     factory<Handler> {
         Handler()
     }
+
     single<Context> {
         App.appContext
     }
+
     single { get<AppDatabase>().wordDao() }
 
     single(named(KEY_DB_PREFS)) {
@@ -75,7 +79,7 @@ val dataModule = module {
         val sel = resolveAssetDatabase(ctx) // получаем и путь, и дату
 
         val prefs: SharedPreferences = get(qualifier = named(KEY_DB_PREFS))
-        prefs.edit() { putString(KEY_DB_DATE, sel.date) }
+        prefs.edit { putString(KEY_DB_DATE, sel.date) }
 
         Room.databaseBuilder(ctx, AppDatabase::class.java, dbName).createFromAsset(sel.assetPath)
             .build()

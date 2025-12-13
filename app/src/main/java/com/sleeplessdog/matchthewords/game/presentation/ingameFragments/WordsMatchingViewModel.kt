@@ -8,16 +8,17 @@ import com.sleeplessdog.matchthewords.game.presentation.interfaces.GameEvent
 import com.sleeplessdog.matchthewords.game.presentation.interfaces.InGameLogic
 import com.sleeplessdog.matchthewords.game.presentation.models.IngameWordsState
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
-import com.sleeplessdog.matchthewords.utils.ShuffleFunctions
+import com.sleeplessdog.matchthewords.utils.ConstantsConditions.PAIRS_ON_PAGE
 import com.sleeplessdog.matchthewords.utils.ConstantsTimeReaction
+import com.sleeplessdog.matchthewords.utils.ShuffleFunctions
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class WordsMatchingViewModel(
     private val shuffleFunctions: ShuffleFunctions,
-    private val pageSize : Int = 6
 ) : ViewModel(), InGameLogic {
 
+    private val pageSize: Int = PAIRS_ON_PAGE
     override val events = MutableLiveData<GameEvent>()
 
     // ВЕСЬ пул пар (все страницы)
@@ -63,22 +64,26 @@ class WordsMatchingViewModel(
             1 -> {
                 if (clickedWord.language == selected[0].language && clickedWord.id != selected[0].id) {
                     _state.value = s.copy(selectedWords = listOf(clickedWord))
-                }
-                else if (clickedWord.id == selected[0].id && clickedWord.language == selected[0].language) {
+                } else if (clickedWord.id == selected[0].id && clickedWord.language == selected[0].language) {
                     _state.value = s.copy(selectedWords = emptyList())
                 } else {
                     checkPair(selected[0], clickedWord)
                 }
             }
+
             else -> _state.value = s.copy(selectedWords = emptyList())
         }
     }
 
     private fun openPage(page: Int) {
-        if (allPairs.isEmpty()) { events.value = GameEvent.Completed; return }
+        if (allPairs.isEmpty()) {
+            events.value = GameEvent.Completed; return
+        }
 
         val from = page * pageSize
-        if (from >= allPairs.size) { events.value = GameEvent.Completed; return }
+        if (from >= allPairs.size) {
+            events.value = GameEvent.Completed; return
+        }
 
         val to = (from + pageSize).coerceAtMost(allPairs.size)
         currentPagePairs = allPairs.subList(from, to)
@@ -95,7 +100,6 @@ class WordsMatchingViewModel(
         val shuffledPairs = shuffleFunctions.shufflePairs(currentPagePairs)
         _pagePairs.value = shuffledPairs
     }
-
 
 
     private fun checkPair(a: Word, b: Word) {
@@ -121,9 +125,7 @@ class WordsMatchingViewModel(
                         add(b)
                     }
                     _state.value = cur.copy(
-                        correctWords = emptyList(),
-                        usedWords = newUsed,
-                        locked = false
+                        correctWords = emptyList(), usedWords = newUsed, locked = false
                     )
 
                     if (matchedIdsOnPage.size >= currentPagePairs.size) {
@@ -134,9 +136,7 @@ class WordsMatchingViewModel(
         } else {
             events.value = GameEvent.Wrong(wordsIds)
             _state.value = s.copy(
-                selectedWords = emptyList(),
-                errorWords = listOf(a, b),
-                locked = true
+                selectedWords = emptyList(), errorWords = listOf(a, b), locked = true
             )
             viewModelScope.launch {
                 delay(ConstantsTimeReaction.REACTION)

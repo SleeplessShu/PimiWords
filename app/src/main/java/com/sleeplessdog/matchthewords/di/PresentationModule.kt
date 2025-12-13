@@ -27,7 +27,9 @@ import org.koin.dsl.module
 val presentationModule = module {
 
     factory<Handler> {
-        Handler(Looper.getMainLooper())
+        Handler(
+            Looper.getMainLooper(),
+        )
     }
 
     factory {
@@ -35,7 +37,7 @@ val presentationModule = module {
             appPrefs = get(),
             languagePrefs = get(),
             wordsController = get(),
-            getSelectedCategoriesUC = get()
+            getSelectedCategoriesUC = get(),
         )
     }
 
@@ -43,30 +45,40 @@ val presentationModule = module {
         GameSessionController(
             wordsController = get(),
             scoreInteractor = get(),
-            progressController = get()
+            progressController = get(),
         )
     }
 
     viewModel {
-        GameSelectViewModel(get())
+        GameSelectViewModel(
+            languagePrefs = get(),
+        )
     }
 
     viewModel {
         GameViewModel(
-            levelLoader = get(), session = get()
+            levelLoader = get(),
+            session = get(),
         )
     }
 
     viewModel {
-        ScoreViewModel(get())
+        ScoreViewModel(
+            scoreInteractor = get(),
+        )
     }
 
     viewModel {
-        DatabaseViewModel(get(), get())
+        DatabaseViewModel(
+            interactor = get(),
+            dateManager = get(),
+        )
     }
 
     viewModel {
-        OneOfFourViewModel(get())
+        OneOfFourViewModel(
+            shuffleFunctions = get(),
+        )
     }
 
     viewModel {
@@ -74,11 +86,15 @@ val presentationModule = module {
     }
 
     viewModel {
-        TrueOrFalseViewModel(get())
+        TrueOrFalseViewModel(
+            shuffleFunctions = get(),
+        )
     }
 
     viewModel {
-        WordsMatchingViewModel(get())
+        WordsMatchingViewModel(
+            shuffleFunctions = get(),
+        )
     }
 
     viewModel {
@@ -86,17 +102,31 @@ val presentationModule = module {
             settingsInteractor = get(),
             app = androidApplication(),
             appPrefs = get(),
-            languagePrefs = get()
+            languagePrefs = get(),
         )
     }
 
     single<SettingsInteractor> {
-        SettingsInteractor(get(), get(), get(), get(), get())
+        SettingsInteractor(
+            observeFeaturedUC = get(),
+            observeAllGroupedUC = get(),
+            toggleUC = get(),
+            saveSelectionUC = get(),
+            createUserUC = get(),
+        )
     }
 
-    single<AppPrefs> { AppPrefsImpl(get()) }
+    single<AppPrefs> {
+        AppPrefsImpl(
+            context = get()
+        )
+    }
 
-    single<LanguagePrefs> { LanguagePrefsImpl(get()) }
+    single<LanguagePrefs> {
+        LanguagePrefsImpl(
+            context = get()
+        )
+    }
 
     single { ShuffleFunctions() }
 

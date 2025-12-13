@@ -4,9 +4,9 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.edit
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
-import androidx.core.content.edit
 import com.sleeplessdog.matchthewords.di.dataModule
 import com.sleeplessdog.matchthewords.di.domainModule
 import com.sleeplessdog.matchthewords.di.presentationModule
@@ -37,7 +37,7 @@ class App : Application() {
             modules(dataModule, domainModule, presentationModule)
         }
         FirebaseAppCheck.getInstance().installAppCheckProviderFactory(
-            DebugAppCheckProviderFactory.getInstance()
+            DebugAppCheckProviderFactory.getInstance(),
         )
     }
 
@@ -62,8 +62,11 @@ class App : Application() {
                 val stackTrace = sw.toString()
 
                 val ts = SimpleDateFormat(
-                    "yyyy-MM-dd HH:mm:ss", Locale.US
-                ).format(System.currentTimeMillis())
+                    "yyyy-MM-dd HH:mm:ss",
+                    Locale.US,
+                ).format(
+                    System.currentTimeMillis(),
+                )
                 val header = buildString {
                     appendLine("=== Crash ===")
                     appendLine("Time      : $ts")
@@ -73,12 +76,10 @@ class App : Application() {
                     appendLine("------------------------------")
                 }
 
-                // пишем (append)
                 openFileOutput(CRASH_FILE, MODE_APPEND).use { fos ->
                     fos.write((header + stackTrace + "\n\n").toByteArray())
                 }
 
-                // ставим флаг
                 getSharedPreferences(PREFS, MODE_PRIVATE).edit {
                     putBoolean(KEY_HAS_CRASH, true)
                 }
@@ -87,17 +88,15 @@ class App : Application() {
             } catch (e: IOException) {
                 Log.e("CRASH", "Failed to save crash", e)
             } finally {
-                // передаём дальше в системный/дефолтный хендлер
+
                 defaultHandler?.uncaughtException(thread, throwable) ?: run {
                     android.os.Process.killProcess(android.os.Process.myPid())
-
                 }
             }
         }
     }
 
     companion object {
-
         lateinit var database: AppDatabase
         lateinit var appContext: Context
 
@@ -106,9 +105,12 @@ class App : Application() {
         fun clearCrashFlag() {
             appContext.getSharedPreferences(PREFS, MODE_PRIVATE).edit {
                 putBoolean(KEY_HAS_CRASH, false).apply()
-        }}
+            }
+        }
 
         fun hasCrash(): Boolean =
-            appContext.getSharedPreferences(PREFS, MODE_PRIVATE).getBoolean(KEY_HAS_CRASH, false)
+            appContext
+                .getSharedPreferences(PREFS, MODE_PRIVATE)
+                .getBoolean(KEY_HAS_CRASH, false)
     }
 }

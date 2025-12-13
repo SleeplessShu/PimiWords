@@ -19,4 +19,5 @@ object ConstantsConditions {
 
     //----------------------M8----------------------
     const val MIN_VARIANTS_COUNT_M8 = 1
+    const val PAIRS_ON_PAGE = 6
 }
