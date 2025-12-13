@@ -49,11 +49,16 @@ val dataModule = module {
     }
 
     single(named(THEME_PREFERENCES)) {
-        App.appContext.getSharedPreferences(NIGHT_MODE, Context.MODE_PRIVATE)
+        App.appContext.getSharedPreferences(
+            NIGHT_MODE,
+            Context.MODE_PRIVATE,
+        )
     }
 
     single<WordsDatabase> {
-        WordsDatabase(get())
+        WordsDatabase(
+            wordDao = get()
+        )
     }
 
     factory<Handler> {
@@ -96,7 +101,9 @@ val dataModule = module {
             ctx,
             AppDatabase::class.java,
             dbName,
-        ).createFromAsset(sel.assetPath).build()
+        )
+            .createFromAsset(sel.assetPath)
+            .build()
     }
 
     single(named(KEY_DB_SCORE)) {

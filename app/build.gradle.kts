@@ -1,3 +1,6 @@
+import org.gradle.internal.impldep.org.eclipse.jgit.util.RawCharUtil.trimTrailingWhitespace
+import org.gradle.kotlin.dsl.invoke
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -8,6 +11,20 @@ plugins {
     id("com.google.gms.google-services")
     id("io.gitlab.arturbosch.detekt") version "1.23.4"
     id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+    id("com.diffplug.spotless") version "6.25.0"
+}
+
+spotless {
+    kotlin {
+        target("**/*.kt")
+        ktlint("1.3.1")
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    kotlinGradle {
+        target("**/*.gradle.kts")
+        ktlint("1.3.1")
+    }
 }
 
 detekt {
