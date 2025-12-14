@@ -8,22 +8,22 @@ enum class TOFButtonState(
     val offsetY: Float
 ) {
     DEFAULT(
-        backgroundRes = R.drawable.cardwards_default,
+        backgroundRes = R.drawable.bg_card_default,
         tintColorRes = android.R.color.transparent, // авто подставим в apply()
         offsetY = 0f
     ),
     PRESSED(
-        backgroundRes = R.drawable.cardwards_default,
+        backgroundRes = R.drawable.bg_card_default,
         tintColorRes = android.R.color.transparent,
         offsetY = 10f
     ),
     RESULT_CORRECT(
-        backgroundRes = R.drawable.cardwords_correct,
+        backgroundRes = R.drawable.bg_card_correct,
         tintColorRes = R.color.dark_gray,
         offsetY = 0f
     ),
     RESULT_WRONG(
-        backgroundRes = R.drawable.cardwords_error,
+        backgroundRes = R.drawable.bg_card_error,
         tintColorRes = R.color.dark_gray,
         offsetY = 0f
     );

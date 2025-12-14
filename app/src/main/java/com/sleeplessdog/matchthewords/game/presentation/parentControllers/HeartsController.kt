@@ -22,9 +22,9 @@ class HeartsController(
 
     private fun applyHeartAnimated(iv: ImageView, state: HeartState) {
         when (state) {
-            HeartState.FULL -> showHeart(iv, R.drawable.interface_health_full)
-            HeartState.HALF -> showHeart(iv, R.drawable.interface_health_half)
-            HeartState.LOW  -> showHeart(iv, R.drawable.interface_health_low)
+            HeartState.FULL -> showHeart(iv, R.drawable.int_lives_3)
+            HeartState.HALF -> showHeart(iv, R.drawable.int_lives_2)
+            HeartState.LOW  -> showHeart(iv, R.drawable.int_lives_1)
             HeartState.HIDDEN -> hideHeart(iv)
         }
     }

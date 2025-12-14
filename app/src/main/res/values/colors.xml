@@ -1,24 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--MAIN-->
-    <color name="day_background">#F7F7EB</color>
-    <color name="day_darkGreen">#1D2E27</color>
-    <color name="day_lightGreen">#00AE6A</color>
-
-    <!--ITEM-->
-    <color name="item_selected">#FFF0CF</color>
-    <color name="item_wrong">#FF6558</color>
-    <color name="item_correct">#01B971</color>
-    <color name="item_default">#F7F7EB</color>
-    <color name="item_used">#C5C5C5</color>
-
-    <!--SUPPORT_COLORS-->
-    <color name="bluegreen">#125359</color>
-    <color name="black_0.25">#401A1B22</color>
-
     <!--TEST-->
     <color name="test">#F0057E</color>
-
 
     <!--NEW_PALETTE-->
     <!--TEXT-->
@@ -29,10 +12,9 @@
     <!--INTERFACE-->
 
     <color name="opaque">#A2313131</color>
-    <color name="dark_background">#252525</color>
-
     <color name="black">#252525</color>
     <color name="dark_gray">#2B2B29</color>
+
     <color name="white">#E4DBC2</color>
 
     <color name="pink">#E91E63</color>
@@ -41,7 +23,6 @@
     <color name="gray_01">#2B2A2A</color>
     <color name="gray_02">#353535</color>
     <color name="gray_03">#6D6B65</color>
-
 
     <color name="black_primary">#212121</color>
 
@@ -52,8 +33,4 @@
     <color name="orange_primary">#FF894A</color>
     <color name="red_primary">#F26155</color>
     <color name="red_secondary">#E75246</color>
-
-
-
-
 </resources>

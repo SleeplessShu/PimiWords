@@ -25,12 +25,6 @@ import com.sleeplessdog.matchthewords.server.data.ServerDateRepositoryImpl
 import com.sleeplessdog.matchthewords.server.domain.ServerDateRepository
 import com.sleeplessdog.matchthewords.server.domain.ServerDbInteractor
 import com.sleeplessdog.matchthewords.server.domain.ServerDbInteractorImpl
-import com.sleeplessdog.matchthewords.settings.data.ExternalNavigatorRepositoryImpl
-import com.sleeplessdog.matchthewords.settings.data.SettingsRepositoryImpl
-import com.sleeplessdog.matchthewords.settings.data.SharingRepositoryImpl
-import com.sleeplessdog.matchthewords.settings.domain.repositories.ExternalNavigatorRepository
-import com.sleeplessdog.matchthewords.settings.domain.repositories.SettingsRepository
-import com.sleeplessdog.matchthewords.settings.domain.repositories.SharingRepository
 import com.sleeplessdog.matchthewords.utils.AppDb
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -50,15 +44,7 @@ val dataModule = module {
     single(named("themePreferences")) {
         App.appContext.getSharedPreferences("NightMode", Context.MODE_PRIVATE)
     }
-    single<SettingsRepository> {
-        SettingsRepositoryImpl(get(named("themePreferences")))
-    }
-    single<SharingRepository> {
-        SharingRepositoryImpl(get())
-    }
-    single<ExternalNavigatorRepository> {
-        ExternalNavigatorRepositoryImpl(get())
-    }
+
     single< WordsDatabase> {
         WordsDatabase(get())
     }

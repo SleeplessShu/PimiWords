@@ -11,7 +11,7 @@ import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.TrueOrFa
 import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.WordsMatchingViewModel
 import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.WriteTheWordViewModel
 import com.sleeplessdog.matchthewords.game.presentation.parentControllers.ProgressController
-import com.sleeplessdog.matchthewords.gameSelect.presentation.GameSelectViewModel
+import com.sleeplessdog.matchthewords.game.presentation.fragments.GameSelectViewModel
 import com.sleeplessdog.matchthewords.score.presentation.ScoreViewModel
 import com.sleeplessdog.matchthewords.settings.presentation.DatabaseViewModel
 import com.sleeplessdog.matchthewords.utils.ShuffleFunctions
