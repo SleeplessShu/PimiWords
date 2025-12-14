@@ -1,17 +1,13 @@
 package com.sleeplessdog.matchthewords.game.presentation
 
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.material.color.utilities.Score.score
 import com.sleeplessdog.matchthewords.game.data.repositories.AppPrefs
 import com.sleeplessdog.matchthewords.game.domain.api.ScoreInteractor
 import com.sleeplessdog.matchthewords.game.domain.interactors.WordsController
-import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.game.domain.models.WordsCategoriesList
 import com.sleeplessdog.matchthewords.game.domain.usecase.GetSelectedCategoriesUC
 import com.sleeplessdog.matchthewords.game.presentation.interfaces.GameEvent
@@ -19,7 +15,6 @@ import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
 import com.sleeplessdog.matchthewords.game.presentation.models.GameSettings
 import com.sleeplessdog.matchthewords.game.presentation.models.GameState
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
-import com.sleeplessdog.matchthewords.game.presentation.models.Language
 import com.sleeplessdog.matchthewords.game.presentation.models.MatchState
 import com.sleeplessdog.matchthewords.game.presentation.models.SessionStats
 import com.sleeplessdog.matchthewords.game.presentation.models.StatsState
@@ -27,7 +22,8 @@ import com.sleeplessdog.matchthewords.game.presentation.models.Word
 import com.sleeplessdog.matchthewords.game.presentation.parentControllers.ProgressController
 import com.sleeplessdog.matchthewords.utils.GamePrices
 import com.sleeplessdog.matchthewords.utils.SupportFunctions
-import com.sleeplessdog.matchthewords.utils.TimeReactionConstants
+import com.sleeplessdog.matchthewords.utils.TimeConstants
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class GameViewModel(
@@ -35,7 +31,7 @@ class GameViewModel(
     private val progressController: ProgressController,
     private val scoreInteractor: ScoreInteractor,
     private val appPrefs: AppPrefs,
-    private val getSelectedCategoriesUC: GetSelectedCategoriesUC
+    private val getSelectedCategoriesUC: GetSelectedCategoriesUC,
 ) : ViewModel() {
 
     // Верхнее состояние экрана игры
@@ -57,7 +53,7 @@ class GameViewModel(
     val showExitDialogEvent: LiveData<Unit> = _showExitDialogEvent
 
     // Техническое
-    private val handler = Handler(Looper.getMainLooper())
+
 
     // «игровая экономика»
     private var score = 0
@@ -89,11 +85,9 @@ class GameViewModel(
         // 1. Загружаем выбранные категории
         val selectedCategories = getSelectedCategoriesUC()
 
-        val enums: Set<WordsCategoriesList> = selectedCategories
-            .mapNotNull { cat ->
-                WordsCategoriesList.values().find { it.key == cat.key }
-            }
-            .toSet()
+        val enums: Set<WordsCategoriesList> = selectedCategories.mapNotNull { cat ->
+            WordsCategoriesList.values().find { it.key == cat.key }
+        }.toSet()
 
         // 2. Читаем префы
         val interfaceLang = appPrefs.getUiLanguage()
@@ -118,7 +112,6 @@ class GameViewModel(
     }
 
 
-
     fun onLoading() {
         _gameState.value = _gameState.value?.copy(state = GameState.LOADING)
     }
@@ -136,10 +129,10 @@ class GameViewModel(
             if (!ok) return@launch
 
             _wordsPairs.value = allPairs
-
-            handler.postDelayed({
+            viewModelScope.launch {
+                delay(TimeConstants.LOADING_PROCESS)
                 _gameState.value = _gameState.value?.copy(state = GameState.GAME)
-            }, TimeReactionConstants.LOADING)
+            }
         }
     }
 
@@ -219,19 +212,15 @@ class GameViewModel(
     private suspend fun loadWordsFromDatabase(): Boolean {
         val wordsNeeded = when (_gameState.value!!.gameType) {
             GameType.WriteTheWord -> difficultLevel / 6
-            GameType.OneOfFour    -> difficultLevel * 4
-            else                  -> difficultLevel
+            GameType.OneOfFour -> difficultLevel * 4
+            else -> difficultLevel
         }
 
         val settings = _gameSettings.value ?: GameSettings()
         Log.d("DEBUG", "loadWordsFromDatabase: ${settings.category} ${settings.level}")
 
         val pairs = wordsController.getWordPairs(
-            settings.language1,
-            settings.language2,
-            settings.level,
-            wordsNeeded,
-            settings.category
+            settings.language1, settings.language2, settings.level, wordsNeeded, settings.category
         )
 
         if (pairs.isEmpty()) {
@@ -251,7 +240,8 @@ class GameViewModel(
             correctIds = sessionCorrectIds.toList(), mistakeIds = sessionWrongIds.toList()
         )
         val todaysScore = scoreInteractor.getTodaysResult()
-        handler.postDelayed({
+        viewModelScope.launch {
+            delay(TimeConstants.LOADING_PROCESS)
             _gameState.value = _gameState.value?.copy(
                 state = GameState.END_OF_GAME,
             )
@@ -260,7 +250,7 @@ class GameViewModel(
             )
             wordsController.putRoundStats(stats)
             scoreInteractor.updateTodaysResult(score)
-        }, TimeReactionConstants.LOADING)
+        }
     }
 
     fun restartGame() {
@@ -298,7 +288,6 @@ class GameViewModel(
 
 
     fun resetStats() {
-        handler.removeCallbacksAndMessages(null)
         score = 0
 
         _wordsPairs.value = emptyList()
@@ -322,4 +311,3 @@ class GameViewModel(
         emitStats()
     }
 }
-

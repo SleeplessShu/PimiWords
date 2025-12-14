@@ -1,8 +1,8 @@
 package com.sleeplessdog.matchthewords.utils
 
-object TimeReactionConstants {
+object TimeConstants {
     const val DISABLE = 1000L
     const val REACTION = 800L
     const val NEXT_QUESTION = 500L
-    const val LOADING: Long = 1000
+    const val LOADING_PROCESS: Long = 2200
 }
