@@ -1,6 +1,5 @@
 package com.sleeplessdog.matchthewords.game.presentation.fragments
 
-import android.R.attr.repeatCount
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
@@ -62,5 +61,4 @@ class LoadingFragment : Fragment(R.layout.loading) {
             start()
         }
     }
-
 }

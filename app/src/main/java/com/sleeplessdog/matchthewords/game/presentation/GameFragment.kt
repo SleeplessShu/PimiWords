@@ -15,7 +15,6 @@ import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.GameFragmentBinding
 import com.sleeplessdog.matchthewords.game.presentation.fragments.EndGameFragment
 import com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment
-import com.sleeplessdog.matchthewords.game.presentation.fragments.MatchSettingsFragment
 import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.OneOfFourFragment
 import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.TrueOrFalseFragment
 import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.WordsMatchingFragment
@@ -105,15 +104,6 @@ class GameFragment : Fragment() {
 
         viewModel.gameState.observe(viewLifecycleOwner) { newState ->
             when (newState.state) {
-
-                GameState.MATCH_SETTINGS -> {
-                    childFragmentManager.beginTransaction()
-                        .replace(R.id.flFragmentContainer, MatchSettingsFragment()).commit()
-                    binding.tvHeader.setText(R.string.state_title_match_settings)
-                    binding.statsBlock.isVisible = false
-                    binding.buttonBack.isVisible = true
-                }
-
                 GameState.LOADING -> {
                     childFragmentManager.beginTransaction()
                         .replace(R.id.flFragmentContainer, LoadingFragment()).commit()
@@ -160,13 +150,6 @@ class GameFragment : Fragment() {
     }
     private fun showExitBottomSheet() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-    }
-
-
-    private fun returnToMatchSettings() {
-        viewModel.resetStats()
-        childFragmentManager.beginTransaction()
-            .replace(R.id.flFragmentContainer, MatchSettingsFragment()).commit()
     }
 
     private fun returnToGameSelect() {

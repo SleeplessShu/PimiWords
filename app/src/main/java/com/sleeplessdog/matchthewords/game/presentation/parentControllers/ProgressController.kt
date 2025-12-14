@@ -1,6 +1,5 @@
 package com.sleeplessdog.matchthewords.game.presentation.parentControllers
 
-import android.util.Log
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
 import com.sleeplessdog.matchthewords.utils.SupportFunctions
