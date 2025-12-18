@@ -10,11 +10,9 @@ import com.sleeplessdog.matchthewords.App
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.ActivityMainBinding
 import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
-import com.sleeplessdog.matchthewords.game.presentation.models.GameState
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.jvm.java
 
-class MainActivity: AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val gameViewModel: GameViewModel by viewModel()
 
@@ -44,5 +42,9 @@ class MainActivity: AppCompatActivity() {
                 }
             }
         }
+    }
+
+    fun setBottomNavVisibility(isVisible: Boolean) {
+        binding.bottomNavigationView.isVisible = isVisible
     }
 }

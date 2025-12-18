@@ -1,16 +1,20 @@
 package com.sleeplessdog.matchthewords.game.presentation.fragments
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sleeplessdog.matchthewords.game.data.repositories.AppPrefs
+import com.sleeplessdog.matchthewords.game.presentation.controller.LandingPagesController
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
+import com.sleeplessdog.matchthewords.game.presentation.models.LandingKeys
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
 import kotlinx.coroutines.launch
 
 class GameSelectViewModel(
-    private val appPrefs: AppPrefs
+    private val appPrefs: AppPrefs,
+    private val landingManager: LandingPagesController,
 ) : ViewModel() {
 
     private val _uiLanguage = MutableLiveData<Language>()
@@ -22,8 +26,13 @@ class GameSelectViewModel(
     private val _availableLanguages = MutableLiveData<List<Language>>()
     val availableLanguages: LiveData<List<Language>> = _availableLanguages
 
+    private val _showLanding = MutableLiveData<Boolean>()
+    val showLanding: LiveData<Boolean> = _showLanding
+
     private val _navigateToGame = MutableLiveData<GameType?>()
     val navigateToGame: LiveData<GameType?> = _navigateToGame
+
+    private var isFirstRun = false
 
     init {
         viewModelScope.launch {
@@ -34,11 +43,17 @@ class GameSelectViewModel(
             }
         }
         val ui = appPrefs.getUiLanguage()
-        val study = appPrefs.getStudyLanguage()
-        rebuild(ui, study)
+        rebuild(ui)
+        isFirstRun = landingManager.shouldShow(LandingKeys.APP_FIRST_LAUNCH)
+        _showLanding.value = isFirstRun
+        Log.d("DEBUG", "$isFirstRun: ")
     }
 
-    private fun rebuild(ui: Language, study: Language) {
+    fun onLandingShown() {
+        landingManager.setShown(LandingKeys.APP_FIRST_LAUNCH)
+    }
+
+    private fun rebuild(ui: Language) {
         _availableLanguages.value = Language.entries.filter { it != ui }
     }
 
@@ -46,7 +61,7 @@ class GameSelectViewModel(
         val ui = _uiLanguage.value ?: Language.RUSSIAN
         _studyLanguage.value = newStudy
         appPrefs.save(ui, newStudy)
-        rebuild(ui, newStudy)
+        rebuild(ui)
     }
 
     fun onGamePicked(type: GameType) {

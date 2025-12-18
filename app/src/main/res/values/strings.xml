@@ -11,6 +11,22 @@
 
     <string name="empty">     </string>
 
+    <!-- LANDING PAGES -->
+    <string name="landing_start_button">Начнём!</string>
+    <string name="landing_start_salut">HOLA!\nSALUT!\nBAREV!</string>
+    <string name="landing_accept">Понятно!</string>
+    <string name="landing_mtw_header">Составляй\nпары из слов</string>
+    <string name="landing_tof_header">Определи\nправильно ли</string>
+    <string name="landing_oof_header">Выбери\nодин вариант</string>
+    <string name="landing_wtw_header">Напиши\nперевод слова</string>
+    <string name="landing_mtw_text">Получай очки за каждую\nправильную пару</string>
+    <string name="landing_tof_text">Получай очки за каждое слово</string>
+    <string name="landing_oof_text">Получай очки за каждое слово</string>
+    <string name="landing_wtw_text">Получай очки за каждое слово</string>
+
+    <string name="landing_start_game">Начать</string>
+    <string name="landing_options_game">Настроить игру</string>
+
     <!-- endgame fragment -->
     <string name="end_game_phrase_win">Победа!</string>
     <string name="end_game_phrase_loose">Провал!</string>

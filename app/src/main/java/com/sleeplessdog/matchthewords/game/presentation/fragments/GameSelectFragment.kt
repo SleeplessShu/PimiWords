@@ -1,9 +1,11 @@
 package com.sleeplessdog.matchthewords.game.presentation.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +15,7 @@ import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageAdapt
 import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageMenuManager
 import com.sleeplessdog.matchthewords.game.presentation.controller.toFlagLargeRes
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
+import com.sleeplessdog.matchthewords.main.MainActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GameSelectFragment : Fragment() {
@@ -26,7 +29,7 @@ class GameSelectFragment : Fragment() {
     private var isLangShown = false
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
     ): View {
         _binding = GameSelectFragmentBinding.inflate(inflater, container, false)
         return binding.root
@@ -34,6 +37,7 @@ class GameSelectFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setupLanguageList()
         setupLanguageButton()
         setupLanguageManager()
@@ -121,17 +125,45 @@ class GameSelectFragment : Fragment() {
             langAdapter.submit(langs, selected)
         }
 
-        // выбранный язык (большой флаг)
         viewModel.studyLanguage.observe(viewLifecycleOwner) { study ->
             binding.languageSelect.setImageResource(study.toFlagLargeRes())
-            // можно тут же подсветить, если список открыт
+
             if (isLangShown) {
                 langAdapter.setSelected(study)
             }
         }
 
         viewModel.uiLanguage.observe(viewLifecycleOwner) {
-            // сейчас ты не показываешь UI-флаг — можно игнорить
+            // не реализовано
+        }
+
+        viewModel.showLanding.observe(viewLifecycleOwner) { shouldShow ->
+            if (shouldShow) {
+                Log.d("DEBUG", "shouldShow: $shouldShow ")
+                (requireActivity() as? MainActivity)?.setBottomNavVisibility(!shouldShow)
+
+                binding.landingOverlayView.root.isVisible = shouldShow
+
+                if (shouldShow) {
+                    binding.landingOverlayView.textView.text =
+                        getString(R.string.landing_start_salut)
+                    binding.landingOverlayView.btn.text = getString(R.string.landing_start_button)
+                    binding.landingOverlayView.animationViewCurtains.setAnimation(R.raw.animations_first_curtans)
+                    binding.landingOverlayView.animationView.setAnimation(R.raw.animations_first_juggles)
+                    binding.landingOverlayView.animationViewCurtains.playAnimation()
+                    binding.landingOverlayView.animationView.playAnimation()
+                    binding.landingOverlayView.btn.setOnClickListener {
+                        Log.d("DEBUG", "shouldShow: $shouldShow ")
+                        binding.landingOverlayView.root.animate().alpha(0f).setDuration(300)
+                            .withEndAction {
+                                binding.landingOverlayView.root.isVisible = false
+                                binding.landingOverlayView.root.alpha = 1f
+                            }
+                        viewModel.onLandingShown()
+                        (requireActivity() as? MainActivity)?.setBottomNavVisibility(shouldShow)
+                    }
+                }
+            }
         }
 
         viewModel.navigateToGame.observe(viewLifecycleOwner) { type ->

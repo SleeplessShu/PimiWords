@@ -5,16 +5,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.game.data.repositories.AppPrefs
 import com.sleeplessdog.matchthewords.game.domain.api.ScoreInteractor
 import com.sleeplessdog.matchthewords.game.domain.interactors.WordsController
 import com.sleeplessdog.matchthewords.game.domain.models.WordsCategoriesList
 import com.sleeplessdog.matchthewords.game.domain.usecase.GetSelectedCategoriesUC
+import com.sleeplessdog.matchthewords.game.presentation.controller.LandingPagesController
 import com.sleeplessdog.matchthewords.game.presentation.interfaces.GameEvent
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
 import com.sleeplessdog.matchthewords.game.presentation.models.GameSettings
 import com.sleeplessdog.matchthewords.game.presentation.models.GameState
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
+import com.sleeplessdog.matchthewords.game.presentation.models.LandingConditions
+import com.sleeplessdog.matchthewords.game.presentation.models.LandingKeys
 import com.sleeplessdog.matchthewords.game.presentation.models.MatchState
 import com.sleeplessdog.matchthewords.game.presentation.models.SessionStats
 import com.sleeplessdog.matchthewords.game.presentation.models.StatsState
@@ -32,14 +36,18 @@ class GameViewModel(
     private val scoreInteractor: ScoreInteractor,
     private val appPrefs: AppPrefs,
     private val getSelectedCategoriesUC: GetSelectedCategoriesUC,
+    private val landingManager: LandingPagesController,
 ) : ViewModel() {
 
     // Верхнее состояние экрана игры
     private val _gameState = MutableLiveData(MatchState())
     val gameState: LiveData<MatchState> = _gameState
-
     private val _statsState = MutableLiveData(StatsState())
     val statsState: LiveData<StatsState> = _statsState
+
+    //навигация
+    private val _navigateToGame = MutableLiveData<GameType?>()
+    val navigateToGame: LiveData<GameType?> = _navigateToGame
 
     // Настройки матча
     private val _gameSettings = MutableLiveData(GameSettings())
@@ -51,9 +59,6 @@ class GameViewModel(
 
     private val _showExitDialogEvent = MutableLiveData<Unit>()
     val showExitDialogEvent: LiveData<Unit> = _showExitDialogEvent
-
-    // Техническое
-
 
     // «игровая экономика»
     private var score = 0
@@ -77,8 +82,6 @@ class GameViewModel(
     }
 
     // ------------ Навигация по экрану ------------
-
-
     private suspend fun prepareData() {
         onLoading()
 
@@ -118,10 +121,8 @@ class GameViewModel(
 
     fun onGame() {
         viewModelScope.launch {
-            // шаг 1: подготовить настройки (здесь же подтянутся категории из БД)
-            prepareData()
 
-            // шаг 2: настроить "экономику" и прогресс
+            prepareData()
             setupGameStats()
 
             // шаг 3: загрузить слова
@@ -132,9 +133,69 @@ class GameViewModel(
             viewModelScope.launch {
                 delay(TimeConstants.LOADING_PROCESS)
                 _gameState.value = _gameState.value?.copy(state = GameState.GAME)
+                landingScreenCheck()
             }
         }
     }
+
+    private fun landingScreenCheck() {
+        val gameType = _gameState.value?.gameType ?: GameType.MATCH8
+        val gameKey = SupportFunctions.getKeyByGameType(gameType)
+        val shouldShow = landingManager.shouldShow(gameKey)
+        if (shouldShow) {
+            val state = _gameState.value ?: MatchState()
+            var landingConditions = LandingConditions()
+            when (state.gameType) {
+                GameType.MATCH8 -> {
+                    landingConditions = LandingConditions(
+                        shouldShow = true,
+                        headerTextId = R.string.landing_mtw_header,
+                        regularTextId = R.string.landing_mtw_text,
+                        animation = R.raw.animations_first_juggles,
+                        key = LandingKeys.GAME_MTW
+                    )
+                }
+
+                GameType.TRUEorFALSE -> {
+                    landingConditions = LandingConditions(
+                        shouldShow = true,
+                        headerTextId = R.string.landing_tof_header,
+                        regularTextId = R.string.landing_tof_text,
+                        animation = R.raw.animations_first_juggles,
+                        key = LandingKeys.GAME_TOF
+                    )
+                }
+
+                GameType.OneOfFour -> {
+                    landingConditions = LandingConditions(
+                        shouldShow = true,
+                        headerTextId = R.string.landing_oof_header,
+                        regularTextId = R.string.landing_oof_text,
+                        animation = R.raw.animations_first_juggles,
+                        key = LandingKeys.GAME_OOF
+                    )
+                }
+
+                GameType.WriteTheWord -> {
+                    landingConditions = LandingConditions(
+                        shouldShow = true,
+                        headerTextId = R.string.landing_wtw_header,
+                        regularTextId = R.string.landing_wtw_text,
+                        animation = R.raw.animations_first_juggles,
+                        key = LandingKeys.GAME_WTW
+                    )
+                }
+            }
+            showLanding(landingConditions)
+        }
+    }
+
+    private fun showLanding(landingConditions: LandingConditions) {
+
+        _gameState.value = _gameState.value?.copy(landingConditions = landingConditions)
+
+    }
+
 
     // ------------ Экономика ------------
     fun reactOnCorrect() {
@@ -299,6 +360,10 @@ class GameViewModel(
         emitStats()
     }
 
+    fun navigateToOptions() {
+        resetAll()
+    }
+
     fun resetAll() {
         resetStats()
         _gameSettings.value = GameSettings()
@@ -309,5 +374,9 @@ class GameViewModel(
         progressSegments = progressController.stepsFor(DifficultLevel.MEDIUM, GameType.MATCH8)
         currentStep = 0
         emitStats()
+    }
+
+    fun onLandingShown(landingKey: LandingKeys) {
+        landingManager.setShown(landingKey)
     }
 }
