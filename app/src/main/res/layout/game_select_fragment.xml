@@ -165,8 +165,14 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include
-        android:id="@+id/landingOverlayView"
+        android:id="@+id/landingFirstOverlayView"
         layout="@layout/landing_gameselect_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <include
+        android:id="@+id/landingLanguageOverlayView"
+        layout="@layout/landing_language_select_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

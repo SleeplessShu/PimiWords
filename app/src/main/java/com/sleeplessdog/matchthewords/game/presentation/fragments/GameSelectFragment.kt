@@ -25,6 +25,7 @@ class GameSelectFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var langAdapter: LanguageAdapter
+    private lateinit var landingLanguageAdapter: LanguageAdapter
     private lateinit var languageMenuManager: LanguageMenuManager
     private var isLangShown = false
 
@@ -61,6 +62,17 @@ class GameSelectFragment : Fragment() {
             langAdapter.setSelected(picked)
 
             binding.rvLanguages.postDelayed({
+
+                binding.landingFirstOverlayView.root.isVisible = false
+                binding.landingFirstOverlayView.root.animate().alpha(0f).setDuration(300)
+                    .withEndAction {
+                        binding.landingFirstOverlayView.root.isVisible = false
+                        binding.landingFirstOverlayView.root.alpha = 1f
+                    }
+                binding.landingLanguageOverlayView.root.isVisible = false
+                viewModel.onLandingShown()
+                (requireActivity() as? MainActivity)?.setBottomNavVisibility(true)
+
                 languageMenuManager.hide()
             }, 150)
         }
@@ -142,25 +154,20 @@ class GameSelectFragment : Fragment() {
                 Log.d("DEBUG", "shouldShow: $shouldShow ")
                 (requireActivity() as? MainActivity)?.setBottomNavVisibility(!shouldShow)
 
-                binding.landingOverlayView.root.isVisible = shouldShow
+                binding.landingFirstOverlayView.root.isVisible = shouldShow
 
                 if (shouldShow) {
-                    binding.landingOverlayView.textView.text =
+                    binding.landingFirstOverlayView.textView.text =
                         getString(R.string.landing_start_salut)
-                    binding.landingOverlayView.btn.text = getString(R.string.landing_start_button)
-                    binding.landingOverlayView.animationViewCurtains.setAnimation(R.raw.animations_first_curtans)
-                    binding.landingOverlayView.animationView.setAnimation(R.raw.animations_first_juggles)
-                    binding.landingOverlayView.animationViewCurtains.playAnimation()
-                    binding.landingOverlayView.animationView.playAnimation()
-                    binding.landingOverlayView.btn.setOnClickListener {
-                        Log.d("DEBUG", "shouldShow: $shouldShow ")
-                        binding.landingOverlayView.root.animate().alpha(0f).setDuration(300)
-                            .withEndAction {
-                                binding.landingOverlayView.root.isVisible = false
-                                binding.landingOverlayView.root.alpha = 1f
-                            }
-                        viewModel.onLandingShown()
-                        (requireActivity() as? MainActivity)?.setBottomNavVisibility(shouldShow)
+                    binding.landingFirstOverlayView.btn.text =
+                        getString(R.string.landing_start_button)
+                    binding.landingFirstOverlayView.animationViewCurtains.setAnimation(R.raw.animations_first_curtans)
+                    binding.landingFirstOverlayView.animationView.setAnimation(R.raw.animations_first_juggles)
+                    binding.landingFirstOverlayView.animationViewCurtains.playAnimation()
+                    binding.landingFirstOverlayView.animationView.playAnimation()
+                    binding.landingFirstOverlayView.btn.setOnClickListener {
+                        showOverlayToLanguageSelect()
+
                     }
                 }
             }
@@ -173,6 +180,23 @@ class GameSelectFragment : Fragment() {
                 viewModel.onNavigateConsumed()
             }
         }
+    }
+
+    private fun showOverlayToLanguageSelect() {
+        binding.landingLanguageOverlayView.root.isVisible = true
+        binding.landingLanguageOverlayView.animationView
+            .setAnimation(R.raw.animation_lang_select_sailorserb)
+        binding.landingLanguageOverlayView.animationView.playAnimation()
+        binding.rvLanguages
+        val list = viewModel.availableLanguages.value ?: emptyList()
+        val selected = viewModel.studyLanguage.value
+        langAdapter.submit(list, selected)
+        selected?.let { langAdapter.setSelected(it) }
+        binding.landingLanguageOverlayView.rvLanguages.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = langAdapter
+        }
+
     }
 
     private fun setupLanguageButton() {

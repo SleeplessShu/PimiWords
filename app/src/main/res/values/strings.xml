@@ -15,6 +15,9 @@
     <string name="landing_start_button">Начнём!</string>
     <string name="landing_start_salut">HOLA!\nSALUT!\nBAREV!</string>
     <string name="landing_accept">Понятно!</string>
+
+    <string name="landing_language_select">Выбери язык\nдля изучения</string>
+
     <string name="landing_mtw_header">Составляй\nпары из слов</string>
     <string name="landing_tof_header">Определи\nправильно ли</string>
     <string name="landing_oof_header">Выбери\nодин вариант</string>
