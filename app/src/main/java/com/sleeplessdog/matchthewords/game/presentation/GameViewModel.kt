@@ -14,6 +14,7 @@ import com.sleeplessdog.matchthewords.game.domain.usecase.GetSelectedCategoriesU
 import com.sleeplessdog.matchthewords.game.presentation.controller.LandingPagesController
 import com.sleeplessdog.matchthewords.game.presentation.interfaces.GameEvent
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
+import com.sleeplessdog.matchthewords.game.presentation.models.EndGameStats
 import com.sleeplessdog.matchthewords.game.presentation.models.GameSettings
 import com.sleeplessdog.matchthewords.game.presentation.models.GameState
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
@@ -59,6 +60,9 @@ class GameViewModel(
 
     private val _showExitDialogEvent = MutableLiveData<Unit>()
     val showExitDialogEvent: LiveData<Unit> = _showExitDialogEvent
+
+    private val _endGameStats = MutableLiveData<EndGameStats>()
+    val endGameStats: LiveData<EndGameStats> = _endGameStats
 
     // «игровая экономика»
     private var score = 0
