@@ -48,7 +48,6 @@ class WriteTheWordFragment : Fragment(R.layout.write_the_word_fragment) {
         }
         binding.rvLetters.layoutManager = flex
         setupObservers()
-        // setupTouchListeners()
     }
 
     override fun onDestroyView() {
@@ -71,7 +70,6 @@ class WriteTheWordFragment : Fragment(R.layout.write_the_word_fragment) {
             adapter.submitList(ui.letters)
             binding.btnClearLetter.isEnabled = !ui.locked && ui.input.isNotEmpty()
             binding.btnClear.isEnabled = !ui.locked && ui.input.isNotEmpty()
-            //binding.btnCheck.isEnabled = !ui.locked && ui.input.isNotEmpty()
             binding.btnCheck.isEnabled = ui.isCheckEnabled
             binding.btnCheck.setBackgroundColor(
                 if (ui.isCheckEnabled)
@@ -97,13 +95,6 @@ class WriteTheWordFragment : Fragment(R.layout.write_the_word_fragment) {
                 )
             }
         }
-        /*childVM.isCheckEnabled.observe(viewLifecycleOwner) { isEnabled ->
-            binding.btnCheck.isEnabled = isEnabled
-            binding.btnCheck.setBackgroundColor(
-                if (isEnabled) requireContext().getColor(R.color.day_lightGreen)
-                else Color.GRAY
-            )
-        }*/
 
         childVM.events.observe(viewLifecycleOwner) { e ->
             parentVM.onGameEvent(e)
