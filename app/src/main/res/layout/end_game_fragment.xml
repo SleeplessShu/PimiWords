@@ -220,7 +220,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginBottom="16dp"
         android:checkable="true"
-        android:text="@string/button_to_menu"
+        android:text="@string/button_new_game"
         android:textAllCaps="false"
         android:textColor="@color/gray_02"
         android:textSize="20sp"
