@@ -23,6 +23,7 @@ import com.sleeplessdog.matchthewords.game.presentation.models.GameState
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
 import com.sleeplessdog.matchthewords.game.presentation.models.LandingConditions
 import com.sleeplessdog.matchthewords.game.presentation.parentControllers.HeartsController
+import com.sleeplessdog.matchthewords.utils.LandingRepeatController.ALWAYS_SHOW_GAME_LANDING
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.roundToInt
 
@@ -198,10 +199,10 @@ class GameFragment : Fragment() {
         binding.landingFirstOverlayView.root.isVisible = showLanding
         binding.landingFirstOverlayView.tvHeader.text = header
         binding.landingFirstOverlayView.tvText.text = text
-        binding.landingFirstOverlayView.animationView.setAnimation(landingConditions.animation)
-        binding.landingFirstOverlayView.animationView.playAnimation()
+        binding.landingFirstOverlayView.animationIdleView.setAnimation(landingConditions.animation)
+        binding.landingFirstOverlayView.animationIdleView.playAnimation()
         binding.landingFirstOverlayView.btnStart.setOnClickListener {
-            viewModel.onLandingShown(landingConditions.key)
+            viewModel.onLandingShown(ALWAYS_SHOW_GAME_LANDING, landingConditions.key)
             binding.landingFirstOverlayView.root.animate().alpha(0f).setDuration(300)
                 .withEndAction {
                     binding.landingFirstOverlayView.root.isVisible = false

@@ -387,7 +387,7 @@ class GameViewModel(
         emitStats()
     }
 
-    fun onLandingShown(landingKey: LandingKeys) {
+    fun onLandingShown(showAlways: Boolean, landingKey: LandingKeys) {
         _gameState.value = _gameState.value?.copy(
             landingConditions =
                 LandingConditions(
@@ -398,6 +398,6 @@ class GameViewModel(
                     key = landingKey,
                 )
         )
-        landingManager.setShown(landingKey)
+        if (!showAlways) landingManager.setShown(landingKey)
     }
 }
