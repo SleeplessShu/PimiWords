@@ -1,7 +1,6 @@
 package com.sleeplessdog.matchthewords.game.presentation.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,8 +54,6 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
 
     private fun setupObservers() {
         parentViewModel.endGameStats.observe(viewLifecycleOwner) { stats ->
-
-            Log.d("DEBUG", "game end vm OBSERVED: $stats")
 
             val isWin = stats.isWin
 

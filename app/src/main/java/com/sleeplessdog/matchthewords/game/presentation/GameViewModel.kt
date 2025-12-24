@@ -299,14 +299,12 @@ class GameViewModel(
 
     // ------------ Конец игры/сброс ------------
     fun onGameEnd() {
-        //onLoading()
 
         val stats = SessionStats(
             correctIds = sessionCorrectIds.toList(), mistakeIds = sessionWrongIds.toList()
         )
         val todaysScore = scoreInteractor.getTodaysResult()
         viewModelScope.launch {
-            //delay(TimeConstants.LOADING_PROCESS)
             _gameState.value = _gameState.value?.copy(
                 state = GameState.END_OF_GAME,
             )
