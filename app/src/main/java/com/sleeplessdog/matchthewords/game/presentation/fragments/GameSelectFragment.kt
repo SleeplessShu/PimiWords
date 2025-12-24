@@ -185,7 +185,7 @@ class GameSelectFragment : Fragment() {
     private fun showOverlayToLanguageSelect() {
         binding.landingLanguageOverlayView.root.isVisible = true
         binding.landingLanguageOverlayView.animationView
-            .setAnimation(R.raw.animation_lang_select_sailorserb)
+            .setAnimation(R.raw.sailorarmen)
         binding.landingLanguageOverlayView.animationView.playAnimation()
         binding.rvLanguages
         val list = viewModel.availableLanguages.value ?: emptyList()

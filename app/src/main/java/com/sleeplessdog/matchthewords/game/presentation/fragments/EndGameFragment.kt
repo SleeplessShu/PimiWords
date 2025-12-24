@@ -10,6 +10,7 @@ import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.EndGameFragmentBinding
 import com.sleeplessdog.matchthewords.game.presentation.GameFragmentDirections
 import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
+import com.sleeplessdog.matchthewords.game.presentation.models.EndGameStats
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class EndGameFragment : Fragment(R.layout.end_game_fragment) {
@@ -19,7 +20,7 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
     ): View? {
         _binding = EndGameFragmentBinding.inflate(inflater, container, false)
         return binding.root
@@ -41,34 +42,62 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
 
 
         binding.bNewGame.setOnClickListener {
-            parentViewModel.onGame()
+            returnToGameSelect()
         }
         binding.bRestart.setOnClickListener {
             parentViewModel.restartGame()
         }
-        binding.bToMenu.setOnClickListener {
-           returnToGameSelect()
+        binding.bToSettings.setOnClickListener {
+            goToSettings()
         }
     }
 
     private fun setupObservers() {
-        parentViewModel.statsState.observe(viewLifecycleOwner) { state ->
-            if (state.lives == 0) {
-                binding.tvResult.setText(R.string.end_game_phrase_loose)
-                binding.pimi.setImageResource(R.drawable.pimi_game_end_fail)
+        parentViewModel.endGameStats.observe(viewLifecycleOwner) { stats ->
+
+            val isWin = stats.isWin
+
+            if (isWin) {
+                showResult(
+                    result = getString(R.string.end_game_phrase_win),
+                    phrase = getString(R.string.eg_congrats),
+                    animation = R.raw.animation_victory_default,
+                    stats = stats
+                )
             } else {
-                binding.tvResult.setText(R.string.end_game_phrase_win)
-                binding.pimi.setImageResource(R.drawable.pimi_game_end_victory)
+                showResult(
+                    result = getString(R.string.end_game_phrase_loose),
+                    phrase = getString(R.string.eg_sorrow),
+                    animation = R.drawable.pimi_game_end_fail,
+                    stats = stats,
+                )
             }
-            val score = state.score.toIntOrNull() ?: 0
-            val scoreText = getString(R.string.score_text, score)
-            binding.tvAnnouncement.text = StringBuilder(scoreText)
         }
+    }
+
+    private fun showResult(result: String, phrase: String, animation: Int, stats: EndGameStats?) {
+        val errors = stats?.mistakesCount
+        val score = stats?.score
+        val words = stats?.wordsCount
+
+        binding.tvResult.text = result
+        binding.tvPhrase.text = phrase
+        binding.tvErrors.text = errors.toString()
+        binding.tvScore.text = score.toString()
+        binding.tvWords.text = words.toString()
+        binding.animationView.setAnimation(animation)
+        binding.animationView.playAnimation()
     }
 
     private fun returnToGameSelect() {
         val dir = GameFragmentDirections
             .actionGameFragmentToGameSelectFragment()
+        findNavController().navigate(dir)
+    }
+
+    private fun goToSettings() {
+        val dir = GameFragmentDirections
+            .actionGameFragmentToSettingsFragment()
         findNavController().navigate(dir)
     }
 }
