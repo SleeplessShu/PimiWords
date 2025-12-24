@@ -195,20 +195,21 @@ class GameFragment : Fragment() {
         val showLanding = landingConditions.shouldShow
         val header = getString(landingConditions.headerTextId)
         val text = getString(landingConditions.regularTextId)
-        binding.landingOverlayView.root.isVisible = showLanding
-        binding.landingOverlayView.tvHeader.text = header
-        binding.landingOverlayView.tvText.text = text
-        binding.landingOverlayView.animationView.setAnimation(landingConditions.animation)
-        binding.landingOverlayView.animationView.playAnimation()
-        binding.landingOverlayView.btnStart.setOnClickListener {
+        binding.landingFirstOverlayView.root.isVisible = showLanding
+        binding.landingFirstOverlayView.tvHeader.text = header
+        binding.landingFirstOverlayView.tvText.text = text
+        binding.landingFirstOverlayView.animationView.setAnimation(landingConditions.animation)
+        binding.landingFirstOverlayView.animationView.playAnimation()
+        binding.landingFirstOverlayView.btnStart.setOnClickListener {
             viewModel.onLandingShown(landingConditions.key)
-            binding.landingOverlayView.root.animate().alpha(0f).setDuration(300).withEndAction {
-                binding.landingOverlayView.root.isVisible = false
-                binding.landingOverlayView.root.alpha = 1f
-            }
+            binding.landingFirstOverlayView.root.animate().alpha(0f).setDuration(300)
+                .withEndAction {
+                    binding.landingFirstOverlayView.root.isVisible = false
+                    binding.landingFirstOverlayView.root.alpha = 1f
+                }
         }
 
-        binding.landingOverlayView.btnSettings.setOnClickListener {
+        binding.landingFirstOverlayView.btnSettings.setOnClickListener {
             viewModel.resetAll()
             val dir = GameFragmentDirections.actionGameFragmentToSettingsFragment()
             findNavController().navigate(dir)

@@ -14,6 +14,7 @@ import com.sleeplessdog.matchthewords.game.domain.usecase.GetSelectedCategoriesU
 import com.sleeplessdog.matchthewords.game.presentation.controller.LandingPagesController
 import com.sleeplessdog.matchthewords.game.presentation.interfaces.GameEvent
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
+import com.sleeplessdog.matchthewords.game.presentation.models.EndGameStats
 import com.sleeplessdog.matchthewords.game.presentation.models.GameSettings
 import com.sleeplessdog.matchthewords.game.presentation.models.GameState
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
@@ -59,6 +60,9 @@ class GameViewModel(
 
     private val _showExitDialogEvent = MutableLiveData<Unit>()
     val showExitDialogEvent: LiveData<Unit> = _showExitDialogEvent
+
+    private val _endGameStats = MutableLiveData<EndGameStats>()
+    val endGameStats: LiveData<EndGameStats> = _endGameStats
 
     // «игровая экономика»
     private var score = 0
@@ -295,20 +299,25 @@ class GameViewModel(
 
     // ------------ Конец игры/сброс ------------
     fun onGameEnd() {
-        onLoading()
 
         val stats = SessionStats(
             correctIds = sessionCorrectIds.toList(), mistakeIds = sessionWrongIds.toList()
         )
         val todaysScore = scoreInteractor.getTodaysResult()
         viewModelScope.launch {
-            delay(TimeConstants.LOADING_PROCESS)
             _gameState.value = _gameState.value?.copy(
                 state = GameState.END_OF_GAME,
             )
             _statsState.value = _statsState.value?.copy(
                 lives = lives, todaysScore = todaysScore.toString()
             )
+            _endGameStats.value = EndGameStats(
+                isWin = lives > 0,
+                mistakesCount = sessionWrongIds.size,
+                score = score,
+                wordsCount = sessionCorrectIds.size
+            )
+
             wordsController.putRoundStats(stats)
             scoreInteractor.updateTodaysResult(score)
         }
@@ -377,6 +386,16 @@ class GameViewModel(
     }
 
     fun onLandingShown(landingKey: LandingKeys) {
+        _gameState.value = _gameState.value?.copy(
+            landingConditions =
+                LandingConditions(
+                    shouldShow = false,
+                    headerTextId = 0,
+                    regularTextId = 0,
+                    animation = 0,
+                    key = landingKey,
+                )
+        )
         landingManager.setShown(landingKey)
     }
 }
