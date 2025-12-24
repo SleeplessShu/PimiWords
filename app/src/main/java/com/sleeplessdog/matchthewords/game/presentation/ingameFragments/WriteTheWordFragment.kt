@@ -1,14 +1,11 @@
 package com.sleeplessdog.matchthewords.game.presentation.ingameFragments
 
 
-import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.google.android.flexbox.FlexDirection
@@ -74,8 +71,39 @@ class WriteTheWordFragment : Fragment(R.layout.write_the_word_fragment) {
             adapter.submitList(ui.letters)
             binding.btnClearLetter.isEnabled = !ui.locked && ui.input.isNotEmpty()
             binding.btnClear.isEnabled = !ui.locked && ui.input.isNotEmpty()
-            binding.btnCheck.isEnabled = !ui.locked && ui.input.isNotEmpty()
+            //binding.btnCheck.isEnabled = !ui.locked && ui.input.isNotEmpty()
+            binding.btnCheck.isEnabled = ui.isCheckEnabled
+            binding.btnCheck.setBackgroundColor(
+                if (ui.isCheckEnabled)
+                    requireContext().getColor(R.color.day_lightGreen)
+                else
+                    requireContext().getColor(R.color.gray_05)
+            )
+            if (ui.isCheckCorrect) {
+                binding.tvPrompt.setBackgroundResource(R.drawable.bg_panoramic_view_correct_r_16)
+                binding.tvPrompt.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.gray_05
+                    )
+                )
+            } else {
+                binding.tvPrompt.setBackgroundResource(R.drawable.bg_panoramic_view_default_r_16)
+                binding.tvPrompt.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.dark_text_default
+                    )
+                )
+            }
         }
+        /*childVM.isCheckEnabled.observe(viewLifecycleOwner) { isEnabled ->
+            binding.btnCheck.isEnabled = isEnabled
+            binding.btnCheck.setBackgroundColor(
+                if (isEnabled) requireContext().getColor(R.color.day_lightGreen)
+                else Color.GRAY
+            )
+        }*/
 
         childVM.events.observe(viewLifecycleOwner) { e ->
             parentVM.onGameEvent(e)

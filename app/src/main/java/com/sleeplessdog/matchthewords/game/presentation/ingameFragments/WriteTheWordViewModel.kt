@@ -71,7 +71,9 @@ class WriteTheWordViewModel : ViewModel(), InGameLogic {
             target = targetClean,            // показываем и в UI, чтобы было видно "эталон" (если нужно)
             input = "",
             letters = letters,
-            locked = false
+            locked = false,
+            isCheckCorrect = false,   // сброс цвета, не показываем подсветку с прошлого слова
+            isCheckEnabled = false
         )
     }
 
@@ -92,9 +94,14 @@ class WriteTheWordViewModel : ViewModel(), InGameLogic {
 
         letters[position] = l.copy(used = true)
         usedIndicesStack.add(position)   // сохраняем позицию
+
+        val newInput = state.input + l.char
+        val enabled = newInput.length == targetClean.length && newInput.isNotEmpty()
+
         _ui.value = state.copy(
             input = state.input + l.char,
-            letters = letters.toList()
+            letters = letters.toList(),
+            isCheckEnabled = enabled
         )
     }
 
@@ -108,8 +115,13 @@ class WriteTheWordViewModel : ViewModel(), InGameLogic {
             val lastUsedIndex = usedIndicesStack.removeAt(usedIndicesStack.lastIndex)
             letters[lastUsedIndex] = letters[lastUsedIndex].copy(used = false)
         }
+        val enabled = newInput.length == targetClean.length && newInput.isNotEmpty()
 
-        _ui.value = state.copy(input = newInput, letters = letters.toList())
+        _ui.value = state.copy(
+            input = newInput,
+            letters = letters.toList(),
+            isCheckEnabled = enabled
+        )
     }
 
     /*fun onBackspace() {
@@ -131,7 +143,11 @@ class WriteTheWordViewModel : ViewModel(), InGameLogic {
     fun onClear() {
         val state = _ui.value ?: return
         letters = letters.map { it.copy(used = false) }.toMutableList()
-        _ui.value = state.copy(input = "", letters = letters.toList())
+        _ui.value = state.copy(
+            input = "",
+            letters = letters.toList(),
+            isCheckEnabled = false
+        )
     }
 
     fun onCheck() {
@@ -140,7 +156,11 @@ class WriteTheWordViewModel : ViewModel(), InGameLogic {
         // сравниваем с targetClean (часть ДО '/'), регистр не важен
         val ok = state.input.equals(targetClean, ignoreCase = true)
 
-        _ui.value = state.copy(locked = true)
+        _ui.value = state.copy(
+            locked = true,
+            isCheckCorrect = ok,
+            isCheckEnabled = false
+        )
         events.value = if (ok) GameEvent.Correct(currentIds) else GameEvent.Wrong(currentIds)
         handler.postDelayed({ nextQuestion() }, TimeConstants.NEXT_QUESTION)
     }

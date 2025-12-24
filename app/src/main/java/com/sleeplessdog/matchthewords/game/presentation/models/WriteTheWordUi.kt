@@ -5,5 +5,7 @@ data class WriteTheWordUi(
     val target: String = "",         // правильный перевод (например, ES)
     val input: String = "",          // что собрал пользователь
     val letters: List<WriteTheWordLetterUi> = emptyList(),
-    val locked: Boolean = false
+    val locked: Boolean = false,
+    val isCheckEnabled: Boolean = false,
+    val isCheckCorrect: Boolean = false
 )
