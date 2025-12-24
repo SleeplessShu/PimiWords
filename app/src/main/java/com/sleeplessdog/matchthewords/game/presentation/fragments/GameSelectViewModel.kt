@@ -49,8 +49,10 @@ class GameSelectViewModel(
         Log.d("DEBUG", "$isFirstRun: ")
     }
 
-    fun onLandingShown() {
-        landingManager.setShown(LandingKeys.APP_FIRST_LAUNCH)
+    fun onLandingShown(showAgain: Boolean) {
+        if (!showAgain) {
+            landingManager.setShown(LandingKeys.APP_FIRST_LAUNCH)
+        }
     }
 
     private fun rebuild(ui: Language) {
