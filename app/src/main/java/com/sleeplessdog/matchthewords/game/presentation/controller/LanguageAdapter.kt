@@ -11,7 +11,7 @@ import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
 
 class LanguageAdapter(
-    private val onClick: (Language) -> Unit
+    private val onClick: (Language) -> Unit,
 ) : RecyclerView.Adapter<LanguageAdapter.LangVH>() {
 
     private val items = mutableListOf<Language>()
@@ -59,23 +59,31 @@ fun Language.toTitle(): String = when (this) {
     Language.ENGLISH -> "Английский"
     Language.SPANISH -> "Испанский"
     Language.RUSSIAN -> "Русский"
-    Language.FRENCH  -> "Французский"
-    Language.GERMAN  -> "Немецкий"
+    Language.FRENCH -> "Французский"
+    Language.GERMAN -> "Немецкий"
 }
 
 fun Language.toFlagSmallRes(): Int = when (this) {
     Language.ENGLISH -> R.drawable.ic_language_flag_british_s
     Language.SPANISH -> R.drawable.ic_language_flag_spanish_s
     Language.RUSSIAN -> R.drawable.ic_language_flag_russian_s
-    Language.FRENCH  -> R.drawable.ic_language_flag_french_s
-    Language.GERMAN  -> R.drawable.ic_language_flag_german_s
+    Language.FRENCH -> R.drawable.ic_language_flag_french_s
+    Language.GERMAN -> R.drawable.ic_language_flag_german_s
 }
 
 fun Language.toFlagLargeRes(): Int = when (this) {
     Language.ENGLISH -> R.drawable.ic_language_flag_british_l
     Language.SPANISH -> R.drawable.ic_language_flag_spanish_l
     Language.RUSSIAN -> R.drawable.ic_language_flag_russian_l
-    Language.FRENCH  -> R.drawable.ic_language_flag_french_l
-    Language.GERMAN  -> R.drawable.ic_language_flag_german_l
+    Language.FRENCH -> R.drawable.ic_language_flag_french_l
+    Language.GERMAN -> R.drawable.ic_language_flag_german_l
+}
+
+fun Language.toLanguageSelectAnimation(): Int = when (this) {
+    Language.ENGLISH -> R.raw.animation_language_select_en
+    Language.SPANISH -> R.raw.animation_language_select_es
+    Language.RUSSIAN -> R.raw.animation_language_select_ru
+    Language.FRENCH -> R.raw.animation_language_select_fr
+    Language.GERMAN -> R.raw.animation_language_select_de
 }
 

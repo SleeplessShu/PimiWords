@@ -38,7 +38,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_Header" />
 
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/animationView"
+        android:id="@+id/animationIdleView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:lottie_rawRes="@raw/animations_first_juggles"
