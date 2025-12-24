@@ -37,14 +37,14 @@
     <string name="button_text_start_game">New Game</string>
     <string name="button_text_new_game">NEW_GAME</string>
 
-    <string name="button_to_menu">Новая игра</string>
+    <string name="button_new_game">Новая игра</string>
     <string name="button_to_settings">В настройки</string>
     <string name="button_restart_round">Перезапуск</string>
     <string name="eg_errors">ошибок</string>
     <string name="eg_points">очков</string>
     <string name="eg_words">слов</string>
     <string name="eg_congrats">Вау! Потрясающая игра</string>
-    <string name="eg_sorrow">Ой! В следующий раз получится лучше</string>
+    <string name="eg_sorrow">Ой! В следующий раз\nполучится лучше</string>
 
 
     <!--games select fragment-->
