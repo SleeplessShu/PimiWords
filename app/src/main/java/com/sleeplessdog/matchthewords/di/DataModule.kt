@@ -3,15 +3,18 @@ package com.sleeplessdog.matchthewords
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Handler
+import android.util.Log
 import androidx.room.Room
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.sleeplessdog.matchthewords.game.data.database.AppDatabase
 import com.sleeplessdog.matchthewords.game.data.database.WordCategoryDao
 import com.sleeplessdog.matchthewords.game.data.database.resolveAssetDatabase
-import com.sleeplessdog.matchthewords.game.data.repositories.WordsDatabase
 import com.sleeplessdog.matchthewords.game.data.repositories.ScoreRepositoryImpl
+import com.sleeplessdog.matchthewords.game.data.repositories.UserDictionaryDatabase
+import com.sleeplessdog.matchthewords.game.data.repositories.UserDictionaryRepository
 import com.sleeplessdog.matchthewords.game.data.repositories.WordCategoriesRepositoryImpl
+import com.sleeplessdog.matchthewords.game.data.repositories.WordsDatabase
 import com.sleeplessdog.matchthewords.game.domain.repositories.ScoreRepository
 import com.sleeplessdog.matchthewords.game.domain.repositories.WordCategoriesRepository
 import com.sleeplessdog.matchthewords.game.domain.usecase.CreateUserCategoryUC
@@ -26,9 +29,9 @@ import com.sleeplessdog.matchthewords.server.domain.ServerDateRepository
 import com.sleeplessdog.matchthewords.server.domain.ServerDbInteractor
 import com.sleeplessdog.matchthewords.server.domain.ServerDbInteractorImpl
 import com.sleeplessdog.matchthewords.utils.AppDb
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-
 
 
 val dataModule = module {
@@ -45,7 +48,7 @@ val dataModule = module {
         App.appContext.getSharedPreferences("NightMode", Context.MODE_PRIVATE)
     }
 
-    single< WordsDatabase> {
+    single<WordsDatabase> {
         WordsDatabase(get())
     }
     factory<Handler> {
@@ -74,6 +77,28 @@ val dataModule = module {
             .build()
     }
 
+    single {
+        Room.databaseBuilder(
+            androidContext(),
+            UserDictionaryDatabase::class.java,
+            "user_dictionary_db" // Имя файла БД
+        )
+            .fallbackToDestructiveMigration() // При обновлении версии, старая БД будет удалена..
+            .build()
+        Log.d(
+            "DEBUG", "Room.databaseBuilder после окончания" +
+                    " работ над базами данных убрать все инструменты " +
+                    "удаления при обновлении и удаления при запуске"
+        )
+    }
+
+    single {
+        get<UserDictionaryDatabase>().userDictionaryDao()
+    }
+
+    single {
+        UserDictionaryRepository(get())
+    }
 
     single(named("scoreStore")) {
         App.appContext.getSharedPreferences("ScoreHistory", Context.MODE_PRIVATE)
@@ -86,7 +111,7 @@ val dataModule = module {
         ServerDateRepositoryImpl(get(named("db_prefs")))
     }
 
-    single < ServerDbInteractor> {
+    single<ServerDbInteractor> {
         ServerDbInteractorImpl(get(), get())
     }
 
@@ -95,14 +120,14 @@ val dataModule = module {
         get<AppDb>().wordCategoryDao()
     }
 
-        single<WordCategoriesRepository> { WordCategoriesRepositoryImpl(get()) }
+    single<WordCategoriesRepository> { WordCategoriesRepositoryImpl(get()) }
 
-        factory { ObserveFeaturedCategoriesUC(get()) }
-        factory { ObserveAllCategoriesGroupedUC(get()) }
-        factory { ToggleCategoryUC(get()) }
-        factory { SaveSelectionUC(get()) }
-        factory { CreateUserCategoryUC(get()) }
-        factory { DeleteUserCategoryUC(get()) }
-        factory { GetSelectedCategoriesUC(get()) }
+    factory { ObserveFeaturedCategoriesUC(get()) }
+    factory { ObserveAllCategoriesGroupedUC(get()) }
+    factory { ToggleCategoryUC(get()) }
+    factory { SaveSelectionUC(get()) }
+    factory { CreateUserCategoryUC(get()) }
+    factory { DeleteUserCategoryUC(get()) }
+    factory { GetSelectedCategoriesUC(get()) }
 
 }
