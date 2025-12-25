@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:paddingHorizontal="20dp"
+    android:paddingTop="20dp"
+    android:paddingBottom="16dp">
 
     <TextView
         android:id="@+id/tvPrompt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="60dp"
         android:height="110dp"
         android:background="@drawable/bg_panoramic_view_default_r_16"
         android:gravity="center"
@@ -81,8 +81,7 @@
         android:id="@+id/btnCheck"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:backgroundTint="@color/gray_05"
         android:text="Проверить"
-        android:textColor="@color/black"
+        android:textColor="@color/dark_text_used"
         android:textSize="20sp" />
 </LinearLayout>

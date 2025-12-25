@@ -71,11 +71,12 @@ class WriteTheWordFragment : Fragment(R.layout.write_the_word_fragment) {
             binding.btnClearLetter.isEnabled = !ui.locked && ui.input.isNotEmpty()
             binding.btnClear.isEnabled = !ui.locked && ui.input.isNotEmpty()
             binding.btnCheck.isEnabled = ui.isCheckEnabled
-            binding.btnCheck.setBackgroundColor(
+            binding.btnCheck.backgroundTintList = null
+            binding.btnCheck.setBackgroundResource(
                 if (ui.isCheckEnabled)
-                    requireContext().getColor(R.color.day_lightGreen)
+                    R.drawable.bg_panoramic_view_correct_r_16
                 else
-                    requireContext().getColor(R.color.gray_05)
+                    R.drawable.bg_panoramic_view_default_r_16
             )
             if (ui.isCheckCorrect) {
                 binding.tvPrompt.setBackgroundResource(R.drawable.bg_panoramic_view_correct_r_16)
