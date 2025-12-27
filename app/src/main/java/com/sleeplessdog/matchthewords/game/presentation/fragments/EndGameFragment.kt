@@ -64,14 +64,16 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
                 showResult(
                     result = getString(R.string.end_game_phrase_win),
                     phrase = getString(R.string.eg_congrats),
-                    animation = R.raw.animation_endgame_victory,
+                    animation = R.raw.animation_endgame_victory_v2,
+                    background = R.raw.animation_bg_confeti,
                     stats = stats
                 )
             } else {
                 showResult(
                     result = getString(R.string.end_game_phrase_loose),
                     phrase = getString(R.string.eg_sorrow),
-                    animation = R.raw.animation_endgame_fail,
+                    animation = R.raw.animation_endgame_fail_v2,
+                    background = R.raw.animation_bg_rain,
                     stats = stats,
                 )
             }
@@ -95,7 +97,28 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
         }
     }
 
-    private fun showResult(result: String, phrase: String, animation: Int, stats: EndGameStats?) {
+    private fun playLoop(where: LottieAnimationView, what: Int) {
+        where.apply {
+            setAnimation(what)
+
+            repeatCount = com.airbnb.lottie.LottieDrawable.INFINITE
+            repeatMode = com.airbnb.lottie.LottieDrawable.RESTART
+
+            removeAllAnimatorListeners()
+
+            progress = 0f
+
+            playAnimation()
+        }
+    }
+
+    private fun showResult(
+        result: String,
+        phrase: String,
+        animation: Int,
+        background: Int,
+        stats: EndGameStats?,
+    ) {
         val errors = stats?.mistakesCount
         val score = stats?.score
         val words = stats?.wordsCount
@@ -108,6 +131,10 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
         playAndStopOnLastFrame(
             where = binding.animationIdleView,
             what = animation
+        )
+        playLoop(
+            where = binding.animationBgView,
+            what = background
         )
     }
 
