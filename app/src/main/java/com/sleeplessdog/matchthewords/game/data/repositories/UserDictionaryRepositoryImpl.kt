@@ -2,6 +2,7 @@ package com.sleeplessdog.matchthewords.game.data.repositories
 
 import com.sleeplessdog.matchthewords.game.data.UserWordEntity
 import com.sleeplessdog.matchthewords.game.data.database.UserDictionaryDao
+import com.sleeplessdog.matchthewords.utils.SupportFunctions
 import kotlinx.coroutines.flow.Flow
 
 class UserDictionaryRepository(private val dao: UserDictionaryDao) {
@@ -45,7 +46,6 @@ class UserDictionaryRepository(private val dao: UserDictionaryDao) {
                     ?: if (lang1Code == "fr") word1 else if (lang2Code == "fr") word2 else null,
                 german = existingWord.german
                     ?: if (lang1Code == "de") word1 else if (lang2Code == "de") word2 else null
-                // и так далее для других языков
             )
             dao.insertOrUpdateWord(updatedWord)
         }
@@ -67,7 +67,8 @@ class UserDictionaryRepository(private val dao: UserDictionaryDao) {
             french = wordsMap["fr"],
             german = wordsMap["de"],
             category = category,
-            date = null // или другое значение по умолчанию
+            dateLastSeen = SupportFunctions.getCurrentDate(),
+            dateAdded = SupportFunctions.getCurrentDate(),
         )
     }
 

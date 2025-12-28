@@ -19,6 +19,6 @@ data class UserWordEntity(
     val correct: Int? = 0,
     @ColumnInfo(defaultValue = "0")
     val mistake: Int? = 0,
-    val date: String?,
-    val dateAdded: Long = System.currentTimeMillis(),
+    val dateLastSeen: String?,
+    val dateAdded: String?,
 )

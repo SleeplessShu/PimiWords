@@ -8,10 +8,10 @@ import androidx.room.Room
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.sleeplessdog.matchthewords.game.data.database.AppDatabase
+import com.sleeplessdog.matchthewords.game.data.database.UserDictionaryDatabase
 import com.sleeplessdog.matchthewords.game.data.database.WordCategoryDao
 import com.sleeplessdog.matchthewords.game.data.database.resolveAssetDatabase
 import com.sleeplessdog.matchthewords.game.data.repositories.ScoreRepositoryImpl
-import com.sleeplessdog.matchthewords.game.data.repositories.UserDictionaryDatabase
 import com.sleeplessdog.matchthewords.game.data.repositories.UserDictionaryRepository
 import com.sleeplessdog.matchthewords.game.data.repositories.WordCategoriesRepositoryImpl
 import com.sleeplessdog.matchthewords.game.data.repositories.WordsDatabase

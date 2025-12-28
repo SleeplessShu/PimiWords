@@ -47,6 +47,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
 
     private lateinit var langAdapter: LanguageAdapter
     private lateinit var languageMenuManager: LanguageMenuManager
+    private lateinit var pimiController: PimiScrollbarController
 
     private var preselected: Set<String> = emptySet()
 
@@ -64,7 +65,8 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         val thumb = binding.tumblerPimi
         val track = binding.pathPimi
 
-        PimiScrollbarController(scrollView, track, thumb).attach()
+        pimiController = PimiScrollbarController(scrollView, track, thumb)
+        pimiController.attach()
     }
 
     private fun setupLanguageMenuManager() {

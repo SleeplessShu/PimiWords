@@ -392,8 +392,7 @@
             android:clickable="true"
             android:focusable="true"
             android:paddingVertical="40dp"
-            android:rotation="37"
-            android:src="@drawable/ic_settings_tumbler"
+            android:src="@drawable/settings_thumb_circle"
             app:layout_constraintEnd_toEndOf="@id/pathPimi"
             app:layout_constraintStart_toStartOf="@id/pathPimi"
             app:layout_constraintTop_toTopOf="@id/pathPimi" />

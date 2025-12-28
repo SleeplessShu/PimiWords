@@ -14,7 +14,6 @@ class PimiScrollbarController(
     private val thumb: ImageView,
 ) {
     private var isDragging = false
-    private var touchOffsetY = 0f
 
     fun attach() {
 
@@ -61,7 +60,9 @@ class PimiScrollbarController(
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupDrag() {
-        val trackLoc = IntArray(2)
+
+        lateinit var trackLoc: IntArray
+        var touchOffsetY = 0f
 
         thumb.setOnTouchListener { _, ev ->
             val range = scrollRange()
@@ -71,15 +72,19 @@ class PimiScrollbarController(
             when (ev.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
                     isDragging = true
+
+                    trackLoc = IntArray(2)
                     track.getLocationOnScreen(trackLoc)
                     val trackTopOnScreen = trackLoc[1].toFloat()
-                    
+
                     touchOffsetY = ev.rawY - (trackTopOnScreen + thumb.translationY)
                     thumb.parent.requestDisallowInterceptTouchEvent(true)
                     true
                 }
 
                 MotionEvent.ACTION_MOVE -> {
+                    if (!isDragging) return@setOnTouchListener false
+
                     val trackTopOnScreen = trackLoc[1].toFloat()
                     val targetInsideTrack = ev.rawY - trackTopOnScreen - touchOffsetY
 
@@ -105,8 +110,4 @@ class PimiScrollbarController(
 
     private fun clamp(v: Float, minV: Float, maxV: Float): Float =
         max(minV, min(maxV, v))
-
-    private companion object {
-        private val TRACK_PADDING_VERTICAL_PX: Int = 40
-    }
 }
