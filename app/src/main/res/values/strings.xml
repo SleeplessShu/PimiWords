@@ -57,7 +57,7 @@
     <!--bottom menu-->
     <string name="games">Игры</string>
     <string name="score">Прогресс</string>
-    <string name="settings">Настройки</string>
+    <string name="settings">Опции</string>
     <string name="words">Словарь</string>
 
     <!--TOF-->
@@ -141,4 +141,5 @@
     <string name="cat_programming">Программирование</string>
     <string name="cat_design">Дизайн</string>
     <string name="cat_random">Случайно</string>
+    <string name="cat_saved">Сохранённые слова</string>
 </resources>

@@ -12,35 +12,25 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface UserDictionaryDao {
 
-    /**
-     * Получить все слова из словаря пользователя в виде потока данных (Flow).
-     * UI будет автоматически обновляться при изменениях.
-     */
     @Query("SELECT * FROM user_dictionary ORDER BY dateAdded DESC")
     fun getAllUserWords(): Flow<List<UserWordEntity>>
 
-    /**
-     * Вставить новое слово. OnConflictStrategy.IGNORE означает,
-     * что если мы попытаемся вставить слово с уже существующим id, операция будет проигнорирована.
-     */
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertWord(word: UserWordEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrUpdateWord(word: UserWordEntity)
 
-    /**
-     * Обновить существующее слово (например, изменить заметки или перевод).
-     */
     @Update
     suspend fun updateWord(word: UserWordEntity)
 
-    /**
-     * Удалить слово из словаря.
-     */
     @Delete
     suspend fun deleteWord(word: UserWordEntity)
 
-    /**
-     * Найти слово по его оригинальному написанию и языкам (для проверок).
-     */
-    @Query("SELECT * FROM user_dictionary WHERE originalWord = :original AND sourceLang = :sourceLang AND targetLang = :targetLang LIMIT 1")
-    suspend fun findWord(original: String, sourceLang: String, targetLang: String): UserWordEntity?
+    @Query("SELECT * FROM user_dictionary WHERE english = :englishWord LIMIT 1")
+    suspend fun findWordByEnglish(englishWord: String): UserWordEntity?
+
+
+    @Query("SELECT * FROM user_dictionary WHERE id = :wordId")
+    suspend fun getWordById(wordId: Long): UserWordEntity?
+
+    @Query("SELECT * FROM user_dictionary WHERE category = :categoryName ORDER BY english ASC")
+    fun getWordsByCategory(categoryName: String): Flow<List<UserWordEntity>>
 }
