@@ -175,7 +175,7 @@ class GameSelectFragment : Fragment() {
                     binding.landingFirstOverlayView.btn.text =
                         getString(R.string.landing_start_button)
                     activateCurtains()
-                    binding.landingFirstOverlayView.animationIdleView.setAnimation(R.raw.animations_first_juggles_v2)
+                    binding.landingFirstOverlayView.animationIdleView.setAnimation(R.raw.animation_first_landing_jogging_long)
                     binding.landingFirstOverlayView.animationViewCurtains.playAnimation()
                     binding.landingFirstOverlayView.animationIdleView.playAnimation()
                     binding.landingFirstOverlayView.btn.setOnClickListener {

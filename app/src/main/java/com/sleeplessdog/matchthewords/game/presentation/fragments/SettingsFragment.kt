@@ -13,9 +13,11 @@ import com.sleeplessdog.matchthewords.databinding.SettingsFragmentBinding
 import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageAdapter
 import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageMenuManager
+import com.sleeplessdog.matchthewords.game.presentation.controller.PimiScrollbarController
 import com.sleeplessdog.matchthewords.game.presentation.controller.toFlagLargeRes
 import com.sleeplessdog.matchthewords.game.presentation.models.CategoryUi
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
+import com.sleeplessdog.matchthewords.main.MainActivity
 import com.sleeplessdog.matchthewords.utils.SupportFunctions
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -45,6 +47,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
 
     private lateinit var langAdapter: LanguageAdapter
     private lateinit var languageMenuManager: LanguageMenuManager
+    private lateinit var pimiController: PimiScrollbarController
 
     private var preselected: Set<String> = emptySet()
 
@@ -57,7 +60,16 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         setupObservers()
     }
 
-    private fun setupLanguageMenuManager(){
+    private fun setupPimiThumb() {
+        val scrollView = binding.categoriesScroll
+        val thumb = binding.tumblerPimi
+        val track = binding.pathPimi
+
+        pimiController = PimiScrollbarController(scrollView, track, thumb)
+        pimiController.attach()
+    }
+
+    private fun setupLanguageMenuManager() {
         languageMenuManager = LanguageMenuManager(
             root = binding.languageSelectRoot,
             bg = binding.languagesBackground,
@@ -277,6 +289,8 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
             view.translationY = 40f
             view.animate().alpha(1f).translationY(0f).setDuration(200).start()
         }
+        (requireActivity() as? MainActivity)?.setBottomNavVisibility(false)
+        setupPimiThumb()
     }
 
     private fun hideTopicsMenu() {
@@ -306,6 +320,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
                 }
             }.start()
         }
+        (requireActivity() as? MainActivity)?.setBottomNavVisibility(true)
     }
 
     override fun onDestroyView() {

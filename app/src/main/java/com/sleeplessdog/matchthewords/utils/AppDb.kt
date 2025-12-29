@@ -20,25 +20,21 @@ abstract class AppDb : RoomDatabase() {
                         super.onCreate(db)
 
                         val DEFAULT_ORDER = listOf(
-                            "animals","food","family","clothes","places","time","transport",
-                            "work","house","education","nature","emotions","colors","numbers",
-                            "actions","objects","abstract","entertainment","communication",
-                            "travel","health","general_adjectives","general_adverbs",
-                            "general_pronouns","miscellaneous","body","programming",
-                            "design","random"
+                            "animals", "food", "family", "clothes", "places", "time", "transport",
+                            "work", "house", "education", "nature", "emotions", "colors", "numbers",
+                            "actions", "objects", "abstract", "entertainment", "communication",
+                            "travel", "health", "general_adjectives", "general_adverbs",
+                            "general_pronouns", "miscellaneous", "body", "programming",
+                            "design", "random"
                         )
 
                         val defaults = DEFAULT_ORDER.mapIndexed { index, key ->
                             val mapped = KEY_MAP[key] ?: key
-                            val icon = when (key) {
-                                // иконок нет в паке → фолбэк на miscellaneous (поменяй, когда добавишь)
-                                "work", "numbers", "programming", "design" -> "random"
-                                else -> mapped
-                            }
+                            val icon = mapped
                             seed(
                                 key = key,
                                 titleKey = "cat_$mapped",
-                                iconKey  = "ic_category_$icon",
+                                iconKey = "ic_category_$icon",
                                 order = index
                             )
                         }
@@ -52,6 +48,12 @@ abstract class AppDb : RoomDatabase() {
                                 arrayOf(it.key, it.titleKey, it.iconKey, it.orderInBlock)
                             )
                         }
+                        db.execSQL(
+                            """
+                            INSERT INTO word_categories(`key`, title_key, icon_key, is_selected, is_user, order_in_block)
+                            VALUES('saved', 'cat_saved', 'ic_category_saved', 0, 1, -1)
+                            """.trimIndent()
+                        )
                     }
                 })
                 .build()
@@ -63,11 +65,11 @@ abstract class AppDb : RoomDatabase() {
         )
 
         private fun seed(
-            key: String, titleKey: String, iconKey: String, order: Int
+            key: String, titleKey: String, iconKey: String, order: Int,
         ) = WordCategoryEntity(
             key = key,
             titleKey = titleKey,
-            iconKey  = iconKey,
+            iconKey = iconKey,
             isSelected = false,
             isUser = false,
             orderInBlock = order
