@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.lottie.LottieAnimationView
+import com.airbnb.lottie.RenderMode
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.GameSelectFragmentBinding
 import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageAdapter
@@ -195,13 +196,13 @@ class GameSelectFragment : Fragment() {
 
     private fun activateCurtains() {
         binding.landingFirstOverlayView.animationViewCurtains.apply {
-            setAnimation(R.raw.animation_first_landing_curtains)
+            setAnimation(R.raw.animation_first_landing_curtains_v3)
             repeatCount = 0
 
             removeAllAnimatorListeners()
             addAnimatorListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator) {
-                    setFrame(maxFrame.toInt() - 5)
+                    setFrame(maxFrame.toInt() - 100)
                     pauseAnimation()
                 }
             })
@@ -225,6 +226,8 @@ class GameSelectFragment : Fragment() {
     }
 
     private fun startDefaultLoop() = with(binding.landingLanguageOverlayView.animationIdleView) {
+        binding.landingFirstOverlayView.animationViewCurtains.enableMergePathsForKitKatAndAbove(true)
+        binding.landingFirstOverlayView.animationViewCurtains.setRenderMode(RenderMode.SOFTWARE)
         setAnimation(R.raw.animation_base_loop)
         repeatCount = com.airbnb.lottie.LottieDrawable.INFINITE
         playAnimation()
