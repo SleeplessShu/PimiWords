@@ -304,6 +304,11 @@ class GameViewModel(
             correctIds = sessionCorrectIds.toList(), mistakeIds = sessionWrongIds.toList()
         )
         val todaysScore = scoreInteractor.getTodaysResult()
+        val sessionWordsIds = (sessionCorrectIds + sessionWrongIds).toSet()
+        val sessionPairs = allPairs.filter { pair ->
+            pair.first.id in sessionWordsIds || pair.second.id in sessionWordsIds
+        }
+
         viewModelScope.launch {
             _gameState.value = _gameState.value?.copy(
                 state = GameState.END_OF_GAME,
@@ -315,7 +320,8 @@ class GameViewModel(
                 isWin = lives > 0,
                 mistakesCount = sessionWrongIds.size,
                 score = score,
-                wordsCount = sessionCorrectIds.size
+                wordsCount = sessionCorrectIds.size,
+                sessionPairs = sessionPairs
             )
 
             wordsController.putRoundStats(stats)

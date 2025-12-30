@@ -261,7 +261,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
             (0 until group.childCount).mapNotNull { i ->
                 val child = group.getChildAt(i)
                 val chip = child as? Chip ?: return@mapNotNull null
-                val key = chip.tag as? String ?: chip.text.toString() // лучше хранить key в tag
+                val key = chip.tag as? String ?: chip.text.toString()
                 if (chip.isChecked) key else null
             }
         return (collect(binding.cgUserCategories) + collect(binding.cgDefaultCategories)).toSet()

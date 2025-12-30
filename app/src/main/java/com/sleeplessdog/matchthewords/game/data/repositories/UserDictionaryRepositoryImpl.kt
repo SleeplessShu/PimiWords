@@ -1,6 +1,7 @@
 package com.sleeplessdog.matchthewords.game.data.repositories
 
 import com.sleeplessdog.matchthewords.game.data.UserWordEntity
+import com.sleeplessdog.matchthewords.game.data.WordEntity
 import com.sleeplessdog.matchthewords.game.data.database.UserDictionaryDao
 import com.sleeplessdog.matchthewords.utils.SupportFunctions
 import kotlinx.coroutines.flow.Flow
@@ -9,46 +10,30 @@ class UserDictionaryRepository(private val dao: UserDictionaryDao) {
 
     fun getAllWords() = dao.getAllUserWords()
 
-    suspend fun saveWord(word: UserWordEntity) {
+    suspend fun saveWord(word: List<UserWordEntity>) {
         dao.insertOrUpdateWord(word)
     }
 
-    //переписать корректно под word из базы данных
-    suspend fun addWordFromMainDb(
-        lang1Code: String,
-        word1: String,
-        lang2Code: String,
-        word2: String,
-        category: String? = null,
-    ) {
-
-        val englishWord = if (lang1Code == "en") word1 else if (lang2Code == "en") word2 else null
-
-        if (englishWord == null) {
-            val newWord = buildWordEntity(lang1Code, word1, lang2Code, word2, category)
-            dao.insertOrUpdateWord(newWord)
+    suspend fun addWordFromMainDb(wordsToSave: List<WordEntity>) {
+        if (wordsToSave.isEmpty()) {
             return
         }
 
-        val existingWord = dao.findWordByEnglish(englishWord)
-
-        if (existingWord == null) {
-            val newWord = buildWordEntity(lang1Code, word1, lang2Code, word2, category)
-            dao.insertOrUpdateWord(newWord)
-        } else {
-
-            val updatedWord = existingWord.copy(
-                spanish = existingWord.spanish
-                    ?: if (lang1Code == "es") word1 else if (lang2Code == "es") word2 else null,
-                russian = existingWord.russian
-                    ?: if (lang1Code == "ru") word1 else if (lang2Code == "ru") word2 else null,
-                french = existingWord.french
-                    ?: if (lang1Code == "fr") word1 else if (lang2Code == "fr") word2 else null,
-                german = existingWord.german
-                    ?: if (lang1Code == "de") word1 else if (lang2Code == "de") word2 else null
+        val userWordsToSave = wordsToSave.map { wordEntity ->
+            UserWordEntity(
+                english = wordEntity.english,
+                spanish = wordEntity.spanish,
+                russian = wordEntity.russian,
+                french = wordEntity.french,
+                german = wordEntity.german,
+                category = wordEntity.category,
+                dateLastSeen = SupportFunctions.getCurrentDate(),
+                dateAdded = SupportFunctions.getCurrentDate()
             )
-            dao.insertOrUpdateWord(updatedWord)
         }
+
+        // 2. Сохраняем все подготовленные слова в базу данных одним вызовом
+        dao.insertOrUpdateWord(userWordsToSave)
     }
 
 

@@ -15,8 +15,8 @@ interface UserDictionaryDao {
     @Query("SELECT * FROM user_dictionary ORDER BY dateAdded DESC")
     fun getAllUserWords(): Flow<List<UserWordEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrUpdateWord(word: UserWordEntity)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertOrUpdateWord(words: List<UserWordEntity>)
 
     @Update
     suspend fun updateWord(word: UserWordEntity)

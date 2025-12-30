@@ -17,6 +17,7 @@ import com.sleeplessdog.matchthewords.game.data.repositories.WordCategoriesRepos
 import com.sleeplessdog.matchthewords.game.data.repositories.WordsDatabase
 import com.sleeplessdog.matchthewords.game.domain.repositories.ScoreRepository
 import com.sleeplessdog.matchthewords.game.domain.repositories.WordCategoriesRepository
+import com.sleeplessdog.matchthewords.game.domain.usecase.AddWordToUserDictionaryUC
 import com.sleeplessdog.matchthewords.game.domain.usecase.CreateUserCategoryUC
 import com.sleeplessdog.matchthewords.game.domain.usecase.DeleteUserCategoryUC
 import com.sleeplessdog.matchthewords.game.domain.usecase.GetSelectedCategoriesUC
@@ -72,8 +73,7 @@ val dataModule = module {
         val prefs: SharedPreferences = get(qualifier = named("db_prefs"))
         prefs.edit().putString("local_db_date", sel.date).apply()
 
-        Room.databaseBuilder(ctx, AppDatabase::class.java, dbName)
-            .createFromAsset(sel.assetPath)
+        Room.databaseBuilder(ctx, AppDatabase::class.java, dbName).createFromAsset(sel.assetPath)
             .build()
     }
 
@@ -82,22 +82,20 @@ val dataModule = module {
             androidContext(),
             UserDictionaryDatabase::class.java,
             "user_dictionary_db" // Имя файла БД
-        )
-            .fallbackToDestructiveMigration() // При обновлении версии, старая БД будет удалена..
+        ).fallbackToDestructiveMigration() // При обновлении версии, старая БД будет удалена..
             .build()
         Log.d(
-            "DEBUG", "Room.databaseBuilder после окончания" +
-                    " работ над базами данных убрать все инструменты " +
-                    "удаления при обновлении и удаления при запуске"
+            "DEBUG",
+            "Room.databaseBuilder после окончания" + " работ над базами данных убрать все инструменты " + "удаления при обновлении и удаления при запуске"
         )
     }
 
-    single {
+    single<com.sleeplessdog.matchthewords.game.data.database.UserDictionaryDao> {
         get<UserDictionaryDatabase>().userDictionaryDao()
     }
 
     single {
-        UserDictionaryRepository(get())
+        UserDictionaryRepository(dao = get())
     }
 
     single(named("scoreStore")) {
@@ -130,4 +128,9 @@ val dataModule = module {
     factory { DeleteUserCategoryUC(get()) }
     factory { GetSelectedCategoriesUC(get()) }
 
+    factory {
+        AddWordToUserDictionaryUC(
+            appDatabase = get(), userRepository = get()
+        )
+    }
 }

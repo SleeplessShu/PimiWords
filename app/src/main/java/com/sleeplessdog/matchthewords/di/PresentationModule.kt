@@ -6,6 +6,7 @@ import com.sleeplessdog.matchthewords.game.data.repositories.AppPrefs
 import com.sleeplessdog.matchthewords.game.data.repositories.AppPrefsImpl
 import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
 import com.sleeplessdog.matchthewords.game.presentation.controller.LandingPagesController
+import com.sleeplessdog.matchthewords.game.presentation.fragments.EndGameViewModel
 import com.sleeplessdog.matchthewords.game.presentation.fragments.GameSelectViewModel
 import com.sleeplessdog.matchthewords.game.presentation.fragments.SettingsViewModel
 import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.OneOfFourViewModel
@@ -66,6 +67,10 @@ val presentationModule = module {
 
     viewModel {
         WordsMatchingViewModel(get())
+    }
+
+    viewModel {
+        EndGameViewModel(get())
     }
 
     viewModel {

@@ -24,7 +24,7 @@ class App : Application() {
         appContext = applicationContext
         deleteAllDatabases(appContext)
 
-        setCrashHandler()
+        //setCrashHandler()
 
         startKoin {
             androidContext(this@App)

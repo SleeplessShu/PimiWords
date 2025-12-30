@@ -5,4 +5,5 @@ data class EndGameStats(
     val mistakesCount: Int = 0,
     val score: Int = 0,
     val wordsCount: Int = 0,
+    val sessionPairs: List<Pair<Word, Word>> = emptyList(),
 )
