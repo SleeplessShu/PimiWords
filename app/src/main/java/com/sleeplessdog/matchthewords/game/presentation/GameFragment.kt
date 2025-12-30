@@ -57,6 +57,10 @@ class GameFragment : Fragment() {
         heartsController = HeartsController(
             listOf(binding.heart1, binding.heart2, binding.heart3)
         )
+        /*heartsController.hearts.forEach {
+            it.scaleX = 3f  // увеличиваем масштаб на 300%
+            it.scaleY = 3f
+        }*/
         setupBottomSheet()
         setupObservers()
     }
