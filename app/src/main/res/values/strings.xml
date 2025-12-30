@@ -142,4 +142,7 @@
     <string name="cat_design">Дизайн</string>
     <string name="cat_random">Случайно</string>
     <string name="cat_saved">Сохранённые слова</string>
+    <string name="btn_clear_word">Удалить слово</string>
+    <string name="btn_clear_letter">Удалить букву</string>
+    <string name="btn_check">Проверить</string>
 </resources>
