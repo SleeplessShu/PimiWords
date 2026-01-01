@@ -14,6 +14,8 @@ import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.EndGameFragmentBinding
 import com.sleeplessdog.matchthewords.game.presentation.GameFragmentDirections
 import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
+import com.sleeplessdog.matchthewords.game.presentation.controller.PimiRecyclerViewAdapter
+import com.sleeplessdog.matchthewords.game.presentation.controller.PimiScrollbarController
 import com.sleeplessdog.matchthewords.game.presentation.holders.EndGameWordsAdapter
 import com.sleeplessdog.matchthewords.game.presentation.models.EndGameStats
 import com.sleeplessdog.matchthewords.game.presentation.models.EndGameWordsAction
@@ -28,6 +30,7 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
     private val binding: EndGameFragmentBinding get() = _binding!!
 
     private lateinit var wordsAdapter: EndGameWordsAdapter
+    private var pimiController: PimiScrollbarController? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
@@ -45,7 +48,7 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
         super.onViewCreated(view, savedInstanceState)
         setupObservers()
         setupUI()
-
+        setupPimiThumbOnce()
     }
 
     private fun setupUI() {
@@ -68,8 +71,10 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
 
     private fun setupObservers() {
         parentViewModel.endGameStats.observe(viewLifecycleOwner) { stats ->
-
             wordsAdapter.submitList(stats.sessionPairs)
+            binding.actionWithWordsOverlayView.rvWords.post {
+                setupPimiThumb()
+            }
 
             val isWin = stats.isWin
             if (isWin) {
@@ -92,25 +97,37 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
         }
 
         childViewModel.actionsWithWords.observe(viewLifecycleOwner) { event ->
+
+            if (event == null) {
+                binding.actionWithWordsOverlayView.root.isVisible = false
+                return@observe
+            }
+
             when (event.action) {
                 EndGameWordsAction.REPORT_ABOUT_MISTAKE -> {
                     setupWordsView(
                         header = getString(R.string.report_words),
                         acceptButton = getString(R.string.report),
-                        onAcceptClick = { childViewModel.sendReport() }
-                    )
+                        onAcceptClick = { childViewModel.sendReport() })
                 }
 
                 EndGameWordsAction.SAVE_WORDS_TO_USERS_DICTIONARY -> {
                     setupWordsView(
                         header = getString(R.string.add_to_dictionary),
                         acceptButton = getString(R.string.save),
-                        onAcceptClick = { childViewModel.saveSelectedWords() }
-                    )
+                        onAcceptClick = { childViewModel.saveSelectedWords() })
                 }
             }
-
             binding.actionWithWordsOverlayView.root.isVisible = event.isVisible
+            if (event.isVisible) {
+                setupPimiThumbOnce()
+                binding.actionWithWordsOverlayView.root.post {
+                    pimiController?.forceUpdate()
+                }
+                binding.actionWithWordsOverlayView.rvWords.post {
+                    pimiController?.forceUpdate()
+                }
+            }
         }
 
         binding.btnReportWords.setOnClickListener {
@@ -120,6 +137,35 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
         binding.btnSaveWords.setOnClickListener {
             childViewModel.saveWordsToUsersDictionary()
         }
+
+        binding.actionWithWordsOverlayView.buttonBack.setOnClickListener { childViewModel.hideActions() }
+
+        binding.actionWithWordsOverlayView.btnCancel.setOnClickListener { childViewModel.hideActions() }
+
+        binding.actionWithWordsOverlayView.checkboxSelectAll.setOnCheckedChangeListener { _, isChecked ->
+            wordsAdapter.toggleSelectAll(isChecked)
+        }
+    }
+
+    private fun setupPimiThumb() {
+        val recyclerView = binding.actionWithWordsOverlayView.rvWords
+        val thumb = binding.actionWithWordsOverlayView.tumblerPimi
+        val track = binding.actionWithWordsOverlayView.pathPimi
+        val scrollableAdapter = PimiRecyclerViewAdapter(recyclerView)
+        val scrollbarController = PimiScrollbarController(scrollableAdapter, track, thumb)
+        scrollbarController.attach()
+    }
+
+    private fun setupPimiThumbOnce() {
+        if (pimiController != null) return
+
+        val recyclerView = binding.actionWithWordsOverlayView.rvWords
+        val thumb = binding.actionWithWordsOverlayView.tumblerPimi
+        val track = binding.actionWithWordsOverlayView.pathPimi
+
+        val scrollableAdapter = PimiRecyclerViewAdapter(recyclerView)
+        pimiController =
+            PimiScrollbarController(scrollableAdapter, track, thumb).also { it.attach() }
     }
 
     private fun setupWordsView(

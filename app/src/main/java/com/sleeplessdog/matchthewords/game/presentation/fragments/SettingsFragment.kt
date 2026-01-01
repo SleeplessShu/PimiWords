@@ -13,6 +13,7 @@ import com.sleeplessdog.matchthewords.databinding.SettingsFragmentBinding
 import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageAdapter
 import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageMenuManager
+import com.sleeplessdog.matchthewords.game.presentation.controller.PimiScrollViewAdapter
 import com.sleeplessdog.matchthewords.game.presentation.controller.PimiScrollbarController
 import com.sleeplessdog.matchthewords.game.presentation.controller.toFlagLargeRes
 import com.sleeplessdog.matchthewords.game.presentation.models.CategoryUi
@@ -64,9 +65,9 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         val scrollView = binding.categoriesScroll
         val thumb = binding.tumblerPimi
         val track = binding.pathPimi
-
-        pimiController = PimiScrollbarController(scrollView, track, thumb)
-        pimiController.attach()
+        val scrollableAdapter = PimiScrollViewAdapter(scrollView)
+        val scrollbarController = PimiScrollbarController(scrollableAdapter, track, thumb)
+        scrollbarController.attach()
     }
 
     private fun setupLanguageMenuManager() {

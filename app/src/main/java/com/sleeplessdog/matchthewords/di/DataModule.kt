@@ -84,11 +84,11 @@ val dataModule = module {
             "user_dictionary_db" // Имя файла БД
         ).fallbackToDestructiveMigration() // При обновлении версии, старая БД будет удалена..
             .build()
-        Log.d(
-            "DEBUG",
-            "Room.databaseBuilder после окончания" + " работ над базами данных убрать все инструменты " + "удаления при обновлении и удаления при запуске"
-        )
     }
+    Log.d(
+        "DEBUG",
+        "Room.databaseBuilder после окончания" + " работ над базами данных убрать все инструменты " + "удаления при обновлении и удаления при запуске"
+    )
 
     single<com.sleeplessdog.matchthewords.game.data.database.UserDictionaryDao> {
         get<UserDictionaryDatabase>().userDictionaryDao()

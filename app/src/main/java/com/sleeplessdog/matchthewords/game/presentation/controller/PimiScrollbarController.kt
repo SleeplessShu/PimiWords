@@ -4,22 +4,20 @@ import android.annotation.SuppressLint
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
-import android.widget.ScrollView
 import kotlin.math.max
 import kotlin.math.min
 
 class PimiScrollbarController(
-    private val scrollView: ScrollView,
+    private val scrollable: PimiScrollable,
     private val track: ImageView,
     private val thumb: ImageView,
 ) {
     private var isDragging = false
 
     fun attach() {
-
         track.post { updateThumbFromScroll() }
 
-        scrollView.viewTreeObserver.addOnScrollChangedListener {
+        scrollable.addOnScrollListener {
             if (!isDragging) updateThumbFromScroll()
         }
 
@@ -33,10 +31,7 @@ class PimiScrollbarController(
         setupDrag()
     }
 
-    private fun scrollRange(): Int {
-        val content = scrollView.getChildAt(0) ?: return 0
-        return max(0, content.height - scrollView.height)
-    }
+    private fun scrollRange(): Int = scrollable.getScrollRange()
 
     private fun thumbTravelRange(): Int {
         return max(0, track.height - thumb.height)
@@ -46,21 +41,20 @@ class PimiScrollbarController(
         val range = scrollRange()
         val travel = thumbTravelRange()
 
-        if (range == 0 || travel == 0) {
+        if (range <= 0 || travel <= 0) {
             thumb.translationY = 0f
-            thumb.visibility = View.GONE
+            
             return
         }
         thumb.visibility = View.VISIBLE
 
-        val progress = scrollView.scrollY.toFloat() / range.toFloat()
+        val progress = scrollable.currentScrollY.toFloat() / range.toFloat()
         val y = travel * progress
         thumb.translationY = clamp(y, 0f, travel.toFloat())
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupDrag() {
-
         lateinit var trackLoc: IntArray
         var touchOffsetY = 0f
 
@@ -72,34 +66,31 @@ class PimiScrollbarController(
             when (ev.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
                     isDragging = true
-
                     trackLoc = IntArray(2)
                     track.getLocationOnScreen(trackLoc)
                     val trackTopOnScreen = trackLoc[1].toFloat()
-
                     touchOffsetY = ev.rawY - (trackTopOnScreen + thumb.translationY)
-                    thumb.parent.requestDisallowInterceptTouchEvent(true)
+
+                    scrollable.view.parent.requestDisallowInterceptTouchEvent(true)
                     true
                 }
 
                 MotionEvent.ACTION_MOVE -> {
                     if (!isDragging) return@setOnTouchListener false
-
                     val trackTopOnScreen = trackLoc[1].toFloat()
                     val targetInsideTrack = ev.rawY - trackTopOnScreen - touchOffsetY
-
                     val clamped = clamp(targetInsideTrack, 0f, travel.toFloat())
                     thumb.translationY = clamped
-
                     val progress = clamped / travel.toFloat()
                     val targetScroll = (progress * range).toInt()
-                    scrollView.scrollTo(0, targetScroll)
+
+                    scrollable.scrollTo(targetScroll)
                     true
                 }
 
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     isDragging = false
-                    thumb.parent.requestDisallowInterceptTouchEvent(false)
+                    scrollable.view.parent.requestDisallowInterceptTouchEvent(false)
                     true
                 }
 
@@ -108,6 +99,11 @@ class PimiScrollbarController(
         }
     }
 
-    private fun clamp(v: Float, minV: Float, maxV: Float): Float =
-        max(minV, min(maxV, v))
+    fun forceUpdate() {
+        track.post {
+            updateThumbFromScroll()
+        }
+    }
+
+    private fun clamp(v: Float, minV: Float, maxV: Float): Float = max(minV, min(maxV, v))
 }
