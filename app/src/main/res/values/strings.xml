@@ -147,6 +147,9 @@
     <string name="report_words">Где прячется ошибка?</string>
     <string name="add_to_dictionary">Что добавим в словарь?</string>
     <string name="report">Сообщить</string>
-
     <string name="add_all">Добавить все</string>
+  
+    <string name="btn_clear_word">Удалить слово</string>
+    <string name="btn_clear_letter">Удалить букву</string>
+    <string name="btn_check">Проверить</string>
 </resources>
