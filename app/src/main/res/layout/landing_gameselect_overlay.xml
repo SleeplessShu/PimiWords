@@ -15,7 +15,6 @@
         android:id="@+id/animationIdleView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:lottie_rawRes="@raw/animation_first_landing_jogging_long"
         app:lottie_autoPlay="false"
         app:lottie_loop="false"
         android:scaleType="centerCrop"
@@ -28,7 +27,6 @@
         android:id="@+id/animationActionView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:lottie_rawRes="@raw/animation_first_landing_jogging_long"
         app:lottie_autoPlay="false"
         app:lottie_loop="false"
         android:scaleType="centerCrop"
@@ -73,10 +71,21 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/animationViewCurtains"
+        android:id="@+id/animationViewCurtainsStatic"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:lottie_rawRes="@raw/animation_first_landing_curtains"
+        app:lottie_autoPlay="false"
+        app:lottie_loop="false"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animationViewCurtainsOpen"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:lottie_autoPlay="false"
         app:lottie_loop="false"
         android:scaleType="centerCrop"

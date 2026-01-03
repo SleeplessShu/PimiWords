@@ -64,7 +64,7 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
                 showResult(
                     result = getString(R.string.end_game_phrase_win),
                     phrase = getString(R.string.eg_congrats),
-                    animation = R.raw.animation_endgame_victory_v2,
+                    animation = R.raw.animation_endgame_victory_260101,
                     background = R.raw.animation_bg_confeti,
                     stats = stats
                 )
