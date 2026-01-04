@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.GameFragmentBinding
+import com.sleeplessdog.matchthewords.game.presentation.controller.LottieAnimationController
 import com.sleeplessdog.matchthewords.game.presentation.fragments.EndGameFragment
 import com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment
 import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.OneOfFourFragment
@@ -29,6 +30,7 @@ import kotlin.math.roundToInt
 
 class GameFragment : Fragment() {
     private lateinit var heartsController: HeartsController
+    private val lottieController = LottieAnimationController()
 
     private val args: GameFragmentArgs by navArgs()
     private val viewModel: GameViewModel by viewModel()
@@ -199,8 +201,13 @@ class GameFragment : Fragment() {
         binding.landingFirstOverlayView.root.isVisible = showLanding
         binding.landingFirstOverlayView.tvHeader.text = header
         binding.landingFirstOverlayView.tvText.text = text
-        binding.landingFirstOverlayView.animationIdleView.setAnimation(landingConditions.animation)
-        binding.landingFirstOverlayView.animationIdleView.playAnimation()
+        lottieController.playLoopCut(
+            res = landingConditions.animation,
+            view = binding.landingFirstOverlayView.animationIdleView,
+            loop = true,
+            cutFromStartFrames = 2,
+            cutFromEndFrames = 2,
+        )
         binding.landingFirstOverlayView.btnStart.setOnClickListener {
             viewModel.onLandingShown(ALWAYS_SHOW_GAME_LANDING, landingConditions.key)
             binding.landingFirstOverlayView.root.animate().alpha(0f).setDuration(300)

@@ -155,7 +155,7 @@ class GameViewModel(
                         shouldShow = true,
                         headerTextId = R.string.landing_mtw_header,
                         regularTextId = R.string.landing_mtw_text,
-                        animation = R.raw.animations_first_juggles,
+                        animation = R.raw.animation_games_pairs_260104,
                         key = LandingKeys.GAME_MTW
                     )
                 }
@@ -165,7 +165,7 @@ class GameViewModel(
                         shouldShow = true,
                         headerTextId = R.string.landing_tof_header,
                         regularTextId = R.string.landing_tof_text,
-                        animation = R.raw.animations_first_juggles,
+                        animation = R.raw.animation_games_yesno_260104,
                         key = LandingKeys.GAME_TOF
                     )
                 }
@@ -175,7 +175,7 @@ class GameViewModel(
                         shouldShow = true,
                         headerTextId = R.string.landing_oof_header,
                         regularTextId = R.string.landing_oof_text,
-                        animation = R.raw.animations_first_juggles,
+                        animation = R.raw.animation_games_oneoffour_260104,
                         key = LandingKeys.GAME_OOF
                     )
                 }
@@ -185,7 +185,7 @@ class GameViewModel(
                         shouldShow = true,
                         headerTextId = R.string.landing_wtw_header,
                         regularTextId = R.string.landing_wtw_text,
-                        animation = R.raw.animations_first_juggles,
+                        animation = R.raw.animation_games_words_260104,
                         key = LandingKeys.GAME_WTW
                     )
                 }

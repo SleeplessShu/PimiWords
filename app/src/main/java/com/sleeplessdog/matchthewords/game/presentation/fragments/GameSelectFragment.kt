@@ -1,22 +1,18 @@
 package com.sleeplessdog.matchthewords.game.presentation.fragments
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RawRes
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.airbnb.lottie.LottieAnimationView
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.GameSelectFragmentBinding
 import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageAdapter
 import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageMenuManager
-import com.sleeplessdog.matchthewords.game.presentation.controller.LottieAnimationSwitcher
+import com.sleeplessdog.matchthewords.game.presentation.controller.LottieAnimationController
 import com.sleeplessdog.matchthewords.game.presentation.controller.toFlagLargeRes
 import com.sleeplessdog.matchthewords.game.presentation.controller.toLanguageSelectAnimation
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
@@ -33,7 +29,7 @@ class GameSelectFragment : Fragment() {
     private lateinit var langAdapter: LanguageAdapter
     private lateinit var landingLanguageAdapter: LanguageAdapter
     private lateinit var languageMenuManager: LanguageMenuManager
-    private val lottieSwitcher = LottieAnimationSwitcher()
+    private val lottieController = LottieAnimationController()
     private var isLangShown = false
 
     override fun onCreateView(
@@ -78,6 +74,7 @@ class GameSelectFragment : Fragment() {
                     }
                 if (binding.landingLanguageOverlayView.root.isVisible) {
                     val wearingHatAnimation = picked.toLanguageSelectAnimation()
+
                     playPimiWearHat(wearingHatAnimation)
                 }
                 languageMenuManager.hide()
@@ -186,19 +183,19 @@ class GameSelectFragment : Fragment() {
     }
 
     private fun activateCurtains() {
-        lottieSwitcher.play(
+        lottieController.switchBetweenTwo(
             resFrom = R.raw.animation_first_landing_curtains_v3,
-            resTo = R.raw.animation_first_landing_curtains_v3,
+            resTo = R.raw.animation_curtains_static_260104,
             fromView = binding.landingFirstOverlayView.animationViewCurtainsOpen,
             toView = binding.landingFirstOverlayView.animationViewCurtainsStatic,
             loopTo = true,
-            toStartFrame = 40,
-            cutFromEndFrames = 20
+            toStartFrame = 10,
+            cutFromEndFrames = 10
         )
     }
 
     private fun activatePimi() {
-        lottieSwitcher.play(
+        lottieController.switchBetweenTwo(
             resFrom = R.raw.animation_first_landing_jogging_260101,
             resTo = R.raw.animation_first_landing_jogging_loop_260101,
             fromView = binding.landingFirstOverlayView.animationActionView,
@@ -208,12 +205,12 @@ class GameSelectFragment : Fragment() {
     }
 
     private fun playPimiWearHat(wearingHatAnimation: Int) {
-        lottieSwitcher.play(
-            resFrom = R.raw.animation_base_loop,
-            resTo = wearingHatAnimation,
-            fromView = binding.landingLanguageOverlayView.animationActionView,
-            toView = binding.landingLanguageOverlayView.animationIdleView,
-            loopTo = false
+        lottieController.playUnderOnce(
+            loopView = binding.landingLanguageOverlayView.animationActionView,
+            underView = binding.landingLanguageOverlayView.animationIdleView,
+            lottie2 = wearingHatAnimation,
+            lottie2StartFrame = 6,
+            onFinished = { closeLanguageLanding() }
         )
     }
 
@@ -230,9 +227,7 @@ class GameSelectFragment : Fragment() {
         }
         binding.landingLanguageOverlayView.animationActionView.setAnimation(R.raw.animation_base_loop)
         binding.landingLanguageOverlayView.animationActionView.playAnimation()
-
     }
-
 
     private fun closeLanguageLanding() {
         binding.landingLanguageOverlayView.root.isVisible = false
@@ -249,45 +244,6 @@ class GameSelectFragment : Fragment() {
                 selected?.let { langAdapter.setSelected(it) }
             }
         }
-    }
-
-    private fun playPickedWithCrossfade(
-        @RawRes resTo: Int,
-        animationFrom: LottieAnimationView,
-        animationTo: LottieAnimationView,
-    ) {
-        animationTo.apply {
-            isVisible = true
-            alpha = 0f
-            progress = 0f
-            setAnimation(resTo)
-            repeatCount = 0
-        }
-
-        animationTo.animate().alpha(1f).setDuration(120).start()
-
-
-        animationFrom.postDelayed({
-            animationFrom.animate().alpha(0f).setDuration(80).withEndAction {
-                animationFrom.pauseAnimation()
-                animationFrom.isVisible = false
-                animationFrom.alpha = 1f
-            }.start()
-        }, 90)
-
-        animationTo.removeAllAnimatorListeners()
-        animationTo.addAnimatorListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator) {
-                if (binding.landingLanguageOverlayView.root.isVisible) {
-                    closeLanguageLanding()
-                }
-                animationTo.removeAllAnimatorListeners()
-                animationTo.isVisible = false
-                animationTo.alpha = 0f
-            }
-        })
-
-        animationTo.playAnimation()
     }
 
     override fun onDestroyView() {
