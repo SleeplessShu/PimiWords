@@ -1,4 +1,4 @@
-package com.sleeplessdog.matchthewords.utils
+package com.sleeplessdog.matchthewords.game.data.database
 
 import android.content.Context
 import androidx.room.Database
@@ -6,16 +6,15 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.sleeplessdog.matchthewords.game.data.WordCategoryEntity
-import com.sleeplessdog.matchthewords.game.data.database.WordCategoryDao
 
 @Database(entities = [WordCategoryEntity::class], version = 1, exportSchema = true)
-abstract class AppDb : RoomDatabase() {
+abstract class AppGroupsDictionary : RoomDatabase() {
     abstract fun wordCategoryDao(): WordCategoryDao
 
     companion object {
-        fun build(context: Context): AppDb =
-            Room.databaseBuilder(context, AppDb::class.java, "app.db")
-                .addCallback(object : RoomDatabase.Callback() {
+        fun build(context: Context): AppGroupsDictionary =
+            Room.databaseBuilder(context, AppGroupsDictionary::class.java, "groups.db")
+                .addCallback(object : Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)
 

@@ -1,13 +1,14 @@
 package com.sleeplessdog.matchthewords.game.data.repositories
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sleeplessdog.matchthewords.game.domain.repositories.ScoreRepository
 import com.sleeplessdog.matchthewords.utils.SupportFunctions
 
 class ScoreRepositoryImpl(
-    private var sharedPreferences: SharedPreferences
+    private var sharedPreferences: SharedPreferences,
 ) : ScoreRepository {
 
     private val _allDaysResults = MutableLiveData<Map<String, Int>>()
@@ -24,7 +25,7 @@ class ScoreRepositoryImpl(
         val currentResult = getTodaysResult()
         val newResult = currentResult + matchResult
 
-        sharedPreferences.edit().putInt(currentDate, newResult).apply()
+        sharedPreferences.edit { putInt(currentDate, newResult) }
 
         val updatedMap =
             sharedPreferences.all.filterValues { it is Int }.mapValues { it.value as Int }
