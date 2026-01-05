@@ -1,16 +1,15 @@
 package com.sleeplessdog.matchthewords
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Handler
 import android.util.Log
 import androidx.room.Room
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
-import com.sleeplessdog.matchthewords.game.data.database.AppDatabase
+import com.sleeplessdog.matchthewords.game.data.database.AppDictionaryDatabase
+import com.sleeplessdog.matchthewords.game.data.database.AppGroupsDictionary
 import com.sleeplessdog.matchthewords.game.data.database.UserDictionaryDatabase
 import com.sleeplessdog.matchthewords.game.data.database.WordCategoryDao
-import com.sleeplessdog.matchthewords.game.data.database.resolveAssetDatabase
 import com.sleeplessdog.matchthewords.game.data.repositories.ScoreRepositoryImpl
 import com.sleeplessdog.matchthewords.game.data.repositories.UserDictionaryRepository
 import com.sleeplessdog.matchthewords.game.data.repositories.WordCategoriesRepositoryImpl
@@ -29,7 +28,6 @@ import com.sleeplessdog.matchthewords.server.data.ServerDateRepositoryImpl
 import com.sleeplessdog.matchthewords.server.domain.ServerDateRepository
 import com.sleeplessdog.matchthewords.server.domain.ServerDbInteractor
 import com.sleeplessdog.matchthewords.server.domain.ServerDbInteractorImpl
-import com.sleeplessdog.matchthewords.utils.AppDb
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -58,32 +56,24 @@ val dataModule = module {
     single<Context> {
         App.appContext
     }
-    single { get<AppDatabase>().wordDao() }
+    single { get<AppDictionaryDatabase>().wordDao() }
 
     single(named("db_prefs")) {
         App.appContext.getSharedPreferences("db_prefs", Context.MODE_PRIVATE)
     }
 
-    single {
+    single<AppDictionaryDatabase> {
         val dbName = "dictionary.db"
         val ctx: Context = get()
 
-        val sel = resolveAssetDatabase(ctx) // получаем и путь, и дату
-
-        val prefs: SharedPreferences = get(qualifier = named("db_prefs"))
-        prefs.edit().putString("local_db_date", sel.date).apply()
-
-        Room.databaseBuilder(ctx, AppDatabase::class.java, dbName).createFromAsset(sel.assetPath)
-            .build()
+        Room.databaseBuilder(ctx, AppDictionaryDatabase::class.java, dbName)
+            .fallbackToDestructiveMigration().build()
     }
 
     single {
         Room.databaseBuilder(
-            androidContext(),
-            UserDictionaryDatabase::class.java,
-            "user_dictionary_db" // Имя файла БД
-        ).fallbackToDestructiveMigration() // При обновлении версии, старая БД будет удалена..
-            .build()
+            androidContext(), UserDictionaryDatabase::class.java, "user_dictionary_db"
+        ).fallbackToDestructiveMigration().build()
     }
     Log.d(
         "DEBUG",
@@ -113,9 +103,10 @@ val dataModule = module {
         ServerDbInteractorImpl(get(), get())
     }
 
-    single { AppDb.build(get()) }
+    single { AppGroupsDictionary.build(get()) }
+
     single<WordCategoryDao> {
-        get<AppDb>().wordCategoryDao()
+        get<AppGroupsDictionary>().wordCategoryDao()
     }
 
     single<WordCategoriesRepository> { WordCategoriesRepositoryImpl(get()) }
@@ -130,7 +121,7 @@ val dataModule = module {
 
     factory {
         AddWordToUserDictionaryUC(
-            appDatabase = get(), userRepository = get()
+            appDictionaryDatabase = get(), userRepository = get()
         )
     }
 }

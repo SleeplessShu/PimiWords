@@ -111,13 +111,19 @@ dependencies {
     implementation("androidx.room:room-ktx:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
 
-    implementation(platform("com.google.firebase:firebase-bom:33.16.0"))
+    // Firebase BoM (управляет версиями всех библиотек Firebase)
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+
+    // Основные библиотеки (версии подтянутся из BoM автоматически)
     implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-crashlytics-ktx")
-    implementation("com.google.firebase:firebase-database-ktx:21.0.0")
-    implementation("com.google.firebase:firebase-storage-ktx:21.0.0")
-    implementation("com.google.firebase:firebase-common-ktx:20.4.2")
-    implementation("com.google.firebase:firebase-appcheck-ktx")
+    implementation("com.google.firebase:firebase-auth")    // Убрали -ktx, BoM сам решит
+    implementation("com.google.firebase:firebase-storage") // Убрали -ktx
+    implementation("com.google.firebase:firebase-database")
+
+    // Корутины для Firebase (обязательно для .await())
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+
+    // App Check (если планируешь использовать)
     implementation("com.google.firebase:firebase-appcheck-playintegrity")
     implementation("com.google.firebase:firebase-appcheck-debug")
 
