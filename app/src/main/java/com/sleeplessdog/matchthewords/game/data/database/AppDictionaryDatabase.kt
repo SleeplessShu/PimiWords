@@ -5,6 +5,6 @@ import androidx.room.RoomDatabase
 import com.sleeplessdog.matchthewords.game.data.WordEntity
 
 @Database(entities = [WordEntity::class], version = 1, exportSchema = false)
-abstract class AppDatabase : RoomDatabase() {
+abstract class AppDictionaryDatabase : RoomDatabase() {
     abstract fun wordDao(): WordDao
 }

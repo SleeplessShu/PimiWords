@@ -6,9 +6,10 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
+import com.sleeplessdog.matchthewords.di.dataModule
 import com.sleeplessdog.matchthewords.di.domainModule
 import com.sleeplessdog.matchthewords.di.presentationModule
-import com.sleeplessdog.matchthewords.game.data.database.AppDatabase
+import com.sleeplessdog.matchthewords.game.data.database.AppDictionaryDatabase
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
 import java.io.File
@@ -92,7 +93,7 @@ class App : Application() {
 
     companion object {
 
-        lateinit var database: AppDatabase
+        lateinit var database: AppDictionaryDatabase
         lateinit var appContext: Context
             private set
 

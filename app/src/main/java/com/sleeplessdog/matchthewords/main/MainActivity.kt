@@ -1,36 +1,89 @@
 package com.sleeplessdog.matchthewords.main
 
-import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.sleeplessdog.matchthewords.App
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.ActivityMainBinding
-import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.sleeplessdog.matchthewords.game.presentation.controller.DictionaryDatabaseController
+import com.sleeplessdog.matchthewords.utils.ConstantsPaths.TAG_MAIN_ACTIVITY
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class MainActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityMainBinding
-    private val gameViewModel: GameViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.bottomNavigationView.isVisible = false
+
+        lifecycleScope.launch {
+            try {
+                // Анонимный вход в Firebase для доступа к Storage
+                Log.d(TAG_MAIN_ACTIVITY, "Попытка входа в Firebase...")
+                Firebase.auth.signInAnonymously().await()
+                Log.d(TAG_MAIN_ACTIVITY, "Вход выполнен успешно")
+
+                // Инициализация контроллера и загрузка базы
+                val dbLoader = DictionaryDatabaseController(this@MainActivity)
+                val result = dbLoader.prepareDatabase()
+
+                if (result.isSuccess) {
+                    Log.d(TAG_MAIN_ACTIVITY, "База данных успешно подготовлена")
+                    initAppAfterDbReady()
+                } else {
+                    Log.e(
+                        TAG_MAIN_ACTIVITY, "Ошибка при подготовке БД: ${result.exceptionOrNull()}"
+                    )
+
+                    initAppAfterDbReady()
+                }
+            } catch (e: Exception) {
+                Log.e(TAG_MAIN_ACTIVITY, "Критическая ошибка инициализации: ${e.message}")
+                // Фоллбэк: пытаемся запустить приложение, надеясь на локальную копию
+                initAppAfterDbReady()
+            }
+        }
+
+        // Проверка на падения из предыдущих сессий
+        /*if (App.hasCrash()) {
+            startActivity(Intent(this, CrashLogActivity::class.java))
+        }*/
+    }
+
+    /**
+     * Метод для настройки навигации.
+     * Вызывается только когда мы уверены, что файл БД существует.
+     */
+    private fun initAppAfterDbReady() {
         val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
+            supportFragmentManager.findFragmentById(R.id.fragment_container) as? NavHostFragment
+
+        if (navHostFragment == null) {
+            Log.e(
+                TAG_MAIN_ACTIVITY,
+                "initAppAfterDbReady: fragment_container is not a NavHostFragment or is null"
+            )
+            return
+        }
         val navController = navHostFragment.navController
 
-        val bottomNavigationView = binding.bottomNavigationView
-        bottomNavigationView.setupWithNavController(navController)
+        // Настройка Bottom Navigation
+        binding.bottomNavigationView.setupWithNavController(navController)
+        binding.bottomNavigationView.isVisible = true
 
-        if (App.hasCrash()) {
-            startActivity(Intent(this, CrashLogActivity::class.java))
-        }
+        // Слушатель изменения экранов
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.gameFragment -> {
@@ -44,6 +97,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Публичный метод для управления видимостью меню из фрагментов
+     */
     fun setBottomNavVisibility(isVisible: Boolean) {
         binding.bottomNavigationView.isVisible = isVisible
     }
