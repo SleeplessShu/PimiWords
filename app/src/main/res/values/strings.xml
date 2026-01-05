@@ -34,8 +34,6 @@
     <string name="end_game_phrase_win">Победа!</string>
     <string name="end_game_phrase_loose">Провал!</string>
     <string name="score_text">%d</string>
-    <string name="button_text_start_game">New Game</string>
-    <string name="button_text_new_game">NEW_GAME</string>
 
     <string name="button_new_game">Новая игра</string>
     <string name="button_to_settings">В настройки</string>
@@ -49,10 +47,10 @@
 
     <!--games select fragment-->
     <string name="select_game">Выбрать игру</string>
-    <string name="MTW">Matching\nThe Words</string>
-    <string name="ROW">Right\nor Wrong</string>
-    <string name="MC">Multi\nChoice</string>
-    <string name="WTW">Write\nThe Word</string>
+    <string name="MTW">Найди\nпару</string>
+    <string name="ROW">Да/Нет</string>
+    <string name="MC">Выбери\Верное</string>
+    <string name="WTW">Собери\nСлово</string>
 
     <!--bottom menu-->
     <string name="games">Игры</string>
@@ -75,10 +73,6 @@
 
     <!--settings menu-->
     <string name="settings_menu">Настройки</string>
-    <string name="switchDarkTheme">Dark theme</string>
-    <string name="shareApp">Share App</string>
-    <string name="support">Mail to support</string>
-    <string name="dictionary_check">Check for dictionary updates</string>
     <string name="int_language">Язык интерфейса</string>
     <string name="std_language">Изучаемый язык</string>
     <string name="std_groups">Изучаемые группы</string>
@@ -109,8 +103,6 @@
     <string name="categories_default_section">Стандартные:</string>
     <string name="cancel">Отмена</string>
     <string name="save">Сохранить</string>
-
-    <string name="game_name">Games name</string>
 
     <string name="cat_animals">Животные</string>
     <string name="cat_food">Еда</string>
@@ -148,7 +140,7 @@
     <string name="add_to_dictionary">Что добавим в словарь?</string>
     <string name="report">Сообщить</string>
     <string name="add_all">Добавить все</string>
-  
+
     <string name="btn_clear_word">Удалить слово</string>
     <string name="btn_clear_letter">Удалить букву</string>
     <string name="btn_check">Проверить</string>

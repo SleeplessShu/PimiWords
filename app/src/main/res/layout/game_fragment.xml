@@ -34,7 +34,6 @@
                 android:layout_marginHorizontal="@dimen/padding_medium"
                 android:layout_marginVertical="@dimen/padding_medium"
                 android:gravity="center"
-                android:text="@string/game_name"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
