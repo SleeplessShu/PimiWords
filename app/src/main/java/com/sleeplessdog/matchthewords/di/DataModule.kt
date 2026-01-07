@@ -7,7 +7,6 @@ import android.util.Log
 import androidx.room.Room
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
-import com.sleeplessdog.matchthewords.App
 import com.sleeplessdog.matchthewords.game.data.database.AppDictionaryDatabase
 import com.sleeplessdog.matchthewords.game.data.database.AppGroupsDictionary
 import com.sleeplessdog.matchthewords.game.data.database.UserDictionaryDatabase
@@ -53,22 +52,21 @@ val dataModule = module {
     }
 
     single(named(SHARED_PREFS_THEME_KEY)) {
-        App.appContext.getSharedPreferences(SHARED_PREFS_THEME_REPOSITORY, Context.MODE_PRIVATE)
+        androidContext().getSharedPreferences(SHARED_PREFS_THEME_REPOSITORY, Context.MODE_PRIVATE)
     }
 
     single<WordsDatabase> {
         WordsDatabase(get())
     }
+
     factory<Handler> {
         Handler(Looper.getMainLooper())
     }
-    single<Context> {
-        App.appContext
-    }
+
     single { get<AppDictionaryDatabase>().wordDao() }
 
     single(named(SHARED_PREFS_DATABASE_SETTINGS)) {
-        App.appContext.getSharedPreferences(SHARED_PREFS_DATABASE_SETTINGS, Context.MODE_PRIVATE)
+        androidContext().getSharedPreferences(SHARED_PREFS_DATABASE_SETTINGS, Context.MODE_PRIVATE)
     }
 
     single<AppDictionaryDatabase> {
@@ -86,7 +84,8 @@ val dataModule = module {
     }
     Log.d(
         "DEBUG",
-        "Room.databaseBuilder после окончания" + " работ над базами данных убрать все инструменты " + "удаления при обновлении и удаления при запуске"
+        "Room.databaseBuilder после окончания" + " работ над базами данных убрать все инструменты "
+                + "удаления при обновлении и удаления при запуске"
     )
 
     single<com.sleeplessdog.matchthewords.game.data.database.UserDictionaryDao> {
@@ -98,8 +97,9 @@ val dataModule = module {
     }
 
     single(named(SHARED_PREFS_SCORE_KEY)) {
-        App.appContext.getSharedPreferences(SHARED_PREFS_SCORE_REPOSITORY, Context.MODE_PRIVATE)
+        androidContext().getSharedPreferences(SHARED_PREFS_SCORE_REPOSITORY, Context.MODE_PRIVATE)
     }
+
     single<ScoreRepository> {
         ScoreRepositoryImpl(get(named(SHARED_PREFS_SCORE_KEY)))
     }

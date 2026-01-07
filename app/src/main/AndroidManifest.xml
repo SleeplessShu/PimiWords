@@ -14,19 +14,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MatchTheWords"
-        tools:targetApi="28">
-        <activity
-            android:name=".main.CrashLogActivity"
-            android:screenOrientation="portrait"
-            android:label="Crash log"
-            android:exported="false"
-            android:theme="@style/Theme.Material3.Dark.NoActionBar" />
+        android:theme="@style/Theme.MatchTheWords">
 
-        <!-- Твоя основная activity -->
         <activity
             android:name=".main.MainActivity"
             android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

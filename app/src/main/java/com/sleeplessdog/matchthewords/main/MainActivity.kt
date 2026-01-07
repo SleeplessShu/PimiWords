@@ -55,11 +55,6 @@ class MainActivity : AppCompatActivity() {
                 initAppAfterDbReady()
             }
         }
-
-        // Проверка на падения из предыдущих сессий
-        /*if (App.hasCrash()) {
-            startActivity(Intent(this, CrashLogActivity::class.java))
-        }*/
     }
 
     /**
@@ -77,21 +72,19 @@ class MainActivity : AppCompatActivity() {
             )
             return
         }
+
         val navController = navHostFragment.navController
-
-        // Настройка Bottom Navigation
         binding.bottomNavigationView.setupWithNavController(navController)
-        binding.bottomNavigationView.isVisible = true
+        setBottomNavVisibility(true)
 
-        // Слушатель изменения экранов
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.gameFragment -> {
-                    binding.bottomNavigationView.isVisible = false
+                    setBottomNavVisibility(false)
                 }
 
                 else -> {
-                    binding.bottomNavigationView.isVisible = true
+                    setBottomNavVisibility(true)
                 }
             }
         }
