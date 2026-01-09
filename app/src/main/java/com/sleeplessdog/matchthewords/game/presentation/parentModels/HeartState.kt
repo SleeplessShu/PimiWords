@@ -1,8 +1,13 @@
 package com.sleeplessdog.matchthewords.game.presentation.parentModels
 
 enum class HeartState {
-    FAST_DARK_TO_MEDIUM,    // 1 → 2: темнооранжевый быстро меняется на среднеоранжевый
-    APPEAR_MEDIUM_ORANGE,   // Появление среднего оранжевого сердца (get_heart_to_2)
-    MEDIUM_TO_BRIGHT,       // 2 → 3: среднеоранжевый плавно становится яркооранжевым
-    APPEAR_BRIGHT_ORANGE    // Появление яркого оранжевого сердца (get_heart_to_3)
+    APPEAR_BRIGHT_ORANGE,   // Появление 3 сердечек
+    BRIGHT_TO_MEDIUM,       // Из 3 сердечек в 2
+    DEAD_BRIGHT_ORANGE,     // Исчезновение яркого сердечка
+    MEDIUM_TO_DARK,         // Из 2 сердечек в 1
+    DEAD_MEDIUM,            // Исчезновение среднего сердечка
+    DARK_TO_MEDIUM,         // Из 1 сердечка в 2
+    APPEAR_MEDIUM_ORANGE,   // Появление второго сердечка
+    MEDIUM_TO_BRIGHT,       // Из 2 сердечек в 3
+    DEAD_DARK               // Исчезновение темного сердечка
 }
