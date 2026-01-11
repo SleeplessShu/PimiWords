@@ -8,7 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.sleeplessdog.matchthewords.game.domain.usecase.AddWordToUserDictionaryUC
 import com.sleeplessdog.matchthewords.game.presentation.models.EndGameActionStatus
 import com.sleeplessdog.matchthewords.game.presentation.models.EndGameWordsAction
-import com.sleeplessdog.matchthewords.game.presentation.models.Word
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class EndGameViewModel(
@@ -17,7 +21,21 @@ class EndGameViewModel(
     private val _actionsWithWords = MutableLiveData<EndGameActionStatus>()
     val actionsWithWords: LiveData<EndGameActionStatus> = _actionsWithWords
 
-    private var selectedPairs: List<Pair<Word, Word>> = emptyList()
+    private val _selectedWordIds = MutableStateFlow<Set<Int>>(emptySet())
+    val selectedWordIds: StateFlow<Set<Int>> = _selectedWordIds
+
+    val isActionEnabled: StateFlow<Boolean> =
+        _selectedWordIds
+            .map { it.isNotEmpty() }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = false
+            )
+
+    fun updateSelection(ids: List<Int>) {
+        _selectedWordIds.value = ids.toSet()
+    }
 
     fun reportAboutMistake() {
         _actionsWithWords.value = EndGameActionStatus(
@@ -31,27 +49,28 @@ class EndGameViewModel(
         )
     }
 
-
-    fun updateSelectedPairs(newPairs: List<Pair<Word, Word>>) {
-        selectedPairs = newPairs
-    }
-
+    /**
+     * отправляет список слов с ошибками на сервер
+     */
     fun sendReport() {
+        val ids = _selectedWordIds.value.toList()
+        if (ids.isEmpty()) return
+        Log.d("DEBUG", "sendReport: $ids ОТПРАВКА ОТЧЁТА НЕ РЕАЛИЗОВАНА")
         hideActions()
-        Log.d("DEBUG", "sendReport: $selectedPairs")
     }
 
+    /**
+     * сохраняет выбранные слова в словарь пользователя
+     */
     fun saveSelectedWords() {
-        hideActions()
-
-        val wordsIds: Set<Int> = selectedPairs.flatMap { pair ->
-            listOf(pair.first.id, pair.second.id)
-        }.toSet()
-
+        val ids = _selectedWordIds.value.toList()
+        if (ids.isEmpty()) return
+        Log.d("ENDGAMEVM", "saveSelectedWords: $ids")
         viewModelScope.launch {
-            addToUserDictionaryUC(wordsIds)
-            Log.d("DEBUG", "написать обработку для возврата резалтата")
+            val result = addToUserDictionaryUC(ids)
+            Log.d("DEBUG", "результат добавления слов в словарь $result")
         }
+        hideActions()
     }
 
     fun hideActions() {

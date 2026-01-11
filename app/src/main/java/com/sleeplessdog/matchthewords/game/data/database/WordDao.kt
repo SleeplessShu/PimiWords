@@ -63,11 +63,6 @@ interface WordDao {
     @Update
     suspend fun updateWord(wordEntity: WordEntity)
 
-    @Query(
-        """
-        SELECT * FROM words
-        WHERE id IN (:ids)
-    """
-    )
+    @Query("SELECT * FROM words WHERE id IN (:ids)")
     suspend fun getByIds(ids: List<Int>): List<WordEntity>
 }

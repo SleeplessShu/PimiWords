@@ -36,8 +36,8 @@
     <string name="score_text">%d</string>
 
     <string name="button_new_game">Новая игра</string>
-    <string name="button_to_settings">В настройки</string>
-    <string name="button_restart_round">Перезапуск</string>
+    <string name="button_to_settings">Настройки</string>
+    <string name="button_restart_round">Повтор</string>
     <string name="eg_errors">ошибок</string>
     <string name="eg_points">очков</string>
     <string name="eg_words">слов</string>
@@ -139,7 +139,7 @@
     <string name="add_to_dictionary">Что добавим в словарь?</string>
     <string name="report">Сообщить</string>
     <string name="add_all">Добавить все</string>
-
+    <string name="done">Готово!</string>
     <string name="btn_clear_word">Удалить слово</string>
     <string name="btn_clear_letter">Удалить букву</string>
     <string name="btn_check">Проверить</string>

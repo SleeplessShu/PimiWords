@@ -31,6 +31,8 @@ val presentationModule = module {
         GameSelectViewModel(
             appPrefs = get(),
             landingManager = get(),
+            userDbController = get(),
+            authRepository = get(),
         )
     }
 

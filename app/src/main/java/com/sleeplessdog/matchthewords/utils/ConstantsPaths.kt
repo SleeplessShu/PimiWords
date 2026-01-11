@@ -6,8 +6,8 @@ object ConstantsPaths {
     const val FIREBASE_KEY =
         "https://match-the-words-d26c2-default-rtdb.europe-west1.firebasedatabase.app"
     const val NETWORK_DATABASE_PATH_ON_FIREBASE = "actual_db/pimi_dictionary.db"
-    const val LOCAL_DATABASE_DICTIONARY_NAME = "dictionary.db"
-    const val USER_DATABASE_DICTIONARY_NAME = "user_dictionary_db"
+    const val LOCAL_DATABASE_DICTIONARY_NAME = "app_dictionary.db"
+    const val USER_DATABASE_DICTIONARY_NAME = "user_dictionary.db"
     const val ASSETS_DATABASE_DICTIONARY_PATH = "databases/dictionary_default.db"
 
     //---SharedPreferences access---

@@ -5,16 +5,19 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.room.Room
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.sleeplessdog.matchthewords.game.data.database.AppDictionaryDatabase
 import com.sleeplessdog.matchthewords.game.data.database.AppGroupsDictionary
+import com.sleeplessdog.matchthewords.game.data.database.UserDictionaryDao
 import com.sleeplessdog.matchthewords.game.data.database.UserDictionaryDatabase
 import com.sleeplessdog.matchthewords.game.data.database.WordCategoryDao
+import com.sleeplessdog.matchthewords.game.data.repositories.AppDictionaryRepository
+import com.sleeplessdog.matchthewords.game.data.repositories.AuthRepository
 import com.sleeplessdog.matchthewords.game.data.repositories.ScoreRepositoryImpl
 import com.sleeplessdog.matchthewords.game.data.repositories.UserDictionaryRepository
 import com.sleeplessdog.matchthewords.game.data.repositories.WordCategoriesRepositoryImpl
-import com.sleeplessdog.matchthewords.game.data.repositories.WordsDatabase
 import com.sleeplessdog.matchthewords.game.domain.repositories.ScoreRepository
 import com.sleeplessdog.matchthewords.game.domain.repositories.WordCategoriesRepository
 import com.sleeplessdog.matchthewords.game.domain.usecase.AddWordToUserDictionaryUC
@@ -25,6 +28,7 @@ import com.sleeplessdog.matchthewords.game.domain.usecase.ObserveAllCategoriesGr
 import com.sleeplessdog.matchthewords.game.domain.usecase.ObserveFeaturedCategoriesUC
 import com.sleeplessdog.matchthewords.game.domain.usecase.SaveSelectionUC
 import com.sleeplessdog.matchthewords.game.domain.usecase.ToggleCategoryUC
+import com.sleeplessdog.matchthewords.game.presentation.controller.UserDatabaseController
 import com.sleeplessdog.matchthewords.server.data.ServerDateRepositoryImpl
 import com.sleeplessdog.matchthewords.server.domain.ServerDateRepository
 import com.sleeplessdog.matchthewords.server.domain.ServerDbInteractor
@@ -43,6 +47,10 @@ import org.koin.dsl.module
 
 val dataModule = module {
 
+    factory<Handler> {
+        Handler(Looper.getMainLooper())
+    }
+
     single {
         FirebaseDatabase.getInstance(FIREBASE_KEY)
     }
@@ -55,19 +63,19 @@ val dataModule = module {
         androidContext().getSharedPreferences(SHARED_PREFS_THEME_REPOSITORY, Context.MODE_PRIVATE)
     }
 
-    single<WordsDatabase> {
-        WordsDatabase(get())
-    }
-
-    factory<Handler> {
-        Handler(Looper.getMainLooper())
-    }
-
-    single { get<AppDictionaryDatabase>().wordDao() }
-
     single(named(SHARED_PREFS_DATABASE_SETTINGS)) {
         androidContext().getSharedPreferences(SHARED_PREFS_DATABASE_SETTINGS, Context.MODE_PRIVATE)
     }
+
+    single(named(SHARED_PREFS_SCORE_KEY)) {
+        androidContext().getSharedPreferences(SHARED_PREFS_SCORE_REPOSITORY, Context.MODE_PRIVATE)
+    }
+
+    single<AppDictionaryRepository> {
+        AppDictionaryRepository(get())
+    }
+
+    single { get<AppDictionaryDatabase>().wordDao() }
 
     single<AppDictionaryDatabase> {
         val dbName = LOCAL_DATABASE_DICTIONARY_NAME
@@ -78,26 +86,37 @@ val dataModule = module {
     }
 
     single {
-        Room.databaseBuilder(
-            androidContext(), UserDictionaryDatabase::class.java, USER_DATABASE_DICTIONARY_NAME
-        ).fallbackToDestructiveMigration().build()
+        UserDatabaseController(
+            userDbProvider = get(),
+            context = androidContext()
+        )
     }
+
+    single<UserDictionaryDatabase> {
+        Room.databaseBuilder(
+            androidContext(),
+            UserDictionaryDatabase::class.java,
+            USER_DATABASE_DICTIONARY_NAME
+        ).fallbackToDestructiveMigration()
+            .build()
+    }
+
+    single {
+        AddWordToUserDictionaryUC(
+            appDictionaryDatabase = get(), userRepository = get()
+        )
+    }
+
     Log.d(
         "DEBUG",
         "Room.databaseBuilder после окончания" + " работ над базами данных убрать все инструменты "
                 + "удаления при обновлении и удаления при запуске"
     )
 
-    single<com.sleeplessdog.matchthewords.game.data.database.UserDictionaryDao> {
-        get<UserDictionaryDatabase>().userDictionaryDao()
-    }
+    single<UserDictionaryDao> { get<UserDictionaryDatabase>().userDictionaryDao() }
 
     single {
         UserDictionaryRepository(dao = get())
-    }
-
-    single(named(SHARED_PREFS_SCORE_KEY)) {
-        androidContext().getSharedPreferences(SHARED_PREFS_SCORE_REPOSITORY, Context.MODE_PRIVATE)
     }
 
     single<ScoreRepository> {
@@ -120,6 +139,9 @@ val dataModule = module {
 
     single<WordCategoriesRepository> { WordCategoriesRepositoryImpl(get()) }
 
+    single<AuthRepository> { AuthRepository(get()) }
+    single { FirebaseAuth.getInstance() }
+
     factory { ObserveFeaturedCategoriesUC(get()) }
     factory { ObserveAllCategoriesGroupedUC(get()) }
     factory { ToggleCategoryUC(get()) }
@@ -127,10 +149,4 @@ val dataModule = module {
     factory { CreateUserCategoryUC(get()) }
     factory { DeleteUserCategoryUC(get()) }
     factory { GetSelectedCategoriesUC(get()) }
-
-    factory {
-        AddWordToUserDictionaryUC(
-            appDictionaryDatabase = get(), userRepository = get()
-        )
-    }
 }

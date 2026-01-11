@@ -1,5 +1,6 @@
 package com.sleeplessdog.matchthewords.game.data.repositories
 
+import android.util.Log
 import com.sleeplessdog.matchthewords.game.data.UserWordEntity
 import com.sleeplessdog.matchthewords.game.data.WordEntity
 import com.sleeplessdog.matchthewords.game.data.database.UserDictionaryDao
@@ -30,9 +31,11 @@ class UserDictionaryRepository(private val dao: UserDictionaryDao) {
                 dateLastSeen = SupportFunctions.getCurrentDate(),
                 dateAdded = SupportFunctions.getCurrentDate()
             )
+
         }
 
         dao.insertOrUpdateWord(userWordsToSave)
+        Log.d("USERDATABASE", "addWordFromMainDb: $userWordsToSave")
     }
 
 

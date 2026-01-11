@@ -18,7 +18,7 @@ class App : Application() {
         super.onCreate()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         val appContext = applicationContext
-        deleteAllDatabases(appContext)
+        //deleteAllDatabases(appContext)
 
         startKoin {
             androidContext(this@App)

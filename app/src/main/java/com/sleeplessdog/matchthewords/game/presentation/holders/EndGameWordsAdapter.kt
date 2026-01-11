@@ -2,7 +2,10 @@ package com.sleeplessdog.matchthewords.game.presentation.holders
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.NO_POSITION
 import com.sleeplessdog.matchthewords.databinding.EndGameRwCheckboxElementBinding
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
 
@@ -12,68 +15,76 @@ data class SelectableWordPair(
 )
 
 class EndGameWordsAdapter(
-    private val onSelectionChanged: (selectedPairs: List<Pair<Word, Word>>) -> Unit,
-) : RecyclerView.Adapter<EndGameWordsAdapter.WordPairViewHolder>() {
+    private val onSelectionChanged: (ids: List<Int>) -> Unit,
+) : ListAdapter<SelectableWordPair, EndGameWordsAdapter.VH>(Diff) {
 
-
-    private var items: MutableList<SelectableWordPair> = mutableListOf()
-
-    inner class WordPairViewHolder(val binding: EndGameRwCheckboxElementBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class VH(private val b: EndGameRwCheckboxElementBinding) :
+        RecyclerView.ViewHolder(b.root) {
 
         init {
-            itemView.setOnClickListener {
-                if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
-                    items[bindingAdapterPosition] =
-                        switchSelectedState(items[bindingAdapterPosition])
-                    notifyItemChanged(bindingAdapterPosition)
-                    reportSelectionChange()
-                }
+            b.root.setOnClickListener {
+                val pos =
+                    bindingAdapterPosition.takeIf { it != NO_POSITION } ?: return@setOnClickListener
+                toggleItem(pos)
             }
         }
 
-        fun bind(selectablePair: SelectableWordPair) {
-            binding.tvOrigin.text = selectablePair.pair.first.text
-            binding.tvTranslate.text = selectablePair.pair.second.text
-            binding.checkbox.isChecked = selectablePair.isSelected
+        fun bind(item: SelectableWordPair) = with(b) {
+            tvOrigin.text = item.pair.first.text
+            tvTranslate.text = item.pair.second.text
+            checkbox.isChecked = item.isSelected
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordPairViewHolder {
-        val binding = EndGameRwCheckboxElementBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH =
+        VH(
+            EndGameRwCheckboxElementBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false
+            )
         )
-        return WordPairViewHolder(binding)
+
+    override fun onBindViewHolder(holder: VH, position: Int) =
+        holder.bind(getItem(position))
+
+    fun submitPairs(pairs: List<Pair<Word, Word>>) {
+        val updated = pairs.map { SelectableWordPair(it) }
+        submitList(updated)
+        notifySelection(updated)
     }
 
-    override fun onBindViewHolder(holder: WordPairViewHolder, position: Int) {
-        holder.bind(items[position])
+    fun toggleSelectAll(select: Boolean) {
+        val updated = currentList.map { it.copy(isSelected = select) }
+        submitList(updated)
+        notifySelection(updated)
     }
 
-    override fun getItemCount(): Int = items.size
 
-    fun submitList(pairs: List<Pair<Word, Word>>) {
-        val oldSize = items.size
-        items.clear()
-        notifyItemRangeRemoved(0, oldSize)
-        items.addAll(pairs.map { SelectableWordPair(it) })
-        notifyItemRangeInserted(0, items.size)
-        reportSelectionChange()
+    private fun toggleItem(position: Int) {
+        val updated = currentList.toMutableList()
+        val item = updated[position]
+        updated[position] = item.copy(isSelected = !item.isSelected)
+
+        submitList(updated)
+        notifySelection(updated)
+
     }
 
-    fun toggleSelectAll(newState: Boolean) {
-        val updatedItems = items.map { it.copy(isSelected = newState) }
-        items = updatedItems.toMutableList()
-        notifyItemRangeChanged(0, items.size)
-        reportSelectionChange()
+    private fun notifySelection(list: List<SelectableWordPair>) {
+        onSelectionChanged(
+            list
+                .filter { it.isSelected }
+                .flatMap { it.pair.toList() }
+                .map { it.id }
+                .distinct()
+        )
     }
 
-    private fun reportSelectionChange() {
-        val selected = items.filter { it.isSelected }.map { it.pair }
-        onSelectionChanged(selected)
-    }
+    private object Diff : DiffUtil.ItemCallback<SelectableWordPair>() {
+        override fun areItemsTheSame(a: SelectableWordPair, b: SelectableWordPair) =
+            a.pair.first.id == b.pair.first.id &&
+                    a.pair.second.id == b.pair.second.id
 
-    private fun switchSelectedState(currentItem: SelectableWordPair): SelectableWordPair {
-        return currentItem.copy(isSelected = !currentItem.isSelected)
+        override fun areContentsTheSame(a: SelectableWordPair, b: SelectableWordPair) =
+            a == b
     }
 }

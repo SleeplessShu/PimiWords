@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.airbnb.lottie.LottieAnimationView
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.EndGameFragmentBinding
 import com.sleeplessdog.matchthewords.game.presentation.GameFragmentDirections
@@ -18,6 +18,7 @@ import com.sleeplessdog.matchthewords.game.presentation.controller.PimiScrollbar
 import com.sleeplessdog.matchthewords.game.presentation.holders.EndGameWordsAdapter
 import com.sleeplessdog.matchthewords.game.presentation.models.EndGameStats
 import com.sleeplessdog.matchthewords.game.presentation.models.EndGameWordsAction
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -53,8 +54,8 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
     }
 
     private fun setupUI() {
-        wordsAdapter = EndGameWordsAdapter { selectedPairs ->
-            childViewModel.updateSelectedPairs(newPairs = selectedPairs)
+        wordsAdapter = EndGameWordsAdapter { ids ->
+            childViewModel.updateSelection(ids)
         }
 
         binding.actionWithWordsOverlayView.rvWords.adapter = wordsAdapter
@@ -87,8 +88,16 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
     }
 
     private fun setupObservers() {
+        viewLifecycleOwner.lifecycleScope.launch {
+
+            childViewModel.isActionEnabled.collect { enabled ->
+                binding.actionWithWordsOverlayView.btnSave.isEnabled = enabled
+
+            }
+        }
+
         parentViewModel.endGameStats.observe(viewLifecycleOwner) { stats ->
-            wordsAdapter.submitList(stats.sessionPairs)
+            wordsAdapter.submitPairs(stats.sessionPairs)
 
             binding.actionWithWordsOverlayView.rvWords.post {
                 setupPimiThumbOnce()
@@ -120,7 +129,6 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
                 binding.actionWithWordsOverlayView.root.isVisible = false
                 return@observe
             }
-
             when (event.action) {
                 EndGameWordsAction.REPORT_ABOUT_MISTAKE -> {
                     setupWordsView(
@@ -128,6 +136,7 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
                         acceptButton = getString(R.string.report),
                         onAcceptClick = {
                             childViewModel.sendReport()
+                            binding.onActionDoneRoot.isVisible = true
                             playResultAnimation(EndGameWordsAction.REPORT_ABOUT_MISTAKE)
                         })
                 }
@@ -138,6 +147,7 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
                         acceptButton = getString(R.string.save),
                         onAcceptClick = {
                             childViewModel.saveSelectedWords()
+                            binding.onActionDoneRoot.isVisible = true
                             playResultAnimation(EndGameWordsAction.SAVE_WORDS_TO_USERS_DICTIONARY)
                         })
                 }
@@ -185,7 +195,9 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
                     cutFromStartFrames = 1,
                     cutFromEndFrames = 1,
                     hideOnEnd = true,
-                )
+                ) {
+                    binding.onActionDoneRoot.isVisible = false
+                }
             }
 
             EndGameWordsAction.SAVE_WORDS_TO_USERS_DICTIONARY -> {
@@ -195,23 +207,10 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
                     cutFromStartFrames = 1,
                     cutFromEndFrames = 1,
                     hideOnEnd = true,
-                )
+                ) {
+                    binding.onActionDoneRoot.isVisible = false
+                }
             }
-        }
-    }
-
-    private fun playLoop1(where: LottieAnimationView, what: Int) {
-        where.apply {
-            setAnimation(what)
-
-            repeatCount = com.airbnb.lottie.LottieDrawable.INFINITE
-            repeatMode = com.airbnb.lottie.LottieDrawable.RESTART
-
-            removeAllAnimatorListeners()
-
-            progress = 0f
-
-            playAnimation()
         }
     }
 
