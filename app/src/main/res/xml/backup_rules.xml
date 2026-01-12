@@ -10,4 +10,7 @@
    <include domain="sharedpref" path="."/>
    <exclude domain="sharedpref" path="device.xml"/>
 -->
+    <exclude
+        domain="sharedpref"
+        path="welcome_screens_prefs.xml" />
 </full-backup-content>
