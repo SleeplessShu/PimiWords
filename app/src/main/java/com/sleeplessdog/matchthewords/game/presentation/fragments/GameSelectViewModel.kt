@@ -12,6 +12,7 @@ import com.sleeplessdog.matchthewords.game.presentation.controller.UserDatabaseC
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
 import com.sleeplessdog.matchthewords.game.presentation.models.LandingKeys
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
+import com.sleeplessdog.matchthewords.utils.LandingRepeatController.ALWAYS_SHOW_FIRST_LANDING
 import kotlinx.coroutines.launch
 
 class GameSelectViewModel(
@@ -40,12 +41,12 @@ class GameSelectViewModel(
     val requestGoogleSignIn: LiveData<Unit> = _requestGoogleSignIn
 
     init {
+        /**
+         * проверяем необходимость показывать лэндинг
+         */
         val isFirstRun = landingManager.shouldShow(LandingKeys.APP_FIRST_LAUNCH)
+        Log.d("DEBUG", "Первый запуск $isFirstRun: ")
         _showLanding.value = isFirstRun
-
-        if (!authRepository.isUserAuthorized()) {
-            _requestGoogleSignIn.value = Unit
-        }
 
         viewModelScope.launch {
             appPrefs.observeStudyLanguage().collect { newLanguage ->
@@ -56,6 +57,9 @@ class GameSelectViewModel(
         val ui = appPrefs.getUiLanguage()
         rebuild(ui)
 
+        if (!isFirstRun) {
+            checkAuthRequirement()
+        }
         Log.d("DEBUG", "Первый запуск $isFirstRun: ")
     }
 
@@ -87,9 +91,12 @@ class GameSelectViewModel(
      * Делаем запись в sharedPrefs о том, что первый запуск приложения закончен
      * и лендинг больше показывать не нужно
      */
-    fun onLandingShown(showAgain: Boolean) {
-        if (!showAgain) {
+    fun onLandingShown() {
+        _showLanding.value = false
+        if (!ALWAYS_SHOW_FIRST_LANDING) {
             landingManager.setShown(LandingKeys.APP_FIRST_LAUNCH)
+            Log.d("DEBUG", "setLandingShown")
+            checkAuthRequirement()
         }
     }
 
@@ -106,6 +113,16 @@ class GameSelectViewModel(
 
     fun onNavigateConsumed() {
         _navigateToGame.value = null
+    }
+
+    fun checkAuthRequirement() {
+        Log.d(
+            "DEBUG",
+            "проверка необходимости авторизации. Авторизация нужна ${!authRepository.isUserAuthorized()}"
+        )
+        if (!authRepository.isUserAuthorized()) {
+            _requestGoogleSignIn.value = Unit
+        }
     }
 
     private fun rebuild(ui: Language) {

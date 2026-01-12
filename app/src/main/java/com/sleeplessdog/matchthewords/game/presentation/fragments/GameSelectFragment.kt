@@ -22,7 +22,6 @@ import com.sleeplessdog.matchthewords.game.presentation.controller.toFlagLargeRe
 import com.sleeplessdog.matchthewords.game.presentation.controller.toLanguageSelectAnimation
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
 import com.sleeplessdog.matchthewords.main.MainActivity
-import com.sleeplessdog.matchthewords.utils.LandingRepeatController.ALWAYS_SHOW_FIRST_LANDING
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GameSelectFragment : Fragment() {
@@ -45,7 +44,7 @@ class GameSelectFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        //resetAuth()
         setupLanguageList()
         setupLanguageButton()
         setupLanguageManager()
@@ -257,7 +256,7 @@ class GameSelectFragment : Fragment() {
      */
     private fun closeLanguageLanding() {
         binding.landingLanguageOverlayView.root.isVisible = false
-        viewModel.onLandingShown(ALWAYS_SHOW_FIRST_LANDING)
+        viewModel.onLandingShown()
         (requireActivity() as? MainActivity)?.setBottomNavVisibility(true)
     }
 
@@ -302,6 +301,22 @@ class GameSelectFragment : Fragment() {
                 Toast.LENGTH_SHORT
             ).show()
         }
+    }
+
+    /**
+     * сброс авторизации пользователя в гугле для тестирования первого запуска
+     */
+    private fun resetAuth() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+        val signInClient = GoogleSignIn.getClient(requireActivity(), gso)
+
+        signInClient.signOut().addOnCompleteListener {
+            // Теперь Firebase/AuthRepository перестанет считать пользователя авторизованным
+            Toast.makeText(context, "Logged out", Toast.LENGTH_SHORT).show()
+        }
+
+        // Если хотите, чтобы снова появилось окно выбора аккаунта:
+        signInClient.revokeAccess()
     }
 
     override fun onDestroyView() {
