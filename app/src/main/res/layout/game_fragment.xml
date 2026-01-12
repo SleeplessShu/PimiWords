@@ -46,6 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginVertical="@dimen/padding_medium"
+                android:clipChildren="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -71,31 +72,34 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tvScores" />
 
-                <ImageView
+                <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/heart1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/int_lives_3"
+                    android:layout_width="50dp"
+                    android:layout_height="40dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:lottie_autoPlay="false"
+                    app:lottie_loop="false" />
 
-                <ImageView
+                <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/heart2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="8dp"
-                    android:src="@drawable/int_lives_3"
+                    android:layout_width="50dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="6dp"
                     app:layout_constraintEnd_toStartOf="@id/heart1"
-                    app:layout_constraintTop_toTopOf="@id/heart1" />
+                    app:layout_constraintTop_toTopOf="@id/heart1"
+                    app:lottie_autoPlay="false"
+                    app:lottie_loop="false" />
 
-                <ImageView
+                <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/heart3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="8dp"
-                    android:src="@drawable/int_lives_3"
+                    android:layout_width="50dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="6dp"
                     app:layout_constraintEnd_toStartOf="@id/heart2"
-                    app:layout_constraintTop_toTopOf="@id/heart2" />
+                    app:layout_constraintTop_toTopOf="@id/heart2"
+                    app:lottie_autoPlay="false"
+                    app:lottie_loop="false" />
 
                 <com.sleeplessdog.matchthewords.game.presentation.SegmentedProgressBar
                     android:id="@+id/progress_bar"

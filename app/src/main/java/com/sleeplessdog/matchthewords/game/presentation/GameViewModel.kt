@@ -31,6 +31,8 @@ import com.sleeplessdog.matchthewords.utils.TimeConstants
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+const val DELAY_BEFORE_END_GAME = 1000L
+
 class GameViewModel(
     private val wordsController: WordsController,
     private val progressController: ProgressController,
@@ -307,6 +309,7 @@ class GameViewModel(
         val sessionPairs = allPairs
 
         viewModelScope.launch {
+            delay(DELAY_BEFORE_END_GAME)
             _gameState.value = _gameState.value?.copy(
                 state = GameState.END_OF_GAME,
             )
@@ -391,13 +394,13 @@ class GameViewModel(
     fun onLandingShown(showAlways: Boolean, landingKey: LandingKeys) {
         _gameState.value = _gameState.value?.copy(
             landingConditions =
-                LandingConditions(
-                    shouldShow = false,
-                    headerTextId = 0,
-                    regularTextId = 0,
-                    animation = 0,
-                    key = landingKey,
-                )
+            LandingConditions(
+                shouldShow = false,
+                headerTextId = 0,
+                regularTextId = 0,
+                animation = 0,
+                key = landingKey,
+            )
         )
         if (!showAlways) landingManager.setShown(landingKey)
     }

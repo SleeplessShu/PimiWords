@@ -55,7 +55,7 @@ class GameFragment : Fragment() {
         val currentType = args.gameType
         viewModel.setGame(currentType)
         heartsController = HeartsController(
-            listOf(binding.heart1, binding.heart2, binding.heart3)
+            listOf(binding.heart1, binding.heart2, binding.heart3),
         )
         setupBottomSheet()
         setupObservers()
@@ -226,7 +226,7 @@ class GameFragment : Fragment() {
     }
 
 
-    fun View.expandTouchAreaByFactor(factor: Float) {
+    private fun View.expandTouchAreaByFactor(factor: Float) {
         val parentView = parent as? View ?: return
         if (factor <= 1f) return
         parentView.post {
@@ -239,4 +239,3 @@ class GameFragment : Fragment() {
         }
     }
 }
-
