@@ -149,4 +149,7 @@
 
     <!--описание контента-->
     <string name="exit_button">Кнопка выхода</string>
+
+    <!--toast-->
+    <string name="error_auth_declined">Ошибка авторизации</string>
 </resources>

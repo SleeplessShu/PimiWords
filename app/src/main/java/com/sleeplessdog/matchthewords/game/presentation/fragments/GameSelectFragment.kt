@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -24,7 +25,7 @@ import com.sleeplessdog.matchthewords.main.MainActivity
 import com.sleeplessdog.matchthewords.utils.LandingRepeatController.ALWAYS_SHOW_FIRST_LANDING
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class GameSelectFragment() : Fragment() {
+class GameSelectFragment : Fragment() {
 
     private val viewModel: GameSelectViewModel by viewModel()
     private var _binding: GameSelectFragmentBinding? = null
@@ -65,7 +66,7 @@ class GameSelectFragment() : Fragment() {
     }
 
     /**
-     * настройка выборя языка во втором лэндинге
+     * настройка выбора языка во втором лэндинге
      */
     private fun setupLanguageList() {
         langAdapter = LanguageAdapter { picked ->
@@ -221,7 +222,7 @@ class GameSelectFragment() : Fragment() {
     }
 
     /**
-     * Проигрывает анимацию во втором лендинге после клика по выбрапнному языку
+     * Проигрывает анимацию во втором лендинге после клика по выбранному языку
      */
     private fun playPimiWearHat(wearingHatAnimation: Int) {
         lottieController.playUnderOnce(
@@ -291,6 +292,15 @@ class GameSelectFragment() : Fragment() {
             account?.idToken?.let {
                 viewModel.onGoogleIdTokenReceived(it)
             }
+        } else {
+            val message = getString(
+                R.string.error_auth_declined
+            ) + result.resultCode
+            Toast.makeText(
+                requireContext(),
+                message,
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 

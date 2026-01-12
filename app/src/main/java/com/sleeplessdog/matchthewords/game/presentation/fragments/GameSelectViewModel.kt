@@ -55,12 +55,12 @@ class GameSelectViewModel(
 
         val ui = appPrefs.getUiLanguage()
         rebuild(ui)
-        _showLanding.value = isFirstRun
+
         Log.d("DEBUG", "Первый запуск $isFirstRun: ")
     }
 
     /**
-     * Запускает процесс авторизации через Google. В случае успеха одновляем словарь пользователя.
+     * Запускает процесс авторизации через Google. В случае успеха обновляем словарь пользователя.
      */
     fun onGoogleIdTokenReceived(token: String) {
         viewModelScope.launch {
