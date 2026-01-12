@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -41,27 +42,26 @@ class MainActivity : AppCompatActivity() {
 
                 if (result.isSuccess) {
                     Log.d(TAG_MAIN_ACTIVITY, "База данных успешно подготовлена")
-                    initAppAfterDbReady()
                 } else {
                     Log.e(
                         TAG_MAIN_ACTIVITY, "Ошибка при подготовке БД: ${result.exceptionOrNull()}"
                     )
 
-                    initAppAfterDbReady()
                 }
             } catch (e: Exception) {
                 Log.e(TAG_MAIN_ACTIVITY, "Критическая ошибка инициализации: ${e.message}")
                 // Фоллбэк: пытаемся запустить приложение, надеясь на локальную копию
-                initAppAfterDbReady()
+
             }
         }
+        setupNavigation()
     }
 
     /**
      * Метод для настройки навигации.
      * Вызывается только когда мы уверены, что файл БД существует.
      */
-    private fun initAppAfterDbReady() {
+    private fun setupNavigation() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container) as? NavHostFragment
 
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Публичный метод для управления видимостью меню из фрагментов
+     * Публичный метод для управления видимостью bottom меню из фрагментов
      */
     fun setBottomNavVisibility(isVisible: Boolean) {
         binding.bottomNavigationView.isVisible = isVisible

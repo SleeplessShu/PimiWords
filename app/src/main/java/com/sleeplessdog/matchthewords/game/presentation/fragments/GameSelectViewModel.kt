@@ -6,7 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sleeplessdog.matchthewords.game.data.repositories.AppPrefs
+import com.sleeplessdog.matchthewords.game.data.repositories.AuthRepository
 import com.sleeplessdog.matchthewords.game.presentation.controller.LandingPagesController
+import com.sleeplessdog.matchthewords.game.presentation.controller.UserDatabaseController
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
 import com.sleeplessdog.matchthewords.game.presentation.models.LandingKeys
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
@@ -15,6 +17,8 @@ import kotlinx.coroutines.launch
 class GameSelectViewModel(
     private val appPrefs: AppPrefs,
     private val landingManager: LandingPagesController,
+    private val userDbController: UserDatabaseController,
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
 
     private val _uiLanguage = MutableLiveData<Language>()
@@ -32,31 +36,61 @@ class GameSelectViewModel(
     private val _navigateToGame = MutableLiveData<GameType?>()
     val navigateToGame: LiveData<GameType?> = _navigateToGame
 
-    private var isFirstRun = false
+    private val _requestGoogleSignIn = MutableLiveData<Unit>()
+    val requestGoogleSignIn: LiveData<Unit> = _requestGoogleSignIn
 
     init {
+        val isFirstRun = landingManager.shouldShow(LandingKeys.APP_FIRST_LAUNCH)
+        _showLanding.value = isFirstRun
+
+        if (!authRepository.isUserAuthorized()) {
+            _requestGoogleSignIn.value = Unit
+        }
+
         viewModelScope.launch {
-            viewModelScope.launch {
-                appPrefs.observeStudyLanguage().collect { newLanguage ->
-                    _studyLanguage.value = newLanguage
-                }
+            appPrefs.observeStudyLanguage().collect { newLanguage ->
+                _studyLanguage.value = newLanguage
             }
         }
+
         val ui = appPrefs.getUiLanguage()
         rebuild(ui)
-        isFirstRun = landingManager.shouldShow(LandingKeys.APP_FIRST_LAUNCH)
-        _showLanding.value = isFirstRun
-        Log.d("DEBUG", "$isFirstRun: ")
+
+        Log.d("DEBUG", "Первый запуск $isFirstRun: ")
     }
 
+    /**
+     * Запускает процесс авторизации через Google. В случае успеха обновляем словарь пользователя.
+     */
+    fun onGoogleIdTokenReceived(token: String) {
+        viewModelScope.launch {
+            authRepository.signInWithGoogle(token)
+                .onSuccess {
+                    beginUpdateUserDictionary()
+                }
+                .onFailure {
+                    Log.e("AUTH", "Auth error", it)
+                }
+        }
+    }
+
+    /**
+     * Восстанавливает БД пользовательского словаря из облака.
+     */
+    fun beginUpdateUserDictionary() {
+        viewModelScope.launch {
+            userDbController.restoreFromCloud()
+        }
+    }
+
+    /**
+     * Делаем запись в sharedPrefs о том, что первый запуск приложения закончен
+     * и лендинг больше показывать не нужно
+     */
     fun onLandingShown(showAgain: Boolean) {
         if (!showAgain) {
             landingManager.setShown(LandingKeys.APP_FIRST_LAUNCH)
         }
-    }
-
-    private fun rebuild(ui: Language) {
-        _availableLanguages.value = Language.entries.filter { it != ui }
     }
 
     fun onLanguagePicked(newStudy: Language) {
@@ -73,5 +107,8 @@ class GameSelectViewModel(
     fun onNavigateConsumed() {
         _navigateToGame.value = null
     }
-}
 
+    private fun rebuild(ui: Language) {
+        _availableLanguages.value = Language.entries.filter { it != ui }
+    }
+}

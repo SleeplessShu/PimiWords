@@ -6,10 +6,10 @@ import com.sleeplessdog.matchthewords.game.data.database.WordDao
 import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.game.domain.models.WordsCategoriesList
 
-class WordsDatabase(private val wordDao: WordDao) {
+class AppDictionaryRepository(private val wordDao: WordDao) {
 
     suspend fun getWordsPack(
-        levels: Set<LanguageLevel>, wordsNeeded: Int, categories: Set<WordsCategoriesList>
+        levels: Set<LanguageLevel>, wordsNeeded: Int, categories: Set<WordsCategoriesList>,
     ): List<WordEntity> {
         Log.d("DEBUG", "getWordsPack: ${levels}  $categories")
         val isAnyLevel = levels.isEmpty()
@@ -39,7 +39,7 @@ class WordsDatabase(private val wordDao: WordDao) {
     }
 
     private suspend fun adaptForConditions(
-        dataBaseResponse: List<WordEntity>, difficultLevel: Int
+        dataBaseResponse: List<WordEntity>, difficultLevel: Int,
     ): List<WordEntity> {
         if (difficultLevel <= 0) return emptyList()
 

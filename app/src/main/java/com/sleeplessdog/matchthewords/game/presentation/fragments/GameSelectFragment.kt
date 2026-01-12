@@ -1,13 +1,18 @@
 package com.sleeplessdog.matchthewords.game.presentation.fragments
 
+import android.app.Activity.RESULT_OK
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.GameSelectFragmentBinding
 import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageAdapter
@@ -27,7 +32,6 @@ class GameSelectFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var langAdapter: LanguageAdapter
-    private lateinit var landingLanguageAdapter: LanguageAdapter
     private lateinit var languageMenuManager: LanguageMenuManager
     private val lottieController = LottieAnimationController()
     private var isLangShown = false
@@ -49,6 +53,9 @@ class GameSelectFragment : Fragment() {
         setupObservers()
     }
 
+    /**
+     * настройка менеджера выбора языка в выпадающем меню фрагмента
+     */
     private fun setupLanguageManager() {
         languageMenuManager = LanguageMenuManager(
             root = binding.languageSelectRoot,
@@ -58,7 +65,9 @@ class GameSelectFragment : Fragment() {
         )
     }
 
-
+    /**
+     * настройка выбора языка во втором лэндинге
+     */
     private fun setupLanguageList() {
         langAdapter = LanguageAdapter { picked ->
             viewModel.onLanguagePicked(picked)
@@ -87,7 +96,9 @@ class GameSelectFragment : Fragment() {
         }
     }
 
-
+    /**
+     * Настраивает содержимое кнопок выбора игры
+     */
     private fun setupGameCards() {
         binding.match6.setup(
             title = getString(R.string.MTW),
@@ -149,8 +160,8 @@ class GameSelectFragment : Fragment() {
             }
         }
 
-        viewModel.uiLanguage.observe(viewLifecycleOwner) {
-            // не реализовано
+        viewModel.requestGoogleSignIn.observe(viewLifecycleOwner) {
+            startGoogleSignIn()
         }
 
         viewModel.showLanding.observe(viewLifecycleOwner) { shouldShow ->
@@ -182,6 +193,9 @@ class GameSelectFragment : Fragment() {
         }
     }
 
+    /**
+     * Проигрывает анимацию в первом лендинге для занавесок
+     */
     private fun activateCurtains() {
         lottieController.switchBetweenTwo(
             resFrom = R.raw.animation_first_landing_curtains_v3,
@@ -194,6 +208,9 @@ class GameSelectFragment : Fragment() {
         )
     }
 
+    /**
+     * Проигрывает анимацию в первом лендинге для Пими
+     */
     private fun activatePimi() {
         lottieController.switchBetweenTwo(
             resFrom = R.raw.animation_first_landing_jogging_260101,
@@ -204,6 +221,9 @@ class GameSelectFragment : Fragment() {
         )
     }
 
+    /**
+     * Проигрывает анимацию во втором лендинге после клика по выбранному языку
+     */
     private fun playPimiWearHat(wearingHatAnimation: Int) {
         lottieController.playUnderOnce(
             loopView = binding.landingLanguageOverlayView.animationActionView,
@@ -214,6 +234,9 @@ class GameSelectFragment : Fragment() {
         )
     }
 
+    /**
+     * Показывает overlay выбора языка (2 лэндинг)
+     */
     private fun showOverlayToLanguageSelect() {
         binding.landingLanguageOverlayView.root.isVisible = true
         binding.rvLanguages
@@ -229,6 +252,9 @@ class GameSelectFragment : Fragment() {
         binding.landingLanguageOverlayView.animationActionView.playAnimation()
     }
 
+    /**
+     * Закрывает overlay выбора языка (2 лэндинг)
+     */
     private fun closeLanguageLanding() {
         binding.landingLanguageOverlayView.root.isVisible = false
         viewModel.onLandingShown(ALWAYS_SHOW_FIRST_LANDING)
@@ -243,6 +269,38 @@ class GameSelectFragment : Fragment() {
                 langAdapter.submit(list, selected)
                 selected?.let { langAdapter.setSelected(it) }
             }
+        }
+    }
+
+    private fun startGoogleSignIn() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        val activity = requireActivity() as MainActivity
+        val signInClient = GoogleSignIn.getClient(activity, gso)
+        googleSignInLauncher.launch(signInClient.signInIntent)
+    }
+
+    private val googleSignInLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            val account = task.result
+            account?.idToken?.let {
+                viewModel.onGoogleIdTokenReceived(it)
+            }
+        } else {
+            val message = getString(
+                R.string.error_auth_declined
+            ) + result.resultCode
+            Toast.makeText(
+                requireContext(),
+                message,
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
