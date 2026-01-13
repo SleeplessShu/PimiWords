@@ -33,4 +33,16 @@ interface UserDictionaryDao {
 
     @Query("SELECT * FROM user_dictionary WHERE category = :categoryName ORDER BY english ASC")
     fun getWordsByCategory(categoryName: String): Flow<List<UserWordEntity>>
+
+    @Query(
+        """
+        SELECT * FROM user_dictionary
+        WHERE category = :categoryName
+        ORDER BY RANDOM()
+    """
+    )
+    suspend fun getAllWordsOfCategory(
+        categoryName: String,
+    ): List<UserWordEntity>
+
 }

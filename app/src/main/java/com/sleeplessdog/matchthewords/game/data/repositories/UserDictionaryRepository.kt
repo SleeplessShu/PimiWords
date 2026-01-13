@@ -83,4 +83,8 @@ class UserDictionaryRepository(private val dao: UserDictionaryDao) {
     fun getWordsByCategory(categoryName: String): Flow<List<UserWordEntity>> {
         return dao.getWordsByCategory(categoryName)
     }
+
+    suspend fun getSizeOfCategory(categoryName: String): Int {
+        return dao.getAllWordsOfCategory(categoryName).size
+    }
 }

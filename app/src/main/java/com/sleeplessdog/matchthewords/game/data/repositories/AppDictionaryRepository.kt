@@ -34,6 +34,12 @@ class AppDictionaryRepository(private val wordDao: WordDao) {
     private suspend fun getRandom(wordsNeeded: Int): List<WordEntity> =
         wordDao.getRandom(wordsNeeded)
 
+    private suspend fun getSizeOfCategory(category: String): Int {
+        val allWords = wordDao.getAllWordsOfCategory(category)
+        return allWords.size
+    }
+
+
     suspend fun updateUsedWordsStatistic(wordEntity: WordEntity) {
         wordDao.updateWord(wordEntity)
     }
