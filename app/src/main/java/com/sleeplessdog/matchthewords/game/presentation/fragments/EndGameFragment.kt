@@ -211,7 +211,7 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
             EndGameWordsAction.REPORT_ABOUT_MISTAKE -> {
                 lottieController.playOnceCut(
                     where = binding.onActionDone,
-                    what = R.raw.animation_error_report_260104,
+                    what = R.raw.animation_error_report_260113,
                     cutFromStartFrames = 1,
                     cutFromEndFrames = 1,
                     hideOnEnd = true,
@@ -223,7 +223,7 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
             EndGameWordsAction.SAVE_WORDS_TO_USERS_DICTIONARY -> {
                 lottieController.playOnceCut(
                     where = binding.onActionDone,
-                    what = R.raw.animation_save_to_dictionary_260104,
+                    what = R.raw.animation_save_to_dictionary_260113,
                     cutFromStartFrames = 1,
                     cutFromEndFrames = 1,
                     hideOnEnd = true,
