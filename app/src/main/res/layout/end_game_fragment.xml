@@ -287,7 +287,7 @@
                 app:layout_constraintStart_toEndOf="@id/bRestart"
                 app:rippleColor="@color/white" />
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/onActionDoneRoot"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -302,9 +302,15 @@
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/onActionDone"
-                    android:layout_width="220dp"
-                    android:layout_height="350dp"
-                    android:scaleType="centerCrop" />
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.68" />
 
                 <TextView
                     style="@style/Text.H1.DisplayLarge"
@@ -314,8 +320,12 @@
                     android:fontFamily="@font/murs_gothic_wide_dark"
                     android:text="@string/done"
                     android:textColor="@color/white"
-                    android:textSize="30sp" />
-            </LinearLayout>
+                    android:textSize="30sp"
+                    android:gravity="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/onActionDone" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
