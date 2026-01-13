@@ -35,6 +35,17 @@ interface WordDao {
         categories: List<String>,
     ): List<WordEntity>
 
+    @Query(
+        """
+        SELECT * FROM words
+        WHERE category = :category COLLATE NOCASE
+        ORDER BY RANDOM()
+    """
+    )
+    suspend fun getAllWordsOfCategory(
+        category: String,
+    ): List<WordEntity>
+
     // 3) ЛЮБАЯ категория И конкретные уровни (все категории), случайный порядок
     @Query(
         """
