@@ -16,7 +16,7 @@ class ScoreFragment : Fragment() {
     private lateinit var adapter: ScoreAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
     ): View? {
         _binding = ScoreFragmentBinding.inflate(inflater, container, false)
         return binding.root
@@ -34,16 +34,15 @@ class ScoreFragment : Fragment() {
 
     }
 
-    private fun setupUI(){
+    private fun setupUI() {
         adapter = ScoreAdapter(mutableListOf())
         binding.scoreRecycleView.layoutManager = LinearLayoutManager(requireContext())
         binding.scoreRecycleView.adapter = adapter
     }
 
-    private fun setupObservers(){
+    private fun setupObservers() {
         viewModel.scoreResults.observe(viewLifecycleOwner) { newData ->
-            adapter.updateData(newData) // Обновляем данные адаптера
+            adapter.updateData(newData)
         }
-
     }
 }
