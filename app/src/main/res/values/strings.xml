@@ -152,4 +152,5 @@
 
     <!--toast-->
     <string name="error_auth_declined">Ошибка авторизации</string>
+    <string name="dictionary">Словарь</string>
 </resources>
