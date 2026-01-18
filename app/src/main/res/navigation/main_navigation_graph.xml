@@ -23,9 +23,9 @@
 
         <action
             android:id="@+id/action_gameFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment"
             app:popUpTo="@id/gameSelectFragment"
-            app:popUpToInclusive="true"
-            app:destination="@id/settingsFragment" />
+            app:popUpToInclusive="true" />
 
         <action
             android:id="@+id/action_gameFragment_to_scoreFragment"
@@ -51,7 +51,7 @@
 
     <fragment
         android:id="@+id/wordsFragment"
-        android:name="com.sleeplessdog.matchthewords.words.presentation.WordsFragment"
+        android:name="com.sleeplessdog.matchthewords.dictionary.DictionaryComposeFragment"
         android:label="WordsFragment">
         <action android:id="@+id/action_wordsFragment_to_settingsFragment" />
 
