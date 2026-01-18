@@ -14,6 +14,7 @@ val Opaque = Color(0xFFA2313131)
 val Black = Color(0xFF252525)
 val DarkGray = Color(0xFF2B2B29)
 val White = Color(0xFFE4DBC2)
+val White01 = Color(0xFFE3E3E3)
 
 val Pink = Color(0xFFE91E63)
 
