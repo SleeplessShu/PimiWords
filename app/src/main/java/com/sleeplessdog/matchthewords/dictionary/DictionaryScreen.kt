@@ -21,6 +21,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,8 +53,10 @@ data class WordStandardGroup(val standardGroupName: String, val words: List<Stri
 fun DictionaryScreen(
     myGroups: List<WordMyGroup>,
     standardGroups: List<WordStandardGroup>,
+    viewModel: DictionaryViewModel,
     bufferWords: List<String>
 ) {
+    val categoriesGrouped by viewModel.categoriesGrouped.collectAsState()
     var groupState by remember { mutableStateOf(DictionaryWordGroups.BOTH_PARTIALLY) }
 
     Column(modifier = Modifier.background(BlackPrimary)) {
@@ -410,7 +413,7 @@ fun StandardGroupTableRow(
         }) {
             Icon(
                 painter = painterResource(id = R.drawable.icon_play_circle),
-                tint = White01,
+                tint = DarkTextDefault,
                 contentDescription = "Кнопка действия"
             )
         }
