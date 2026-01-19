@@ -72,7 +72,7 @@ dependencies {
     implementation(libs.androidx.material3)
 
     implementation(libs.androidx.gridlayout)
-    implementation(libs.androidx.ui.test.android)
+    testImplementation(libs.androidx.ui.test.android)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
