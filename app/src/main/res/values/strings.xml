@@ -163,7 +163,50 @@
     <string name="stats_scores">Очков набрано</string>
 
     <!--AwardsScreen-->
-    <string name="my_awards">Мои трофеи</string>
+    <string name="my_awards">Мои награды</string>
+    <!-- Awards titles -->
+    <string name="award_mammoth_hunter_title">Охотник на мамонтов</string>
+    <string name="award_responsible_citizen_title">Ответственный гражданин</string>
+    <string name="award_perfectionist_title">Перфекционист</string>
+    <string name="award_almost_title">Ну почти</string>
+    <string name="award_now_for_sure_title">Ну теперь точно</string>
+    <string name="award_almost_expert_title">Почти эксперт</string>
+    <string name="award_knowledge_collector_title">Коллекционер знаний</string>
+    <string name="award_for_a_rainy_day_title">На чёрный день</string>
+    <string name="award_maybe_useful_title">А вдруг пригодится</string>
+    <string name="award_i_live_here_title">Я тут живу</string>
+    <string name="award_little_but_regular_title">Чуть-чуть, но регулярно</string>
+    <string name="award_lazy_panda_title">Ленивая панда</string>
+    <string name="award_i_tried_title">Я старался</string>
+    <string name="award_word_by_word_title">Слово за слово</string>
+    <string name="award_honestly_title">Не идеально, но честно</string>
+    <string name="award_slow_but_pretty_title">Медленно, зато красиво</string>
+    <string name="award_self_improvement_title">Работа над собой</string>
+    <string name="award_i_understood_title">Я понял, честно</string>
+    <string name="award_learned_from_mistakes_title">Учёл прошлый опыт</string>
+    <string name="award_figured_out_title">Разобрался</string>
+
+    <!-- Awards descriptions -->
+    <string name="award_mammoth_hunter_desc">Выучил всех млекопитающих</string>
+    <string name="award_responsible_citizen_desc">Сообщил об ошибке 10 раз</string>
+    <string name="award_perfectionist_desc">Закрыл категорию на 100%</string>
+    <string name="award_almost_desc">Закрыл категорию на 99%</string>
+    <string name="award_now_for_sure_desc">Довёл категорию с 95–99% до 100%</string>
+    <string name="award_almost_expert_desc">Закрыл 5 категорий минимум на 90%</string>
+    <string name="award_knowledge_collector_desc">Открыл все слова в категории</string>
+    <string name="award_for_a_rainy_day_desc">Добавил 50 слов в избранное</string>
+    <string name="award_maybe_useful_desc">Добавил слово в избранное и ни разу к нему не вернулся</string>
+    <string name="award_i_live_here_desc">Заходил в приложение 7 дней подряд</string>
+    <string name="award_little_but_regular_desc">Учился 3 дня подряд меньше 5 минут</string>
+    <string name="award_lazy_panda_desc">Сделал урок из 3 слов</string>
+    <string name="award_i_tried_desc">Сделал урок и сразу вышел</string>
+    <string name="award_word_by_word_desc">Выучил 100 слов</string>
+    <string name="award_honestly_desc">Выучил слово со второй попытки</string>
+    <string name="award_slow_but_pretty_desc">Отвечал правильно, но дольше обычного</string>
+    <string name="award_self_improvement_desc">Исправил 10 ранее ошибочных слов</string>
+    <string name="award_i_understood_desc">Ответил правильно после 3 ошибок</string>
+    <string name="award_learned_from_mistakes_desc">Больше не ошибался в слове после его исправления</string>
+    <string name="award_figured_out_desc">Закрыл все ошибки в одной категории</string>
 
     <!--toast-->
     <string name="error_auth_declined">Ошибка авторизации</string>

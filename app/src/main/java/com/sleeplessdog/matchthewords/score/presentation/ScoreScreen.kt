@@ -57,6 +57,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.score.domain.models.AwardsCatalog
 import com.sleeplessdog.matchthewords.score.models.AwardMeta
 import com.sleeplessdog.matchthewords.score.presentation.models.ScoreUiState
@@ -98,7 +99,7 @@ public fun ScoreScreen(
                     .align(Alignment.TopCenter)
             ) {
 
-                HeaderSection(level = state.level)
+                HeaderSection(level = state.level.toString())
 
                 Spacer(Modifier.height(24.dp))
 
@@ -322,7 +323,7 @@ private fun AwardCard(award: AwardMeta) {
                 painter = painterResource(
                     id = safeResId
                 ),
-                contentDescription = award.title,
+                contentDescription = stringResource(award.title),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
@@ -352,7 +353,7 @@ fun LockedAwardIcon(award: AwardMeta) {
 
         if (showDescription) {
             Text(
-                text = award.description,
+                text = stringResource(award.description),
                 color = White,
                 style = t4Text,
                 textAlign = TextAlign.Center,
@@ -389,7 +390,7 @@ private fun ScoreScreenPreview() {
     val navController = NavController(LocalContext.current)
     ScoreScreen(
         state = ScoreUiState(
-            level = "B2", statsWeek = StatItem(
+            level = LanguageLevel.A1, statsWeek = StatItem(
                 wordsLearned = 26,
                 categoriesLearned = 456,
                 gamesPlayed = 32,

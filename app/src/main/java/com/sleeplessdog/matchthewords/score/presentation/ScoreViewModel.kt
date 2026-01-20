@@ -2,6 +2,7 @@ package com.sleeplessdog.matchthewords.score.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.score.domain.models.AwardsCatalog
 import com.sleeplessdog.matchthewords.score.presentation.models.ScoreUiState
 import com.sleeplessdog.matchthewords.score.presentation.models.StatItem
@@ -24,7 +25,7 @@ class ScoreViewModel(
     }
     private val _state = MutableStateFlow(
         ScoreUiState(
-            level = "B2",
+            level = LanguageLevel.B2,
             awards = awardsResult,
             statsWeek = StatItem(15, 3, 104, 534),
             statsAllTime = StatItem(345, 34, 304, 65534),

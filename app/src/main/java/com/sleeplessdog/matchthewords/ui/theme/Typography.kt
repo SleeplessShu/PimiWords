@@ -1,6 +1,5 @@
 package com.sleeplessdog.matchthewords.ui.theme
 
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -19,7 +18,7 @@ val openSansFamily = FontFamily(
     Font(R.font.open_sans_bold, FontWeight.Bold)
 )
 val mursGothicFamily = FontFamily(
-    Font(R.font.murs_gothic_wide_dark, FontWeight(800)))
+    Font(R.font.murs_gothic_wide_dark, FontWeight.ExtraBold))
 
 val textSize24Medium = TextStyle(
     fontStyle = FontStyle.Normal,

@@ -125,7 +125,7 @@ private fun AwardCard(award: AwardMeta) {
                 painter = painterResource(
                     id = safeResId
                 ),
-                contentDescription = award.title,
+                contentDescription = stringResource(award.title),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
@@ -134,8 +134,18 @@ private fun AwardCard(award: AwardMeta) {
             }
         }
         Spacer(modifier = Modifier.height(14.dp))
-        Text(text = award.title, style = h2Header, color = White, textAlign = TextAlign.Center)
-        Text(text = award.description, style = t4Text, color = White, textAlign = TextAlign.Center)
+        Text(
+            text = stringResource(award.title),
+            style = h2Header,
+            color = White,
+            textAlign = TextAlign.Center
+        )
+        Text(
+            text = stringResource(award.description),
+            style = t4Text,
+            color = White,
+            textAlign = TextAlign.Center
+        )
         Spacer(modifier = Modifier.height(18.dp))
     }
 }
