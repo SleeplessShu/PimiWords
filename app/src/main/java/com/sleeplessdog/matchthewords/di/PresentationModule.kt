@@ -2,7 +2,6 @@ package com.sleeplessdog.matchthewords.di
 
 import android.os.Handler
 import android.os.Looper
-import com.sleeplessdog.matchthewords.dictionary.DictionaryViewModel
 import com.sleeplessdog.matchthewords.game.data.repositories.AppPrefs
 import com.sleeplessdog.matchthewords.game.data.repositories.AppPrefsImpl
 import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
@@ -50,8 +49,6 @@ val presentationModule = module {
 
 
     viewModel { ScoreViewModel() }
-
-    viewModel { DictionaryViewModel(get()) }
 
 
     viewModel() {

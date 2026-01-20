@@ -211,6 +211,4 @@
     <!--toast-->
     <string name="error_auth_declined">Ошибка авторизации</string>
     <string name="dictionary">Словарь</string>
-    <string name="create_group">Создать группу</string>
-    <string name="added_words">Добавленные слова</string>
 </resources>
