@@ -6,37 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import com.sleeplessdog.matchthewords.score.presentation.ScoreViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DictionaryComposeFragment : Fragment() {
-
+    private val viewModel: DictionaryViewModel by viewModel()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                DictionaryScreen(
-                    myGroups = listOf(
-                        WordMyGroup(
-                            "Приветствия", listOf("Привет", "Здравствуй", "Добрый день")
-                        ),
-                        WordMyGroup(
-                            "Птички", listOf("Попугай", "Аист", "Сокол", "Воробей", "Чайка")
-                        ),
-                        WordMyGroup(
-                            "Рыбы", listOf("Осетр")
-                        )
-                    ),
-                    standardGroups = listOf(
-                        WordStandardGroup("Путешествия", listOf("Отель")),
-                        WordStandardGroup("Дом", listOf("Кровать", "Стол")),
-                        WordStandardGroup(
-                            "Работа", listOf("Зарплата", "График", "Коллега", "Отпуск", "Премия")
-                        ),
-                        WordStandardGroup("Птицы", listOf("Голубь"))
-                    ),
-                    bufferWords = listOf("apple", "dog", "cat")
-                )
+                DictionaryUi(viewModel = viewModel)
             }
         }
     }
