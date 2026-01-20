@@ -1,6 +1,7 @@
 package com.sleeplessdog.matchthewords.game.presentation.models
 
-data class MatchState (
+data class MatchState(
     var gameType: GameType = GameType.MATCH8,
     var state: GameState = GameState.LOADING,
+    var landingConditions: LandingConditions = LandingConditions(),
 )

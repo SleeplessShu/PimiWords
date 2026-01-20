@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- выбранная -->
-    <item android:state_selected="true"
-        android:drawable="@drawable/game_mc_icon_selected" />
-    <!-- обычная -->
-    <item android:drawable="@drawable/game_mc_icon_normal" />
-</selector>

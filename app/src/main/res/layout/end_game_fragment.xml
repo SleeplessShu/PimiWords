@@ -1,88 +1,339 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/light"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/game_end_pimi_victory_light"
-        app:layout_constraintBottom_toBottomOf="@id/pimi"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvAnnouncement" />
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_primary">
 
-    <TextView
-        android:id="@+id/tvResult"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:fontFamily="@font/murs_gothic_wide_dark"
-        android:letterSpacing="0.02"
-        android:textColor="@color/green_primary"
-        android:textFontWeight="800"
-        android:textSize="62sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Victory!" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tvAnnouncement"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:fontFamily="@font/murs_gothic_wide_dark"
-        android:letterSpacing="0.00"
-        android:textColor="@color/green_primary"
-        android:textFontWeight="800"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvResult"
-        tools:text="Счёт 40 очков" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.50" />
 
-    <ImageView
-        android:id="@+id/pimi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
-        android:src="@drawable/game_end_pimi_victory"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvAnnouncement" />
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/animationBgView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/animation_bg_confeti" />
 
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/animationIdleView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toTopOf="@id/baseBackground"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_autoPlay="false"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/animations_first_juggles" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSaveWords"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="40dp"
+                android:layout_height="46dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:foreground="@drawable/ic_save_words"
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/bNewGame"
-        style="@style/EndGameButtonStyle"
-        android:layout_marginTop="94dp"
-        android:text="@string/button_text_start_game"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pimi" />
+                android:foregroundTint="@color/action_with_words_icons"
+                app:backgroundTint="@color/gray_02"
+                app:cornerRadius="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:rippleColor="@color/white" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnReportWords"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="40dp"
+                android:layout_height="46dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:foreground="@drawable/ic_report_word"
+                android:foregroundTint="@color/action_with_words_icons"
+                app:backgroundTint="@color/gray_02"
+                app:cornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:rippleColor="@color/white" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/bRestart"
-        style="@style/EndGameButtonStyle"
-        android:layout_marginTop="8dp"
-        android:text="@string/button_text_restart_round"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bNewGame" />
+            <LinearLayout
+                android:id="@+id/baseBackground"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginVertical="16dp"
+                android:background="@drawable/bg_language_panel_r24"
+                android:backgroundTint="@color/gray_06"
+                android:orientation="vertical"
+                android:paddingVertical="16dp"
+                app:layout_constraintBottom_toTopOf="@id/bNewGame"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/bToMenu"
-        style="@style/EndGameButtonStyle"
-        android:layout_marginTop="8dp"
-        android:text="@string/button_to_menu"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bRestart" />
+                <TextView
+                    android:id="@+id/tvResult"
+                    style="@style/Text.H1.DisplayLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/murs_gothic_wide_dark"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    tools:text="@string/end_game_phrase_win" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/tvPhrase"
+                    style="@style/Text.H3.HeadlineSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center_horizontal"
+                    android:text="@string/eg_congrats"
+                    android:textColor="@color/gray_03"
+
+                    app:layout_constraintEnd_toEndOf="@id/baseBackground"
+                    app:layout_constraintStart_toStartOf="@id/baseBackground"
+                    app:layout_constraintTop_toBottomOf="@id/tvResult" />
+
+                <LinearLayout
+                    android:id="@+id/stats_root"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+
+                    android:weightSum="3">
+
+                    <!-- Ошибки -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_end_game_r10"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvErrors"
+                            style="@style/Text.H3.HeadlineSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:paddingTop="8dp"
+                            android:textColor="@color/white"
+                            tools:text="0" />
+
+                        <TextView
+                            android:id="@+id/tvErrorsDescription"
+                            style="@style/Text.T3.TextLarge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:paddingBottom="16dp"
+                            android:text="@string/eg_errors"
+                            android:textColor="@color/gray_03" />
+                    </LinearLayout>
+
+                    <!-- Счёт -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_end_game_r10"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvScore"
+                            style="@style/Text.H3.HeadlineSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:paddingTop="8dp"
+                            android:textColor="@color/white"
+                            tools:text="40" />
+
+                        <TextView
+                            android:id="@+id/tvScoreDescription"
+                            style="@style/Text.T3.TextLarge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:paddingBottom="16dp"
+                            android:text="@string/eg_points"
+                            android:textColor="@color/gray_03" />
+                    </LinearLayout>
+
+                    <!-- Слова -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_end_game_r10"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvWords"
+                            style="@style/Text.H3.HeadlineSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:paddingTop="8dp"
+                            android:textColor="@color/white"
+                            tools:text="40" />
+
+                        <TextView
+                            android:id="@+id/tvWordsDescription"
+                            style="@style/Text.T3.TextLarge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:paddingBottom="16dp"
+                            android:text="@string/eg_words"
+                            android:textColor="@color/gray_03" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/bNewGame"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="16dp"
+                android:checkable="true"
+                android:text="@string/button_new_game"
+                android:textAllCaps="false"
+                android:textColor="@color/gray_02"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/green_primary"
+                app:cornerRadius="16dp"
+                app:layout_constraintBottom_toTopOf="@id/bRestart"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:rippleColor="@color/white" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/bRestart"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="20dp"
+                android:checkable="true"
+                android:text="@string/button_restart_round"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/gray_02"
+                app:cornerRadius="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/bToSettings"
+                app:layout_constraintStart_toStartOf="@id/bNewGame"
+                app:rippleColor="@color/white" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/bToSettings"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="20dp"
+                android:checkable="true"
+                android:text="@string/button_to_settings"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/gray_02"
+                app:cornerRadius="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/bNewGame"
+                app:layout_constraintStart_toEndOf="@id/bRestart"
+                app:rippleColor="@color/white" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/onActionDoneRoot"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black_primary"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/onActionDone"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.68" />
+
+                <TextView
+                    style="@style/Text.H1.DisplayLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/murs_gothic_wide_dark"
+                    android:text="@string/done"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:gravity="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/onActionDone" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <include
+        android:id="@+id/actionWithWordsOverlayView"
+        layout="@layout/end_game_action_with_words"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</FrameLayout>

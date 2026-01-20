@@ -14,18 +14,24 @@
     <fragment
         android:id="@+id/gameFragment"
         android:name="com.sleeplessdog.matchthewords.game.presentation.GameFragment"
-        android:label="GameFragment" >
+        android:label="GameFragment">
 
         <action
             android:id="@+id/action_gameFragment_to_GameSelectFragment"
             app:destination="@id/gameSelectFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_gameFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment"
+            app:popUpTo="@id/gameSelectFragment"
+            app:popUpToInclusive="true" />
 
         <action
             android:id="@+id/action_gameFragment_to_scoreFragment"
             app:destination="@id/scoreFragment"
             app:popUpTo="@+id/gameFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
 
         <argument
             android:name="gameType"
@@ -35,24 +41,26 @@
 
     <fragment
         android:id="@+id/gameSelectFragment"
-        android:name="com.sleeplessdog.matchthewords.gameSelect.presentation.GameSelectFragment"
-        android:label="GameSelectFragment" >
+        android:name="com.sleeplessdog.matchthewords.game.presentation.fragments.GameSelectFragment"
+        android:label="GameSelectFragment">
         <action
             android:id="@+id/action_gameSelectFragment_to_gameFragment"
             app:destination="@id/gameFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
         android:id="@+id/wordsFragment"
-        android:name="com.sleeplessdog.matchthewords.words.presentation.WordsFragment"
-        android:label="WordsFragment" >
+        android:name="com.sleeplessdog.matchthewords.dictionary.DictionaryComposeFragment"
+        android:label="WordsFragment">
+        <action android:id="@+id/action_wordsFragment_to_settingsFragment" />
+
     </fragment>
 
     <fragment
         android:id="@+id/scoreFragment"
         android:name="com.sleeplessdog.matchthewords.score.presentation.ScoreFragment"
-        android:label="ScoreFragment" >
+        android:label="ScoreFragment">
         <action
             android:id="@+id/action_scoreFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />

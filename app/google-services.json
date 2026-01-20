@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "389611247142",
+    "firebase_url": "https://match-the-words-d26c2-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "match-the-words-d26c2",
     "storage_bucket": "match-the-words-d26c2.firebasestorage.app"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.sleeplessdog.matchthewords"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "389611247142-3moku4mqdmnqmg84oojjnnr22s8dib1c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sleeplessdog.matchthewords",
+            "certificate_hash": "68f71e3665cb5d19ac531e8a77a3a6112d1a78ca"
+          }
+        },
+        {
+          "client_id": "389611247142-5rr6q4otau0b01q77k6836b50r30bqjr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDFV9fJ_bV2EPAX6wX68CFQhVZaArWhdFI"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "389611247142-5rr6q4otau0b01q77k6836b50r30bqjr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

@@ -4,7 +4,6 @@ package com.sleeplessdog.matchthewords.utils
 import android.content.Context
 import android.content.res.Configuration
 import android.util.Log
-import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
@@ -13,42 +12,39 @@ import com.google.android.material.chip.Chip
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.game.presentation.models.CategoryUi
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
+import com.sleeplessdog.matchthewords.game.presentation.models.GameType
+import com.sleeplessdog.matchthewords.game.presentation.models.LandingKeys
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
-import com.sleeplessdog.matchthewords.game.presentation.models.Word
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
-import kotlin.random.Random
 
 object SupportFunctions {
-    fun <T> switchItem(currentItem: T?, items: Array<T>, isNext: Boolean): T {
-        val currentIndex = items.indexOf(currentItem).takeIf { it != -1 } ?: 0
-        return if (isNext) {
-            items[(currentIndex + 1) % items.size]
-        } else {
-            items[(currentIndex - 1 + items.size) % items.size]
-        }
-    }
 
     fun getCurrentDate(): String {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         return dateFormat.format(Date())
     }
-     fun getScoreAsString(score: Int): String {
+
+    fun getScoreAsString(score: Int): String {
         return score.toString().padStart(9, '0')
     }
+
     fun sortMapByDateDescending(inputMap: Map<String, Int>): Map<String, Int> {
         val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
-        return inputMap
-            .mapKeys { entry -> LocalDate.parse(entry.key, dateFormatter) } // Преобразуем ключи в LocalDate
+        return inputMap.mapKeys { entry ->
+            LocalDate.parse(
+                entry.key, dateFormatter
+            )
+        } // Преобразуем ключи в LocalDate
             .toSortedMap(compareByDescending { it }) // Сортируем по убыванию дат
             .mapKeys { entry -> entry.key.format(dateFormatter) } // Преобразуем обратно ключи в строковый формат
     }
 
-     fun getGameDifficult(difficultLevel: DifficultLevel): Int {
+    fun getGameDifficult(difficultLevel: DifficultLevel): Int {
         return when (difficultLevel) {
             DifficultLevel.EASY -> 12
             DifficultLevel.MEDIUM -> 24
@@ -57,12 +53,21 @@ object SupportFunctions {
         }
     }
 
-     fun getLivesCount(difficultLevel: DifficultLevel): Int {
+    fun getLivesCount(difficultLevel: DifficultLevel): Int {
         return when (difficultLevel) {
             DifficultLevel.EASY -> 3
             DifficultLevel.MEDIUM -> 3
             DifficultLevel.HARD -> 2
             DifficultLevel.EXPERT -> 1
+        }
+    }
+
+    fun getKeyByGameType(gameType: GameType): LandingKeys {
+        return when (gameType) {
+            GameType.MATCH8 -> LandingKeys.GAME_MTW
+            GameType.TRUEorFALSE -> LandingKeys.GAME_TOF
+            GameType.OneOfFour -> LandingKeys.GAME_OOF
+            GameType.WriteTheWord -> LandingKeys.GAME_WTW
         }
     }
 
@@ -81,15 +86,14 @@ object SupportFunctions {
 
     fun createCategoryChip(parent: ViewGroup, item: CategoryUi): Chip {
         val ctx = parent.context
-        val chip = LayoutInflater.from(ctx)
-            .inflate(R.layout.view_category_chip, parent, false) as Chip
+        val chip =
+            LayoutInflater.from(ctx).inflate(R.layout.view_category_chip, parent, false) as Chip
 
         chip.text = item.title
         chip.isCheckable = true
         chip.tag = item.key
         chip.chipBackgroundColor = ContextCompat.getColorStateList(
-            ctx,
-            R.color.selector_options_button_bg
+            ctx, R.color.selector_options_button_bg
         )
         if (item.iconRes != 0) {
             chip.chipIcon = AppCompatResources.getDrawable(ctx, item.iconRes)

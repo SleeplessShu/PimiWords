@@ -1,139 +1,155 @@
-<?xml version="1.0" encoding="utf-8"?><!-- 1. Меняем корневой элемент на CoordinatorLayout -->
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/black_primary">
+    android:layout_height="match_parent">
 
-    <!-- 2. Весь ваш старый UI оборачиваем в ConstraintLayout -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/gameContent"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageButton
-            android:id="@+id/buttonBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:background="@drawable/nav_cancel"
-            app:layout_constraintBottom_toBottomOf="@id/tvHeader"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tvHeader" />
-
-        <TextView
-            android:id="@+id/tvHeader"
-            style="@style/Header_ver2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/padding_medium"
-            android:layout_marginVertical="@dimen/padding_medium"
-            android:gravity="center"
-            android:text="@string/game_name"
-            android:textColor="?attr/colorOnSecondary"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent"
+        android:background="@color/black_primary">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/statsBlock"
+            android:id="@+id/gameContent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginVertical="@dimen/padding_medium"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/tvScores"
-                style="@style/Stats"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/padding_medium"
-                android:textSize="22sp"
-                app:layout_constraintEnd_toEndOf="@id/statsBlock"
-                app:layout_constraintTop_toBottomOf="@id/heart1"
-                tools:text="0000000" />
-
-            <TextView
-                android:id="@+id/scores"
-                style="@style/Stats"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Счёт"
-                android:textSize="22sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tvScores" />
-
-            <ImageView
-                android:id="@+id/heart1"
+            <ImageButton
+                android:id="@+id/buttonBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/interface_health_full"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/ic_nav_cancel"
+                android:contentDescription="@string/exit_button"
+                app:layout_constraintBottom_toBottomOf="@id/tvHeader"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tvHeader" />
+
+            <TextView
+                android:id="@+id/tvHeader"
+                style="@style/Header_ver2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/padding_medium"
+                android:layout_marginVertical="@dimen/padding_medium"
+                android:gravity="center"
+                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/heart2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:src="@drawable/interface_health_full"
-                app:layout_constraintEnd_toStartOf="@id/heart1"
-                app:layout_constraintTop_toTopOf="@id/heart1" />
-
-            <ImageView
-                android:id="@+id/heart3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:src="@drawable/interface_health_full"
-                app:layout_constraintEnd_toStartOf="@id/heart2"
-                app:layout_constraintTop_toTopOf="@id/heart2" />
-
-            <com.sleeplessdog.matchthewords.game.presentation.SegmentedProgressBar
-                android:id="@+id/progress_bar"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/statsBlock"
                 android:layout_width="match_parent"
-                android:layout_height="14dp"
-                android:layout_marginTop="@dimen/padding_sm"
-                app:layout_constraintTop_toBottomOf="@id/tvScores"
-                app:spb_bgColor="#333738"
-                app:spb_cornerRadius="5dp"
-                app:spb_fgColor="#E8DFCB"
-                app:spb_gap="8dp"
-                app:spb_height="10dp"
-                app:spb_mode="count"
-                app:spb_segments="12" />
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginVertical="@dimen/padding_medium"
+                android:clipChildren="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
+                <TextView
+                    android:id="@+id/tvScores"
+                    style="@style/Stats"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/padding_medium"
+                    android:textSize="22sp"
+                    app:layout_constraintEnd_toEndOf="@id/statsBlock"
+                    app:layout_constraintTop_toBottomOf="@id/heart1"
+                    tools:text="0000000" />
+
+                <TextView
+                    android:id="@+id/scores"
+                    style="@style/Stats"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/score_in_game"
+                    android:textSize="22sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tvScores" />
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/heart1"
+                    android:layout_width="50dp"
+                    android:layout_height="40dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:lottie_autoPlay="false"
+                    app:lottie_loop="false" />
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/heart2"
+                    android:layout_width="50dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="6dp"
+                    app:layout_constraintEnd_toStartOf="@id/heart1"
+                    app:layout_constraintTop_toTopOf="@id/heart1"
+                    app:lottie_autoPlay="false"
+                    app:lottie_loop="false" />
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/heart3"
+                    android:layout_width="50dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="6dp"
+                    app:layout_constraintEnd_toStartOf="@id/heart2"
+                    app:layout_constraintTop_toTopOf="@id/heart2"
+                    app:lottie_autoPlay="false"
+                    app:lottie_loop="false" />
+
+                <com.sleeplessdog.matchthewords.game.presentation.SegmentedProgressBar
+                    android:id="@+id/progress_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="14dp"
+                    android:layout_marginTop="@dimen/padding_sm"
+                    app:layout_constraintTop_toBottomOf="@id/tvScores"
+                    app:spb_bgColor="#333738"
+                    app:spb_cornerRadius="5dp"
+                    app:spb_fgColor="#E8DFCB"
+                    app:spb_gap="8dp"
+                    app:spb_height="10dp"
+                    app:spb_mode="count"
+                    app:spb_segments="12" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <FrameLayout
+                android:id="@+id/flFragmentContainer"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/tvHeader"
+                app:layout_constraintStart_toStartOf="@+id/tvHeader"
+                app:layout_constraintTop_toBottomOf="@+id/statsBlock" />
+
+            <View
+                android:id="@+id/overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#80000000"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <FrameLayout
-            android:id="@+id/flFragmentContainer"
+        <include
+            android:id="@+id/bottomSheetExit"
+            layout="@layout/dialog_exit_game"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/tvHeader"
-            app:layout_constraintStart_toStartOf="@+id/tvHeader"
-            app:layout_constraintTop_toBottomOf="@+id/statsBlock" />
+            android:layout_height="wrap_content"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
 
-        <View
-            android:id="@+id/overlay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#80000000"
-            android:clickable="true"
-            android:focusable="true"
-            android:visibility="gone" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <include
-        android:id="@+id/bottomSheetExit"
-        layout="@layout/dialog_exit_game"
+        android:id="@+id/landingFirstOverlayView"
+        layout="@layout/landing_game_overlay"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
+        android:layout_height="match_parent" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</FrameLayout>

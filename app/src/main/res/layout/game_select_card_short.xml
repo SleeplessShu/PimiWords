@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootCard"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:minHeight="128dp"
     android:padding="16dp"
     android:clickable="true"
     android:focusable="true"
 
     android:background="@drawable/bg_game_card_selector"
-    android:foreground="@drawable/bg_game_card_ripple">
+    android:foreground="@drawable/ef_ripple_r24_white">
 
     <!-- внутренний блок, который мы будем центрировать целиком -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,10 +29,10 @@
             android:layout_height="70dp"
             android:scaleType="fitCenter"
             android:duplicateParentState="true"
-            android:src="@drawable/game_mtw_icon_normal"
+            android:src="@drawable/ic_game_mtw_normal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <!-- текст -->
         <TextView
@@ -53,8 +53,7 @@
 
             app:layout_constraintTop_toBottomOf="@id/icon"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-     />
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -193,8 +193,8 @@
         android:layout_height="0dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/rightBorder"
-        app:layout_constraintStart_toStartOf="@id/leftBorder"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/settingsHeader">
 
         <ImageView
@@ -211,7 +211,7 @@
             android:id="@+id/languagesBackgroundSolid"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:src="@color/black"
+            android:src="@drawable/bg_language_select_r24_solid"
             app:layout_constraintBottom_toBottomOf="@id/rv_LanguageList"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -235,11 +235,10 @@
             android:id="@+id/rv_LanguageList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_lang_panel"
             android:clipToPadding="false"
             android:overScrollMode="never"
             android:paddingTop="24dp"
-            android:paddingBottom="12dp"
+            android:paddingBottom="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_LanguageList" />
@@ -262,7 +261,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/empty"
-        android:src="@drawable/language_flag_spanish_s"
+        android:src="@drawable/ic_language_flag_spanish_l"
         app:layout_constraintBottom_toBottomOf="@id/settingsHeader"
         app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintTop_toTopOf="@id/settingsHeader" />
@@ -273,7 +272,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:contentDescription="@string/empty"
-        android:src="@drawable/language_flag_spanish_s"
+        android:src="@drawable/ic_language_flag_spanish_l"
         app:layout_constraintBottom_toBottomOf="@id/settingsHeader"
         app:layout_constraintEnd_toEndOf="@id/rightBorder"
         app:layout_constraintTop_toTopOf="@id/settingsHeader" />
@@ -315,6 +314,7 @@
             android:layout_height="0dp"
             android:paddingTop="@dimen/space_l"
             android:paddingBottom="@dimen/space_l"
+            android:scrollbars="none"
             app:layout_constraintBottom_toTopOf="@id/bottomButtons"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -328,12 +328,11 @@
                 android:padding="@dimen/p_screen">
 
                 <TextView
-                    style="@style/Text.L1.Label"
+                    style="@style/Text.H3.HeadlineSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_m"
                     android:text="@string/categories_user_section"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/green_primary" />
 
                 <com.google.android.flexbox.FlexboxLayout
                     android:id="@+id/cgUserCategories"
@@ -348,12 +347,12 @@
                     app:justifyContent="center" />
 
                 <TextView
-                    style="@style/Text.L1.Label"
+                    style="@style/Text.H3.HeadlineSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_l"
                     android:text="@string/categories_default_section"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/green_primary" />
 
                 <com.google.android.flexbox.FlexboxLayout
                     android:id="@+id/cgDefaultCategories"
@@ -370,8 +369,35 @@
             </LinearLayout>
         </ScrollView>
 
-        <!-- Кнопки снизу, всегда видимые -->
-        <LinearLayout
+        <ImageView
+            android:id="@+id/pathPimi"
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:src="@drawable/bg_language_panel_r24"
+            app:tint="@color/green_primary"
+            android:layout_marginVertical="160dp"
+            android:layout_marginEnd="16dp"
+            android:clickable="false"
+            android:focusable="false"
+            app:layout_constraintBottom_toTopOf="@id/bottomButtons"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header" />
+
+        <ImageView
+            android:id="@+id/tumblerPimi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingVertical="40dp"
+            android:src="@drawable/settings_thumb_circle"
+            app:layout_constraintEnd_toEndOf="@id/pathPimi"
+            app:layout_constraintStart_toStartOf="@id/pathPimi"
+            app:layout_constraintTop_toTopOf="@id/pathPimi" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/bottomButtons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -385,19 +411,44 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCancel"
-                style="@style/button_settings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/cancel" />
+                style="@style/Widget.Material3.Button"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:checkable="true"
+                android:text="@string/cancel"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/gray_02"
+                app:cornerRadius="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btnSave"
+                app:layout_constraintStart_toStartOf="parent"
+                app:rippleColor="@color/white" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSave"
-                style="@style/button_settings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_m"
-                android:text="@string/save" />
-        </LinearLayout>
+                style="@style/Widget.Material3.Button"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:checkable="true"
+                android:text="@string/save"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/gray_02"
+                app:cornerRadius="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btnCancel"
+                app:rippleColor="@color/white" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

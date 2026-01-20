@@ -10,7 +10,6 @@ import com.sleeplessdog.matchthewords.game.presentation.interfaces.InGameLogic
 import com.sleeplessdog.matchthewords.game.presentation.models.TfQuestionUi
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
 import com.sleeplessdog.matchthewords.utils.ShuffleFunctions
-import com.sleeplessdog.matchthewords.utils.TimeReactionConstants
 import kotlin.collections.getOrNull
 
 class TrueOrFalseViewModel (

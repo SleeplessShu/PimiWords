@@ -6,7 +6,7 @@
         android:title="@string/games" />
     <item
         android:id="@+id/wordsFragment"
-        android:icon="@drawable/bttm_menu_dictiunary"
+        android:icon="@drawable/bttm_menu_dictionary"
         android:title="@string/words" />
     <item
         android:id="@+id/scoreFragment"

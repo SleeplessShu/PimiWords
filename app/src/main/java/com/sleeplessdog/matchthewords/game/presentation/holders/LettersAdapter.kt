@@ -1,8 +1,11 @@
 package com.sleeplessdog.matchthewords.game.presentation.holders
 
+import android.annotation.SuppressLint
+import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isInvisible
@@ -34,7 +37,7 @@ class LettersAdapter(
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        holder.bind(getItem(position), locked)
+        holder.bind(getItem(position), locked, isSelected = false)
     }
 
     private fun handleClickOptimistic(position: Int) {
@@ -52,18 +55,66 @@ class LettersAdapter(
         uiHandler.postDelayed({ onClick(position) }, PRESS_DELAY_MS)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     class VH(
         private val binding: ItemLetterBinding,
         private val onOptimisticClick: (Int) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
+            binding.root.setOnTouchListener { v, event ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        onPressHighlight()
+                    }
+
+                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                        onReleaseHighlight()
+                    }
+                }
+                false // разрешаем обработку клика
+            }
+
             binding.root.setOnClickListener {
-                onOptimisticClick(bindingAdapterPosition)
+                if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                    onOptimisticClick(bindingAdapterPosition)
+                }
             }
         }
 
-        fun bind(item: WriteTheWordLetterUi, locked: Boolean) {
+
+        // При нажатии (желтый фон, серый текст)
+        fun onPressHighlight() {
+            val context = binding.root.context
+            val background = binding.root.background as? GradientDrawable
+            background?.setColor(context.getColor(R.color.yellow_primary))
+            binding.tLetter.setTextColor(context.getColor(R.color.gray_05))
+        }
+
+        // При отпускании (серый фон, серый текст — выделенный, к примеру)
+        fun onReleaseHighlight() {
+            val context = binding.root.context
+            val background = binding.root.background as? GradientDrawable
+            background?.setColor(context.getColor(R.color.gray_02))
+            binding.tLetter.setTextColor(context.getColor(R.color.gray_05))
+        }
+
+        // При обычном состоянии до нажатия (серый фон 05, белый текст)
+        fun clearHighlight() {
+            val context = binding.root.context
+            val background = binding.root.background as? GradientDrawable
+            background?.setColor(context.getColor(R.color.gray_05))
+            binding.tLetter.setTextColor(context.getColor(R.color.white))
+        }
+
+        fun onSelectedHighlight() {
+            val context = binding.root.context
+            val background = binding.root.background as? GradientDrawable
+            background?.setColor(context.getColor(R.color.yellow_primary))
+            binding.tLetter.setTextColor(context.getColor(R.color.white))
+        }
+
+        fun bind(item: WriteTheWordLetterUi, locked: Boolean, isSelected: Boolean) {
             val isSpace = item.char == ' '
 
             binding.iconSpace.visibility = if (isSpace) View.VISIBLE else View.GONE
@@ -72,12 +123,18 @@ class LettersAdapter(
                 binding.tLetter.text = item.char.toString()
             } else {
                 binding.tLetter.text = ""
-                binding.iconSpace.setImageResource(R.drawable.ic_crown)
+                binding.iconSpace.setImageResource(R.drawable.ic_category_abstract)
             }
 
             val enabled = !item.used && !locked
             binding.root.isEnabled = enabled
             binding.root.alpha = if (enabled) 1f else 0.45f
+
+            when {
+                item.used -> onReleaseHighlight()
+                isSelected -> onSelectedHighlight()
+                else -> clearHighlight()
+            }
         }
     }
 
@@ -85,10 +142,16 @@ class LettersAdapter(
         private const val PRESS_DELAY_MS = 120L
 
         private val DIFF = object : DiffUtil.ItemCallback<WriteTheWordLetterUi>() {
-            override fun areItemsTheSame(oldItem: WriteTheWordLetterUi, newItem: WriteTheWordLetterUi) =
+            override fun areItemsTheSame(
+                oldItem: WriteTheWordLetterUi,
+                newItem: WriteTheWordLetterUi
+            ) =
                 oldItem.id == newItem.id
 
-            override fun areContentsTheSame(oldItem: WriteTheWordLetterUi, newItem: WriteTheWordLetterUi) =
+            override fun areContentsTheSame(
+                oldItem: WriteTheWordLetterUi,
+                newItem: WriteTheWordLetterUi
+            ) =
                 oldItem == newItem
         }
     }

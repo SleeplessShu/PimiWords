@@ -7,11 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sleeplessdog.matchthewords.game.presentation.interfaces.GameEvent
 import com.sleeplessdog.matchthewords.game.presentation.interfaces.InGameLogic
-import com.sleeplessdog.matchthewords.game.presentation.models.AnswerEvent
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
 import com.sleeplessdog.matchthewords.game.presentation.models.WriteTheWordLetterUi
 import com.sleeplessdog.matchthewords.game.presentation.models.WriteTheWordUi
-import com.sleeplessdog.matchthewords.utils.TimeReactionConstants
+import com.sleeplessdog.matchthewords.utils.TimeConstants
 
 class WriteTheWordViewModel : ViewModel(), InGameLogic {
 
@@ -21,6 +20,7 @@ class WriteTheWordViewModel : ViewModel(), InGameLogic {
     private val handler = Handler(Looper.getMainLooper())
 
     private var pool: List<Pair<Word, Word>> = emptyList()
+
     private var usedIndices = mutableSetOf<Int>()
 
     private val _ui = MutableLiveData(WriteTheWordUi())
@@ -71,15 +71,22 @@ class WriteTheWordViewModel : ViewModel(), InGameLogic {
             target = targetClean,            // показываем и в UI, чтобы было видно "эталон" (если нужно)
             input = "",
             letters = letters,
-            locked = false
+            locked = false,
+            isCheckCorrect = false,   // сброс цвета, не показываем подсветку с прошлого слова
+            isCheckEnabled = false
         )
     }
 
     /** оставляем часть ДО '/', плюс trim */
     private fun cleanTranslation(raw: String): String {
         val beforeSlash = raw.substringBefore('/')
-        return beforeSlash.trim()
+        return beforeSlash
+            .replace("\\s".toRegex(), "")  // удаляем все пробелы включая невидимые
+            .replace("\u00A0", "")         // на всякий удаляем неразрывный пробел
+            .trim()
     }
+
+    private val usedIndicesStack = mutableListOf<Int>()
 
     fun onLetterClick(position: Int) {
         val state = _ui.value ?: return
@@ -89,32 +96,46 @@ class WriteTheWordViewModel : ViewModel(), InGameLogic {
         if (l.used) return               // уже использована — игнор
 
         letters[position] = l.copy(used = true)
+        usedIndicesStack.add(position)   // сохраняем позицию
+
+        val newInput = state.input + l.char
+        val enabled = newInput.length == targetClean.length && newInput.isNotEmpty()
+
         _ui.value = state.copy(
             input = state.input + l.char,
-            letters = letters.toList()
+            letters = letters.toList(),
+            isCheckEnabled = enabled
         )
     }
 
-    fun onBackspace() {
+    fun onDeleteLetter() {
         val state = _ui.value ?: return
-        if (state.locked || state.input.isEmpty()) return
+        if (state.input.isEmpty()) return
 
-        // снимаем used с последней добавленной буквы по символу
-        val lastChar = state.input.last()
-        val idx = letters.indexOfLast { it.used && it.char == lastChar }
-        if (idx != -1) {
-            letters[idx] = letters[idx].copy(used = false)
-            _ui.value = state.copy(
-                input = state.input.dropLast(1),
-                letters = letters.toList()
-            )
+        val newInput = state.input.dropLast(1)
+
+        if (usedIndicesStack.isNotEmpty()) {
+            val lastUsedIndex = usedIndicesStack.removeAt(usedIndicesStack.lastIndex)
+            letters[lastUsedIndex] = letters[lastUsedIndex].copy(used = false)
         }
+        val enabled = newInput.length == targetClean.length && newInput.isNotEmpty()
+
+        _ui.value = state.copy(
+            input = newInput,
+            letters = letters.toList(),
+            isCheckEnabled = enabled
+        )
     }
 
     fun onClear() {
         val state = _ui.value ?: return
         letters = letters.map { it.copy(used = false) }.toMutableList()
-        _ui.value = state.copy(input = "", letters = letters.toList())
+        usedIndicesStack.clear()
+        _ui.value = state.copy(
+            input = "",
+            letters = letters.toList(),
+            isCheckEnabled = false
+        )
     }
 
     fun onCheck() {
@@ -123,9 +144,13 @@ class WriteTheWordViewModel : ViewModel(), InGameLogic {
         // сравниваем с targetClean (часть ДО '/'), регистр не важен
         val ok = state.input.equals(targetClean, ignoreCase = true)
 
-        _ui.value = state.copy(locked = true)
+        _ui.value = state.copy(
+            locked = true,
+            isCheckCorrect = ok,
+            isCheckEnabled = false
+        )
         events.value = if (ok) GameEvent.Correct(currentIds) else GameEvent.Wrong(currentIds)
-        handler.postDelayed({ nextQuestion() }, TimeReactionConstants.NEXT_QUESTION)
+        handler.postDelayed({ nextQuestion() }, TimeConstants.NEXT_QUESTION)
     }
 
     override fun onCleared() {

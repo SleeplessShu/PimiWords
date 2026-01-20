@@ -13,31 +13,33 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.GameFragmentBinding
+import com.sleeplessdog.matchthewords.game.presentation.controller.LottieAnimationController
 import com.sleeplessdog.matchthewords.game.presentation.fragments.EndGameFragment
 import com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment
-import com.sleeplessdog.matchthewords.game.presentation.fragments.MatchSettingsFragment
 import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.OneOfFourFragment
 import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.TrueOrFalseFragment
 import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.WordsMatchingFragment
 import com.sleeplessdog.matchthewords.game.presentation.ingameFragments.WriteTheWordFragment
 import com.sleeplessdog.matchthewords.game.presentation.models.GameState
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
+import com.sleeplessdog.matchthewords.game.presentation.models.LandingConditions
 import com.sleeplessdog.matchthewords.game.presentation.parentControllers.HeartsController
+import com.sleeplessdog.matchthewords.utils.LandingRepeatController.ALWAYS_SHOW_GAME_LANDING
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.roundToInt
 
 class GameFragment : Fragment() {
     private lateinit var heartsController: HeartsController
+    private val lottieController = LottieAnimationController()
 
     private val args: GameFragmentArgs by navArgs()
     private val viewModel: GameViewModel by viewModel()
     private var _binding: GameFragmentBinding? = null
     private val binding: GameFragmentBinding get() = _binding!!
-
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
     ): View? {
         _binding = GameFragmentBinding.inflate(inflater, container, false)
         return binding.root
@@ -53,7 +55,7 @@ class GameFragment : Fragment() {
         val currentType = args.gameType
         viewModel.setGame(currentType)
         heartsController = HeartsController(
-            listOf(binding.heart1, binding.heart2, binding.heart3)
+            listOf(binding.heart1, binding.heart2, binding.heart3),
         )
         setupBottomSheet()
         setupObservers()
@@ -63,7 +65,8 @@ class GameFragment : Fragment() {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheetExit.root)
         bottomSheetBehavior.isHideable = true
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                     binding.overlay.visibility = View.GONE
@@ -74,7 +77,6 @@ class GameFragment : Fragment() {
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
 
-                val alpha = (slideOffset + 1) / 2
                 val newAlpha = if (slideOffset < 0) {
                     slideOffset + 1
                 } else {
@@ -85,7 +87,6 @@ class GameFragment : Fragment() {
             }
         })
 
-        // 4. Обработка нажатия на Overlay (чтобы закрыть шторку тапом мимо)
         binding.overlay.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
@@ -96,7 +97,6 @@ class GameFragment : Fragment() {
         }
 
         binding.bottomSheetExit.btnExit.setOnClickListener {
-            //bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             returnToGameSelect()
         }
     }
@@ -105,15 +105,6 @@ class GameFragment : Fragment() {
 
         viewModel.gameState.observe(viewLifecycleOwner) { newState ->
             when (newState.state) {
-
-                GameState.MATCH_SETTINGS -> {
-                    childFragmentManager.beginTransaction()
-                        .replace(R.id.flFragmentContainer, MatchSettingsFragment()).commit()
-                    binding.tvHeader.setText(R.string.state_title_match_settings)
-                    binding.statsBlock.isVisible = false
-                    binding.buttonBack.isVisible = true
-                }
-
                 GameState.LOADING -> {
                     childFragmentManager.beginTransaction()
                         .replace(R.id.flFragmentContainer, LoadingFragment()).commit()
@@ -137,13 +128,18 @@ class GameFragment : Fragment() {
                     binding.buttonBack.isVisible = false
                 }
             }
+            if (newState.landingConditions.shouldShow) {
+                showLanding(newState.landingConditions)
+            }
         }
+
         viewModel.statsState.observe(viewLifecycleOwner) { stats ->
-            binding.tvScores.setText(stats.score)
+            binding.tvScores.text = stats.score
             binding.progressBar.setSegments(stats.progressSegments)
             binding.progressBar.setProgress(stats.progress)
             setHearts(stats.lives)
         }
+
         binding.buttonBack.expandTouchAreaByFactor(6f)
 
         binding.buttonBack.setOnClickListener {
@@ -157,22 +153,17 @@ class GameFragment : Fragment() {
         viewModel.showExitDialogEvent.observe(viewLifecycleOwner) {
             showExitBottomSheet()
         }
+
+
     }
+
     private fun showExitBottomSheet() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-
-    private fun returnToMatchSettings() {
-        viewModel.resetStats()
-        childFragmentManager.beginTransaction()
-            .replace(R.id.flFragmentContainer, MatchSettingsFragment()).commit()
-    }
-
     private fun returnToGameSelect() {
         viewModel.resetAll()
-        val dir = GameFragmentDirections
-            .actionGameFragmentToGameSelectFragment()
+        val dir = GameFragmentDirections.actionGameFragmentToGameSelectFragment()
         findNavController().navigate(dir)
     }
 
@@ -203,7 +194,39 @@ class GameFragment : Fragment() {
         heartsController.render(heartsQuantity)
     }
 
-    fun View.expandTouchAreaByFactor(factor: Float) {
+    private fun showLanding(landingConditions: LandingConditions) {
+        val showLanding = landingConditions.shouldShow
+        val header = getString(landingConditions.headerTextId)
+        val text = getString(landingConditions.regularTextId)
+        binding.landingFirstOverlayView.root.isVisible = showLanding
+        binding.landingFirstOverlayView.tvHeader.text = header
+        binding.landingFirstOverlayView.tvText.text = text
+        lottieController.playLoopCut(
+            what = landingConditions.animation,
+            where = binding.landingFirstOverlayView.animationIdleView,
+            loop = true,
+            cutFromStartFrames = 2,
+            cutFromEndFrames = 2,
+        )
+        binding.landingFirstOverlayView.btnStart.setOnClickListener {
+            viewModel.onLandingShown(ALWAYS_SHOW_GAME_LANDING, landingConditions.key)
+            binding.landingFirstOverlayView.root.animate().alpha(0f).setDuration(300)
+                .withEndAction {
+                    binding.landingFirstOverlayView.root.isVisible = false
+                    binding.landingFirstOverlayView.root.alpha = 1f
+                }
+        }
+
+        binding.landingFirstOverlayView.btnSettings.setOnClickListener {
+            viewModel.resetAll()
+            val dir = GameFragmentDirections.actionGameFragmentToSettingsFragment()
+            findNavController().navigate(dir)
+
+        }
+    }
+
+
+    private fun View.expandTouchAreaByFactor(factor: Float) {
         val parentView = parent as? View ?: return
         if (factor <= 1f) return
         parentView.post {
@@ -211,7 +234,7 @@ class GameFragment : Fragment() {
             getHitRect(rect)
             val addX = ((rect.width() * (factor - 1f)) / 2f).roundToInt()
             val addY = ((rect.height() * (factor - 1f)) / 2f).roundToInt()
-            rect.inset(-addX, -addY)               // расширяем область
+            rect.inset(-addX, -addY)
             parentView.touchDelegate = TouchDelegate(rect, this)
         }
     }

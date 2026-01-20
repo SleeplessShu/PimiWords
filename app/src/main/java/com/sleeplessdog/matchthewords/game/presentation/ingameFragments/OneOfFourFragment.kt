@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.sleeplessdog.matchthewords.R
@@ -66,7 +65,7 @@ class OneOfFourFragment : Fragment(R.layout.game_one_of_four) {
     }
 
     private fun getBackgroundRes(state: ButtonState?) =
-        state?.backgroundRes ?: R.drawable.word_background_default
+        state?.backgroundRes ?: R.drawable.bg_card_default
 
 
     override fun onDestroyView() {

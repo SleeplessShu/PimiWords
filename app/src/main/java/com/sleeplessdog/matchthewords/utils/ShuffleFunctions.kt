@@ -92,6 +92,4 @@ class ShuffleFunctions {
             consumedFirstIds = consumed
         )
     }
-
-    //----------------------writeTheWord----------------------
 }

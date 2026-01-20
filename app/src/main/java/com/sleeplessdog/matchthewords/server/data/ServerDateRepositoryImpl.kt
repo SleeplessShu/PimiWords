@@ -1,7 +1,6 @@
 package com.sleeplessdog.matchthewords.server.data
 
 import android.content.SharedPreferences
-import com.sleeplessdog.matchthewords.App
 import com.sleeplessdog.matchthewords.server.domain.ServerDateRepository
 
 class ServerDateRepositoryImpl(

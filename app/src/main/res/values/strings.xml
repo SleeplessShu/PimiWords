@@ -1,40 +1,60 @@
 <resources>
     <!-- TITLES -->
-    <!-- TITLES -->
     <string name="title_application_name">PimiMatch</string>
     <string name="app_name">Pimi</string>
 
     <string name="state_title_game">Игра</string>
     <string name="state_title_settings">Настройки</string>
-    <string name="state_title_loading">Загрузка...</string>
+    <string name="state_title_loading">Загрузка…</string>
     <string name="state_title_result">Очки</string>
     <string name="state_title_match_settings">Настройки матча</string>
 
-
     <string name="empty">     </string>
+
+    <!-- LANDING PAGES -->
+    <string name="landing_start_button">Начнём!</string>
+    <string name="landing_start_salut">HOLA!\nSALUT!\nBAREV!</string>
+    <string name="landing_accept">Понятно!</string>
+
+    <string name="landing_language_select">Выбери язык\nдля изучения</string>
+
+    <string name="landing_mtw_header">Составляй\nпары из слов</string>
+    <string name="landing_tof_header">Определи\nправильно ли</string>
+    <string name="landing_oof_header">Выбери\nодин вариант</string>
+    <string name="landing_wtw_header">Напиши\nперевод слова</string>
+    <string name="landing_mtw_text">Получай очки за каждую\nправильную пару</string>
+    <string name="landing_tof_text">Получай очки за каждое слово</string>
+    <string name="landing_oof_text">Получай очки за каждое слово</string>
+    <string name="landing_wtw_text">Получай очки за каждое слово</string>
+
+    <string name="landing_start_game">Начать</string>
+    <string name="landing_options_game">Настроить игру</string>
 
     <!-- endgame fragment -->
     <string name="end_game_phrase_win">Победа!</string>
     <string name="end_game_phrase_loose">Провал!</string>
-    <string name="score_text">Счёт %d очков</string>
+    <string name="score_text">%d</string>
 
-    <string name="button_text_start_game">New Game</string>
-    <string name="button_text_new_game">NEW_GAME</string>
-    <string name="button_text_restart_round">Перезапуск</string>
-    <string name="button_to_menu">Назад в меню</string>
-
+    <string name="button_new_game">Новая игра</string>
+    <string name="button_to_settings">Настройки</string>
+    <string name="button_restart_round">Повтор</string>
+    <string name="eg_errors">ошибок</string>
+    <string name="eg_points">очков</string>
+    <string name="eg_words">слов</string>
+    <string name="eg_congrats">Вау! Потрясающая игра</string>
+    <string name="eg_sorrow">Ой! В следующий раз\nполучится лучше</string>
 
     <!--games select fragment-->
-    <string name="select_game">Выбрать игру</string>
-    <string name="MTW">Matching\nThe Words</string>
-    <string name="ROW">Right\nor Wrong</string>
-    <string name="MC">Multi\nChoice</string>
-    <string name="WTW">Write\nThe Word</string>
+    <string name="select_game">Выбери игру</string>
+    <string name="MTW">Найди\nпару</string>
+    <string name="ROW">Да/Нет</string>
+    <string name="MC">Выбери\nВерное</string>
+    <string name="WTW">Собери\nСлово</string>
 
     <!--bottom menu-->
     <string name="games">Игры</string>
     <string name="score">Прогресс</string>
-    <string name="settings">Настройки</string>
+    <string name="settings">Опции</string>
     <string name="words">Словарь</string>
 
     <!--TOF-->
@@ -42,7 +62,6 @@
     <string name="tof_no">Нет</string>
     <string name="tof_correct">Правильно</string>
     <string name="tof_wrong">Неправильно</string>
-
 
     <!--Exitgame Bottomshit-->
     <string name="exit_game_title">Точно хочешь\nвыйти из игры?</string>
@@ -52,10 +71,6 @@
 
     <!--settings menu-->
     <string name="settings_menu">Настройки</string>
-    <string name="switchDarkTheme">Dark theme</string>
-    <string name="shareApp">Share App</string>
-    <string name="support">Mail to support</string>
-    <string name="dictionary_check">Check for dictionary updates</string>
     <string name="int_language">Язык интерфейса</string>
     <string name="std_language">Изучаемый язык</string>
     <string name="std_groups">Изучаемые группы</string>
@@ -68,6 +83,7 @@
     <string name="level_c1">C1</string>
     <string name="level_c2">C2</string>
     <string name="game_difficult">Сложность игры</string>
+
     <!-- названия уровней сложности игры -->
     <string name="difficulty_easy">Лёгкий</string>
     <string name="difficulty_medium">Средний</string>
@@ -86,9 +102,6 @@
     <string name="categories_default_section">Стандартные:</string>
     <string name="cancel">Отмена</string>
     <string name="save">Сохранить</string>
-
-    <string name="game_name">Games name</string>
-
 
     <string name="cat_animals">Животные</string>
     <string name="cat_food">Еда</string>
@@ -119,4 +132,83 @@
     <string name="cat_programming">Программирование</string>
     <string name="cat_design">Дизайн</string>
     <string name="cat_random">Случайно</string>
+    <string name="cat_saved">Сохранённые слова</string>
+
+    <!--Репорт/добавление слов-->
+    <string name="report_words">Где ошибка?</string>
+    <string name="add_to_dictionary">Что сохраним?</string>
+    <string name="report">Сообщить</string>
+    <string name="add_all">Добавить все</string>
+    <string name="done">Готово!</string>
+    <string name="btn_clear_word">Удалить слово</string>
+    <string name="btn_clear_letter">Удалить букву</string>
+    <string name="btn_check">Проверить</string>
+
+    <!--GameFragment-->
+    <string name="score_in_game">Счёт</string>
+
+    <!--описание контента-->
+    <string name="exit_button">Кнопка выхода</string>
+
+    <!--ScoreScreen-->
+    <string name="h1_my_level">Мой уровень:</string>
+    <string name="h2_statistic">Статистика</string>
+    <string name="tab_week">Неделя</string>
+    <string name="tab_all_time">Всё время</string>
+    <string name="h2_awards">Награды</string>
+    <string name="awards_header">все</string>
+    <string name="stats_words_learned">Слов пройдено</string>
+    <string name="stats_categories_learned">Категорий выучено</string>
+    <string name="stats_games_played">Игр сыграно</string>
+    <string name="stats_scores">Очков набрано</string>
+
+    <!--AwardsScreen-->
+    <string name="my_awards">Мои награды</string>
+    <!-- Awards titles -->
+    <string name="award_mammoth_hunter_title">Охотник на мамонтов</string>
+    <string name="award_responsible_citizen_title">Ответственный гражданин</string>
+    <string name="award_perfectionist_title">Перфекционист</string>
+    <string name="award_almost_title">Ну почти</string>
+    <string name="award_now_for_sure_title">Ну теперь точно</string>
+    <string name="award_almost_expert_title">Почти эксперт</string>
+    <string name="award_knowledge_collector_title">Коллекционер знаний</string>
+    <string name="award_for_a_rainy_day_title">На чёрный день</string>
+    <string name="award_maybe_useful_title">А вдруг пригодится</string>
+    <string name="award_i_live_here_title">Я тут живу</string>
+    <string name="award_little_but_regular_title">Чуть-чуть, но регулярно</string>
+    <string name="award_lazy_panda_title">Ленивая панда</string>
+    <string name="award_i_tried_title">Я старался</string>
+    <string name="award_word_by_word_title">Слово за слово</string>
+    <string name="award_honestly_title">Не идеально, но честно</string>
+    <string name="award_slow_but_pretty_title">Медленно, зато красиво</string>
+    <string name="award_self_improvement_title">Работа над собой</string>
+    <string name="award_i_understood_title">Я понял, честно</string>
+    <string name="award_learned_from_mistakes_title">Учёл прошлый опыт</string>
+    <string name="award_figured_out_title">Разобрался</string>
+
+    <!-- Awards descriptions -->
+    <string name="award_mammoth_hunter_desc">Выучил всех млекопитающих</string>
+    <string name="award_responsible_citizen_desc">Сообщил об ошибке 10 раз</string>
+    <string name="award_perfectionist_desc">Закрыл категорию на 100%</string>
+    <string name="award_almost_desc">Закрыл категорию на 99%</string>
+    <string name="award_now_for_sure_desc">Довёл категорию с 95–99% до 100%</string>
+    <string name="award_almost_expert_desc">Закрыл 5 категорий минимум на 90%</string>
+    <string name="award_knowledge_collector_desc">Открыл все слова в категории</string>
+    <string name="award_for_a_rainy_day_desc">Добавил 50 слов в избранное</string>
+    <string name="award_maybe_useful_desc">Добавил слово в избранное и ни разу к нему не вернулся</string>
+    <string name="award_i_live_here_desc">Заходил в приложение 7 дней подряд</string>
+    <string name="award_little_but_regular_desc">Учился 3 дня подряд меньше 5 минут</string>
+    <string name="award_lazy_panda_desc">Сделал урок из 3 слов</string>
+    <string name="award_i_tried_desc">Сделал урок и сразу вышел</string>
+    <string name="award_word_by_word_desc">Выучил 100 слов</string>
+    <string name="award_honestly_desc">Выучил слово со второй попытки</string>
+    <string name="award_slow_but_pretty_desc">Отвечал правильно, но дольше обычного</string>
+    <string name="award_self_improvement_desc">Исправил 10 ранее ошибочных слов</string>
+    <string name="award_i_understood_desc">Ответил правильно после 3 ошибок</string>
+    <string name="award_learned_from_mistakes_desc">Больше не ошибался в слове после его исправления</string>
+    <string name="award_figured_out_desc">Закрыл все ошибки в одной категории</string>
+
+    <!--toast-->
+    <string name="error_auth_declined">Ошибка авторизации</string>
+    <string name="dictionary">Словарь</string>
 </resources>

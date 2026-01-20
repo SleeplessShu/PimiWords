@@ -2,23 +2,28 @@ package com.sleeplessdog.matchthewords.game.presentation.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.flexbox.FlexboxLayout
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.ItemDifficultyCardBinding
 import com.sleeplessdog.matchthewords.databinding.SettingsFragmentBinding
 import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
-
+import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageAdapter
+import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageMenuManager
+import com.sleeplessdog.matchthewords.game.presentation.controller.PimiScrollViewAdapter
+import com.sleeplessdog.matchthewords.game.presentation.controller.PimiScrollbarController
+import com.sleeplessdog.matchthewords.game.presentation.controller.toFlagLargeRes
 import com.sleeplessdog.matchthewords.game.presentation.models.CategoryUi
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
-import com.sleeplessdog.matchthewords.gameSelect.controller.LanguageAdapter
-import com.sleeplessdog.matchthewords.gameSelect.controller.toFlagSmallRes
+import com.sleeplessdog.matchthewords.main.MainActivity
 import com.sleeplessdog.matchthewords.utils.SupportFunctions
-
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 enum class LanguageAdapterState {
@@ -46,15 +51,39 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
     private lateinit var cardExpert: ItemDifficultyCardBinding
 
     private lateinit var langAdapter: LanguageAdapter
+    private lateinit var languageMenuManager: LanguageMenuManager
+    private var pimiController: PimiScrollbarController? = null
 
     private var preselected: Set<String> = emptySet()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = SettingsFragmentBinding.bind(view)
+        setupLanguageMenuManager()
         setupLevelChips()
         setupLanguageList()
         setupDifficultyCards()
         setupObservers()
+    }
+
+    private fun setupPimiThumbOnce() {
+        if (pimiController != null) return
+        if (_binding == null) return
+
+        val scrollView = binding.categoriesScroll
+        val thumb = binding.tumblerPimi
+        val track = binding.pathPimi
+        val scrollableAdapter = PimiScrollViewAdapter(scrollView)
+        pimiController =
+            PimiScrollbarController(scrollableAdapter, track, thumb).also { it.attach() }
+    }
+
+    private fun setupLanguageMenuManager() {
+        languageMenuManager = LanguageMenuManager(
+            root = binding.languageSelectRoot,
+            bg = binding.languagesBackground,
+            bgSolid = binding.languagesBackgroundSolid,
+            titleTv = binding.tvLanguageList
+        )
     }
 
     private fun setupLevelChips() {
@@ -73,41 +102,43 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         cardExpert = binding.cardExpert
 
         with(binding.cardEasy) {
-            ivIcon.setImageResource(R.drawable.lightning_1)
+            ivIcon.setImageResource(R.drawable.ic_game_lightning_1)
             tvTitle.setText(R.string.difficulty_easy)
             tvSubtitle.setText(R.string.difficulty_easy_words)
-            root.setOnClickListener {  vm.onDifficultyPicked(DifficultLevel.EASY) }
+            root.setOnClickListener { vm.onDifficultyPicked(DifficultLevel.EASY) }
         }
 
         with(binding.cardMedium) {
-            ivIcon.setImageResource(R.drawable.lightning_2)
+            ivIcon.setImageResource(R.drawable.ic_game_lightning_2)
             tvTitle.setText(R.string.difficulty_medium)
             tvSubtitle.setText(R.string.difficulty_medium_words)
-            root.setOnClickListener {  vm.onDifficultyPicked(DifficultLevel.MEDIUM) }
+            root.setOnClickListener { vm.onDifficultyPicked(DifficultLevel.MEDIUM) }
         }
 
         with(binding.cardHard) {
-            ivIcon.setImageResource(R.drawable.lightning_3)
+            ivIcon.setImageResource(R.drawable.ic_game_lightning_3)
             tvTitle.setText(R.string.difficulty_hard)
             tvSubtitle.setText(R.string.difficulty_hard_words)
-            root.setOnClickListener {  vm.onDifficultyPicked(DifficultLevel.HARD) }
+            root.setOnClickListener { vm.onDifficultyPicked(DifficultLevel.HARD) }
         }
 
         with(binding.cardExpert) {
-            ivIcon.setImageResource(R.drawable.lightning_4)
+            ivIcon.setImageResource(R.drawable.ic_game_lightning_4)
             tvTitle.setText(R.string.difficulty_expert)
             tvSubtitle.setText(R.string.difficulty_expert_words)
-            root.setOnClickListener {  vm.onDifficultyPicked(DifficultLevel.EXPERT) }
+            root.setOnClickListener { vm.onDifficultyPicked(DifficultLevel.EXPERT) }
         }
 
     }
 
     private fun setupObservers() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            vm.state.collect { state ->
-                renderFeatured(state.featured)
-                renderGroup(binding.cgUserCategories, state.user)
-                renderGroup(binding.cgDefaultCategories, state.defaults)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                vm.state.collect { state ->
+                    renderFeatured(state.featured)
+                    renderGroup(binding.cgUserCategories, state.user)
+                    renderGroup(binding.cgDefaultCategories, state.defaults)
+                }
             }
         }
 
@@ -128,18 +159,25 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         chipC2.setOnClickListener { vm.toggleLevel(LanguageLevel.C2) }
 
         binding.ivFlagStudy.setOnClickListener {
-            showLanguages(LanguageAdapterState.STUDY)
+            currentLangMode = LanguageAdapterState.STUDY // Запоминаем режим
+
+            languageMenuManager.show(R.string.std_language) {
+                val list = vm.studyLanguageList.value ?: emptyList()
+                val selected = vm.studyLanguage.value
+                langAdapter.submit(list, selected)
+                selected?.let { langAdapter.setSelected(it) }
+            }
         }
 
         binding.ivFlagUi.setOnClickListener {
-            showLanguages(LanguageAdapterState.UI)
-        }
+            currentLangMode = LanguageAdapterState.UI // Запоминаем режим
 
-        binding.languagesBackgroundSolid.setOnClickListener {
-            hideAllLanguageLists()
-        }
-        binding.languagesBackground.setOnClickListener {
-            hideAllLanguageLists()
+            languageMenuManager.show(R.string.int_language) {
+                val list = vm.uiLanguageList.value ?: emptyList()
+                val selected = vm.uiLanguage.value
+                langAdapter.submit(list, selected)
+                selected?.let { langAdapter.setSelected(it) }
+            }
         }
 
         binding.topicsBackground.setOnClickListener { hideTopicsMenu() }
@@ -153,9 +191,8 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         }
 
         binding.btnShowAllCategories.setOnClickListener {
-            preselected =
-                vm.state.value.user.plus(vm.state.value.defaults).filter { it.isSelected }
-                    .map { it.key }.toSet()
+            preselected = vm.state.value.user.plus(vm.state.value.defaults).filter { it.isSelected }
+                .map { it.key }.toSet()
             showTopicsMenu()
         }
 
@@ -167,15 +204,15 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         }
 
         vm.studyLanguage.observe(viewLifecycleOwner) { study ->
-            binding.ivFlagStudy.setImageResource(study.toFlagSmallRes())
+            binding.ivFlagStudy.setImageResource(study.toFlagLargeRes())
         }
 
         vm.uiLanguage.observe(viewLifecycleOwner) { uiLang ->
-            binding.ivFlagUi.setImageResource(uiLang.toFlagSmallRes())
+            binding.ivFlagUi.setImageResource(uiLang.toFlagLargeRes())
         }
 
         vm.uiLanguageList.observe(viewLifecycleOwner) { list ->
-            if (currentLangMode == LanguageAdapterState.UI && binding.rvLanguageList.visibility == View.VISIBLE) {
+            if (currentLangMode == LanguageAdapterState.UI && binding.rvLanguageList.isVisible) {
                 val selected = vm.uiLanguage.value
                 langAdapter.submit(list, selected)
                 selected?.let { langAdapter.setSelected(it) }
@@ -183,7 +220,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         }
 
         vm.studyLanguageList.observe(viewLifecycleOwner) { list ->
-            if (currentLangMode == LanguageAdapterState.STUDY && binding.rvLanguageList.visibility == View.VISIBLE) {
+            if (currentLangMode == LanguageAdapterState.STUDY && binding.rvLanguageList.isVisible) {
                 val selected = vm.studyLanguage.value
                 langAdapter.submit(list, selected)
                 selected?.let { langAdapter.setSelected(it) }
@@ -196,7 +233,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
             vm.onLanguagePicked(picked, currentLangMode)
             langAdapter.setSelected(picked)
             binding.rvLanguageList.postDelayed({
-                hideAllLanguageLists()
+                languageMenuManager.hide()
             }, 150)
         }
 
@@ -220,77 +257,6 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         }
     }
 
-    private fun showBgIfNeeded() {
-        val bg = binding.languagesBackground
-        if (bg.visibility != View.VISIBLE) {
-            bg.visibility = View.VISIBLE
-            bg.alpha = 0f
-            bg.animate().alpha(1f).setDuration(200).start()
-        }
-
-        val bgSolid = binding.languagesBackgroundSolid
-        if (bgSolid.visibility != View.VISIBLE) {
-            bgSolid.visibility = View.VISIBLE
-            bgSolid.alpha = 0f
-            bgSolid.animate().alpha(1f).setDuration(200).start()
-        }
-    }
-
-    private fun hideBg() {
-        val bg = binding.languagesBackground
-        if (bg.visibility == View.VISIBLE) {
-            bg.animate().alpha(0f).setDuration(200).withEndAction { bg.visibility = View.GONE }
-                .start()
-        }
-        val bgSolid = binding.languagesBackgroundSolid
-        if (bgSolid.visibility == View.VISIBLE) {
-            bgSolid.animate().alpha(0f).setDuration(200).withEndAction { bgSolid.visibility = View.GONE }
-                .start()
-        }
-    }
-
-    private fun showLanguages(mode: LanguageAdapterState) {
-        currentLangMode = mode
-        val root = binding.languageSelectRoot
-        if (root.visibility == View.VISIBLE && root.alpha == 1f) {
-            hideAllLanguageLists()
-        } else {
-            root.visibility = View.VISIBLE
-            root.alpha = 0f
-            root.scaleY = 0f
-            root.pivotY = 0f
-            root.animate().alpha(1f).scaleY(1f).setDuration(200).start()
-        }
-
-        when (mode) {
-            LanguageAdapterState.UI -> {
-                binding.tvLanguageList.setText(R.string.int_language)
-                val list = vm.uiLanguageList.value ?: emptyList()
-                val selected = vm.uiLanguage.value
-                langAdapter.submit(list, selected)
-                selected?.let { langAdapter.setSelected(it) }
-            }
-
-            LanguageAdapterState.STUDY -> {
-                binding.tvLanguageList.setText(R.string.std_language)
-                val list = vm.studyLanguageList.value ?: emptyList()
-                val selected = vm.studyLanguage.value
-                langAdapter.submit(list, selected)
-                selected?.let { langAdapter.setSelected(it) }
-            }
-        }
-        showBgIfNeeded()
-    }
-
-    private fun hideAllLanguageLists() {
-        val root = binding.languageSelectRoot
-
-        if (root.visibility == View.VISIBLE) {
-            root.animate().alpha(0f).scaleY(0f).setDuration(200)
-                .withEndAction { root.visibility = View.GONE }.start()
-        }
-        hideBg()
-    }
     private fun renderGroup(group: FlexboxLayout, items: List<CategoryUi>) {
         group.removeAllViews()
         items.forEach { item ->
@@ -305,98 +271,71 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
             (0 until group.childCount).mapNotNull { i ->
                 val child = group.getChildAt(i)
                 val chip = child as? Chip ?: return@mapNotNull null
-                val key = chip.tag as? String ?: chip.text.toString() // лучше хранить key в tag
+                val key = chip.tag as? String ?: chip.text.toString()
                 if (chip.isChecked) key else null
             }
-
-        // складываем теги; при создании чипа поставь tag = item.key
         return (collect(binding.cgUserCategories) + collect(binding.cgDefaultCategories)).toSet()
     }
 
     private fun showTopicsMenu() {
         val root = binding.rootTopics
-        if (root.visibility == View.VISIBLE) return
+        if (root.isVisible) return
 
-        // показываем корень
         root.alpha = 0f
         root.visibility = View.VISIBLE
-        root.animate()
-            .alpha(1f)
-            .setDuration(150)
-            .start()
+        root.animate().alpha(1f).setDuration(150).start()
 
-        // фон — мягкий фейд-ин
         binding.topicsBackground.apply {
             alpha = 0f
-            animate()
-                .alpha(1f)
-                .setDuration(200)
-                .start()
+            animate().alpha(1f).setDuration(200).start()
         }
 
-        // контент (хедер + список + кнопки) — легкий слайд вверх + фейд-ин
         val contentViews = listOf(
-            binding.header,
-            binding.categoriesScroll,
-            binding.bottomButtons
+            binding.header, binding.categoriesScroll, binding.bottomButtons
         )
 
         contentViews.forEach { view ->
             view.alpha = 0f
             view.translationY = 40f
-            view.animate()
-                .alpha(1f)
-                .translationY(0f)
-                .setDuration(200)
-                .start()
+            view.animate().alpha(1f).translationY(0f).setDuration(200).start()
         }
+        (requireActivity() as? MainActivity)?.setBottomNavVisibility(false)
+        setupPimiThumbOnce()
     }
 
     private fun hideTopicsMenu() {
         val root = binding.rootTopics
         if (root.visibility != View.VISIBLE) return
 
-        // фон — фейд-аут
-        binding.topicsBackground.animate()
-            .alpha(0f)
-            .setDuration(200)
-            .start()
+        binding.topicsBackground.animate().alpha(0f).setDuration(200).start()
 
         val contentViews = listOf(
-            binding.header,
-            binding.categoriesScroll,
-            binding.bottomButtons
+            binding.header, binding.categoriesScroll, binding.bottomButtons
         )
 
         var finished = 0
         val total = contentViews.size
 
-        // контент — фейд-аут + слайд вниз
         contentViews.forEach { view ->
-            view.animate()
-                .alpha(0f)
-                .translationY(40f)
-                .setDuration(200)
-                .withEndAction {
-                    finished++
-                    if (finished == total) {
-                        // полностью скрываем оверлей после анимации
-                        root.visibility = View.GONE
+            view.animate().alpha(0f).translationY(40f).setDuration(200).withEndAction {
+                finished++
+                if (finished == total) {
+                    root.visibility = View.GONE
 
-                        // сбрасываем стейты, чтобы при следующем показе всё было ок
-                        contentViews.forEach { v ->
-                            v.alpha = 1f
-                            v.translationY = 0f
-                        }
-                        binding.topicsBackground.alpha = 1f
+                    contentViews.forEach { v ->
+                        v.alpha = 1f
+                        v.translationY = 0f
                     }
+                    binding.topicsBackground.alpha = 1f
                 }
-                .start()
+            }.start()
         }
+        (requireActivity() as? MainActivity)?.setBottomNavVisibility(true)
     }
 
     override fun onDestroyView() {
         _binding = null
+        pimiController = null
         super.onDestroyView()
     }
 }

@@ -1,0 +1,24 @@
+package com.sleeplessdog.matchthewords.score.domain.models
+
+enum class AwardId {
+    MAMMOTH_HUNTER,
+    RESPONSIBLE_CITIZEN,
+    PERFECTIONIST,
+    ALMOST,
+    NOW_FOR_SURE,
+    ALMOST_EXPERT,
+    KNOWLEDGE_COLLECTOR,
+    FOR_A_RAINY_DAY,
+    MAYBE_USEFUL,
+    I_LIVE_HERE,
+    LITTLE_BUT_REGULAR,
+    LAZY_PANDA,
+    I_TRIED,
+    WORD_BY_WORD,
+    HONESTLY,
+    SLOW_BUT_PRETTY,
+    SELF_IMPROVEMENT,
+    I_UNDERSTOOD,
+    LEARNED_FROM_MISTAKES,
+    FIGURED_OUT
+}

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:backgroundTint="@color/black_primary">
+
+        <!-- Гайды -->
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/leftBorder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="20dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/rightBorder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="20dp" />
+
+        <!-- язык -->
+        <ImageView
+            android:id="@+id/languageSelect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="20dp"
+            app:layout_constraintEnd_toEndOf="@id/rightBorder"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_language_flag_spanish_l" />
+
+        <!-- лого -->
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/languageSelect"
+            app:layout_constraintStart_toStartOf="@id/leftBorder"
+            app:layout_constraintTop_toTopOf="@id/languageSelect"
+            app:srcCompat="@drawable/ic_app_name" />
+
+        <!-- заголовок -->
+        <TextView
+            android:id="@+id/gameSelect"
+            style="@style/Header_01"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/select_game"
+            app:layout_constraintEnd_toEndOf="@id/rightBorder"
+            app:layout_constraintStart_toStartOf="@id/leftBorder"
+            app:layout_constraintTop_toBottomOf="@id/languageSelect" />
+
+        <!-- БОЛЬШАЯ КАРТОЧКА Matching The Words -->
+        <com.sleeplessdog.matchthewords.game.presentation.controller.GameOptionViewLong
+            android:id="@+id/match6"
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="@id/rightBorder"
+            app:layout_constraintStart_toStartOf="@id/leftBorder"
+            app:layout_constraintTop_toBottomOf="@id/gameSelect" />
+
+        <LinearLayout
+            android:id="@+id/short_cards"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@id/rightBorder"
+            app:layout_constraintStart_toStartOf="@id/leftBorder"
+            app:layout_constraintTop_toBottomOf="@id/match6">
+
+            <!-- ПЕРВАЯ КАРТОЧКА ВО ВТОРОМ РЯДУ -->
+            <com.sleeplessdog.matchthewords.game.presentation.controller.GameOptionViewShort
+                android:id="@+id/trueOrFalse"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="50" />
+
+            <!-- ВТОРАЯ КАРТОЧКА ВО ВТОРОМ РЯДУ -->
+            <com.sleeplessdog.matchthewords.game.presentation.controller.GameOptionViewShort
+                android:id="@+id/multiChoise"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="50" />
+        </LinearLayout>
+        <!-- НИЖНЯЯ ШИРОКАЯ КАРТОЧКА -->
+        <com.sleeplessdog.matchthewords.game.presentation.controller.GameOptionViewLong
+            android:id="@+id/writeTheWord"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="@id/rightBorder"
+            app:layout_constraintStart_toStartOf="@id/leftBorder"
+            app:layout_constraintTop_toBottomOf="@id/short_cards" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/languageSelectRoot"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/languageSelect">
+
+            <ImageView
+                android:id="@+id/languagesBackground"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@color/opaque"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/languagesBackgroundSolid"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/bg_language_select_r24_solid"
+                app:layout_constraintBottom_toBottomOf="@id/rvLanguages"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_LanguageList"
+                style="@style/Text.H2.HeadlineLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:layout_marginBottom="12dp"
+                android:gravity="center"
+                android:text="@string/std_language"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvLanguages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:clipToPadding="false"
+                android:overScrollMode="never"
+                android:paddingTop="24dp"
+                android:paddingBottom="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_LanguageList" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+        android:id="@+id/landingFirstOverlayView"
+        layout="@layout/landing_gameselect_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <include
+        android:id="@+id/landingLanguageOverlayView"
+        layout="@layout/landing_language_select_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</FrameLayout>

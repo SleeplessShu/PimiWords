@@ -1,19 +1,16 @@
 package com.sleeplessdog.matchthewords.game.presentation.ingameFragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.sleeplessdog.matchthewords.App
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.WordsMatchingFragmentBinding
 import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
 import com.sleeplessdog.matchthewords.game.presentation.holders.WordsMatchingAdapter
-import com.sleeplessdog.matchthewords.game.presentation.models.AnswerEvent
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel

@@ -1,33 +1,41 @@
 package com.sleeplessdog.matchthewords.score.presentation
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sleeplessdog.matchthewords.game.domain.api.ScoreInteractor
-import com.sleeplessdog.matchthewords.score.models.GameResult
-import com.sleeplessdog.matchthewords.utils.SupportFunctions
+import androidx.lifecycle.viewModelScope
+import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
+import com.sleeplessdog.matchthewords.score.domain.models.AwardsCatalog
+import com.sleeplessdog.matchthewords.score.presentation.models.ScoreUiState
+import com.sleeplessdog.matchthewords.score.presentation.models.StatItem
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 
 class ScoreViewModel(
-    private val scoreInteractor: ScoreInteractor
+    //private val scoreInteractor: ScoreInteractor,
 ) : ViewModel() {
-    private val _scoreResults = MutableLiveData<List<GameResult>>()
-    val scoreResults: LiveData<List<GameResult>> get() = _scoreResults
-
-
-    init {
-        observeScoreChanges()
+    val awards = AwardsCatalog.all
+    val unlocked = awards.filter { !it.isLocked }
+    val locked = awards.filter { it.isLocked }
+    val awardsResult = buildList {
+        addAll(unlocked.take(5))
+        if (size < 5) {
+            addAll(locked.take(5 - size))
+        }
     }
+    private val _state = MutableStateFlow(
+        ScoreUiState(
+            level = LanguageLevel.B2,
+            awards = awardsResult,
+            statsWeek = StatItem(15, 3, 104, 534),
+            statsAllTime = StatItem(345, 34, 304, 65534),
+        )
+    )
+    val state: StateFlow<ScoreUiState> = _state
 
-    private fun observeScoreChanges() {
-        scoreInteractor.getAllDaysResults().observeForever { databaseResponse ->
-            val updatedScoreList = databaseResponse.map { (date, score) ->
-                GameResult(
-                    date = date,
-                    score = SupportFunctions.getScoreAsString(score)
-                )
-            }
-            _scoreResults.postValue(updatedScoreList)
+    fun loadData() {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = false)
         }
     }
 }

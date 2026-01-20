@@ -7,10 +7,5 @@
         <item name="android:navigationBarColor">@color/black_primary</item>
         <item name="android:windowLightNavigationBar">false</item>
         <item name="android:colorBackground">@color/black_primary</item>
-
-        <item name="colorPrimary">@color/black</item> <!-- Кнопки -->
-        <item name="colorOnPrimary">@color/day_lightGreen</item> <!-- Текст -->
-        <item name="colorOnSecondary">@color/day_background</item>
-
     </style>
 </resources>

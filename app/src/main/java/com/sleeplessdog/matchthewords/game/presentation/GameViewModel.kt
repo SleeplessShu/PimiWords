@@ -1,25 +1,25 @@
 package com.sleeplessdog.matchthewords.game.presentation
 
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.material.color.utilities.Score.score
+import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.game.data.repositories.AppPrefs
 import com.sleeplessdog.matchthewords.game.domain.api.ScoreInteractor
 import com.sleeplessdog.matchthewords.game.domain.interactors.WordsController
-import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.game.domain.models.WordsCategoriesList
 import com.sleeplessdog.matchthewords.game.domain.usecase.GetSelectedCategoriesUC
+import com.sleeplessdog.matchthewords.game.presentation.controller.LandingPagesController
 import com.sleeplessdog.matchthewords.game.presentation.interfaces.GameEvent
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
+import com.sleeplessdog.matchthewords.game.presentation.models.EndGameStats
 import com.sleeplessdog.matchthewords.game.presentation.models.GameSettings
 import com.sleeplessdog.matchthewords.game.presentation.models.GameState
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
-import com.sleeplessdog.matchthewords.game.presentation.models.Language
+import com.sleeplessdog.matchthewords.game.presentation.models.LandingConditions
+import com.sleeplessdog.matchthewords.game.presentation.models.LandingKeys
 import com.sleeplessdog.matchthewords.game.presentation.models.MatchState
 import com.sleeplessdog.matchthewords.game.presentation.models.SessionStats
 import com.sleeplessdog.matchthewords.game.presentation.models.StatsState
@@ -27,28 +27,30 @@ import com.sleeplessdog.matchthewords.game.presentation.models.Word
 import com.sleeplessdog.matchthewords.game.presentation.parentControllers.ProgressController
 import com.sleeplessdog.matchthewords.utils.GamePrices
 import com.sleeplessdog.matchthewords.utils.SupportFunctions
-import com.sleeplessdog.matchthewords.utils.TimeReactionConstants
+import com.sleeplessdog.matchthewords.utils.TimeConstants
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
+const val DELAY_BEFORE_END_GAME = 1000L
 
 class GameViewModel(
     private val wordsController: WordsController,
     private val progressController: ProgressController,
     private val scoreInteractor: ScoreInteractor,
     private val appPrefs: AppPrefs,
-    private val getSelectedCategoriesUC: GetSelectedCategoriesUC
+    private val getSelectedCategoriesUC: GetSelectedCategoriesUC,
+    private val landingManager: LandingPagesController,
 ) : ViewModel() {
-
-    private val languages = Language.entries.toTypedArray()
-    private val levels = LanguageLevel.entries.toTypedArray()
-    private val categories = WordsCategoriesList.entries.toTypedArray()
-    private val difficult = DifficultLevel.entries.toTypedArray()
 
     // Верхнее состояние экрана игры
     private val _gameState = MutableLiveData(MatchState())
     val gameState: LiveData<MatchState> = _gameState
-
     private val _statsState = MutableLiveData(StatsState())
     val statsState: LiveData<StatsState> = _statsState
+
+    //навигация
+    private val _navigateToGame = MutableLiveData<GameType?>()
+    val navigateToGame: LiveData<GameType?> = _navigateToGame
 
     // Настройки матча
     private val _gameSettings = MutableLiveData(GameSettings())
@@ -61,8 +63,8 @@ class GameViewModel(
     private val _showExitDialogEvent = MutableLiveData<Unit>()
     val showExitDialogEvent: LiveData<Unit> = _showExitDialogEvent
 
-    // Техническое
-    private val handler = Handler(Looper.getMainLooper())
+    private val _endGameStats = MutableLiveData<EndGameStats>()
+    val endGameStats: LiveData<EndGameStats> = _endGameStats
 
     // «игровая экономика»
     private var score = 0
@@ -85,81 +87,16 @@ class GameViewModel(
         _gameState.value = _gameState.value?.copy(gameType = gameType)
     }
 
-
-    // ------------ Match settings ------------
-    fun switchLanguage1(isNext: Boolean) {
-        val nextLanguage =
-            SupportFunctions.switchItem(_gameSettings.value?.language1, languages, isNext)
-        if (nextLanguage == _gameSettings.value?.language2) {
-            val adjustedLanguage = SupportFunctions.switchItem(nextLanguage, languages, isNext)
-            updateLanguage1(adjustedLanguage)
-        } else {
-            updateLanguage1(nextLanguage)
-        }
-    }
-
-    fun switchLanguage2(isNext: Boolean) {
-        val nextLanguage =
-            SupportFunctions.switchItem(_gameSettings.value?.language2, languages, isNext)
-        if (nextLanguage == _gameSettings.value?.language1) {
-            val adjustedLanguage = SupportFunctions.switchItem(nextLanguage, languages, isNext)
-            updateLanguage2(adjustedLanguage)
-        } else {
-            updateLanguage2(nextLanguage)
-        }
-    }
-
-    fun switchWordsLevel(isNext: Boolean) {
-//        val nextLevel = SupportFunctions.switchItem(_gameSettings.value?.level, levels, isNext)
-//        updateLevel(nextLevel)
-    }
-
-    fun switchDifficultLevel(isNext: Boolean) {
-        val nextDifficult =
-            SupportFunctions.switchItem(_gameSettings.value?.difficult, difficult, isNext)
-        updateDifficult(nextDifficult)
-    }
-
-    fun switchWordsCategory(isNext: Boolean) {
-//        val nextCategory =
-//            SupportFunctions.switchItem(_gameSettings.value?.category, categories, isNext)
-//        updateCategory(nextCategory)
-    }
-
-    fun updateLanguage1(newLanguage: Language) {
-        _gameSettings.value = _gameSettings.value?.copy(language1 = newLanguage)
-    }
-
-    fun updateLanguage2(newLanguage: Language) {
-        _gameSettings.value = _gameSettings.value?.copy(language2 = newLanguage)
-    }
-
-    fun updateLevel(newLevel: LanguageLevel) {
-//        _gameSettings.value = _gameSettings.value?.copy(level = newLevel)
-    }
-
-    fun updateCategory(newCategory: WordsCategoriesList) {
-//        _gameSettings.value = _gameSettings.value?.copy(category = newCategory)
-    }
-
-    fun updateDifficult(newDifficult: DifficultLevel) {
-        _gameSettings.value = _gameSettings.value?.copy(difficult = newDifficult)
-    }
-
     // ------------ Навигация по экрану ------------
-
-
     private suspend fun prepareData() {
         onLoading()
 
         // 1. Загружаем выбранные категории
         val selectedCategories = getSelectedCategoriesUC()
 
-        val enums: Set<WordsCategoriesList> = selectedCategories
-            .mapNotNull { cat ->
-                WordsCategoriesList.values().find { it.key == cat.key }
-            }
-            .toSet()
+        val enums: Set<WordsCategoriesList> = selectedCategories.mapNotNull { cat ->
+            WordsCategoriesList.values().find { it.key == cat.key }
+        }.toSet()
 
         // 2. Читаем префы
         val interfaceLang = appPrefs.getUiLanguage()
@@ -184,17 +121,14 @@ class GameViewModel(
     }
 
 
-
     fun onLoading() {
         _gameState.value = _gameState.value?.copy(state = GameState.LOADING)
     }
 
     fun onGame() {
         viewModelScope.launch {
-            // шаг 1: подготовить настройки (здесь же подтянутся категории из БД)
-            prepareData()
 
-            // шаг 2: настроить "экономику" и прогресс
+            prepareData()
             setupGameStats()
 
             // шаг 3: загрузить слова
@@ -202,12 +136,72 @@ class GameViewModel(
             if (!ok) return@launch
 
             _wordsPairs.value = allPairs
-
-            handler.postDelayed({
+            viewModelScope.launch {
+                delay(TimeConstants.LOADING_PROCESS)
                 _gameState.value = _gameState.value?.copy(state = GameState.GAME)
-            }, TimeReactionConstants.LOADING)
+                landingScreenCheck()
+            }
         }
     }
+
+    private fun landingScreenCheck() {
+        val gameType = _gameState.value?.gameType ?: GameType.MATCH8
+        val gameKey = SupportFunctions.getKeyByGameType(gameType)
+        val shouldShow = landingManager.shouldShow(gameKey)
+        if (shouldShow) {
+            val state = _gameState.value ?: MatchState()
+            var landingConditions = LandingConditions()
+            when (state.gameType) {
+                GameType.MATCH8 -> {
+                    landingConditions = LandingConditions(
+                        shouldShow = true,
+                        headerTextId = R.string.landing_mtw_header,
+                        regularTextId = R.string.landing_mtw_text,
+                        animation = R.raw.animation_games_pairs_260104,
+                        key = LandingKeys.GAME_MTW
+                    )
+                }
+
+                GameType.TRUEorFALSE -> {
+                    landingConditions = LandingConditions(
+                        shouldShow = true,
+                        headerTextId = R.string.landing_tof_header,
+                        regularTextId = R.string.landing_tof_text,
+                        animation = R.raw.animation_games_yesno_260104,
+                        key = LandingKeys.GAME_TOF
+                    )
+                }
+
+                GameType.OneOfFour -> {
+                    landingConditions = LandingConditions(
+                        shouldShow = true,
+                        headerTextId = R.string.landing_oof_header,
+                        regularTextId = R.string.landing_oof_text,
+                        animation = R.raw.animation_games_oneoffour_260104,
+                        key = LandingKeys.GAME_OOF
+                    )
+                }
+
+                GameType.WriteTheWord -> {
+                    landingConditions = LandingConditions(
+                        shouldShow = true,
+                        headerTextId = R.string.landing_wtw_header,
+                        regularTextId = R.string.landing_wtw_text,
+                        animation = R.raw.animation_games_words_260104,
+                        key = LandingKeys.GAME_WTW
+                    )
+                }
+            }
+            showLanding(landingConditions)
+        }
+    }
+
+    private fun showLanding(landingConditions: LandingConditions) {
+
+        _gameState.value = _gameState.value?.copy(landingConditions = landingConditions)
+
+    }
+
 
     // ------------ Экономика ------------
     fun reactOnCorrect() {
@@ -285,19 +279,15 @@ class GameViewModel(
     private suspend fun loadWordsFromDatabase(): Boolean {
         val wordsNeeded = when (_gameState.value!!.gameType) {
             GameType.WriteTheWord -> difficultLevel / 6
-            GameType.OneOfFour    -> difficultLevel * 4
-            else                  -> difficultLevel
+            GameType.OneOfFour -> difficultLevel * 4
+            else -> difficultLevel
         }
 
         val settings = _gameSettings.value ?: GameSettings()
         Log.d("DEBUG", "loadWordsFromDatabase: ${settings.category} ${settings.level}")
 
         val pairs = wordsController.getWordPairs(
-            settings.language1,
-            settings.language2,
-            settings.level,
-            wordsNeeded,
-            settings.category
+            settings.language1, settings.language2, settings.level, wordsNeeded, settings.category
         )
 
         if (pairs.isEmpty()) {
@@ -311,22 +301,32 @@ class GameViewModel(
 
     // ------------ Конец игры/сброс ------------
     fun onGameEnd() {
-        onLoading()
 
         val stats = SessionStats(
             correctIds = sessionCorrectIds.toList(), mistakeIds = sessionWrongIds.toList()
         )
         val todaysScore = scoreInteractor.getTodaysResult()
-        handler.postDelayed({
+        val sessionPairs = allPairs
+
+        viewModelScope.launch {
+            delay(DELAY_BEFORE_END_GAME)
             _gameState.value = _gameState.value?.copy(
                 state = GameState.END_OF_GAME,
             )
             _statsState.value = _statsState.value?.copy(
                 lives = lives, todaysScore = todaysScore.toString()
             )
+            _endGameStats.value = EndGameStats(
+                isWin = lives > 0,
+                mistakesCount = sessionWrongIds.size,
+                score = score,
+                wordsCount = sessionCorrectIds.size,
+                sessionPairs = sessionPairs
+            )
+
             wordsController.putRoundStats(stats)
             scoreInteractor.updateTodaysResult(score)
-        }, TimeReactionConstants.LOADING)
+        }
     }
 
     fun restartGame() {
@@ -364,7 +364,6 @@ class GameViewModel(
 
 
     fun resetStats() {
-        handler.removeCallbacksAndMessages(null)
         score = 0
 
         _wordsPairs.value = emptyList()
@@ -374,6 +373,10 @@ class GameViewModel(
 
         currentStep = 0
         emitStats()
+    }
+
+    fun navigateToOptions() {
+        resetAll()
     }
 
     fun resetAll() {
@@ -387,5 +390,18 @@ class GameViewModel(
         currentStep = 0
         emitStats()
     }
-}
 
+    fun onLandingShown(showAlways: Boolean, landingKey: LandingKeys) {
+        _gameState.value = _gameState.value?.copy(
+            landingConditions =
+            LandingConditions(
+                shouldShow = false,
+                headerTextId = 0,
+                regularTextId = 0,
+                animation = 0,
+                key = landingKey,
+            )
+        )
+        if (!showAlways) landingManager.setShown(landingKey)
+    }
+}

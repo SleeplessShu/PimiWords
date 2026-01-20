@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.google.android.flexbox.FlexDirection
@@ -15,7 +16,6 @@ import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.WriteTheWordFragmentBinding
 import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
 import com.sleeplessdog.matchthewords.game.presentation.holders.LettersAdapter
-import com.sleeplessdog.matchthewords.game.presentation.models.AnswerEvent
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -47,7 +47,6 @@ class WriteTheWordFragment : Fragment(R.layout.write_the_word_fragment) {
             justifyContent = JustifyContent.CENTER
         }
         binding.rvLetters.layoutManager = flex
-
         setupObservers()
     }
 
@@ -69,16 +68,40 @@ class WriteTheWordFragment : Fragment(R.layout.write_the_word_fragment) {
             binding.tvInput.text = ui.input
             adapter.locked = ui.locked
             adapter.submitList(ui.letters)
-            binding.btnBackspace.isEnabled = !ui.locked && ui.input.isNotEmpty()
+            binding.btnClearLetter.isEnabled = !ui.locked && ui.input.isNotEmpty()
             binding.btnClear.isEnabled = !ui.locked && ui.input.isNotEmpty()
-            binding.btnCheck.isEnabled = !ui.locked && ui.input.isNotEmpty()
+            binding.btnCheck.isEnabled = ui.isCheckEnabled
+            binding.btnCheck.backgroundTintList = null
+            binding.btnCheck.setBackgroundResource(
+                if (ui.isCheckEnabled)
+                    R.drawable.bg_panoramic_view_correct_r_16
+                else
+                    R.drawable.bg_panoramic_view_default_r_16
+            )
+            if (ui.isCheckCorrect) {
+                binding.tvPrompt.setBackgroundResource(R.drawable.bg_panoramic_view_correct_r_16)
+                binding.tvPrompt.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.gray_05
+                    )
+                )
+            } else {
+                binding.tvPrompt.setBackgroundResource(R.drawable.bg_panoramic_view_default_r_16)
+                binding.tvPrompt.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.dark_text_default
+                    )
+                )
+            }
         }
 
         childVM.events.observe(viewLifecycleOwner) { e ->
             parentVM.onGameEvent(e)
         }
 
-        binding.btnBackspace.setOnClickListener { childVM.onBackspace() }
+        binding.btnClearLetter.setOnClickListener { childVM.onDeleteLetter() }
         binding.btnClear.setOnClickListener { childVM.onClear() }
         binding.btnCheck.setOnClickListener { childVM.onCheck() }
     }
