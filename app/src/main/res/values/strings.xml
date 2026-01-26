@@ -212,6 +212,10 @@
     <string name="error_auth_declined">Ошибка авторизации</string>
     <string name="dictionary">Словарь</string>
 
+    <!--dictionary-->
+    <string name="create_group">Создать группу</string>
+    <string name="added_words">Добавленные слова</string>
+
     <!--languages-->
     <string name="language_english">Английский</string>
     <string name="language_spanish">Испанский</string>
@@ -220,4 +224,5 @@
     <string name="language_german">Немецкий</string>
     <string name="language_armenian">Армянский</string>
     <string name="language_serbian">Сербский</string>
+
 </resources>
