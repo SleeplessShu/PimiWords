@@ -3,11 +3,12 @@ package com.sleeplessdog.matchthewords.di
 
 import com.sleeplessdog.matchthewords.backend.data.db.global.GlobalDatabase
 import com.sleeplessdog.matchthewords.backend.data.db.user.UserDatabase
-import com.sleeplessdog.matchthewords.backend.data.repository.CategoriesRepository
+import com.sleeplessdog.matchthewords.backend.data.repository.GroupsRepository
 import com.sleeplessdog.matchthewords.backend.data.repository.WordsRepository
 import com.sleeplessdog.matchthewords.backend.domain.models.WordsController
 import com.sleeplessdog.matchthewords.backend.domain.usecases.groups.CreateUserGroupUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.groups.GetSelectedGroupsUC
+import com.sleeplessdog.matchthewords.backend.domain.usecases.groups.GetWordsCountForGroupUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.groups.ObserveAllGroupsGroupedUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.groups.ObserveFeaturedGroupsUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.groups.SaveSelectionUC
@@ -67,7 +68,7 @@ val databaseModule = module {
         )
     }
 
-    single { CategoriesRepository(get(), get()) }
+    single { GroupsRepository(get(), get()) }
 
     single { ObserveAllGroupsGroupedUC(get()) }
     single { ObserveFeaturedGroupsUC(get()) }
@@ -78,4 +79,5 @@ val databaseModule = module {
     single { SettingsSaveLevelsUC(get()) }
     single { SettingsObserveLevelsUC(get()) }
     single { UpdateScoreProgressUseCase(get()) }
+    single { GetWordsCountForGroupUC(get()) }
 }

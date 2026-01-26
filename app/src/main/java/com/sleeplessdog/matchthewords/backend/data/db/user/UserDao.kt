@@ -33,6 +33,17 @@ interface UserDao {
     @Query("SELECT selectedGroups FROM UserSettings WHERE id = 1")
     suspend fun getSelectedGroups(): String?
 
+    @Query(
+        """
+    SELECT COUNT(*) 
+    FROM UserWords uw
+    INNER JOIN UserGroups ug ON uw.groupId = ug.id
+    WHERE ug.groupKey = :groupKey
+"""
+    )
+    suspend fun countWordsByGroupKey(groupKey: String): Int
+
+
     // ---------- Words ----------
 
     @Query("SELECT * FROM UserWords")

@@ -12,17 +12,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -57,8 +55,8 @@ fun DictionaryUi(viewModel: DictionaryViewModel) {
 
 @Composable
 fun DictionaryScreen(
-    myGroups: List<MyGroup>,
-    standardGroups: List<StandardGroup>,
+    userGroups: List<GroupUiDictionary>,
+    standardGroups: List<GroupUiDictionary>,
     bufferWords: List<String>,
 ) {
     var groupState by remember { mutableStateOf(DictionaryWordGroups.BOTH_PARTIALLY) }
@@ -88,8 +86,8 @@ fun DictionaryScreen(
 
         if (groupState == DictionaryWordGroups.BOTH_PARTIALLY || groupState == DictionaryWordGroups.MY_ONLY
         ) {
-            MyGroupsTable(
-                myGroups,
+            UserGroupsTable(
+                userGroups,
                 expanded = groupState == DictionaryWordGroups.MY_ONLY,
                 bufferWords = bufferWords,
             )
@@ -169,7 +167,7 @@ fun HeaderDictionary() {
 fun MyGroupsHeader(
     onClick: () -> Unit,
     showAll: Boolean,
-    groupState: DictionaryWordGroups
+    groupState: DictionaryWordGroups,
 ) {
     val textColor =
         if (groupState == DictionaryWordGroups.MY_ONLY) DarkTextDefault else Gray03
@@ -212,8 +210,8 @@ fun MyGroupsHeader(
 }
 
 @Composable
-fun MyGroupsTable(
-    groups: List<MyGroup>,
+fun UserGroupsTable(
+    groups: List<GroupUiDictionary>,
     expanded: Boolean,
     bufferWords: List<String>,
 ) {
@@ -224,7 +222,7 @@ fun MyGroupsTable(
             .padding(horizontal = 20.dp)
             .clip(RoundedCornerShape(12.dp))
     ) {
-        MyGroupTableRow(
+        UserGroupTableRow(
             titleKey = stringResource(R.string.added_words),
             rowIndex = -1,
             wordsCount = bufferWords.size
@@ -232,9 +230,9 @@ fun MyGroupsTable(
         Divider(color = BlackPrimary, thickness = 1.dp)
         val groupsToShow = if (expanded) groups else groups.take(2)
         groupsToShow.forEachIndexed { index, group ->
-            MyGroupTableRow(
-                titleKey = group.myGroupName,
-                wordsCount = group.countWords,
+            UserGroupTableRow(
+                titleKey = group.titleKey,
+                wordsCount = group.wordsInGroup,
                 rowIndex = index
             )
             if (index != groups.lastIndex) {
@@ -242,7 +240,7 @@ fun MyGroupsTable(
             }
         }
         Divider(color = BlackPrimary, thickness = 1.dp)
-        MyGroupTableRow(
+        UserGroupTableRow(
             titleKey = stringResource(R.string.create_group),
             rowIndex = -2,
         )
@@ -250,10 +248,10 @@ fun MyGroupsTable(
 }
 
 @Composable
-fun MyGroupTableRow(
+fun UserGroupTableRow(
     rowIndex: Int,
     titleKey: String,
-    wordsCount: Int? = null
+    wordsCount: Int? = null,
 ) {
     val context = LocalContext.current
     val resId = remember(titleKey) {
@@ -338,7 +336,7 @@ fun pluralizeWord(count: Int): String {
 fun StandardGroupsHeader(
     showAll: Boolean,
     onClick: () -> Unit,
-    groupState: DictionaryWordGroups
+    groupState: DictionaryWordGroups,
 ) {
     val textColor =
         if (groupState == DictionaryWordGroups.STANDARD_ONLY) DarkTextDefault else Gray03
@@ -381,8 +379,8 @@ fun StandardGroupsHeader(
 
 @Composable
 fun StandardGroupsTable(
-    groups: List<StandardGroup>,
-    expanded: Boolean
+    groups: List<GroupUiDictionary>,
+    expanded: Boolean,
 ) {
     Column(
         modifier = Modifier
@@ -394,9 +392,9 @@ fun StandardGroupsTable(
         val groupsToShow = if (expanded) groups else groups.take(3)
         groupsToShow.forEachIndexed { index, group ->
             StandardGroupTableRow(
-                titleKey = group.standardGroupName,
-                wordsCount = group.countWords,
-                iconKey = group.iconItem
+                titleKey = group.titleKey,
+                wordsCount = group.wordsInGroup,
+                iconKey = group.iconKey
             )
 
             if (index != groups.lastIndex) {
@@ -409,7 +407,7 @@ fun StandardGroupsTable(
 @Composable
 fun StandardGroupTableRow(
     wordsCount: Int,
-    iconKey: String,
+    iconKey: Int,
     titleKey: String,
 ) {
     val context = LocalContext.current
@@ -418,14 +416,10 @@ fun StandardGroupTableRow(
     }
     val titleText = if (resId != 0) stringResource(id = resId) else titleKey
 
-    val resIdIcon = remember(iconKey) {
-        context.resources.getIdentifier(iconKey, "drawable", context.packageName)
-    }
-    val iconPainter = if (resIdIcon != 0) {
-        painterResource(id = resIdIcon)
+    val iconPainter = if (iconKey != 0) {
+        painterResource(id = iconKey)
     } else {
-        // fallback иконка в случае ошибки
-        painterResource(id = R.drawable.icon_add_standard_group) // замени на своё
+        painterResource(id = R.drawable.icon_add_standard_group)
     }
 
     Row(
@@ -434,7 +428,7 @@ fun StandardGroupTableRow(
             .background(Gray05)
             .height(68.dp),
         verticalAlignment = Alignment.CenterVertically,
-        ) {
+    ) {
         Icon(
             painter = iconPainter,
             contentDescription = null,
@@ -478,24 +472,51 @@ fun StandardGroupTableRow(
 @Composable
 fun DictionaryScreenPreview() {
     DictionaryScreen(
-        myGroups = listOf(
-            MyGroup(
-                "Приветствия", 3, ""
+        userGroups = listOf(
+            GroupUiDictionary(
+                key = "saved_words",
+                titleKey = "added_words",
+                iconKey = R.drawable.icon_favorite,
+                wordsInGroup = 3
             ),
-            MyGroup(
-                "Птички", 5, ""
+            GroupUiDictionary(
+                key = "birds",
+                titleKey = "birds",
+                iconKey = R.drawable.icon_book,
+                wordsInGroup = 5
             ),
-            MyGroup(
-                "Рыбы", 1, ""
+            GroupUiDictionary(
+                key = "fish",
+                titleKey = "fish",
+                iconKey = R.drawable.icon_book,
+                wordsInGroup = 1
             )
         ),
         standardGroups = listOf(
-            StandardGroup("Путешествия", 1, ""),
-            StandardGroup("Дом", 2, ""),
-            StandardGroup(
-                "Работа", 5, ""
+            GroupUiDictionary(
+                key = "travel",
+                titleKey = "travel",
+                iconKey = R.drawable.icon_book,
+                wordsInGroup = 1
             ),
-            StandardGroup("Птицы", 1, "")
+            GroupUiDictionary(
+                key = "house",
+                titleKey = "house",
+                iconKey = R.drawable.icon_book,
+                wordsInGroup = 2
+            ),
+            GroupUiDictionary(
+                key = "work",
+                titleKey = "work",
+                iconKey = R.drawable.icon_book,
+                wordsInGroup = 5
+            ),
+            GroupUiDictionary(
+                key = "birds_std",
+                titleKey = "birds",
+                iconKey = R.drawable.icon_book,
+                wordsInGroup = 1
+            )
         ),
         bufferWords = listOf("apple", "dog", "cat")
     )

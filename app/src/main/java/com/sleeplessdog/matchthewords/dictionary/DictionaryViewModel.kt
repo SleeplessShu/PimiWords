@@ -1,15 +1,23 @@
 package com.sleeplessdog.matchthewords.dictionary
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sleeplessdog.matchthewords.game.domain.repositories.WordCategoriesRepository
+import com.sleeplessdog.matchthewords.backend.data.repository.AppPrefs
+import com.sleeplessdog.matchthewords.backend.domain.models.WordGroup
+import com.sleeplessdog.matchthewords.backend.domain.usecases.groups.GetWordsCountForGroupUC
+import com.sleeplessdog.matchthewords.backend.domain.usecases.groups.ObserveAllGroupsGroupedUC
+import com.sleeplessdog.matchthewords.utils.SupportFunctions.drawableIdByName
+import com.sleeplessdog.matchthewords.utils.SupportFunctions.stringByName
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class DictionaryViewModel(
-    private val repository: WordCategoriesRepository
+    private val observeAllGroups: ObserveAllGroupsGroupedUC,
+    private val getWordsCountForGroup: GetWordsCountForGroupUC,
+    private val appPrefs: AppPrefs,
+    private val app: Application,
 ) : ViewModel() {
 
     private val _categoriesGrouped = MutableStateFlow(
@@ -23,27 +31,27 @@ class DictionaryViewModel(
 
     private fun loadGroups() {
         viewModelScope.launch {
-            val allCategories = repository.observeAll().first()
-            val userGroups = allCategories.filter { it.isUser }.map { category ->
-                MyGroup(
-                    myGroupName = category.titleKey,
-                    countWords = 1,
-                    iconItem = category.iconKey
+
+            observeAllGroups().collect { grouped ->
+                val uiLang = appPrefs.getUiLanguage()
+                suspend fun toUi(m: WordGroup): GroupUiDictionary {
+                    val wordsCount = getWordsCountForGroup(m)
+                    return GroupUiDictionary(
+                        key = m.key,
+                        titleKey = app.stringByName(m.titleKey, uiLang),
+                        iconKey = app.drawableIdByName(m.iconKey),
+                        wordsInGroup = wordsCount
+                    )
+                }
+
+                val userDomain = grouped.user.map { toUi(it) }
+                val defaultDomain = grouped.defaults.map { toUi(it) }
+
+                _categoriesGrouped.value = DictionaryScreenState(
+                    userGroups = userDomain,
+                    defaultGroups = defaultDomain
                 )
             }
-
-            val defaultGroups = allCategories.filter { !it.isUser }.map { category ->
-                StandardGroup(
-                    standardGroupName = category.titleKey,
-                    countWords = 1,
-                    iconItem = category.iconKey
-                )
-            }
-
-            _categoriesGrouped.value = DictionaryScreenState(
-                userGroups = userGroups,
-                defaultGroups = defaultGroups
-            )
         }
     }
 }

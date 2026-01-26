@@ -18,17 +18,14 @@ import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageAdapt
 import com.sleeplessdog.matchthewords.game.presentation.controller.PimiScrollViewAdapter
 import com.sleeplessdog.matchthewords.game.presentation.controller.PimiScrollbarController
 import com.sleeplessdog.matchthewords.game.presentation.controller.toFlagLargeRes
-import com.sleeplessdog.matchthewords.game.presentation.models.CategoryUi
+import com.sleeplessdog.matchthewords.game.presentation.holders.LanguageAdapterState
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
+import com.sleeplessdog.matchthewords.game.presentation.models.GroupUiSettings
 import com.sleeplessdog.matchthewords.game.presentation.view.LanguageMenuManager
 import com.sleeplessdog.matchthewords.main.MainActivity
 import com.sleeplessdog.matchthewords.utils.SupportFunctions
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
-enum class LanguageAdapterState {
-    UI, STUDY
-}
 
 class SettingsFragment : Fragment(R.layout.settings_fragment) {
 
@@ -243,7 +240,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         }
     }
 
-    private fun renderFeatured(list: List<CategoryUi>) {
+    private fun renderFeatured(list: List<GroupUiSettings>) {
         val group = binding.cgFeaturedCategories
         group.removeAllViews()
 
@@ -257,7 +254,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         }
     }
 
-    private fun renderGroup(group: FlexboxLayout, items: List<CategoryUi>) {
+    private fun renderGroup(group: FlexboxLayout, items: List<GroupUiSettings>) {
         group.removeAllViews()
         items.forEach { item ->
             group.addView(SupportFunctions.createCategoryChip(group, item).apply {

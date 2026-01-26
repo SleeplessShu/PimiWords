@@ -2,9 +2,9 @@ package com.sleeplessdog.matchthewords.di
 
 import android.os.Handler
 import android.os.Looper
-import com.sleeplessdog.matchthewords.dictionary.DictionaryViewModel
 import com.sleeplessdog.matchthewords.backend.data.repository.AppPrefs
 import com.sleeplessdog.matchthewords.backend.data.repository.AppPrefsImpl
+import com.sleeplessdog.matchthewords.dictionary.DictionaryViewModel
 import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
 import com.sleeplessdog.matchthewords.game.presentation.controller.LandingPagesController
 import com.sleeplessdog.matchthewords.game.presentation.fragments.EndGameViewModel
@@ -51,7 +51,14 @@ val presentationModule = module {
 
     viewModel { ScoreViewModel() }
 
-    viewModel { DictionaryViewModel(get()) }
+    viewModel {
+        DictionaryViewModel(
+            observeAllGroups = get(),
+            getWordsCountForGroup = get(),
+            appPrefs = get(),
+            app = get()
+        )
+    }
 
 
     /*    viewModel() {

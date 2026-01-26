@@ -10,9 +10,9 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import com.google.android.material.chip.Chip
 import com.sleeplessdog.matchthewords.R
-import com.sleeplessdog.matchthewords.game.presentation.models.CategoryUi
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
+import com.sleeplessdog.matchthewords.game.presentation.models.GroupUiSettings
 import com.sleeplessdog.matchthewords.game.presentation.models.LandingKeys
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
 import java.text.SimpleDateFormat
@@ -84,7 +84,7 @@ object SupportFunctions {
         return if (id != 0) id else R.drawable.ic_category_miscellaneous
     }
 
-    fun createCategoryChip(parent: ViewGroup, item: CategoryUi): Chip {
+    fun createCategoryChip(parent: ViewGroup, item: GroupUiSettings): Chip {
         val ctx = parent.context
         val chip =
             LayoutInflater.from(ctx).inflate(R.layout.view_category_chip, parent, false) as Chip

@@ -1,18 +1,13 @@
 package com.sleeplessdog.matchthewords.dictionary
 
-data class MyGroup(
-    val myGroupName: String,
-    val countWords: Int,
-    val iconItem: String
-)
-
-data class StandardGroup(
-    val standardGroupName: String,
-    val countWords: Int,
-    val iconItem: String
+data class GroupUiDictionary(
+    val key: String,
+    val titleKey: String,
+    val wordsInGroup: Int,
+    val iconKey: Int,
 )
 
 data class DictionaryScreenState(
-    val userGroups: List<MyGroup>,
-    val defaultGroups: List<StandardGroup>
+    val userGroups: List<GroupUiDictionary>,
+    val defaultGroups: List<GroupUiDictionary>,
 )

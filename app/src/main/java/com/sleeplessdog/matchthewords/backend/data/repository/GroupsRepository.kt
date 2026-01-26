@@ -7,7 +7,7 @@ import com.sleeplessdog.matchthewords.backend.domain.models.UserSettingsEntity
 import com.sleeplessdog.matchthewords.backend.domain.models.WordGroup
 import kotlinx.coroutines.flow.firstOrNull
 
-class CategoriesRepository(
+class GroupsRepository(
     private val globalDao: GlobalDao,
     private val userDao: UserDao,
 ) {
@@ -24,8 +24,8 @@ class CategoriesRepository(
         val globalCategories = globalKeys.map { key ->
             WordGroup(
                 key = key,
-                titleKey = key,          // дальше UI сам переведёт
-                iconKey = key,           // маппинг по имени
+                titleKey = key,
+                iconKey = key,
                 isSelected = key in selected,
                 isUser = false,
                 orderInBlock = 0
@@ -48,6 +48,9 @@ class CategoriesRepository(
         return userCategories + globalCategories
     }
 
+    /**
+     * сохраняти в БД выбранные в настройках группы
+     */
     suspend fun saveSelection(keys: Set<String>) {
         val current = userDao.observeSettings().firstOrNull()
 
@@ -85,5 +88,13 @@ class CategoriesRepository(
                 iconKey = iconKey
             )
         )
+    }
+
+    suspend fun getWordsCount(group: WordGroup): Int {
+        return if (group.isUser) {
+            userDao.countWordsByGroupKey(group.key)
+        } else {
+            globalDao.countWordsByGroup(group.key)
+        }
     }
 }
