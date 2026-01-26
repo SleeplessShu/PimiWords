@@ -1,9 +1,9 @@
 package com.sleeplessdog.matchthewords.backend.domain.usecases.groups
 
-import com.sleeplessdog.matchthewords.backend.data.repository.CategoriesRepository
+import com.sleeplessdog.matchthewords.backend.data.repository.GroupsRepository
 
 class CreateUserGroupUC(
-    private val repo: CategoriesRepository,
+    private val repo: GroupsRepository,
 ) {
     suspend operator fun invoke(
         key: String,

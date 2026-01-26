@@ -6,6 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sleeplessdog.matchthewords.backend.data.repository.AppPrefs
+import com.sleeplessdog.matchthewords.backend.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.backend.domain.models.WordGroup
 import com.sleeplessdog.matchthewords.backend.domain.usecases.groups.CreateUserGroupUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.groups.ObserveAllGroupsGroupedUC
@@ -14,11 +16,10 @@ import com.sleeplessdog.matchthewords.backend.domain.usecases.groups.SaveSelecti
 import com.sleeplessdog.matchthewords.backend.domain.usecases.groups.ToggleCategoryUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.settings.SettingsObserveLevelsUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.settings.SettingsSaveLevelsUC
-import com.sleeplessdog.matchthewords.backend.data.repository.AppPrefs
-import com.sleeplessdog.matchthewords.backend.domain.models.LanguageLevel
-import com.sleeplessdog.matchthewords.game.presentation.models.CategoriesUiState
-import com.sleeplessdog.matchthewords.game.presentation.models.CategoryUi
+import com.sleeplessdog.matchthewords.game.presentation.holders.LanguageAdapterState
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
+import com.sleeplessdog.matchthewords.game.presentation.models.GroupUiSettings
+import com.sleeplessdog.matchthewords.game.presentation.models.GroupsUiState
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
 import com.sleeplessdog.matchthewords.utils.SupportFunctions.drawableIdByName
 import com.sleeplessdog.matchthewords.utils.SupportFunctions.stringByName
@@ -59,8 +60,8 @@ class SettingsViewModel(
     val difficulty: LiveData<DifficultLevel> = _difficulty
 
 
-    private val _state = MutableStateFlow(CategoriesUiState())
-    val state: StateFlow<CategoriesUiState> = _state
+    private val _state = MutableStateFlow(GroupsUiState())
+    val state: StateFlow<GroupsUiState> = _state
 
     init {
         viewModelScope.launch {
@@ -94,10 +95,10 @@ class SettingsViewModel(
             combine(
                 observeFeaturedUC(limit = 8), observeAllGroupedUC()
             ) { featured, grouped ->
-                val toUi: (WordGroup) -> CategoryUi = { m ->
+                val toUi: (WordGroup) -> GroupUiSettings = { m ->
                     val uiLang = _uiLanguage.value ?: appPrefs.getUiLanguage()
 
-                    CategoryUi(
+                    GroupUiSettings(
                         key = m.key,
                         title = app.stringByName(m.titleKey, uiLang),
                         iconRes = app.drawableIdByName(m.iconKey),
@@ -114,7 +115,7 @@ class SettingsViewModel(
                     allDomain.sortedWith(compareByDescending<WordGroup> { it.isSelected }.thenByDescending { it.isUser }
                         .thenBy { it.orderInBlock }.thenBy { it.titleKey }).take(FEATURED_LIMIT)
 
-                CategoriesUiState(
+                GroupsUiState(
                     featured = featuredDomain.map(toUi),
                     user = userDomain.map(toUi),
                     defaults = defaultDomain.map(toUi),
@@ -133,7 +134,7 @@ class SettingsViewModel(
         saveSelectionUC(selectedKeys)
     }
 
-    fun onCreateUserCategory(key: String, titleKey: String, iconKey: String) =
+    fun onCreateUserGroup(key: String, titleKey: String, iconKey: String) =
         viewModelScope.launch {
             createUserGroupUC(key, titleKey, iconKey)
         }

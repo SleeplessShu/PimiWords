@@ -31,4 +31,13 @@ interface GlobalDao {
 """
     )
     suspend fun getAllGroupKeys(): List<String>
+
+    @Query(
+        """
+    SELECT COUNT(*) 
+    FROM GlobalDictionary 
+    WHERE groupKey = :groupKey AND isDeleted = 0
+"""
+    )
+    suspend fun countWordsByGroup(groupKey: String): Int
 }
