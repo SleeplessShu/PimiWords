@@ -5,10 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sleeplessdog.matchthewords.game.data.repositories.AppPrefs
-import com.sleeplessdog.matchthewords.game.data.repositories.AuthRepository
+import com.sleeplessdog.matchthewords.backend.data.repository.AppPrefs
+import com.sleeplessdog.matchthewords.backend.data.repository.AuthRepository
 import com.sleeplessdog.matchthewords.game.presentation.controller.LandingPagesController
-import com.sleeplessdog.matchthewords.game.presentation.controller.UserDatabaseController
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
 import com.sleeplessdog.matchthewords.game.presentation.models.LandingKeys
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
@@ -18,7 +17,7 @@ import kotlinx.coroutines.launch
 class GameSelectViewModel(
     private val appPrefs: AppPrefs,
     private val landingManager: LandingPagesController,
-    private val userDbController: UserDatabaseController,
+    //private val userDbController: UserDatabaseController,
     private val authRepository: AuthRepository,
 ) : ViewModel() {
 
@@ -83,7 +82,7 @@ class GameSelectViewModel(
      */
     fun beginUpdateUserDictionary() {
         viewModelScope.launch {
-            userDbController.restoreFromCloud()
+            //userDbController.restoreFromCloud()
         }
     }
 

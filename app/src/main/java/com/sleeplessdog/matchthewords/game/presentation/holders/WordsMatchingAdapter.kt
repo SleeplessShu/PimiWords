@@ -1,6 +1,5 @@
 package com.sleeplessdog.matchthewords.game.presentation.holders
 
-import android.R.attr.visible
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -42,7 +41,7 @@ class WordsMatchingAdapter(
     override fun onBindViewHolder(
         holder: ViewHolderWordsMatching,
         position: Int,
-        payloads: MutableList<Any>
+        payloads: MutableList<Any>,
     ) {
         if (payloads.isEmpty()) {
             bindFull(holder, position)
@@ -101,10 +100,10 @@ class WordsMatchingAdapter(
     /** Единый маппинг слова → состояние. */
     private fun stateFor(word: Word): ButtonState = when {
         isError(word) -> ButtonState.ERROR
-        word.id in usedWords    -> ButtonState.DISABLED
+        word.id in usedWords -> ButtonState.DISABLED
         word.id in correctWords -> ButtonState.CORRECT
         isSelected(word) -> ButtonState.SELECTED
-        else            -> ButtonState.DEFAULT
+        else -> ButtonState.DEFAULT
     }
 
     private fun isError(word: Word): Boolean =
@@ -122,7 +121,8 @@ class WordsMatchingAdapter(
 
     fun updateSelectedWords(newSelected: List<Word>) {
         selectedWords = newSelected
-        notifyDataSetChanged() }
+        notifyDataSetChanged()
+    }
 
     fun updateErrorWords(newError: List<Word>) {
         errorWords = newError

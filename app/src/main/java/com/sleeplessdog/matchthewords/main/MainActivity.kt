@@ -11,7 +11,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.ActivityMainBinding
-import com.sleeplessdog.matchthewords.game.presentation.controller.DictionaryDatabaseController
+import com.sleeplessdog.matchthewords.game.presentation.controller.GlobalDatabaseController
 import com.sleeplessdog.matchthewords.utils.ConstantsPaths.TAG_MAIN_ACTIVITY
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG_MAIN_ACTIVITY, "Вход выполнен успешно")
 
                 // Инициализация контроллера и загрузка базы
-                val dbLoader = DictionaryDatabaseController(this@MainActivity)
+                val dbLoader = GlobalDatabaseController(this@MainActivity)
                 val result = dbLoader.prepareDatabase()
 
                 if (result.isSuccess) {

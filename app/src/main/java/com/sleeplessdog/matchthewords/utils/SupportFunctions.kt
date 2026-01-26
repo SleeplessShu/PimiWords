@@ -112,6 +112,8 @@ object SupportFunctions {
             Language.ENGLISH -> Locale("en")
             Language.FRENCH -> Locale("fr")
             Language.GERMAN -> Locale("ge")
+            Language.ARMENIAN -> Locale("hy")
+            Language.SERBIAN -> Locale("sr")
         }
 
         val config = Configuration(resources.configuration)

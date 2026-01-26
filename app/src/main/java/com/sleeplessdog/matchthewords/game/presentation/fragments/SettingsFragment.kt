@@ -11,16 +11,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.matchthewords.backend.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.databinding.ItemDifficultyCardBinding
 import com.sleeplessdog.matchthewords.databinding.SettingsFragmentBinding
-import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageAdapter
-import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageMenuManager
 import com.sleeplessdog.matchthewords.game.presentation.controller.PimiScrollViewAdapter
 import com.sleeplessdog.matchthewords.game.presentation.controller.PimiScrollbarController
 import com.sleeplessdog.matchthewords.game.presentation.controller.toFlagLargeRes
 import com.sleeplessdog.matchthewords.game.presentation.models.CategoryUi
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
+import com.sleeplessdog.matchthewords.game.presentation.view.LanguageMenuManager
 import com.sleeplessdog.matchthewords.main.MainActivity
 import com.sleeplessdog.matchthewords.utils.SupportFunctions
 import kotlinx.coroutines.launch
@@ -229,7 +229,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
     }
 
     private fun setupLanguageList() {
-        langAdapter = LanguageAdapter { picked ->
+        langAdapter = LanguageAdapter(requireContext()) { picked ->
             vm.onLanguagePicked(picked, currentLangMode)
             langAdapter.setSelected(picked)
             binding.rvLanguageList.postDelayed({

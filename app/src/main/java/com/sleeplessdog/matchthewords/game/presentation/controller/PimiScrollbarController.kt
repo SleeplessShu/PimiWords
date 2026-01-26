@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
+import com.sleeplessdog.matchthewords.game.presentation.view.PimiScrollable
 import kotlin.math.max
 import kotlin.math.min
 

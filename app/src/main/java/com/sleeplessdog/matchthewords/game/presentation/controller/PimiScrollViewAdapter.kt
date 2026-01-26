@@ -2,6 +2,7 @@ package com.sleeplessdog.matchthewords.game.presentation.controller
 
 import android.view.View
 import android.widget.ScrollView
+import com.sleeplessdog.matchthewords.game.presentation.view.PimiScrollable
 import kotlin.math.max
 
 class PimiScrollViewAdapter(private val scrollView: ScrollView) : PimiScrollable {

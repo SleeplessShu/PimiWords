@@ -5,10 +5,10 @@ object ConstantsPaths {
 
     const val FIREBASE_KEY =
         "https://match-the-words-d26c2-default-rtdb.europe-west1.firebasedatabase.app"
-    const val NETWORK_DATABASE_PATH_ON_FIREBASE = "actual_db/pimi_dictionary.db"
-    const val LOCAL_DATABASE_DICTIONARY_NAME = "app_dictionary.db"
+    const val NETWORK_DATABASE_PATH_ON_FIREBASE = "actual_db/global_dictionary.db"
+    const val LOCAL_DATABASE_DICTIONARY_NAME = "global_dictionary.db"
     const val USER_DATABASE_DICTIONARY_NAME = "user_dictionary.db"
-    const val ASSETS_DATABASE_DICTIONARY_PATH = "databases/dictionary_default.db"
+    const val ASSETS_DATABASE_DICTIONARY_PATH = "databases/global_dictionary.db"
 
     //---SharedPreferences access---
     const val SHARED_PREFS_SCORE_REPOSITORY = "ScoreHistory"
@@ -22,4 +22,11 @@ object ConstantsPaths {
 
     //---DEBUGGING TAG NAMES---
     const val TAG_MAIN_ACTIVITY = "MainActivity_Debugging"
+
+    const val TOTAL_POINTS = "total_points"
+    const val CURRENT_STREAK = "current_streak"
+    const val LAST_PLAY_DATE = "last_play_date" // yyyy-MM-dd
+    const val TOTAL_GAMES = "total_games"
+
+    const val SAVED_GROUP_KEY = "saved_words"
 }

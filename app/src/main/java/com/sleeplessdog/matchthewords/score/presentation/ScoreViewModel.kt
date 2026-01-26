@@ -2,7 +2,7 @@ package com.sleeplessdog.matchthewords.score.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
+import com.sleeplessdog.matchthewords.backend.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.score.domain.models.AwardsCatalog
 import com.sleeplessdog.matchthewords.score.presentation.models.ScoreUiState
 import com.sleeplessdog.matchthewords.score.presentation.models.StatItem

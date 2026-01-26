@@ -1,10 +1,11 @@
 package com.sleeplessdog.matchthewords.game.presentation.models
 
+
 data class Word(
     val id: Int,
     val text: String,
     val language: Language,
-    val isValid: Boolean = true
+    val isValid: Boolean = true,
 ) {
     companion object {
         fun invalid(language: Language): Word =

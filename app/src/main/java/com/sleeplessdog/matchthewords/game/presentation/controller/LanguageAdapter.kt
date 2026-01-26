@@ -1,5 +1,6 @@
 package com.sleeplessdog.matchthewords.game.presentation.controller
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
 
 class LanguageAdapter(
+    private val context: Context,
     private val onClick: (Language) -> Unit,
 ) : RecyclerView.Adapter<LanguageAdapter.LangVH>() {
 
@@ -48,42 +50,62 @@ class LanguageAdapter(
 
         fun bind(lang: Language) {
             root.isSelected = (lang == selected)
-            title.text = lang.toTitle()
+            title.text = context.getString(lang.toTitleRes())
             flag.setImageResource(lang.toFlagSmallRes())
             root.setOnClickListener { onClick(lang) }
         }
     }
 }
 
-fun Language.toTitle(): String = when (this) {
-    Language.ENGLISH -> "Английский"
-    Language.SPANISH -> "Испанский"
-    Language.RUSSIAN -> "Русский"
-    Language.FRENCH -> "Французский"
-    Language.GERMAN -> "Немецкий"
+/**
+ * задаёт название отображаемое на всплывашке выбора языка
+ */
+fun Language.toTitleRes(): Int = when (this) {
+    Language.ENGLISH -> R.string.language_english
+    Language.SPANISH -> R.string.language_spanish
+    Language.RUSSIAN -> R.string.language_russian
+    Language.FRENCH -> R.string.language_french
+    Language.GERMAN -> R.string.language_german
+    Language.ARMENIAN -> R.string.language_armenian
+    Language.SERBIAN -> R.string.language_serbian
 }
 
+/**
+ * адаптер флага для всплывашки выбора языка
+ */
 fun Language.toFlagSmallRes(): Int = when (this) {
     Language.ENGLISH -> R.drawable.ic_language_flag_british_s
     Language.SPANISH -> R.drawable.ic_language_flag_spanish_s
     Language.RUSSIAN -> R.drawable.ic_language_flag_russian_s
     Language.FRENCH -> R.drawable.ic_language_flag_french_s
     Language.GERMAN -> R.drawable.ic_language_flag_german_s
+    Language.ARMENIAN -> R.drawable.ic_language_flag_armenian_s
+    Language.SERBIAN -> R.drawable.ic_language_flag_serbian_s
 }
 
+/**
+ * адаптер флага для иконки выбранного языка
+ */
 fun Language.toFlagLargeRes(): Int = when (this) {
     Language.ENGLISH -> R.drawable.ic_language_flag_british_l
     Language.SPANISH -> R.drawable.ic_language_flag_spanish_l
     Language.RUSSIAN -> R.drawable.ic_language_flag_russian_l
     Language.FRENCH -> R.drawable.ic_language_flag_french_l
     Language.GERMAN -> R.drawable.ic_language_flag_german_l
+    Language.ARMENIAN -> R.drawable.ic_language_flag_armenian_l
+    Language.SERBIAN -> R.drawable.ic_language_flag_serbian_l
 }
 
+/**
+ * анимация переключения языка
+ */
 fun Language.toLanguageSelectAnimation(): Int = when (this) {
     Language.ENGLISH -> R.raw.animation_language_select_en
     Language.SPANISH -> R.raw.animation_language_select_es
     Language.RUSSIAN -> R.raw.animation_language_select_ru
     Language.FRENCH -> R.raw.animation_language_select_fr
     Language.GERMAN -> R.raw.animation_language_select_de
+    Language.ARMENIAN -> R.raw.animation_language_select_am
+    Language.SERBIAN -> R.raw.animation_language_select_se
 }
 

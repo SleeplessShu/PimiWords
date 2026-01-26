@@ -16,11 +16,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.GameSelectFragmentBinding
 import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageAdapter
-import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageMenuManager
 import com.sleeplessdog.matchthewords.game.presentation.controller.LottieAnimationController
 import com.sleeplessdog.matchthewords.game.presentation.controller.toFlagLargeRes
 import com.sleeplessdog.matchthewords.game.presentation.controller.toLanguageSelectAnimation
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
+import com.sleeplessdog.matchthewords.game.presentation.view.LanguageMenuManager
 import com.sleeplessdog.matchthewords.main.MainActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -68,7 +68,7 @@ class GameSelectFragment : Fragment() {
      * настройка выбора языка во втором лэндинге
      */
     private fun setupLanguageList() {
-        langAdapter = LanguageAdapter { picked ->
+        langAdapter = LanguageAdapter(requireContext()) { picked ->
             viewModel.onLanguagePicked(picked)
             langAdapter.setSelected(picked)
 
@@ -229,8 +229,7 @@ class GameSelectFragment : Fragment() {
             underView = binding.landingLanguageOverlayView.animationIdleView,
             lottie2 = wearingHatAnimation,
             lottie2StartFrame = 6,
-            onFinished = { closeLanguageLanding() }
-        )
+            onFinished = { closeLanguageLanding() })
     }
 
     /**
@@ -273,9 +272,7 @@ class GameSelectFragment : Fragment() {
 
     private fun startGoogleSignIn() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
+            .requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build()
 
         val activity = requireActivity() as MainActivity
         val signInClient = GoogleSignIn.getClient(activity, gso)
@@ -296,9 +293,7 @@ class GameSelectFragment : Fragment() {
                 R.string.error_auth_declined
             ) + result.resultCode
             Toast.makeText(
-                requireContext(),
-                message,
-                Toast.LENGTH_SHORT
+                requireContext(), message, Toast.LENGTH_SHORT
             ).show()
         }
     }

@@ -5,7 +5,9 @@ import androidx.core.content.edit
 import com.sleeplessdog.matchthewords.game.presentation.models.LandingKeys
 import com.sleeplessdog.matchthewords.utils.ConstantsPaths.LANDING_SCREENS_PREFS
 
-
+/***
+ * Класс для управления показом экранов приветствия
+ */
 class LandingPagesController(context: Context) {
     private val prefs = context.getSharedPreferences(LANDING_SCREENS_PREFS, Context.MODE_PRIVATE)
 

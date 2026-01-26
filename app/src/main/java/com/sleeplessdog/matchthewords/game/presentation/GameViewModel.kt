@@ -6,11 +6,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sleeplessdog.matchthewords.R
-import com.sleeplessdog.matchthewords.game.data.repositories.AppPrefs
-import com.sleeplessdog.matchthewords.game.domain.api.ScoreInteractor
-import com.sleeplessdog.matchthewords.game.domain.interactors.WordsController
-import com.sleeplessdog.matchthewords.game.domain.models.WordsCategoriesList
-import com.sleeplessdog.matchthewords.game.domain.usecase.GetSelectedCategoriesUC
+import com.sleeplessdog.matchthewords.backend.domain.models.WordsController
+import com.sleeplessdog.matchthewords.backend.domain.usecases.groups.GetSelectedGroupsUC
+import com.sleeplessdog.matchthewords.backend.domain.usecases.score.UpdateScoreProgressUseCase
+import com.sleeplessdog.matchthewords.backend.domain.usecases.score.UpdateWordProgressUseCase
+import com.sleeplessdog.matchthewords.backend.data.repository.AppPrefs
+import com.sleeplessdog.matchthewords.backend.domain.models.WordsGroupsList
 import com.sleeplessdog.matchthewords.game.presentation.controller.LandingPagesController
 import com.sleeplessdog.matchthewords.game.presentation.interfaces.GameEvent
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
@@ -34,12 +35,14 @@ import kotlinx.coroutines.launch
 const val DELAY_BEFORE_END_GAME = 1000L
 
 class GameViewModel(
+
     private val wordsController: WordsController,
     private val progressController: ProgressController,
-    private val scoreInteractor: ScoreInteractor,
-    private val appPrefs: AppPrefs,
-    private val getSelectedCategoriesUC: GetSelectedCategoriesUC,
     private val landingManager: LandingPagesController,
+    private val updateWordProgress: UpdateWordProgressUseCase,
+    private val updateScoreProgress: UpdateScoreProgressUseCase,
+    private val getSelectedGroupsUC: GetSelectedGroupsUC,
+    private val appPrefs: AppPrefs,
 ) : ViewModel() {
 
     // Верхнее состояние экрана игры
@@ -92,11 +95,12 @@ class GameViewModel(
         onLoading()
 
         // 1. Загружаем выбранные категории
-        val selectedCategories = getSelectedCategoriesUC()
+        val selectedGroups = getSelectedGroupsUC.get()
 
-        val enums: Set<WordsCategoriesList> = selectedCategories.mapNotNull { cat ->
-            WordsCategoriesList.values().find { it.key == cat.key }
-        }.toSet()
+        val enums: Set<WordsGroupsList> =
+            selectedGroups.mapNotNull { key ->
+                WordsGroupsList.values().find { it.key == key }
+            }.toSet()
 
         // 2. Читаем префы
         val interfaceLang = appPrefs.getUiLanguage()
@@ -305,7 +309,7 @@ class GameViewModel(
         val stats = SessionStats(
             correctIds = sessionCorrectIds.toList(), mistakeIds = sessionWrongIds.toList()
         )
-        val todaysScore = scoreInteractor.getTodaysResult()
+        val todaysScore = 9999//scoreInteractor.getTodaysResult()
         val sessionPairs = allPairs
 
         viewModelScope.launch {
@@ -324,8 +328,13 @@ class GameViewModel(
                 sessionPairs = sessionPairs
             )
 
-            wordsController.putRoundStats(stats)
-            scoreInteractor.updateTodaysResult(score)
+            updateWordProgress.update(correctIds = stats.correctIds, mistakeIds = stats.mistakeIds)
+            updateScoreProgress.update(
+                score = score,
+                stats.correctIds.size,
+                stats.mistakeIds.size,
+                0
+            )
         }
     }
 
@@ -394,13 +403,13 @@ class GameViewModel(
     fun onLandingShown(showAlways: Boolean, landingKey: LandingKeys) {
         _gameState.value = _gameState.value?.copy(
             landingConditions =
-            LandingConditions(
-                shouldShow = false,
-                headerTextId = 0,
-                regularTextId = 0,
-                animation = 0,
-                key = landingKey,
-            )
+                LandingConditions(
+                    shouldShow = false,
+                    headerTextId = 0,
+                    regularTextId = 0,
+                    animation = 0,
+                    key = landingKey,
+                )
         )
         if (!showAlways) landingManager.setShown(landingKey)
     }

@@ -3,44 +3,16 @@ package com.sleeplessdog.matchthewords.di
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
-import androidx.room.Room
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
-import com.sleeplessdog.matchthewords.game.data.database.AppDictionaryDatabase
-import com.sleeplessdog.matchthewords.game.data.database.AppGroupsDictionary
-import com.sleeplessdog.matchthewords.game.data.database.UserDictionaryDao
-import com.sleeplessdog.matchthewords.game.data.database.UserDictionaryDatabase
-import com.sleeplessdog.matchthewords.game.data.database.WordCategoryDao
-import com.sleeplessdog.matchthewords.game.data.repositories.AppDictionaryRepository
-import com.sleeplessdog.matchthewords.game.data.repositories.AuthRepository
-import com.sleeplessdog.matchthewords.game.data.repositories.ScoreRepositoryImpl
-import com.sleeplessdog.matchthewords.game.data.repositories.UserDictionaryRepository
-import com.sleeplessdog.matchthewords.game.data.repositories.WordCategoriesRepositoryImpl
-import com.sleeplessdog.matchthewords.game.domain.repositories.ScoreRepository
-import com.sleeplessdog.matchthewords.game.domain.repositories.WordCategoriesRepository
-import com.sleeplessdog.matchthewords.game.domain.usecase.AddWordToUserDictionaryUC
-import com.sleeplessdog.matchthewords.game.domain.usecase.CreateUserCategoryUC
-import com.sleeplessdog.matchthewords.game.domain.usecase.DeleteUserCategoryUC
-import com.sleeplessdog.matchthewords.game.domain.usecase.GetSelectedCategoriesUC
-import com.sleeplessdog.matchthewords.game.domain.usecase.ObserveAllCategoriesGroupedUC
-import com.sleeplessdog.matchthewords.game.domain.usecase.ObserveFeaturedCategoriesUC
-import com.sleeplessdog.matchthewords.game.domain.usecase.SaveSelectionUC
-import com.sleeplessdog.matchthewords.game.domain.usecase.ToggleCategoryUC
-import com.sleeplessdog.matchthewords.game.presentation.controller.UserDatabaseController
-import com.sleeplessdog.matchthewords.server.data.ServerDateRepositoryImpl
-import com.sleeplessdog.matchthewords.server.domain.ServerDateRepository
-import com.sleeplessdog.matchthewords.server.domain.ServerDbInteractor
-import com.sleeplessdog.matchthewords.server.domain.ServerDbInteractorImpl
+import com.sleeplessdog.matchthewords.backend.data.repository.AuthRepository
 import com.sleeplessdog.matchthewords.utils.ConstantsPaths.FIREBASE_KEY
-import com.sleeplessdog.matchthewords.utils.ConstantsPaths.LOCAL_DATABASE_DICTIONARY_NAME
 import com.sleeplessdog.matchthewords.utils.ConstantsPaths.SHARED_PREFS_DATABASE_SETTINGS
 import com.sleeplessdog.matchthewords.utils.ConstantsPaths.SHARED_PREFS_SCORE_KEY
 import com.sleeplessdog.matchthewords.utils.ConstantsPaths.SHARED_PREFS_SCORE_REPOSITORY
 import com.sleeplessdog.matchthewords.utils.ConstantsPaths.SHARED_PREFS_THEME_KEY
 import com.sleeplessdog.matchthewords.utils.ConstantsPaths.SHARED_PREFS_THEME_REPOSITORY
-import com.sleeplessdog.matchthewords.utils.ConstantsPaths.USER_DATABASE_DICTIONARY_NAME
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -71,7 +43,10 @@ val dataModule = module {
         androidContext().getSharedPreferences(SHARED_PREFS_SCORE_REPOSITORY, Context.MODE_PRIVATE)
     }
 
-    single<AppDictionaryRepository> {
+    single<AuthRepository> { AuthRepository(get()) }
+    single { FirebaseAuth.getInstance() }
+
+    /*single<AppDictionaryRepository> {
         AppDictionaryRepository(get())
     }
 
@@ -101,12 +76,6 @@ val dataModule = module {
             .build()
     }
 
-    single {
-        AddWordToUserDictionaryUC(
-            appDictionaryDatabase = get(), userRepository = get()
-        )
-    }
-
     Log.d(
         "DEBUG",
         "Room.databaseBuilder после окончания" + " работ над базами данных убрать все инструменты "
@@ -121,32 +90,29 @@ val dataModule = module {
 
     single<ScoreRepository> {
         ScoreRepositoryImpl(get(named(SHARED_PREFS_SCORE_KEY)))
-    }
+    }*/
 
-    single<ServerDateRepository> {
-        ServerDateRepositoryImpl(get(named(SHARED_PREFS_DATABASE_SETTINGS)))
-    }
+    /*  single<ServerDateRepository> {
+          ServerDateRepositoryImpl(get(named(SHARED_PREFS_DATABASE_SETTINGS)))
+      }
+  */
+    /*    single<ServerDbInteractor> {
+            ServerDbInteractorImpl(get(), get())
+        }*/
 
-    single<ServerDbInteractor> {
-        ServerDbInteractorImpl(get(), get())
-    }
+    /* single { AppGroupsDictionary.build(get()) }
 
-    single { AppGroupsDictionary.build(get()) }
+     single<WordCategoryDao> {
+         get<AppGroupsDictionary>().wordCategoryDao()
+     }
 
-    single<WordCategoryDao> {
-        get<AppGroupsDictionary>().wordCategoryDao()
-    }
+     single<WordCategoriesRepository> { WordCategoriesRepositoryImpl(get()) }
+ */
 
-    single<WordCategoriesRepository> { WordCategoriesRepositoryImpl(get()) }
 
-    single<AuthRepository> { AuthRepository(get()) }
-    single { FirebaseAuth.getInstance() }
-
-    factory { ObserveFeaturedCategoriesUC(get()) }
+    /*factory { ObserveFeaturedCategoriesUC(get()) }
     factory { ObserveAllCategoriesGroupedUC(get()) }
     factory { ToggleCategoryUC(get()) }
     factory { SaveSelectionUC(get()) }
-    factory { CreateUserCategoryUC(get()) }
-    factory { DeleteUserCategoryUC(get()) }
-    factory { GetSelectedCategoriesUC(get()) }
+    factory { CreateUserCategoryUC(get()) }*/
 }

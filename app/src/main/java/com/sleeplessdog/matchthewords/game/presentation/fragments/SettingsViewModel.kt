@@ -6,14 +6,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sleeplessdog.matchthewords.game.data.repositories.AppPrefs
-import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
-import com.sleeplessdog.matchthewords.game.domain.models.WordCategory
-import com.sleeplessdog.matchthewords.game.domain.usecase.CreateUserCategoryUC
-import com.sleeplessdog.matchthewords.game.domain.usecase.ObserveAllCategoriesGroupedUC
-import com.sleeplessdog.matchthewords.game.domain.usecase.ObserveFeaturedCategoriesUC
-import com.sleeplessdog.matchthewords.game.domain.usecase.SaveSelectionUC
-import com.sleeplessdog.matchthewords.game.domain.usecase.ToggleCategoryUC
+import com.sleeplessdog.matchthewords.backend.domain.models.WordGroup
+import com.sleeplessdog.matchthewords.backend.domain.usecases.groups.CreateUserGroupUC
+import com.sleeplessdog.matchthewords.backend.domain.usecases.groups.ObserveAllGroupsGroupedUC
+import com.sleeplessdog.matchthewords.backend.domain.usecases.groups.ObserveFeaturedGroupsUC
+import com.sleeplessdog.matchthewords.backend.domain.usecases.groups.SaveSelectionUC
+import com.sleeplessdog.matchthewords.backend.domain.usecases.groups.ToggleCategoryUC
+import com.sleeplessdog.matchthewords.backend.domain.usecases.settings.SettingsObserveLevelsUC
+import com.sleeplessdog.matchthewords.backend.domain.usecases.settings.SettingsSaveLevelsUC
+import com.sleeplessdog.matchthewords.backend.data.repository.AppPrefs
+import com.sleeplessdog.matchthewords.backend.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.game.presentation.models.CategoriesUiState
 import com.sleeplessdog.matchthewords.game.presentation.models.CategoryUi
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
@@ -27,13 +29,15 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
-    private val observeFeaturedUC: ObserveFeaturedCategoriesUC,
-    private val observeAllGroupedUC: ObserveAllCategoriesGroupedUC,
+    private val observeFeaturedUC: ObserveFeaturedGroupsUC,
+    private val observeAllGroupedUC: ObserveAllGroupsGroupedUC,
     private val toggleUC: ToggleCategoryUC,
     private val saveSelectionUC: SaveSelectionUC,
-    private val createUserUC: CreateUserCategoryUC,
+    private val createUserGroupUC: CreateUserGroupUC,
+    private val saveLevelsUC: SettingsSaveLevelsUC,
+    private val observeLevelsUC: SettingsObserveLevelsUC,
     private val app: Application,
-    private val appPrefs: AppPrefs
+    private val appPrefs: AppPrefs,
 ) : ViewModel() {
     private val _uiLanguage = MutableLiveData<Language>()
     val uiLanguage: LiveData<Language> = _uiLanguage
@@ -77,14 +81,20 @@ class SettingsViewModel(
         _studyLanguage.value = study
         rebuild(ui, study)
 
-        loadLevels()
+        viewModelScope.launch {
+            observeLevelsUC.observe()
+                .collect { levels ->
+                    _levels.value = levels.ifEmpty { setOf(LanguageLevel.A1) }
+                }
+        }
+
         loadDifficulty()
 
         viewModelScope.launch {
             combine(
                 observeFeaturedUC(limit = 8), observeAllGroupedUC()
             ) { featured, grouped ->
-                val toUi: (WordCategory) -> CategoryUi = { m ->
+                val toUi: (WordGroup) -> CategoryUi = { m ->
                     val uiLang = _uiLanguage.value ?: appPrefs.getUiLanguage()
 
                     CategoryUi(
@@ -101,7 +111,7 @@ class SettingsViewModel(
                 val allDomain = userDomain + defaultDomain
 
                 val featuredDomain =
-                    allDomain.sortedWith(compareByDescending<WordCategory> { it.isSelected }.thenByDescending { it.isUser }
+                    allDomain.sortedWith(compareByDescending<WordGroup> { it.isSelected }.thenByDescending { it.isUser }
                         .thenBy { it.orderInBlock }.thenBy { it.titleKey }).take(FEATURED_LIMIT)
 
                 CategoriesUiState(
@@ -125,7 +135,7 @@ class SettingsViewModel(
 
     fun onCreateUserCategory(key: String, titleKey: String, iconKey: String) =
         viewModelScope.launch {
-            createUserUC(key, titleKey, iconKey)
+            createUserGroupUC(key, titleKey, iconKey)
         }
 
     fun onLanguagePicked(newLang: Language, currentLangMode: LanguageAdapterState) {
@@ -155,11 +165,6 @@ class SettingsViewModel(
         appPrefs.saveDifficulty(level)
     }
 
-    fun loadLevels() {
-        val stored = appPrefs.getLevels()
-        _levels.value = stored.ifEmpty { setOf(LanguageLevel.A1) }
-    }
-
     fun toggleLevel(level: LanguageLevel) {
         val current = _levels.value ?: setOf(LanguageLevel.A1)
 
@@ -172,7 +177,11 @@ class SettingsViewModel(
         }
 
         _levels.value = new
-        appPrefs.saveLevels(new)
+
+        viewModelScope.launch {
+            saveLevelsUC.save(new)
+        }
+
     }
 
     private fun rebuild(ui: Language, study: Language) {

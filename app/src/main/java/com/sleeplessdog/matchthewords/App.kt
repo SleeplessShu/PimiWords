@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
 import com.sleeplessdog.matchthewords.di.dataModule
+import com.sleeplessdog.matchthewords.di.databaseModule
 import com.sleeplessdog.matchthewords.di.domainModule
 import com.sleeplessdog.matchthewords.di.presentationModule
 import org.koin.android.ext.koin.androidContext
@@ -22,7 +23,7 @@ class App : Application() {
 
         startKoin {
             androidContext(this@App)
-            modules(dataModule, domainModule, presentationModule)
+            modules(databaseModule, dataModule, domainModule, presentationModule)
         }
         FirebaseAppCheck.getInstance().installAppCheckProviderFactory(
             DebugAppCheckProviderFactory.getInstance()

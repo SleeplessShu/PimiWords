@@ -1,6 +1,6 @@
 package com.sleeplessdog.matchthewords.score.presentation.models
 
-import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
+import com.sleeplessdog.matchthewords.backend.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.score.models.AwardMeta
 
 data class ScoreUiState(

@@ -2,6 +2,7 @@ package com.sleeplessdog.matchthewords.game.presentation.controller
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.sleeplessdog.matchthewords.game.presentation.view.PimiScrollable
 
 class PimiRecyclerViewAdapter(private val recyclerView: RecyclerView) : PimiScrollable {
     override val view: View

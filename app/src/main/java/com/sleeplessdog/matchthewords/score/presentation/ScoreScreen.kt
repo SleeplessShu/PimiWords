@@ -57,7 +57,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.sleeplessdog.matchthewords.R
-import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
+import com.sleeplessdog.matchthewords.backend.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.score.domain.models.AwardsCatalog
 import com.sleeplessdog.matchthewords.score.models.AwardMeta
 import com.sleeplessdog.matchthewords.score.presentation.models.ScoreUiState

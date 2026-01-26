@@ -5,5 +5,7 @@ enum class Language {
     SPANISH,
     RUSSIAN,
     FRENCH,
-    GERMAN
+    GERMAN,
+    ARMENIAN,
+    SERBIAN
 }
