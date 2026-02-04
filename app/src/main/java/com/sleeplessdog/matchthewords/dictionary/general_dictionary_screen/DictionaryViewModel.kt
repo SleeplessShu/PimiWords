@@ -12,6 +12,8 @@ import com.sleeplessdog.matchthewords.backend.domain.usecases.groups.ObserveAllG
 import com.sleeplessdog.matchthewords.utils.SupportFunctions.drawableIdByName
 import com.sleeplessdog.matchthewords.utils.SupportFunctions.stringByName
 import com.sleeplessdog.matchthewords.dictionary.DictionaryScreenState
+import com.sleeplessdog.matchthewords.utils.groupIconRes
+import com.sleeplessdog.matchthewords.utils.groupTitleRes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -42,8 +44,8 @@ class DictionaryViewModel(
                     val wordsCount = getWordsCountForGroup(m)
                     return GroupUiDictionary(
                         key = m.key,
-                        titleKey = app.stringByName(m.titleKey, uiLang),
-                        iconKey = app.drawableIdByName(m.iconKey),
+                        titleKey = app.groupTitleRes(m.key),
+                        iconKey = app.groupIconRes(m.key),
                         wordsInGroup = wordsCount
                     )
                 }

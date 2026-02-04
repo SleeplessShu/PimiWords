@@ -5,13 +5,11 @@ import com.sleeplessdog.matchthewords.backend.presentation.models.WordGroupPrese
 
 data class WordGroup(
     val key: String,
-    val titleKey: String,
-    val iconKey: String,
     val isSelected: Boolean,
     val isUser: Boolean,
     val orderInBlock: Int,
 )
 
 fun WordGroupPresentation.toDomain() = WordGroup(
-    key, titleKey, iconKey, isSelected, isUser, orderInBlock
+    key, isSelected, isUser, orderInBlock
 )

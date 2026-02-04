@@ -318,7 +318,7 @@ private fun AwardCard(award: AwardMeta) {
         ) {
             val resId = if (award.isLocked) award.iconLocked else award.iconUnlocked
             println("DEBUG_TAG: Award: ${award.title}, Resource ID: $resId")
-            val safeResId = if (resId != 0) resId else R.drawable.ic_category_abstract
+            val safeResId = if (resId != 0) resId else R.drawable.ic_group_abstract
             Image(
                 painter = painterResource(
                     id = safeResId

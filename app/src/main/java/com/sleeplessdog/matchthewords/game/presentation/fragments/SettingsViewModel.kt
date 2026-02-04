@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.backend.data.repository.AppPrefs
 import com.sleeplessdog.matchthewords.backend.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.backend.domain.models.WordGroup
@@ -21,8 +22,8 @@ import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
 import com.sleeplessdog.matchthewords.game.presentation.models.GroupUiSettings
 import com.sleeplessdog.matchthewords.game.presentation.models.GroupsUiState
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
-import com.sleeplessdog.matchthewords.utils.SupportFunctions.drawableIdByName
-import com.sleeplessdog.matchthewords.utils.SupportFunctions.stringByName
+import com.sleeplessdog.matchthewords.utils.groupIconRes
+import com.sleeplessdog.matchthewords.utils.groupTitleRes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -96,12 +97,12 @@ class SettingsViewModel(
                 observeFeaturedUC(limit = 8), observeAllGroupedUC()
             ) { featured, grouped ->
                 val toUi: (WordGroup) -> GroupUiSettings = { m ->
-                    val uiLang = _uiLanguage.value ?: appPrefs.getUiLanguage()
-
                     GroupUiSettings(
                         key = m.key,
-                        title = app.stringByName(m.titleKey, uiLang),
-                        iconRes = app.drawableIdByName(m.iconKey),
+                        titleRes = if (m.isUser && !m.key.equals("saved_words")) 0 else app.groupTitleRes(
+                            m.key
+                        ),
+                        iconRes = if (m.isUser) R.drawable.ic_group_default else app.groupIconRes(m.key),
                         isSelected = m.isSelected,
                         isUser = m.isUser
                     )
@@ -113,7 +114,7 @@ class SettingsViewModel(
 
                 val featuredDomain =
                     allDomain.sortedWith(compareByDescending<WordGroup> { it.isSelected }.thenByDescending { it.isUser }
-                        .thenBy { it.orderInBlock }.thenBy { it.titleKey }).take(FEATURED_LIMIT)
+                        .thenBy { it.orderInBlock }).take(FEATURED_LIMIT)
 
                 GroupsUiState(
                     featured = featuredDomain.map(toUi),

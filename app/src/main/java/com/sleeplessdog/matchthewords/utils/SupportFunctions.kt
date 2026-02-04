@@ -1,9 +1,6 @@
 package com.sleeplessdog.matchthewords.utils
 
 
-import android.content.Context
-import android.content.res.Configuration
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
@@ -14,35 +11,29 @@ import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
 import com.sleeplessdog.matchthewords.game.presentation.models.GroupUiSettings
 import com.sleeplessdog.matchthewords.game.presentation.models.LandingKeys
-import com.sleeplessdog.matchthewords.game.presentation.models.Language
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.Date
-import java.util.Locale
 
 object SupportFunctions {
 
-    fun getCurrentDate(): String {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        return dateFormat.format(Date())
-    }
+    /*    fun getCurrentDate(): String {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            return dateFormat.format(Date())
+        }
 
-    fun getScoreAsString(score: Int): String {
-        return score.toString().padStart(9, '0')
-    }
+        fun getScoreAsString(score: Int): String {
+            return score.toString().padStart(9, '0')
+        }
 
-    fun sortMapByDateDescending(inputMap: Map<String, Int>): Map<String, Int> {
-        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        fun sortMapByDateDescending(inputMap: Map<String, Int>): Map<String, Int> {
+            val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
-        return inputMap.mapKeys { entry ->
-            LocalDate.parse(
-                entry.key, dateFormatter
-            )
-        } // Преобразуем ключи в LocalDate
-            .toSortedMap(compareByDescending { it }) // Сортируем по убыванию дат
-            .mapKeys { entry -> entry.key.format(dateFormatter) } // Преобразуем обратно ключи в строковый формат
-    }
+            return inputMap.mapKeys { entry ->
+                LocalDate.parse(
+                    entry.key, dateFormatter
+                )
+            } // Преобразуем ключи в LocalDate
+                .toSortedMap(compareByDescending { it }) // Сортируем по убыванию дат
+                .mapKeys { entry -> entry.key.format(dateFormatter) } // Преобразуем обратно ключи в строковый формат
+        }*/
 
     fun getGameDifficult(difficultLevel: DifficultLevel): Int {
         return when (difficultLevel) {
@@ -71,7 +62,7 @@ object SupportFunctions {
         }
     }
 
-    fun Context.stringByName(name: String, uiLanguage: Language): String {
+    /*fun Context.stringByName(name: String, uiLanguage: Language): String {
         val localized = withLanguage(uiLanguage)
         val resId = localized.resources.getIdentifier(name, "string", packageName)
         return if (resId != 0) localized.getString(resId) else name
@@ -81,15 +72,19 @@ object SupportFunctions {
     fun Context.drawableIdByName(name: String): Int {
         val id = resources.getIdentifier(name, "drawable", packageName)
         Log.e("DRAWABLE_RES", "Drawable not found for name = $name")
-        return if (id != 0) id else R.drawable.ic_category_miscellaneous
-    }
+        return if (id != 0) id else R.drawable.ic_group_miscellaneous
+    }*/
 
     fun createCategoryChip(parent: ViewGroup, item: GroupUiSettings): Chip {
         val ctx = parent.context
         val chip =
             LayoutInflater.from(ctx).inflate(R.layout.view_category_chip, parent, false) as Chip
 
-        chip.text = item.title
+        chip.text = if (item.titleRes != 0) {
+            ctx.getString(item.titleRes)
+        } else {
+            item.key // fallback, НИКОГДА не падает
+        }
         chip.isCheckable = true
         chip.tag = item.key
         chip.chipBackgroundColor = ContextCompat.getColorStateList(
@@ -105,19 +100,19 @@ object SupportFunctions {
         return chip
     }
 
-    fun Context.withLanguage(lang: Language): Context {
-        val locale = when (lang) {
-            Language.RUSSIAN -> Locale("ru")
-            Language.SPANISH -> Locale("es")
-            Language.ENGLISH -> Locale("en")
-            Language.FRENCH -> Locale("fr")
-            Language.GERMAN -> Locale("ge")
-            Language.ARMENIAN -> Locale("hy")
-            Language.SERBIAN -> Locale("sr")
-        }
+    /*    fun Context.withLanguage(lang: Language): Context {
+            val locale = when (lang) {
+                Language.RUSSIAN -> Locale("ru")
+                Language.SPANISH -> Locale("es")
+                Language.ENGLISH -> Locale("en")
+                Language.FRENCH -> Locale("fr")
+                Language.GERMAN -> Locale("ge")
+                Language.ARMENIAN -> Locale("hy")
+                Language.SERBIAN -> Locale("sr")
+            }
 
-        val config = Configuration(resources.configuration)
-        config.setLocale(locale)
-        return createConfigurationContext(config)
-    }
+            val config = Configuration(resources.configuration)
+            config.setLocale(locale)
+            return createConfigurationContext(config)
+        }*/
 }

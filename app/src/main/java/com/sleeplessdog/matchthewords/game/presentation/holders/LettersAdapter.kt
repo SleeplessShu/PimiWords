@@ -17,7 +17,7 @@ import com.sleeplessdog.matchthewords.databinding.ItemLetterBinding
 import com.sleeplessdog.matchthewords.game.presentation.models.WriteTheWordLetterUi
 
 class LettersAdapter(
-    private val onClick: (position: Int) -> Unit
+    private val onClick: (position: Int) -> Unit,
 ) : ListAdapter<WriteTheWordLetterUi, LettersAdapter.VH>(DIFF) {
 
     var locked: Boolean = false
@@ -58,7 +58,7 @@ class LettersAdapter(
     @SuppressLint("ClickableViewAccessibility")
     class VH(
         private val binding: ItemLetterBinding,
-        private val onOptimisticClick: (Int) -> Unit
+        private val onOptimisticClick: (Int) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
@@ -123,7 +123,7 @@ class LettersAdapter(
                 binding.tLetter.text = item.char.toString()
             } else {
                 binding.tLetter.text = ""
-                binding.iconSpace.setImageResource(R.drawable.ic_category_abstract)
+                binding.iconSpace.setImageResource(R.drawable.ic_group_abstract)
             }
 
             val enabled = !item.used && !locked
@@ -144,13 +144,13 @@ class LettersAdapter(
         private val DIFF = object : DiffUtil.ItemCallback<WriteTheWordLetterUi>() {
             override fun areItemsTheSame(
                 oldItem: WriteTheWordLetterUi,
-                newItem: WriteTheWordLetterUi
+                newItem: WriteTheWordLetterUi,
             ) =
                 oldItem.id == newItem.id
 
             override fun areContentsTheSame(
                 oldItem: WriteTheWordLetterUi,
-                newItem: WriteTheWordLetterUi
+                newItem: WriteTheWordLetterUi,
             ) =
                 oldItem == newItem
         }

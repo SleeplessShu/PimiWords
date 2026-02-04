@@ -1,4 +1,4 @@
-package com.sleeplessdog.matchthewords.dictionary.general_dictionary_screen
+package com.sleeplessdog.matchthewords.dictionary
 
 import android.widget.Toast
 import androidx.compose.animation.animateContentSize
@@ -248,6 +248,7 @@ fun MyGroupsHeader(
 fun UserGroupsTable(
     groups: List<GroupUiDictionary>,
     expanded: Boolean,
+    bufferWords: List<String>,
     onNavigateToNewGroup: () -> Unit,
     onShowDialog: (Boolean) -> Unit
 ) {
@@ -258,6 +259,13 @@ fun UserGroupsTable(
             .padding(horizontal = 20.dp)
             .clip(RoundedCornerShape(12.dp))
     ) {
+        UserGroupTableRow(
+            titleKey = R.string.added_words,
+            wordsCount = bufferWords.size,
+            rowIndex = -1,
+            onClick = onNavigateToNewGroup
+        )
+        Divider(color = BlackPrimary, thickness = 1.dp)
         val groupsToShow = if (expanded) groups else groups.take(2)
         groupsToShow.forEachIndexed { index, group ->
             UserGroupTableRow(
@@ -272,7 +280,7 @@ fun UserGroupsTable(
         }
         Divider(color = BlackPrimary, thickness = 1.dp)
         UserGroupTableRow(
-            titleKey = stringResource(R.string.create_group),
+            titleKey = R.string.create_group,
             rowIndex = -2,
             onClick = { onShowDialog(true) }
 
@@ -283,21 +291,18 @@ fun UserGroupsTable(
 @Composable
 fun UserGroupTableRow(
     rowIndex: Int,
-    titleKey: String,
+    titleKey: Int,
     wordsCount: Int? = null,
 
     onClick: () -> Unit,
 ) {
     val context = LocalContext.current
-    val resId = remember(titleKey) {
-        context.resources.getIdentifier(titleKey, "string", context.packageName)
-    }
-
-    val titleText = if (resId != 0) stringResource(id = resId) else titleKey
+    val titleText = if (titleKey != 0) stringResource(id = titleKey) else titleKey
 
     val clickableIconPainter =
         painterResource(id = R.drawable.icon_dots_three_outline_vertical)
     val leftIconPainter = when (rowIndex) {
+        -1 -> painterResource(R.drawable.icon_favorite)
         -2 -> painterResource(R.drawable.icon_add)
         else -> painterResource(R.drawable.icon_book)
     }
@@ -321,7 +326,7 @@ fun UserGroupTableRow(
         Spacer(modifier = Modifier.width(8.dp))
         Column {
             Text(
-                titleText,
+                text = stringResource(id = titleKey),
                 style = textSize16Bold,
                 color = DarkTextDefault
             )
@@ -427,6 +432,7 @@ fun StandardGroupsTable(
         val groupsToShow = if (expanded) groups else groups.take(3)
         groupsToShow.forEachIndexed { index, group ->
             StandardGroupTableRow(
+
                 titleKey = group.titleKey,
                 wordsCount = group.wordsInGroup,
                 iconKey = group.iconKey
@@ -443,14 +449,10 @@ fun StandardGroupsTable(
 fun StandardGroupTableRow(
     wordsCount: Int,
     iconKey: Int,
-    titleKey: String,
+    titleKey: Int,
 ) {
     val context = LocalContext.current
-    val resId = remember(titleKey) {
-        context.resources.getIdentifier(titleKey, "string", context.packageName)
-    }
-    val titleText = if (resId != 0) stringResource(id = resId) else titleKey
-
+    val titleText = stringResource(titleKey)
     val iconPainter = if (iconKey != 0) {
         painterResource(id = iconKey)
     } else {

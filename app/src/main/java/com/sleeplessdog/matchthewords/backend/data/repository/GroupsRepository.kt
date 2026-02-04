@@ -24,8 +24,6 @@ class GroupsRepository(
         val globalCategories = globalKeys.map { key ->
             WordGroup(
                 key = key,
-                titleKey = key,
-                iconKey = key,
                 isSelected = key in selected,
                 isUser = false,
                 orderInBlock = 0
@@ -37,8 +35,6 @@ class GroupsRepository(
         val userCategories = userGroups.map { g ->
             WordGroup(
                 key = g.groupKey,
-                titleKey = g.title,
-                iconKey = g.iconKey,
                 isSelected = g.groupKey in selected,
                 isUser = true,
                 orderInBlock = 1
