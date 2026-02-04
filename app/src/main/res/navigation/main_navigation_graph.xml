@@ -56,13 +56,17 @@
         <action android:id="@+id/action_wordsFragment_to_settingsFragment" />
         <action
             android:id="@+id/action_wordsFragment_to_newGroupFragment"
-            app:destination="@id/newGroupFragment" />
+            app:destination="@id/userGroupFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/newGroupFragment"
-        android:name="com.sleeplessdog.matchthewords.dictionary.adding_new_group.UserGroupComposeFragment"
-        android:label="NewGroupFragment"></fragment>
+        android:id="@+id/userGroupFragment"
+        android:name="com.sleeplessdog.matchthewords.dictionary.user_group.UserGroupComposeFragment"
+        android:label="UserGroupFragment">
+        <argument
+            android:name="group_key"
+            app:argType="string" />
+    </fragment>
 
     <fragment
         android:id="@+id/scoreFragment"

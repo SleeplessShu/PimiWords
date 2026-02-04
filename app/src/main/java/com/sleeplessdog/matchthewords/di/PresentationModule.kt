@@ -4,7 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import com.sleeplessdog.matchthewords.backend.data.repository.AppPrefs
 import com.sleeplessdog.matchthewords.backend.data.repository.AppPrefsImpl
-import com.sleeplessdog.matchthewords.dictionary.adding_new_group.UserGroupViewModel
+import com.sleeplessdog.matchthewords.dictionary.user_group.UserGroupViewModel
 import com.sleeplessdog.matchthewords.dictionary.general_dictionary_screen.DictionaryViewModel
 import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
 import com.sleeplessdog.matchthewords.game.presentation.controller.LandingPagesController
@@ -62,7 +62,12 @@ val presentationModule = module {
         )
     }
 
-    viewModel { UserGroupViewModel() }
+    viewModel {
+        UserGroupViewModel(
+            getWordsByGroup = get(),
+            repository = get()
+        )
+    }
 
 
     /*    viewModel() {

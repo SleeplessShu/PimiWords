@@ -18,6 +18,7 @@ import com.sleeplessdog.matchthewords.backend.domain.usecases.score.UpdateWordPr
 import com.sleeplessdog.matchthewords.backend.domain.usecases.settings.SettingsObserveLevelsUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.settings.SettingsSaveLevelsUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.words.AddWordToUserDictionaryUC
+import com.sleeplessdog.matchthewords.backend.domain.usecases.words.GetWordsByGroupUC
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -80,4 +81,5 @@ val databaseModule = module {
     single { SettingsObserveLevelsUC(get()) }
     single { UpdateScoreProgressUseCase(get()) }
     single { GetWordsCountForGroupUC(get()) }
+    single { GetWordsByGroupUC(get()) }
 }

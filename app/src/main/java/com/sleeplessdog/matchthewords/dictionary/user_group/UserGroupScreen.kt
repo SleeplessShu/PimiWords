@@ -1,4 +1,4 @@
-package com.sleeplessdog.matchthewords.dictionary.adding_new_group
+package com.sleeplessdog.matchthewords.dictionary.user_group
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -19,10 +19,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -35,7 +35,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sleeplessdog.matchthewords.R
-import com.sleeplessdog.matchthewords.dictionary.GroupUiDictionary
 import com.sleeplessdog.matchthewords.ui.theme.BlackPrimary
 import com.sleeplessdog.matchthewords.ui.theme.DarkTextDefault
 import com.sleeplessdog.matchthewords.ui.theme.Gray05
@@ -45,23 +44,29 @@ import com.sleeplessdog.matchthewords.ui.theme.textSize20Medium
 import com.sleeplessdog.matchthewords.ui.theme.textSize24Medium
 
 @Composable
-fun MyGroupUi(viewModel: UserGroupViewModel, onBackClick: () -> Unit) {
+fun UserGroupUi(
+    groupKey: String,
+    viewModelWords: UserGroupViewModel,
+    onBackClick: () -> Unit
+) {
 
-    val state by viewModel.userGroups.collectAsState()
+    val stateWords by viewModelWords.wordsState.collectAsState()
 
-    MyGroupScreen(
+    LaunchedEffect(groupKey) {
+        viewModelWords.loadWords(groupKey)
+    }
+    UserGroupScreen(
         onClick = onBackClick,
-        userGroups = state,
+        words = stateWords,
     )
 }
 
 @Composable
-fun MyGroupScreen(
+fun UserGroupScreen(
     onClick: () -> Unit,
-    userGroups: List<GroupUiDictionary>,
+    words: List<WordWithTranslation>,
 ) {
     val scrollState = rememberScrollState()
-
     Column(
         modifier = Modifier
             .background(BlackPrimary)
@@ -74,8 +79,7 @@ fun MyGroupScreen(
         RowNumberWords()
         Spacer(modifier = Modifier.height(12.dp))
         WordAndTranslationTable(
-            groups =,
-            expanded = true
+            words = words
         )
     }
 }
@@ -183,24 +187,23 @@ fun RowNumberWords() {
 
 @Composable
 fun WordAndTranslationTable(
-    groups: List<Pair<String, String>>,
-    expanded: Boolean
+    words: List<WordWithTranslation>
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
-            .offset(y = (-6).dp)
-            .clip(RoundedCornerShape(12.dp))
+            .offset(y = (-6).dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        val groupsToShow = if (expanded) groups else groups.take(5)
-        groupsToShow.forEachIndexed { index, pair ->
-            WordAndTranslationTableRow(
-                titleKey = pair.first,
-                translation = pair.second
-            )
-            if (index != groups.lastIndex) {
-                Divider(color = BlackPrimary, thickness = 1.dp)
+        words.forEachIndexed { index, word ->
+            word.word?.let {
+                word.translation?.let { it1 ->
+                    WordAndTranslationTableRow(
+                        titleKey = it,
+                        translation = it1,
+                    )
+                }
             }
         }
     }
@@ -220,6 +223,7 @@ fun WordAndTranslationTableRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
             .background(Gray05)
             .height(68.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -244,7 +248,7 @@ fun WordAndTranslationTableRow(
         Spacer(modifier = Modifier.weight(1f))
 
         Icon(
-            painter = painterResource(id = R.drawable.icon_play_circle),
+            painter = painterResource(id = R.drawable.icon_dots_three_outline_vertical),
             tint = DarkTextDefault,
             contentDescription = "Кнопка действия",
             modifier = Modifier
@@ -262,5 +266,11 @@ fun WordAndTranslationTableRow(
 @Preview(showBackground = true)
 @Composable
 fun MyGroupScreenPreview() {
-    MyGroupScreen(onClick = {})
+    UserGroupScreen(
+        onClick = {},
+        words = listOf(
+            WordWithTranslation(word = "Привет", translation = "Hello"),
+            WordWithTranslation(word = "Кошка", translation = "Cat")
+        )
+    )
 }

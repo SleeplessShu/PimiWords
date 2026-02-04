@@ -2,6 +2,7 @@ package com.sleeplessdog.matchthewords.backend.data.repository
 
 import com.sleeplessdog.matchthewords.backend.data.db.global.GlobalDao
 import com.sleeplessdog.matchthewords.backend.data.db.user.UserDao
+import com.sleeplessdog.matchthewords.backend.data.db.user.UserWordEntity
 import com.sleeplessdog.matchthewords.backend.domain.models.CombinedWord
 import com.sleeplessdog.matchthewords.backend.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.backend.domain.models.WordsGroupsList
@@ -88,6 +89,11 @@ class WordsRepository(
             if (!w1.isValid || !w2.isValid) null
             else w1 to w2
         }
+    }
+
+    suspend fun getWordsByGroup(groupKey: String): List<UserWordEntity> {
+        val group = userDao.getGroupByKey(groupKey) ?: return emptyList()
+        return userDao.getWordsByGroups(setOf(group.id))
     }
 
     // ---------- helpers ----------

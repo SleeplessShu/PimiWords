@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.sleeplessdog.matchthewords.R
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DictionaryComposeFragment : Fragment() {
@@ -24,10 +23,9 @@ class DictionaryComposeFragment : Fragment() {
         }
     }
 
-    // Функция для перехода на NewGroupComposeFragment
-    private fun navigateToNewGroup() {
-        findNavController().navigate(R.id.action_wordsFragment_to_newGroupFragment)
+    private fun navigateToNewGroup(key: String) {
+        val action =
+            DictionaryComposeFragmentDirections.actionWordsFragmentToNewGroupFragment(groupKey = key)
+        findNavController().navigate(action)
     }
-
-
 }

@@ -64,7 +64,7 @@ import com.sleeplessdog.matchthewords.ui.theme.textSize24Medium
 @Composable
 fun DictionaryUi(
     viewModel: DictionaryViewModel,
-    onNavigateToNewGroup: () -> Unit,
+    onNavigateToNewGroup: (String) -> Unit,
 ) {
     val state by viewModel.categoriesGrouped.collectAsState()
 
@@ -80,7 +80,7 @@ fun DictionaryUi(
 fun DictionaryScreen(
     userGroups: List<GroupUiDictionary>,
     standardGroups: List<GroupUiDictionary>,
-    onNavigateToNewGroup: () -> Unit,
+    onNavigateToNewGroup: (String) -> Unit,
     addNewUserGroup: (String) -> Unit
 ) {
     var groupState by remember { mutableStateOf(DictionaryWordGroups.BOTH_PARTIALLY) }
@@ -248,7 +248,7 @@ fun MyGroupsHeader(
 fun UserGroupsTable(
     groups: List<GroupUiDictionary>,
     expanded: Boolean,
-    onNavigateToNewGroup: () -> Unit,
+    onNavigateToNewGroup: (String) -> Unit,
     onShowDialog: (Boolean) -> Unit
 ) {
     Column(
@@ -264,7 +264,8 @@ fun UserGroupsTable(
                 titleKey = group.titleKey,
                 wordsCount = group.wordsInGroup,
                 rowIndex = index,
-                onClick = onNavigateToNewGroup
+                onClick = onNavigateToNewGroup,
+                key = group.key
             )
             if (index != groups.lastIndex) {
                 Divider(color = BlackPrimary, thickness = 1.dp)
@@ -273,19 +274,19 @@ fun UserGroupsTable(
         UserGroupTableRow(
             titleKey = stringResource(R.string.create_group),
             rowIndex = -2,
-            onClick = { onShowDialog(true) }
-
+            onClick = { onShowDialog(true) },
+            key = "",
         )
     }
 }
 
 @Composable
 fun UserGroupTableRow(
+    key: String,
     rowIndex: Int,
     titleKey: String,
     wordsCount: Int? = null,
-
-    onClick: () -> Unit,
+    onClick: (String) -> Unit,
 ) {
     val context = LocalContext.current
     val resId = remember(titleKey) {
@@ -305,7 +306,7 @@ fun UserGroupTableRow(
             .fillMaxWidth()
             .height(68.dp)
             .background(Gray05)
-            .clickable { onClick() },
+            .clickable { onClick(key) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -315,8 +316,7 @@ fun UserGroupTableRow(
             modifier = Modifier
                 .size(36.dp)
                 .padding(start = 12.dp),
-
-            )
+        )
         Spacer(modifier = Modifier.width(8.dp))
         Column {
             Text(
