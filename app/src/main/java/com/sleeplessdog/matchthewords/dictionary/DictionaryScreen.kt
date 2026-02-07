@@ -223,7 +223,7 @@ fun UserGroupsTable(
             .clip(RoundedCornerShape(12.dp))
     ) {
         UserGroupTableRow(
-            titleKey = stringResource(R.string.added_words),
+            titleKey = R.string.added_words,
             rowIndex = -1,
             wordsCount = bufferWords.size
         )
@@ -241,7 +241,7 @@ fun UserGroupsTable(
         }
         Divider(color = BlackPrimary, thickness = 1.dp)
         UserGroupTableRow(
-            titleKey = stringResource(R.string.create_group),
+            titleKey = R.string.create_group,
             rowIndex = -2,
         )
     }
@@ -250,15 +250,10 @@ fun UserGroupsTable(
 @Composable
 fun UserGroupTableRow(
     rowIndex: Int,
-    titleKey: String,
+    titleKey: Int,
     wordsCount: Int? = null,
 ) {
     val context = LocalContext.current
-    val resId = remember(titleKey) {
-        context.resources.getIdentifier(titleKey, "string", context.packageName)
-    }
-
-    val titleText = if (resId != 0) stringResource(id = resId) else titleKey
 
     val clickableIconPainter =
         painterResource(id = R.drawable.icon_dots_three_outline_vertical)
@@ -286,7 +281,7 @@ fun UserGroupTableRow(
         Spacer(modifier = Modifier.width(8.dp))
         Column {
             Text(
-                titleText,
+                text = stringResource(id = titleKey),
                 style = textSize16Bold,
                 color = DarkTextDefault
             )
@@ -408,14 +403,10 @@ fun StandardGroupsTable(
 fun StandardGroupTableRow(
     wordsCount: Int,
     iconKey: Int,
-    titleKey: String,
+    titleKey: Int,
 ) {
     val context = LocalContext.current
-    val resId = remember(titleKey) {
-        context.resources.getIdentifier(titleKey, "string", context.packageName)
-    }
-    val titleText = if (resId != 0) stringResource(id = resId) else titleKey
-
+    val titleText = stringResource(titleKey)
     val iconPainter = if (iconKey != 0) {
         painterResource(id = iconKey)
     } else {
@@ -475,49 +466,50 @@ fun DictionaryScreenPreview() {
         userGroups = listOf(
             GroupUiDictionary(
                 key = "saved_words",
-                titleKey = "added_words",
+                titleKey = R.string.added_words,
                 iconKey = R.drawable.icon_favorite,
                 wordsInGroup = 3
             ),
             GroupUiDictionary(
                 key = "birds",
-                titleKey = "birds",
-                iconKey = R.drawable.icon_book,
+                titleKey = R.string.group_house,
+                iconKey = R.drawable.ic_group_house,
                 wordsInGroup = 5
             ),
             GroupUiDictionary(
                 key = "fish",
-                titleKey = "fish",
-                iconKey = R.drawable.icon_book,
+                titleKey = R.string.group_work,
+                iconKey = R.drawable.ic_group_work,
                 wordsInGroup = 1
             )
         ),
         standardGroups = listOf(
             GroupUiDictionary(
                 key = "travel",
-                titleKey = "travel",
-                iconKey = R.drawable.icon_book,
+                titleKey = R.string.group_travel,
+                iconKey = R.drawable.ic_group_travel,
                 wordsInGroup = 1
             ),
             GroupUiDictionary(
                 key = "house",
-                titleKey = "house",
-                iconKey = R.drawable.icon_book,
+                titleKey = R.string.group_house,
+                iconKey = R.drawable.ic_group_house,
                 wordsInGroup = 2
             ),
             GroupUiDictionary(
                 key = "work",
-                titleKey = "work",
-                iconKey = R.drawable.icon_book,
+                titleKey = R.string.group_work,
+                iconKey = R.drawable.ic_group_work,
                 wordsInGroup = 5
             ),
             GroupUiDictionary(
                 key = "birds_std",
-                titleKey = "birds",
-                iconKey = R.drawable.icon_book,
+                titleKey = R.string.group_body,
+                iconKey = R.drawable.ic_group_body,
                 wordsInGroup = 1
             )
         ),
         bufferWords = listOf("apple", "dog", "cat")
     )
 }
+
