@@ -5,12 +5,17 @@ data class CombinedGroupsDictionaryScreen(
     val globalGroups: List<GlobalGroupUiEntity>,
 )
 
-data class CombinedGroupsSettingsScreen(
+data class CombinedGroupsSettingsDomain(
+    val featured: List<WordGroup> = emptyList(),
+    val userGroups: List<WordGroup> = emptyList(),
+    val globalGroups: List<WordGroup> = emptyList(),
+)
+
+data class CombinedGroupsSettingsUi(
     val featured: List<GroupUiSettings> = emptyList(),
     val userGroups: List<GroupUiSettings> = emptyList(),
     val globalGroups: List<GroupUiSettings> = emptyList(),
 )
-
 
 /**
  * используется в сеттингах, чтобы получить список всех групп
@@ -38,7 +43,8 @@ data class GroupPresentationSettingsEntity(
 
 data class GroupUiSettings(
     val key: String,
-    val titleRes: String,
+    val title: String? = null,
+    val titleRes: Int,
     val iconRes: Int,
     val isSelected: Boolean,
     val isUser: Boolean,
@@ -63,3 +69,16 @@ data class GroupsUiState(
     val loading: Boolean = true,
     val error: Throwable? = null,
 )
+
+data class WordGroup(
+    val key: String,
+    val title: String? = null,
+    val isSelected: Boolean,
+    val isUser: Boolean,
+    val orderInBlock: Int,
+)
+
+/*
+fun WordGroupPresentation.toDomain() = WordGroup(
+    key, title,isSelected, isUser, orderInBlock
+)*/

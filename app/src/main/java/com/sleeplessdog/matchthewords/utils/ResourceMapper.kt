@@ -4,20 +4,11 @@ import android.content.Context
 import com.sleeplessdog.matchthewords.R
 
 
-fun Context.groupTitleRes(key: String): String {
-    if (key == "saved_words") {
-        return getString(R.string.group_saved)
-    }
-
+fun Context.groupTitleRes(key: String): Int {
+    if (key.equals("saved_words")) return R.string.group_saved
     val normalized = normalizeGroupKey(key)
-
-    val resId = resources.getIdentifier(
-        "group_$normalized",
-        "string",
-        packageName
-    )
-
-    return if (resId != 0) getString(resId) else key
+    return resources.getIdentifier("group_$normalized", "string", packageName).takeIf { it != 0 }
+        ?: R.string.group_unknown
 }
 
 fun Context.groupIconRes(key: String): Int {

@@ -52,6 +52,8 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
     private var pimiController: PimiScrollbarController? = null
 
     private var preselected: Set<String> = emptySet()
+    private var showAllTopics = false
+    private var groupsLimit = FEATURED_LIMIT
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = SettingsFragmentBinding.bind(view)
@@ -188,8 +190,12 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         }
 
         binding.btnShowAllCategories.setOnClickListener {
-            preselected = vm.state.value.featured.filter { it.isSelected }
-                .map { it.key }.toSet()
+            showAllTopics = true
+
+            preselected = vm.state.value.featured
+                .filter { it.isSelected }
+                .map { it.key }
+                .toSet()
             showTopicsMenu()
         }
 
@@ -244,7 +250,13 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         val group = binding.cgFeaturedCategories
         group.removeAllViews()
 
-        list.forEach { item ->
+        val itemsToShow =
+            if (showAllTopics) list
+            else list.take(FEATURED_LIMIT)
+        if (!showAllTopics) groupsLimit -= list.size
+
+
+        itemsToShow.forEach { item ->
             val chip = SupportFunctions.createCategoryChip(group, item)
 
             chip.isChecked = item.isSelected
@@ -256,6 +268,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
 
     private fun renderGroup(group: FlexboxLayout, items: List<GroupUiSettings>) {
         group.removeAllViews()
+
         items.forEach { item ->
             group.addView(SupportFunctions.createCategoryChip(group, item).apply {
                 isChecked = item.key in preselected || item.isSelected
@@ -301,6 +314,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
     }
 
     private fun hideTopicsMenu() {
+        showAllTopics = false
         val root = binding.rootTopics
         if (root.visibility != View.VISIBLE) return
 
@@ -334,5 +348,9 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         _binding = null
         pimiController = null
         super.onDestroyView()
+    }
+
+    private companion object {
+        val FEATURED_LIMIT = 6
     }
 }

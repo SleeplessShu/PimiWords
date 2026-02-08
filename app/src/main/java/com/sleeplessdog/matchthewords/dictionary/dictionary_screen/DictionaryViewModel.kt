@@ -12,6 +12,7 @@ import com.sleeplessdog.matchthewords.backend.domain.usecases.CreateUserGroupUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.GetGlobalGroupsOnceUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.GetWordsCountUserGroupUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.ObserveUserGroupsUC
+import com.sleeplessdog.matchthewords.utils.SupportFunctions.getGroupUiName
 import com.sleeplessdog.matchthewords.utils.groupIconRes
 import com.sleeplessdog.matchthewords.utils.groupTitleRes
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -64,9 +65,15 @@ class DictionaryViewModel(
 
             val globalGroups = getGlobalGroupsOnce()
             val globalUiGroups = globalGroups.map { group ->
+                val titleRes = app.groupTitleRes(group.groupKey)
+                if (titleRes != 0) {
+                    app.getString(titleRes)
+                } else {
+                    group.groupKey // fallback, НИКОГДА не падает
+                }
                 GlobalGroupUiEntity(
                     groupId = group.groupKey,
-                    title = app.groupTitleRes(group.groupKey),
+                    title = getGroupUiName(app, 0, group.groupKey),
                     iconRes = app.groupIconRes(group.groupKey),
                     wordsCount = group.wordsCount
                 )

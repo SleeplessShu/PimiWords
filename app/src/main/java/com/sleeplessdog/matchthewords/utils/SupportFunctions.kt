@@ -81,24 +81,32 @@ object SupportFunctions {
     }
 
     fun createCategoryChip(parent: ViewGroup, item: GroupUiSettings): Chip {
-        val ctx = parent.context
+        val context = parent.context
         val chip =
-            LayoutInflater.from(ctx).inflate(R.layout.view_category_chip, parent, false) as Chip
+            LayoutInflater.from(context).inflate(R.layout.view_category_chip, parent, false) as Chip
 
-        chip.text = item.titleRes
+        chip.text = item.title ?: getGroupUiName(context, item.titleRes, item.key)
         chip.isCheckable = true
         chip.tag = item.key
         chip.chipBackgroundColor = ContextCompat.getColorStateList(
-            ctx, R.color.selector_options_button_bg
+            context, R.color.selector_options_button_bg
         )
         if (item.iconRes != 0) {
-            chip.chipIcon = AppCompatResources.getDrawable(ctx, item.iconRes)
+            chip.chipIcon = AppCompatResources.getDrawable(context, item.iconRes)
             chip.isChipIconVisible = true
         } else {
             chip.isChipIconVisible = false
         }
 
         return chip
+    }
+
+    fun getGroupUiName(context: Context, titleRes: Int, key: String): String {
+        return if (titleRes != 0) {
+            context.getString(titleRes)
+        } else {
+            key // fallback, НИКОГДА не падает
+        }
     }
 
     fun Context.withLanguage(lang: Language): Context {

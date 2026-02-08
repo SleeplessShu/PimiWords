@@ -5,11 +5,11 @@ import com.sleeplessdog.matchthewords.backend.data.db.global.toUi
 import com.sleeplessdog.matchthewords.backend.data.db.user.UserDao
 import com.sleeplessdog.matchthewords.backend.data.db.user.UserGroupEntity
 import com.sleeplessdog.matchthewords.backend.data.db.user.toUi
-import com.sleeplessdog.matchthewords.backend.domain.models.CombinedGroupsSettingsScreen
+import com.sleeplessdog.matchthewords.backend.domain.models.CombinedGroupsSettingsDomain
 import com.sleeplessdog.matchthewords.backend.domain.models.GlobalGroupDBEntity
 import com.sleeplessdog.matchthewords.backend.domain.models.GroupPresentationSettingsEntity
-import com.sleeplessdog.matchthewords.backend.domain.models.GroupUiSettings
 import com.sleeplessdog.matchthewords.backend.domain.models.UserSettingsEntity
+import com.sleeplessdog.matchthewords.backend.domain.models.WordGroup
 import com.sleeplessdog.matchthewords.dictionary.group_screen.GroupType
 import com.sleeplessdog.matchthewords.dictionary.group_screen.WordUi
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
@@ -22,7 +22,7 @@ class GroupsRepository(
     private val globalDao: GlobalDao,
     private val userDao: UserDao,
 ) {
-    fun observeAllGroups(): Flow<CombinedGroupsSettingsScreen> {
+    fun observeAllGroups(): Flow<CombinedGroupsSettingsDomain> {
 
         return combine(
             userDao.observeUserGroups(),
@@ -37,21 +37,18 @@ class GroupsRepository(
                 ?: emptySet()
 
             val globalCategories = globalKeys.map { key ->
-                GroupUiSettings(
+                WordGroup(
                     key = key,
                     isSelected = key in selected,
                     isUser = false,
                     orderInBlock = 1,
-                    titleRes = key,
-                    iconRes = 0
                 )
             }
 
             val userCategories = userGroups.map { g ->
-                GroupUiSettings(
+                WordGroup(
                     key = g.groupKey,
-                    titleRes = g.title,
-                    iconRes = 0,
+                    title = g.title,
                     isSelected = g.groupKey in selected,
                     isUser = true,
                     orderInBlock = 0
@@ -60,14 +57,14 @@ class GroupsRepository(
 
             val featured = (userCategories + globalCategories)
                 .sortedWith(
-                    compareByDescending<GroupUiSettings> { it.isSelected }
+                    compareByDescending<WordGroup> { it.isSelected }
                         .thenByDescending { it.isUser }
                         .thenBy { it.orderInBlock }
                         .thenBy { it.key }
                 )
 
 
-            CombinedGroupsSettingsScreen(
+            CombinedGroupsSettingsDomain(
                 featured = featured,
                 userGroups = userCategories,
                 globalGroups = globalCategories

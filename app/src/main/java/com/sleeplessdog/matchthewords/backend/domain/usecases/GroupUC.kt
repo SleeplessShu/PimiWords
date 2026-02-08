@@ -3,7 +3,7 @@ package com.sleeplessdog.matchthewords.backend.domain.usecases
 import com.sleeplessdog.matchthewords.backend.data.db.user.UserDao
 import com.sleeplessdog.matchthewords.backend.data.db.user.UserGroupEntity
 import com.sleeplessdog.matchthewords.backend.data.repository.GroupsRepository
-import com.sleeplessdog.matchthewords.backend.domain.models.CombinedGroupsSettingsScreen
+import com.sleeplessdog.matchthewords.backend.domain.models.CombinedGroupsSettingsDomain
 import com.sleeplessdog.matchthewords.backend.domain.models.GlobalGroupDBEntity
 import com.sleeplessdog.matchthewords.backend.domain.models.GroupPresentationSettingsEntity
 import com.sleeplessdog.matchthewords.dictionary.group_screen.GroupType
@@ -131,5 +131,5 @@ class GetGroupTitleByIdUC(
 class ObserveAllGroupsGroupedUC(
     private val repo: GroupsRepository,
 ) {
-    operator fun invoke(): Flow<CombinedGroupsSettingsScreen> = repo.observeAllGroups()
+    operator fun invoke(): Flow<CombinedGroupsSettingsDomain> = repo.observeAllGroups()
 }

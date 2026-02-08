@@ -6,6 +6,7 @@ import com.sleeplessdog.matchthewords.backend.data.repository.AppPrefs
 import com.sleeplessdog.matchthewords.backend.data.repository.AppPrefsImpl
 import com.sleeplessdog.matchthewords.dictionary.dictionary_screen.DictionaryViewModel
 import com.sleeplessdog.matchthewords.dictionary.group_screen.GroupViewModel
+import com.sleeplessdog.matchthewords.dictionary.models.GroupUiMapper
 import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
 import com.sleeplessdog.matchthewords.game.presentation.controller.LandingPagesController
 import com.sleeplessdog.matchthewords.game.presentation.fragments.EndGameViewModel
@@ -100,7 +101,7 @@ val presentationModule = module {
     }
 
     viewModel {
-        SettingsViewModel(
+        val settingsViewModel = SettingsViewModel(
             observeAllGroups = get(),
             toggleUC = get(),
             saveSelectionUC = get(),
@@ -108,8 +109,10 @@ val presentationModule = module {
             saveLevelsUC = get(),
             observeLevelsUC = get(),
             app = androidApplication(),
-            appPrefs = get()
+            appPrefs = get(),
+            groupUiMapper = get()
         )
+        settingsViewModel
     }
 
     single<AppPrefs> {
@@ -126,5 +129,6 @@ val presentationModule = module {
 
     single { ShuffleFunctions() }
     single { ProgressController() }
+    single { GroupUiMapper(get()) }
 
 }

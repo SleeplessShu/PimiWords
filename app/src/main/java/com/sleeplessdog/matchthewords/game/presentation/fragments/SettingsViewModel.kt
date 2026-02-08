@@ -7,8 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sleeplessdog.matchthewords.backend.data.repository.AppPrefs
-import com.sleeplessdog.matchthewords.backend.domain.models.CombinedGroupsSettingsScreen
-import com.sleeplessdog.matchthewords.backend.domain.models.GroupUiSettings
+import com.sleeplessdog.matchthewords.backend.domain.models.CombinedGroupsSettingsUi
 import com.sleeplessdog.matchthewords.backend.domain.models.LanguageLevel
 import com.sleeplessdog.matchthewords.backend.domain.usecases.CreateUserGroupUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.ObserveAllGroupsGroupedUC
@@ -16,11 +15,10 @@ import com.sleeplessdog.matchthewords.backend.domain.usecases.SaveSelectionUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.ToggleCategoryUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.settings.SettingsObserveLevelsUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.settings.SettingsSaveLevelsUC
+import com.sleeplessdog.matchthewords.dictionary.models.GroupUiMapper
 import com.sleeplessdog.matchthewords.game.presentation.holders.LanguageAdapterState
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
-import com.sleeplessdog.matchthewords.utils.SupportFunctions.drawableIdByName
-import com.sleeplessdog.matchthewords.utils.SupportFunctions.stringByName
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -35,6 +33,7 @@ class SettingsViewModel(
     private val createUserGroupUC: CreateUserGroupUC,
     private val saveLevelsUC: SettingsSaveLevelsUC,
     private val observeLevelsUC: SettingsObserveLevelsUC,
+    private val groupUiMapper: GroupUiMapper,
     private val app: Application,
     private val appPrefs: AppPrefs,
 ) : ViewModel() {
@@ -58,19 +57,19 @@ class SettingsViewModel(
     val difficulty: LiveData<DifficultLevel> = _difficulty
 
 
-    val state: StateFlow<CombinedGroupsSettingsScreen> =
+    val state: StateFlow<CombinedGroupsSettingsUi> =
         observeAllGroups()
             .map { domain ->
-                CombinedGroupsSettingsScreen(
-                    featured = domain.featured.map { it.toUi() },
-                    userGroups = domain.userGroups.map { it.toUi() },
-                    globalGroups = domain.globalGroups.map { it.toUi() }
+                CombinedGroupsSettingsUi(
+                    featured = domain.featured.map(groupUiMapper::map),
+                    userGroups = domain.userGroups.map(groupUiMapper::map),
+                    globalGroups = domain.globalGroups.map(groupUiMapper::map)
                 )
             }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),
-                initialValue = CombinedGroupsSettingsScreen()
+                initialValue = CombinedGroupsSettingsUi()
             )
 
     init {
@@ -161,20 +160,54 @@ class SettingsViewModel(
         _studyLanguageList.value = Language.entries.filter { it != ui }
     }
 
-    private fun GroupUiSettings.toUi(): GroupUiSettings {
-        val uiLang = appPrefs.getUiLanguage()
-
+    /*private fun WordGroup.toUi(): GroupUiSettings {
         return GroupUiSettings(
             key = key,
-            titleRes = app.stringByName(key, uiLang),
-            iconRes = app.drawableIdByName(key),
+            titleRes = if (isUser && !key.equals("saved_words")) 0 else app.groupTitleRes(
+                key
+            ),
+            title = if (isUser && !key.equals("saved_words")) title else null,
+            iconRes = if (isUser && !key.equals("saved_words")) R.drawable.ic_group_default else app.groupIconRes(
+                key
+            ),
             isSelected = isSelected,
             isUser = isUser,
             orderInBlock = orderInBlock
         )
-    }
+    }*/
 
-    private companion object {
-        val FEATURED_LIMIT = 8
-    }
+    /*private fun buildFeatured(
+        featuredGroups: List<WordGroup>,
+        userGroups: List<WordGroup>,
+        globalGroups: List<WordGroup>,
+    ): List<WordGroup> {
+
+        // уже хватает — просто обрезаем
+        if (featuredGroups.size >= FEATURED_LIMIT) {
+            return featuredGroups.take(FEATURED_LIMIT)
+        }
+
+        val result = featuredGroups.toMutableList()
+        val usedKeys = result.map { it.key }.toMutableSet()
+
+        // добираем из user
+        for (group in userGroups) {
+            if (result.size >= FEATURED_LIMIT) break
+            if (group.key !in usedKeys) {
+                result.add(group)
+                usedKeys.add(group.key)
+            }
+        }
+
+        // добираем из global
+        for (group in globalGroups) {
+            if (result.size >= FEATURED_LIMIT) break
+            if (group.key !in usedKeys) {
+                result.add(group)
+                usedKeys.add(group.key)
+            }
+        }
+
+        return result
+    }*/
 }
