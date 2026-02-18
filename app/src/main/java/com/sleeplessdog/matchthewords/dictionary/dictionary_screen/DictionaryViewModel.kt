@@ -21,18 +21,8 @@ class DictionaryViewModel(
     private val deleteUserGroup: DeleteUserGroupUC,
     private val groupDictionaryUiMapper: GroupDictionaryUiMapper,
 
-    /*private val getGlobalGroupsOnce: GetGlobalGroupsOnceUC,
-    private val getWordsCountUserGroup: GetWordsCountUserGroupUC,
-    private val observeUserGroups: ObserveUserGroupsUC,
-    private val appPrefs: AppPrefs,
-    private val app: Application,*/
-) : ViewModel() {
+    ) : ViewModel() {
 
-    /*private val _categoriesGrouped = MutableStateFlow(
-        CombinedGroupsDictionaryScreen(userGroups = emptyList(), globalGroups = emptyList())
-    )
-    val categoriesGrouped: StateFlow<CombinedGroupsDictionaryScreen> = _categoriesGrouped
-*/
     val state: StateFlow<CombinedGroupsDictionaryUi> =
         observeAllGroups()
             .map { domain ->
@@ -46,56 +36,6 @@ class DictionaryViewModel(
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = CombinedGroupsDictionaryUi()
             )
-
-    init {
-        /*observeUserGroups()
-        fetchGlobalGroups()*/
-    }
-
-    /*private fun observeUserGroups() {
-        viewModelScope.launch {
-            observeUserGroups.invoke().collect { userGroups ->
-                val userUiGroups = userGroups.map { group ->
-                    val icon =
-                        if (group.icon == null) R.drawable.icon_book else app.groupIconRes(group.icon)
-                    UserGroupUiEntity(
-                        groupKey = group.groupKey,
-                        title = group.title,
-                        icon = icon,
-                        wordsCount = getWordsCountUserGroup(group.groupKey)
-                    )
-                }
-
-                _categoriesGrouped.update { currentState ->
-                    currentState.copy(userGroups = userUiGroups)
-                }
-            }
-        }
-    }
-
-    private fun fetchGlobalGroups() {
-        viewModelScope.launch {
-
-            val globalGroups = getGlobalGroupsOnce()
-            val globalUiGroups = globalGroups.map { group ->
-                val titleRes = app.groupTitleRes(group.groupKey)
-                if (titleRes != 0) {
-                    app.getString(titleRes)
-                } else {
-                    group.groupKey // fallback, НИКОГДА не падает
-                }
-                GlobalGroupUiEntity(
-                    groupId = group.groupKey,
-                    title = getGroupUiName(app, 0, group.groupKey),
-                    iconRes = app.groupIconRes(group.groupKey),
-                    wordsCount = group.wordsCount
-                )
-            }
-            _categoriesGrouped.update { currentState ->
-                currentState.copy(globalGroups = globalUiGroups)
-            }
-        }
-    }*/
 
     fun addNewUserGroup(name: String) {
         viewModelScope.launch {

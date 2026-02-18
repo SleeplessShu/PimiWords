@@ -96,6 +96,19 @@ class GroupsRepository(
         }
     }
 
+    fun observeUserGroupsForDictionary(): Flow<List<GroupDictionaryDomain>> {
+        return userDao.observeUserGroups().map { list ->
+            list.map { group ->
+                GroupDictionaryDomain(
+                    key = group.groupKey,
+                    title = group.title,
+                    wordsInGroup = getWordsCountUserGroup(group.groupKey),
+                    isUser = true
+                )
+            }
+        }
+    }
+
     /**
      * сохраняти в БД выбранные в настройках группы
      */

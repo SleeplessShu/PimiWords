@@ -6,8 +6,8 @@ import com.sleeplessdog.matchthewords.backend.data.repository.GroupsRepository
 import com.sleeplessdog.matchthewords.backend.domain.models.CombinedGroupsDictionaryDomain
 import com.sleeplessdog.matchthewords.backend.domain.models.CombinedGroupsSettingsDomain
 import com.sleeplessdog.matchthewords.backend.domain.models.GlobalGroupDBEntity
+import com.sleeplessdog.matchthewords.backend.domain.models.GroupDictionaryDomain
 import com.sleeplessdog.matchthewords.backend.domain.models.GroupPresentationSettingsEntity
-import com.sleeplessdog.matchthewords.dictionary.group_screen.GroupType
 import com.sleeplessdog.matchthewords.dictionary.group_screen.WordUi
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
 import kotlinx.coroutines.flow.Flow
@@ -67,14 +67,6 @@ class GetSelectedGroupsUC(
             ?: emptySet()
     }
 }
-
-/*class ObserveFeaturedGroupsUC(
-    private val repo: GroupsRepository,
-) {
-    operator fun invoke(limit: Int): Flow<List<GlobalGroupPresentationEntity>> = flow {
-        emit(repo.getAllGroups().take(limit))
-    }
-}*/
 
 class SaveSelectionUC(
     private val repo: GroupsRepository,
@@ -140,16 +132,6 @@ class GetGlobalGroupWordsOnceUC(
     }
 }
 
-class GetGroupTitleByIdUC(
-    private val repo: GroupsRepository,
-) {
-    suspend operator fun invoke(
-        groupId: String, groupType: GroupType,
-    ): String {
-        return repo.getGroupTitleById(groupId, groupType)
-    }
-}
-
 class ObserveAllGroupsForSettingsUC(
     private val repo: GroupsRepository,
 ) {
@@ -162,3 +144,29 @@ class ObserveAllGroupsForDictionaryUC(
     operator fun invoke(): Flow<CombinedGroupsDictionaryDomain> =
         repo.observeAllGroupsForDictionary()
 }
+
+class ObserveUserGroupsForGroupsUC(
+    private val repo: GroupsRepository,
+) {
+    operator fun invoke(): Flow<List<GroupDictionaryDomain>> =
+        repo.observeUserGroupsForDictionary()
+}
+
+
+/*class GetGroupTitleByIdUC(
+    private val repo: GroupsRepository,
+) {
+    suspend operator fun invoke(
+        groupId: String, groupType: GroupType,
+    ): String {
+        return repo.getGroupTitleById(groupId, groupType)
+    }
+}*/
+
+/*class ObserveFeaturedGroupsUC(
+    private val repo: GroupsRepository,
+) {
+    operator fun invoke(limit: Int): Flow<List<GlobalGroupPresentationEntity>> = flow {
+        emit(repo.getAllGroups().take(limit))
+    }
+}*/

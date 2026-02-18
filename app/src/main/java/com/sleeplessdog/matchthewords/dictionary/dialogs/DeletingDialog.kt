@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.matchthewords.dictionary.DialogType
 import com.sleeplessdog.matchthewords.ui.theme.DarkTextDefault
 import com.sleeplessdog.matchthewords.ui.theme.Gray05
 import com.sleeplessdog.matchthewords.ui.theme.textSize16SemiBold
@@ -25,10 +26,11 @@ import com.sleeplessdog.matchthewords.ui.theme.textSize24Bold
 
 
 @Composable
-fun DeleteCategoryDialog(
+fun DeletingDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
-    groupTitle: String,
+    title: String,
+    dialogType: DialogType,
 ) {
     Dialog(
         onDismissRequest = onDismiss,
@@ -58,12 +60,13 @@ fun DeleteCategoryDialog(
                 )
 
                 Spacer(Modifier.height(16.dp))
-
+                val question = when (dialogType) {
+                    DialogType.DELETE_GROUP -> stringResource(R.string.delete_group_confirm, title)
+                    DialogType.DELETE_PAIR -> stringResource(R.string.delete_word_confirm, title)
+                    else -> ""
+                }
                 Text(
-                    text = stringResource(
-                        R.string.delete_group_confirm,
-                        groupTitle
-                    ),
+                    text = question,
                     style = textSize16SemiBold,
                     color = DarkTextDefault.copy(alpha = 0.8f),
                     modifier = Modifier.fillMaxWidth(),
@@ -72,9 +75,10 @@ fun DeleteCategoryDialog(
 
                 Spacer(Modifier.height(36.dp))
 
-                ButtonsCancelAndDelete(
+                DialogButtons(
                     onDismiss = onDismiss,
-                    onDelete = onConfirm
+                    onConfirm = onConfirm,
+                    dialogType = dialogType
                 )
             }
         }

@@ -55,10 +55,16 @@ val presentationModule = module {
     viewModel { ScoreViewModel() }
     viewModel {
         GroupViewModel(
+            observeUserGroupsForGroups = get(),
             observeWordsInUserGroup = get(),
             getGlobalGroupWordsOnce = get(),
+            savedStateHandle = get(),
+            addWordToUserGroup = get(),
+            editWordInUserGroup = get(),
+            deleteWordFromUserGroup = get(),
+            moveWordToUserGroup = get(),
             appPrefs = get(),
-            savedStateHandle = get()
+            addSingleWordToSavedWords = get(),
         )
     }
     viewModel {

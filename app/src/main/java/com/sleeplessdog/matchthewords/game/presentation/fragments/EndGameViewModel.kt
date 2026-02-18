@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sleeplessdog.matchthewords.backend.domain.usecases.words.AddWordToUserDictionaryUC
+import com.sleeplessdog.matchthewords.backend.domain.usecases.AddWordToUserDictionaryUC
 import com.sleeplessdog.matchthewords.game.presentation.models.EndGameActionStatus
 import com.sleeplessdog.matchthewords.game.presentation.models.EndGameWordsAction
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,7 +67,7 @@ class EndGameViewModel(
         if (ids.isEmpty()) return
         Log.d("ENDGAMEVM", "saveSelectedWords: $ids")
         viewModelScope.launch {
-            val result = addWordToUserDictionary.add(ids)
+            val result = addWordToUserDictionary(ids)
             Log.d("DEBUG", "результат добавления слов в словарь $result")
         }
         hideActions()

@@ -36,9 +36,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.backend.domain.models.GroupUiDictionary
-import com.sleeplessdog.matchthewords.dictionary.dialogs.DeleteCategoryDialog
-import com.sleeplessdog.matchthewords.dictionary.dialogs.NewCategoryDialog
-import com.sleeplessdog.matchthewords.dictionary.dialogs.RenameCategoryDialog
+import com.sleeplessdog.matchthewords.dictionary.dialogs.DeletingDialog
+import com.sleeplessdog.matchthewords.dictionary.dialogs.GroupDialog
 import com.sleeplessdog.matchthewords.dictionary.dictionary_screen.DictionaryViewModel
 import com.sleeplessdog.matchthewords.ui.theme.BlackPrimary
 import com.sleeplessdog.matchthewords.ui.theme.DarkTextDefault
@@ -78,30 +77,32 @@ fun DictionaryScreen(
     addNewUserGroup: (String) -> Unit,
     bottomPadding: Int,
 ) {
-    var menuExpanded by remember { mutableStateOf(false) }
-    var showDialog by remember { mutableStateOf(false) }
+    //var menuExpanded by remember { mutableStateOf(false) }
+    //var showDialog by remember { mutableStateOf(false) }
     var renameGroup by remember { mutableStateOf<Pair<String, String>?>(null) }
     var deleteGroup by remember { mutableStateOf<Pair<String, String>?>(null) }
 
     renameGroup?.let { (key, title) ->
-        RenameCategoryDialog(
+        GroupDialog(
             onDismiss = { renameGroup = null },
-            onSave = { newName ->
+            onConfirm = { newName ->
                 viewModel.renameGroup(key, newName)
                 renameGroup = null
             },
+            dialogType = DialogType.RENAME_GROUP,
             groupTitle = title
         )
     }
 
     deleteGroup?.let { (key, title) ->
-        DeleteCategoryDialog(
+        DeletingDialog(
             onDismiss = { deleteGroup = null },
             onConfirm = {
                 viewModel.deleteGroup(key)
                 deleteGroup = null
             },
-            groupTitle = title
+            title = title,
+            dialogType = DialogType.DELETE_GROUP
         )
     }
 
@@ -272,12 +273,13 @@ fun DictionaryTabs(
         }
 
         if (showDialog) {
-            NewCategoryDialog(
+            GroupDialog(
                 onDismiss = { showDialog = false },
-                onSave = {
+                onConfirm = {
                     addNewUserGroup(it)
                     showDialog = false
-                }
+                },
+                dialogType = DialogType.NEW_GROUP
             )
         }
     }

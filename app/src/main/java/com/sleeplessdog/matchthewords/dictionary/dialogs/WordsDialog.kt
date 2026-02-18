@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.matchthewords.dictionary.DialogType
 import com.sleeplessdog.matchthewords.ui.theme.DarkTextDefault
 import com.sleeplessdog.matchthewords.ui.theme.Gray05
 import com.sleeplessdog.matchthewords.ui.theme.Gray07
@@ -36,13 +37,16 @@ import com.sleeplessdog.matchthewords.ui.theme.textSize16SemiBold
 import com.sleeplessdog.matchthewords.ui.theme.textSize20Medium
 import com.sleeplessdog.matchthewords.ui.theme.textSize24Bold
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewCategoryDialog(
+fun WordsPairDialog(
+    dialogType: DialogType,
     onDismiss: () -> Unit,
-    onSave: (String) -> Unit,
+    onConfirm: (String, String) -> Unit,
 ) {
-    var text by remember { mutableStateOf("") }
+    var origin by remember { mutableStateOf("") }
+    var translate by remember { mutableStateOf("") }
     Dialog(
         onDismissRequest = onDismiss, properties = DialogProperties(
             usePlatformDefaultWidth = false,
@@ -61,8 +65,13 @@ fun NewCategoryDialog(
                     .background(Gray05)
                     .padding(16.dp), verticalArrangement = Arrangement.Top
             ) {
+                val text = when (dialogType) {
+                    DialogType.NEW_PAIR -> R.string.add_word
+                    DialogType.EDIT_PAIR -> R.string.edit_word
+                    else -> 0
+                }
                 Text(
-                    text = stringResource(R.string.new_group),
+                    text = stringResource(text),
                     style = textSize24Bold,
                     color = DarkTextDefault,
                     modifier = Modifier.fillMaxWidth(),
@@ -70,11 +79,35 @@ fun NewCategoryDialog(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 OutlinedTextField(
-                    value = text,
-                    onValueChange = { text = it },
+                    value = origin,
+                    onValueChange = { origin = it },
                     placeholder = {
                         Text(
-                            text = stringResource(R.string.enter_group_name),
+                            text = stringResource(R.string.enter_word_origin),
+                            style = textSize20Medium,
+                            color = Gray07,
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    textStyle = textSize16SemiBold.copy(color = GreenPrimary),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent,
+
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        cursorColor = GreenPrimary
+                    )
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                OutlinedTextField(
+                    value = translate,
+                    onValueChange = { translate = it },
+                    placeholder = {
+                        Text(
+                            text = stringResource(R.string.enter_word_translate),
                             style = textSize20Medium,
                             color = Gray07,
                         )
@@ -96,12 +129,16 @@ fun NewCategoryDialog(
                     thickness = 1.dp, color = DarkTextDefault
                 )
                 Spacer(modifier = Modifier.height(36.dp))
-                ButtonsCancelAndSave(onDismiss = onDismiss, onSave = {
-                    if (text.isNotBlank()) {
-                        onSave(text)
-                        onDismiss()
-                    }
-                })
+                DialogButtons(
+                    onDismiss = onDismiss,
+                    onConfirm = {
+                        if (origin.isNotBlank() && translate.isNotBlank()) {
+                            onConfirm(origin, translate)
+                            onDismiss()
+                        }
+                    },
+                    dialogType = dialogType
+                )
             }
         }
     }

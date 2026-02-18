@@ -1,3 +1,4 @@
+/*
 package com.sleeplessdog.matchthewords.dictionary.dialogs
 
 import androidx.compose.foundation.layout.Arrangement
@@ -52,4 +53,4 @@ fun ButtonsCancelAndSave(
             )
         }
     }
-}
+}*/

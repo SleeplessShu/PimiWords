@@ -102,8 +102,59 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWord(word: UserWordEntity)
 
+    @Query(
+        """
+UPDATE UserWords SET
+    english  = CASE WHEN :english  IS NOT NULL THEN :english  ELSE english END,
+    spanish  = CASE WHEN :spanish  IS NOT NULL THEN :spanish  ELSE spanish END,
+    russian  = CASE WHEN :russian  IS NOT NULL THEN :russian  ELSE russian END,
+    french   = CASE WHEN :french   IS NOT NULL THEN :french   ELSE french END,
+    german   = CASE WHEN :german   IS NOT NULL THEN :german   ELSE german END,
+    armenian = CASE WHEN :armenian IS NOT NULL THEN :armenian ELSE armenian END,
+    serbian  = CASE WHEN :serbian  IS NOT NULL THEN :serbian  ELSE serbian END
+WHERE id = :wordId
+  AND groupId = :groupId
+  
+"""
+    )
+    suspend fun updateUserWordFields(
+        wordId: Long,
+        groupId: String,
+        english: String?,
+        spanish: String?,
+        russian: String?,
+        french: String?,
+        german: String?,
+        armenian: String?,
+        serbian: String?,
+    )
+
     @Delete
     suspend fun deleteWord(word: UserWordEntity)
+
+    @Query(
+        """
+DELETE FROM UserWords
+WHERE groupId = :groupId
+AND id = :wordId
+"""
+    )
+    suspend fun deleteWordByGroupIdAndWordId(
+        groupId: String,
+        wordId: Long,
+    )
+
+    @Query(
+        """
+UPDATE UserWords
+SET groupId = :targetGroupId
+WHERE id = :wordId
+"""
+    )
+    suspend fun moveWordToGroup(
+        wordId: Long,
+        targetGroupId: String,
+    )
 
     // ---------- Progress ----------
 

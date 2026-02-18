@@ -1,5 +1,6 @@
 package com.sleeplessdog.matchthewords.dictionary.navigation
 
+/*
 sealed class DictionaryRoute(val route: String) {
 
     object Main : DictionaryRoute("dictionary_main")
@@ -17,4 +18,4 @@ sealed class DictionaryRoute(val route: String) {
         fun create(groupId: String) =
             "global_group/$groupId"
     }
-}
+}*/

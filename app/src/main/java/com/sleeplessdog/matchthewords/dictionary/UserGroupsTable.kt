@@ -43,7 +43,6 @@ fun UserGroupsTable(
     onNavigateToUserGroup: (String, String) -> Unit,
     onRenameGroup: (String, String) -> Unit,
     onDeleteGroup: (String, String) -> Unit,
-    //onShowDialog: (Boolean) -> Unit,
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -64,7 +63,7 @@ fun UserGroupsTable(
         groups.forEachIndexed { index, group ->
             UserGroupTableRow(
                 title = group.title,
-                groupKey = group.key,
+                //groupKey = group.key,
                 iconKey = group.iconRes,
                 wordsCount = group.wordsInGroup,
                 rowIndex = index,
@@ -83,7 +82,7 @@ fun UserGroupsTable(
 fun UserGroupTableRow(
     rowIndex: Int,
     title: String,
-    groupKey: String,
+    //groupKey: String,
     iconKey: Int,
     wordsCount: Int? = null,
     onClick: () -> Unit,

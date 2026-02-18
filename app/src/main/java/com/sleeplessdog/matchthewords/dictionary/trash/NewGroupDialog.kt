@@ -1,6 +1,8 @@
+/*
 package com.sleeplessdog.matchthewords.dictionary.dialogs
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,27 +29,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.matchthewords.dictionary.DialogType
 import com.sleeplessdog.matchthewords.ui.theme.DarkTextDefault
 import com.sleeplessdog.matchthewords.ui.theme.Gray05
+import com.sleeplessdog.matchthewords.ui.theme.Gray07
 import com.sleeplessdog.matchthewords.ui.theme.GreenPrimary
 import com.sleeplessdog.matchthewords.ui.theme.textSize16SemiBold
+import com.sleeplessdog.matchthewords.ui.theme.textSize20Medium
 import com.sleeplessdog.matchthewords.ui.theme.textSize24Bold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RenameCategoryDialog(
-    initialValue: String = "",
+fun NewGroupDialog(
     onDismiss: () -> Unit,
-    onSave: (String) -> Unit,
-    groupTitle: String,
+    onConfirm: (String) -> Unit,
+    dialogType: DialogType,
 ) {
-    var text by remember { mutableStateOf(initialValue) }
-
+    var text by remember { mutableStateOf("") }
     Dialog(
-        onDismissRequest = onDismiss,
-        properties = DialogProperties(
+        onDismissRequest = onDismiss, properties = DialogProperties(
             usePlatformDefaultWidth = false,
-            decorFitsSystemWindows = false
+            decorFitsSystemWindows = false,
         )
     ) {
         Box(
@@ -60,25 +62,29 @@ fun RenameCategoryDialog(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
                     .background(Gray05)
-                    .padding(16.dp)
+                    .padding(16.dp), verticalArrangement = Arrangement.Top
             ) {
-
                 Text(
-                    text = stringResource(R.string.rename_group_confirm, groupTitle),
+                    text = stringResource(R.string.new_group),
                     style = textSize24Bold,
                     color = DarkTextDefault,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
-
-                Spacer(Modifier.height(16.dp))
-
+                Spacer(modifier = Modifier.height(16.dp))
                 OutlinedTextField(
                     value = text,
                     onValueChange = { text = it },
-                    singleLine = true,
+                    placeholder = {
+                        Text(
+                            text = stringResource(R.string.enter_group_name),
+                            style = textSize20Medium,
+                            color = Gray07,
+                        )
+                    },
                     modifier = Modifier.fillMaxWidth(),
-                    textStyle = textSize16SemiBold.copy(color = DarkTextDefault),
+                    singleLine = true,
+                    textStyle = textSize16SemiBold.copy(color = GreenPrimary),
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
@@ -89,23 +95,22 @@ fun RenameCategoryDialog(
                         cursorColor = GreenPrimary
                     )
                 )
-
                 Divider(
-                    thickness = 1.dp,
-                    color = DarkTextDefault
+                    thickness = 1.dp, color = DarkTextDefault
                 )
-
-                Spacer(Modifier.height(36.dp))
-
-                ButtonsCancelAndSave(
+                Spacer(modifier = Modifier.height(36.dp))
+                DialogButtons(
                     onDismiss = onDismiss,
-                    onSave = {
+                    onConfirm = {
                         if (text.isNotBlank()) {
-                            onSave(text.trim())
+                            onConfirm(text)
+                            onDismiss()
                         }
-                    }
+
+                    },
+                    dialogType = dialogType
                 )
             }
         }
     }
-}
+}*/

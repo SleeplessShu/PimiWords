@@ -13,14 +13,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.matchthewords.dictionary.DialogType
 import com.sleeplessdog.matchthewords.ui.theme.Gray03
 import com.sleeplessdog.matchthewords.ui.theme.GreenPrimary
 import com.sleeplessdog.matchthewords.ui.theme.textSize16SemiBold
 
 @Composable
-fun ButtonsCancelAndDelete(
+fun DialogButtons(
     onDismiss: () -> Unit,
-    onDelete: () -> Unit,
+    onConfirm: () -> Unit,
+    dialogType: DialogType,
 ) {
     Row(
         modifier = Modifier
@@ -42,10 +44,19 @@ fun ButtonsCancelAndDelete(
         Spacer(Modifier.width(8.dp))
 
         TextButton(
-            onClick = onDelete
+            onClick = onConfirm
         ) {
+            val onConfirmText = when (dialogType) {
+                DialogType.NEW_PAIR -> R.string.button_save
+                DialogType.EDIT_PAIR -> R.string.button_rename
+                DialogType.MOVE_PAIR -> R.string.button_move
+                DialogType.DELETE_PAIR -> R.string.button_delete
+                DialogType.DELETE_GROUP -> R.string.button_delete
+                DialogType.RENAME_GROUP -> R.string.button_rename
+                DialogType.NEW_GROUP -> R.string.button_save
+            }
             Text(
-                text = stringResource(R.string.button_yes_v2),
+                text = stringResource(onConfirmText),
                 color = GreenPrimary,
                 style = textSize16SemiBold
             )
