@@ -29,7 +29,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.dictionary.DialogType
+import com.sleeplessdog.matchthewords.dictionary.group_screen.WordUi
 import com.sleeplessdog.matchthewords.ui.theme.DarkTextDefault
+import com.sleeplessdog.matchthewords.ui.theme.Gray03
 import com.sleeplessdog.matchthewords.ui.theme.Gray05
 import com.sleeplessdog.matchthewords.ui.theme.Gray07
 import com.sleeplessdog.matchthewords.ui.theme.GreenPrimary
@@ -42,6 +44,7 @@ import com.sleeplessdog.matchthewords.ui.theme.textSize24Bold
 @Composable
 fun WordsPairDialog(
     dialogType: DialogType,
+    word: WordUi = WordUi(id = 0L, word = "", translation = ""),
     onDismiss: () -> Unit,
     onConfirm: (String, String) -> Unit,
 ) {
@@ -77,37 +80,18 @@ fun WordsPairDialog(
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = origin,
                     onValueChange = { origin = it },
                     placeholder = {
+                        val text = when (dialogType) {
+                            DialogType.NEW_PAIR -> stringResource(R.string.enter_word_origin)
+                            DialogType.EDIT_PAIR -> word.word
+                            else -> ""
+                        }
                         Text(
-                            text = stringResource(R.string.enter_word_origin),
-                            style = textSize20Medium,
-                            color = Gray07,
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    textStyle = textSize16SemiBold.copy(color = GreenPrimary),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        disabledContainerColor = Color.Transparent,
-
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        cursorColor = GreenPrimary
-                    )
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(
-                    value = translate,
-                    onValueChange = { translate = it },
-                    placeholder = {
-                        Text(
-                            text = stringResource(R.string.enter_word_translate),
+                            text = text,
                             style = textSize20Medium,
                             color = Gray07,
                         )
@@ -126,9 +110,45 @@ fun WordsPairDialog(
                     )
                 )
                 Divider(
-                    thickness = 1.dp, color = DarkTextDefault
+                    thickness = 1.dp,
+                    color = Gray03,
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp)
                 )
-                Spacer(modifier = Modifier.height(36.dp))
+
+                OutlinedTextField(
+                    value = translate,
+                    onValueChange = { translate = it },
+                    placeholder = {
+                        val text = when (dialogType) {
+                            DialogType.NEW_PAIR -> stringResource(R.string.enter_word_translate)
+                            DialogType.EDIT_PAIR -> word.translation
+                            else -> ""
+                        }
+                        Text(
+                            text = text,
+                            style = textSize20Medium,
+                            color = Gray07,
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    textStyle = textSize16SemiBold.copy(color = GreenPrimary),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent,
+
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        cursorColor = GreenPrimary
+                    )
+                )
+                Divider(
+                    thickness = 1.dp,
+                    color = Gray03,
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
                 DialogButtons(
                     onDismiss = onDismiss,
                     onConfirm = {

@@ -1,12 +1,8 @@
 package com.sleeplessdog.matchthewords.dictionary
 
-import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -141,32 +137,29 @@ fun HeaderDictionary() {
             .fillMaxWidth()
             .height(48.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.pimiss),
-                contentDescription = "Левая иконка",
-                modifier = Modifier.padding(start = 16.dp)
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
-                text = stringResource(R.string.dictionary),
-                style = textSize24Medium,
-                color = DarkTextDefault,
-                modifier = Modifier.align(Alignment.CenterVertically)
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Icon(
-                painter = painterResource(id = R.drawable.icon_park_outline_search),
-                contentDescription = "Правая иконка",
-                tint = DarkTextDefault,
-                modifier = Modifier
-                    .padding(end = 16.dp)
-                    .clickable {
-                        Toast.makeText(context, "Лупа нажата", Toast.LENGTH_SHORT).show()
-                    })
-        }
+
+        /*Image(
+            painter = painterResource(id = R.drawable.pimiss),
+            contentDescription = "Левая иконка",
+            modifier = Modifier.padding(start = 16.dp)
+        )*/
+
+        Text(
+            text = stringResource(R.string.dictionary),
+            style = textSize24Medium,
+            color = DarkTextDefault,
+            modifier = Modifier.align(Alignment.Center)
+        )
+        /*Icon(
+            painter = painterResource(id = R.drawable.icon_park_outline_search),
+            contentDescription = "Правая иконка",
+            tint = DarkTextDefault,
+            modifier = Modifier
+                .padding(end = 16.dp)
+                .clickable {
+                    Toast.makeText(context, "Лупа нажата", Toast.LENGTH_SHORT).show()
+                })*/
+
     }
 }
 
@@ -260,9 +253,8 @@ fun DictionaryTabs(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(
-                        end = 20.dp,
-
-                        bottom = 80.dp
+                        end = 16.dp,
+                        bottom = 120.dp
                     )
             ) {
                 Icon(
@@ -284,12 +276,3 @@ fun DictionaryTabs(
         }
     }
 }
-
-
-
-
-
-
-
-
-

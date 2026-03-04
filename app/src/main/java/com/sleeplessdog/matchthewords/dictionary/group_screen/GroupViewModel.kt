@@ -62,14 +62,16 @@ class GroupViewModel(
         viewModelScope.launch {
             observeWordsInUserGroup(groupId, ui = ui, study = study).collect { words ->
 
-                _state.value = GroupScreenState(
-                    groupType = groupType,
-                    groupId = groupId,
-                    groupTitle = groupTitle,
-                    words = words,
-                    wordsCount = words.size,
-                    loading = false
-                )
+                _state.update { current ->
+                    current.copy(
+                        groupType = groupType,
+                        groupId = groupId,
+                        groupTitle = groupTitle,
+                        words = words,
+                        wordsCount = words.size,
+                        loading = false
+                    )
+                }
             }
         }
     }
@@ -101,14 +103,16 @@ class GroupViewModel(
         viewModelScope.launch {
             val words = getGlobalGroupWordsOnce(groupId, ui = ui, study = study)
 
-            _state.value = GroupScreenState(
-                groupType = groupType,
-                groupId = groupId,
-                groupTitle = groupTitle,
-                words = words,
-                wordsCount = words.size,
-                loading = false
-            )
+            _state.update { current ->
+                current.copy(
+                    groupType = groupType,
+                    groupId = groupId,
+                    groupTitle = groupTitle,
+                    words = words,
+                    wordsCount = words.size,
+                    loading = false
+                )
+            }
         }
     }
 

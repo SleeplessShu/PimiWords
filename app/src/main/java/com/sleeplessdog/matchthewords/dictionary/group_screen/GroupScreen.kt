@@ -1,6 +1,5 @@
 package com.sleeplessdog.matchthewords.dictionary.group_screen
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,7 +30,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
@@ -77,16 +75,12 @@ fun GroupScreen(
     onMoveWord: (WordUi, String) -> Unit,
     onSaveToSavedWords: (WordUi) -> Unit,
 ) {
-    val scrollState = rememberScrollState()
+
 
     var showAddWordDialog by remember { mutableStateOf(false) }
     var editingWord by remember { mutableStateOf<WordUi?>(null) }
     var deletingWord by remember { mutableStateOf<WordUi?>(null) }
     var movingWord by remember { mutableStateOf<WordUi?>(null) }
-
-
-    /*var deleteWord by remember { mutableStateOf<WordUi?>(null) }
-    var moveWord by remember { mutableStateOf<WordUi?>(null) }*/
 
     Box(
         modifier = Modifier
@@ -94,9 +88,7 @@ fun GroupScreen(
             .background(BlackPrimary)
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState)
+            modifier = Modifier.fillMaxSize()
         ) {
             HeaderUserGroup(
                 title = state.groupTitle, onClick = onBackClick
@@ -104,13 +96,7 @@ fun GroupScreen(
 
             Spacer(Modifier.height(8.dp))
 
-            //AddWord(onClick = onAddWordClick)
-
-            Spacer(Modifier.height(20.dp))
-
             RowNumberWords(state.wordsCount)
-
-            Spacer(Modifier.height(12.dp))
 
             WordAndTranslationTable(
                 words = state.words,
@@ -121,8 +107,6 @@ fun GroupScreen(
                 onSaveToSavedWordsClick = { onSaveToSavedWords(it) },
                 expanded = true
             )
-
-
         }
 
         if (state.groupType == GroupType.USER) {
@@ -133,9 +117,7 @@ fun GroupScreen(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(
-                        end = 20.dp,
-
-                        bottom = 80.dp
+                        end = 16.dp, bottom = 120.dp
                     )
             ) {
                 Icon(
@@ -143,6 +125,7 @@ fun GroupScreen(
                 )
             }
         }
+
         if (showAddWordDialog) {
             WordsPairDialog(
                 dialogType = DialogType.NEW_PAIR,
@@ -157,17 +140,13 @@ fun GroupScreen(
 
         editingWord?.let { word ->
             WordsPairDialog(
-                onDismiss = { editingWord = null },
-                onConfirm = { origin, translate ->
+                onDismiss = { editingWord = null }, onConfirm = { origin, translate ->
                     onEditWord(
                         WordUi(
-                            id = word.id,
-                            word = origin,
-                            translation = translate
+                            id = word.id, word = origin, translation = translate
                         )
                     )
-                },
-                dialogType = DialogType.EDIT_PAIR
+                }, dialogType = DialogType.EDIT_PAIR, word = word
             )
         }
 
@@ -179,19 +158,15 @@ fun GroupScreen(
                 onConfirm = { targetGroupId ->
                     onMoveWord(word, targetGroupId)
                     movingWord = null
-                }
-            )
+                })
         }
 
         deletingWord?.let { word ->
             DeletingDialog(
-                title = word.word,
-                onDismiss = { deletingWord = null },
-                onConfirm = {
+                title = word.word, onDismiss = { deletingWord = null }, onConfirm = {
                     onDeleteWord(word)
                     deletingWord = null
-                },
-                dialogType = DialogType.DELETE_PAIR
+                }, dialogType = DialogType.DELETE_PAIR
             )
         }
     }
@@ -202,42 +177,27 @@ fun HeaderUserGroup(
     title: String,
     onClick: () -> Unit,
 ) {
-    val context = LocalContext.current
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically
-        ) {
 
-            Image(
-                painter = painterResource(id = R.drawable.icon_back),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(start = 16.dp)
-                    .clickable { onClick() })
 
-            Spacer(modifier = Modifier.weight(1f))
+        Image(
+            painter = painterResource(id = R.drawable.icon_back),
+            contentDescription = null,
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(start = 16.dp)
+                .clickable { onClick() })
 
-            Text(
-                text = title, style = textSize24Medium, color = DarkTextDefault
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Icon(
-                painter = painterResource(id = R.drawable.icon_park_outline_search),
-                contentDescription = null,
-                tint = DarkTextDefault,
-                modifier = Modifier
-                    .padding(end = 16.dp)
-                    .clickable {
-                        Toast.makeText(context, "Search clicked", Toast.LENGTH_SHORT).show()
-                    })
-        }
+        Text(
+            text = title,
+            style = textSize24Medium,
+            color = DarkTextDefault,
+            modifier = Modifier.align(Alignment.Center)
+        )
     }
 }
 
@@ -247,18 +207,11 @@ fun RowNumberWords(count: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(44.dp)
+            //.height(44.dp)
             .padding(horizontal = 20.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Absolute.Right
     ) {
-
-        /*   Text(
-               text = stringResource(R.string.words_count_title),
-               style = textSize20Medium,
-               color = DarkTextDefault
-           )
-   */
         Text(
             text = pluralStringResource(
                 R.plurals.words_count, count, count
@@ -278,12 +231,15 @@ fun WordAndTranslationTable(
     expanded: Boolean,
 ) {
     val wordsToShow = if (expanded) words else words.take(3)
-
+    val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp)
+            .padding(
+                start = 20.dp, end = 20.dp, top = 16.dp, bottom = 80.dp
+            )
             .clip(RoundedCornerShape(12.dp))
+            .verticalScroll(scrollState)
     ) {
 
         wordsToShow.forEachIndexed { index, word ->
@@ -317,8 +273,6 @@ fun WordAndTranslationTableRow(
     onDeleteWordClick: (WordUi) -> Unit,
     onSaveToSavedWordsClick: (WordUi) -> Unit,
 ) {
-    //val context = LocalContext.current
-
     Row(
 
         modifier = Modifier
@@ -330,7 +284,11 @@ fun WordAndTranslationTableRow(
         var menuExpanded by remember { mutableStateOf(false) }
         Spacer(modifier = Modifier.width(12.dp))
 
-        Column(modifier = Modifier.weight(1f)) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 16.dp)
+        ) {
 
             Text(
                 text = title, style = textSize16Bold, color = DarkTextDefault
@@ -365,49 +323,5 @@ fun WordAndTranslationTableRow(
             )
         }
         Spacer(modifier = Modifier.width(12.dp))
-
-
     }
 }
-
-
-/*Icon(
-            painter = painterResource(id = R.drawable.icon_play_circle),
-            tint = DarkTextDefault,
-            contentDescription = null,
-            modifier = Modifier
-                .size(24.dp)
-                .clickable {
-                    Toast.makeText(context, "Play clicked", Toast.LENGTH_SHORT).show()
-                }
-        )*/
-/*@Composable
-fun AddWord(onClick: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp)
-            .height(68.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .background(Gray05)
-            .clickable { onClick() },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.icon_add),
-            tint = DarkTextDefault,
-            contentDescription = null,
-            modifier = Modifier
-                .size(36.dp)
-                .padding(start = 12.dp)
-        )
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Text(
-            text = stringResource(R.string.add_word),
-            style = textSize16Bold,
-            color = DarkTextDefault
-        )
-    }
-}*/

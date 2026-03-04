@@ -64,7 +64,7 @@ fun GroupDialog(
                 val message = when (dialogType) {
                     DialogType.NEW_GROUP -> stringResource(R.string.enter_group_name)
                     DialogType.RENAME_GROUP -> stringResource(
-                        R.string.rename_group_confirm, groupTitle!!
+                        R.string.rename_group_confirm, groupTitle
                     )
 
                     else -> ""

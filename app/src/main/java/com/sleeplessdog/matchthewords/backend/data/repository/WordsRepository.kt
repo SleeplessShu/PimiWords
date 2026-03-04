@@ -1,6 +1,7 @@
 package com.sleeplessdog.matchthewords.backend.data.repository
 
 import com.sleeplessdog.matchthewords.backend.data.db.global.GlobalDao
+import com.sleeplessdog.matchthewords.backend.data.db.global.GlobalDictionaryEntity
 import com.sleeplessdog.matchthewords.backend.data.db.user.UserDao
 import com.sleeplessdog.matchthewords.backend.data.db.user.UserGroupEntity
 import com.sleeplessdog.matchthewords.backend.data.db.user.UserWordEntity
@@ -33,9 +34,12 @@ class WordsRepository(
             .takeIf { it.isNotEmpty() }
 
         //Global words
-        val globalWords = globalDao.getWords(
-            levels = levels, groupKeys = categoryKeys
-        )
+        var globalWords = emptyList<GlobalDictionaryEntity>()
+        if (categoryKeys.isNullOrEmpty()) {
+            globalWords = globalDao.getWordsWOGroups(levels)
+        } else {
+            globalWords = globalDao.getWordsWGroups(levels, categoryKeys)
+        }
 
         //User words (включая user-only)
         val userWords = userDao.getAllWords()

@@ -23,6 +23,32 @@ interface GlobalDao {
 
     @Query(
         """
+SELECT * FROM GlobalDictionary
+WHERE isDeleted = 0
+AND difficulty IN (:levels)
+"""
+    )
+    suspend fun getWordsWOGroups(
+        levels: Set<LanguageLevel>,
+    ): List<GlobalDictionaryEntity>
+
+
+    @Query(
+        """
+SELECT * FROM GlobalDictionary
+WHERE isDeleted = 0
+AND difficulty IN (:levels)
+AND groupKey IN (:groupKeys)
+"""
+    )
+    suspend fun getWordsWGroups(
+        levels: Set<LanguageLevel>,
+        groupKeys: Set<String>,
+    ): List<GlobalDictionaryEntity>
+
+
+    @Query(
+        """
         SELECT * FROM GlobalDictionary
         WHERE isDeleted = 0
         AND groupKey = :groupKey
