@@ -9,7 +9,7 @@ object DictionaryDestinations {
     const val ARG_GROUP_ID = "groupId"
     const val ARG_GROUP_NAME = "groupName"
     const val ARG_GROUP_TYPE = "groupType"
-    const val ARG_GROUP_USER = "isUser"
+//    const val ARG_GROUP_USER = "isUser"
 
     fun groupRoute(
         groupId: String,
