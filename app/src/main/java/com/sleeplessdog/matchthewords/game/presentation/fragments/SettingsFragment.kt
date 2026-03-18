@@ -103,28 +103,24 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         with(binding.cardEasy) {
             ivIcon.setImageResource(R.drawable.ic_game_lightning_1)
             tvTitle.setText(R.string.difficulty_easy)
-            tvSubtitle.setText(R.string.difficulty_easy_words)
             root.setOnClickListener { vm.onDifficultyPicked(DifficultLevel.EASY) }
         }
 
         with(binding.cardMedium) {
             ivIcon.setImageResource(R.drawable.ic_game_lightning_2)
             tvTitle.setText(R.string.difficulty_medium)
-            tvSubtitle.setText(R.string.difficulty_medium_words)
             root.setOnClickListener { vm.onDifficultyPicked(DifficultLevel.MEDIUM) }
         }
 
         with(binding.cardHard) {
             ivIcon.setImageResource(R.drawable.ic_game_lightning_3)
             tvTitle.setText(R.string.difficulty_hard)
-            tvSubtitle.setText(R.string.difficulty_hard_words)
             root.setOnClickListener { vm.onDifficultyPicked(DifficultLevel.HARD) }
         }
 
         with(binding.cardExpert) {
             ivIcon.setImageResource(R.drawable.ic_game_lightning_4)
             tvTitle.setText(R.string.difficulty_expert)
-            tvSubtitle.setText(R.string.difficulty_expert_words)
             root.setOnClickListener { vm.onDifficultyPicked(DifficultLevel.EXPERT) }
         }
 
