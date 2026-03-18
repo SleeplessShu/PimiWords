@@ -1,18 +1,13 @@
 package com.sleeplessdog.matchthewords.game.presentation.fragments
 
-import android.app.Activity.RESULT_OK
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.GameSelectFragmentBinding
 import com.sleeplessdog.matchthewords.game.presentation.controller.LanguageAdapter
@@ -159,9 +154,7 @@ class GameSelectFragment : Fragment() {
             }
         }
 
-        viewModel.requestGoogleSignIn.observe(viewLifecycleOwner) {
-            startGoogleSignIn()
-        }
+
 
         viewModel.showLanding.observe(viewLifecycleOwner) { shouldShow ->
             if (shouldShow) {
@@ -270,49 +263,6 @@ class GameSelectFragment : Fragment() {
         }
     }
 
-    private fun startGoogleSignIn() {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build()
-
-        val activity = requireActivity() as MainActivity
-        val signInClient = GoogleSignIn.getClient(activity, gso)
-        googleSignInLauncher.launch(signInClient.signInIntent)
-    }
-
-    private val googleSignInLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == RESULT_OK) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-            val account = task.result
-            account?.idToken?.let {
-                viewModel.onGoogleIdTokenReceived(it)
-            }
-        } else {
-            val message = getString(
-                R.string.error_auth_declined
-            ) + result.resultCode
-            Toast.makeText(
-                requireContext(), message, Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-
-    /**
-     * сброс авторизации пользователя в гугле для тестирования первого запуска
-     */
-    private fun resetAuth() {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
-        val signInClient = GoogleSignIn.getClient(requireActivity(), gso)
-
-        signInClient.signOut().addOnCompleteListener {
-            // Теперь Firebase/AuthRepository перестанет считать пользователя авторизованным
-            Toast.makeText(context, "Logged out", Toast.LENGTH_SHORT).show()
-        }
-
-        // Если хотите, чтобы снова появилось окно выбора аккаунта:
-        signInClient.revokeAccess()
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

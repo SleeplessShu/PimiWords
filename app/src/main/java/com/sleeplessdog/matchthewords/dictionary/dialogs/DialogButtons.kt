@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sleeplessdog.matchthewords.R
-import com.sleeplessdog.matchthewords.dictionary.DialogType
+import com.sleeplessdog.matchthewords.dictionary.models.DialogType
 import com.sleeplessdog.matchthewords.ui.theme.Gray03
 import com.sleeplessdog.matchthewords.ui.theme.GreenPrimary
 import com.sleeplessdog.matchthewords.ui.theme.textSize16SemiBold

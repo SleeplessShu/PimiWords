@@ -4,9 +4,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.tasks.await
 
-class AuthRepository(
+class FirebaseAuthRepository(
     private val firebaseAuth: FirebaseAuth,
 ) {
+    val currentUser get() = firebaseAuth.currentUser
 
     fun isUserAuthorized(): Boolean {
         return firebaseAuth.currentUser != null

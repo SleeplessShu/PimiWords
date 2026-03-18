@@ -1,11 +1,11 @@
 package com.sleeplessdog.matchthewords.backend.domain.usecases.score
 
-import com.sleeplessdog.matchthewords.backend.data.db.user.UserDao
+import com.sleeplessdog.matchthewords.backend.data.db.AppDatabaseProvider
 import com.sleeplessdog.matchthewords.backend.data.db.user.UserWordProgressEntity
 import com.sleeplessdog.matchthewords.utils.GamePrices.LEARNED_THRESHOLD
 
 class UpdateWordProgressUseCase(
-    private val userDao: UserDao,
+    private val databaseProvider: AppDatabaseProvider,
 ) {
 
     suspend fun update(
@@ -38,6 +38,7 @@ class UpdateWordProgressUseCase(
         isCorrect: Boolean,
         now: Long,
     ) {
+        val userDao = databaseProvider.getUserDatabase().userDao()
         val current = userDao.getProgress(globalId)
 
         val updated = if (current == null) {

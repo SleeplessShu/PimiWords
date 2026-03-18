@@ -1,8 +1,7 @@
 package com.sleeplessdog.matchthewords.backend.data.repository
 
-import com.sleeplessdog.matchthewords.backend.data.db.global.GlobalDao
+import com.sleeplessdog.matchthewords.backend.data.db.AppDatabaseProvider
 import com.sleeplessdog.matchthewords.backend.data.db.global.toUi
-import com.sleeplessdog.matchthewords.backend.data.db.user.UserDao
 import com.sleeplessdog.matchthewords.backend.data.db.user.UserGroupEntity
 import com.sleeplessdog.matchthewords.backend.data.db.user.toUi
 import com.sleeplessdog.matchthewords.backend.domain.models.CombinedGroupsDictionaryDomain
@@ -21,10 +20,11 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
 class GroupsRepository(
-    private val globalDao: GlobalDao,
-    private val userDao: UserDao,
+    private val databaseProvider: AppDatabaseProvider,
 ) {
     fun observeAllGroupsForSettings(): Flow<CombinedGroupsSettingsDomain> {
+        val globalDao = databaseProvider.getGlobalDao()
+        val userDao = databaseProvider.getUserDao()
 
         return combine(
             userDao.observeUserGroups(),
@@ -66,7 +66,8 @@ class GroupsRepository(
     }
 
     fun observeAllGroupsForDictionary(): Flow<CombinedGroupsDictionaryDomain> {
-
+        val globalDao = databaseProvider.getGlobalDao()
+        val userDao = databaseProvider.getUserDao()
         return combine(
             userDao.observeUserGroups(), globalDao.observeAllGroupKeys()
         ) { userGroups, globalKeys ->
@@ -97,6 +98,7 @@ class GroupsRepository(
     }
 
     fun observeUserGroupsForDictionary(): Flow<List<GroupDictionaryDomain>> {
+        val userDao = databaseProvider.getUserDao()
         return userDao.observeUserGroups().map { list ->
             list.map { group ->
                 GroupDictionaryDomain(
@@ -113,6 +115,7 @@ class GroupsRepository(
      * сохраняти в БД выбранные в настройках группы
      */
     suspend fun saveSelection(keys: Set<String>) {
+        val userDao = databaseProvider.getUserDatabase().userDao()
         val current = userDao.observeSettings().firstOrNull()
 
         userDao.saveSettings(
@@ -125,10 +128,13 @@ class GroupsRepository(
     }
 
     fun observeUserGroups(): Flow<List<UserGroupEntity>> {
+        val userDao = databaseProvider.getUserDao()
         return userDao.observeUserGroups()
     }
 
     suspend fun getGlobalGroupsOnce(): List<GlobalGroupDBEntity> {
+
+        val globalDao = databaseProvider.getGlobalDatabase().globalDao()
         val globalKeys = globalDao.getAllGroupKeys()
 
         val globalCategories = globalKeys.map { key ->
@@ -140,6 +146,7 @@ class GroupsRepository(
     }
 
     suspend fun toggle(key: String) {
+        val userDao = databaseProvider.getUserDatabase().userDao()
         val selected =
             userDao.getSelectedGroups()?.split(",")?.filter { it.isNotBlank() }?.toMutableSet()
                 ?: mutableSetOf()
@@ -154,6 +161,7 @@ class GroupsRepository(
         key: String,
         groupName: String,
     ) {
+        val userDao = databaseProvider.getUserDatabase().userDao()
         userDao.insertGroup(
             UserGroupEntity(
                 groupKey = key, title = groupName
@@ -165,6 +173,7 @@ class GroupsRepository(
         groupKey: String,
         newName: String,
     ) {
+        val userDao = databaseProvider.getUserDatabase().userDao()
         userDao.updateGroupTitle(
             groupKey = groupKey, newTitle = newName
         )
@@ -173,12 +182,16 @@ class GroupsRepository(
     suspend fun deleteUserGroup(
         groupKey: String,
     ) {
+        val userDao = databaseProvider.getUserDatabase().userDao()
         userDao.deleteGroupByKey(
             groupKey = groupKey,
         )
     }
 
     suspend fun getWordsCount(group: GroupPresentationSettingsEntity): Int {
+        val userDao = databaseProvider.getUserDatabase().userDao()
+        val globalDao = databaseProvider.getGlobalDatabase().globalDao()
+
         return if (group.isUser) {
             userDao.countWordsByGroupKey(group.key)
         } else {
@@ -187,16 +200,19 @@ class GroupsRepository(
     }
 
     suspend fun getWordsCountUserGroup(groupKey: String): Int {
+        val userDao = databaseProvider.getUserDatabase().userDao()
         return userDao.countWordsByGroupKey(groupKey)
     }
 
     private suspend fun getWordsCountGlobalGroup(groupKey: String): Int {
+        val globalDao = databaseProvider.getGlobalDatabase().globalDao()
         return globalDao.countWordsByGroup(groupKey)
     }
 
     fun observeWordsInUserGroup(
         groupId: String, ui: Language, study: Language,
     ): Flow<List<WordUi>> {
+        val userDao = databaseProvider.getUserDao()
         return userDao.observeWordsInUserGroup(groupId)
             .map { list -> list.map { it.toUi(ui, study) } }
     }
@@ -204,12 +220,16 @@ class GroupsRepository(
     suspend fun getGlobalGroupWordsOnceUC(
         groupId: String, ui: Language, study: Language,
     ): List<WordUi> {
+        val globalDao = databaseProvider.getGlobalDatabase().globalDao()
         return globalDao.getWordsByGroup(groupId).map { it.toUi(ui, study) }
     }
 
     suspend fun getGroupTitleById(
         groupId: String, groupType: GroupType,
     ): String {
+        val userDao = databaseProvider.getUserDatabase().userDao()
+        val globalDao = databaseProvider.getGlobalDatabase().globalDao()
+
         return when (groupType) {
             GroupType.USER -> userDao.getGroupTitleById(groupId) ?: groupId
             GroupType.GLOBAL -> globalDao.getGroupTitleById(groupId) ?: groupId

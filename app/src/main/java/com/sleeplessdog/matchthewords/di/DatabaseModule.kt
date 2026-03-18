@@ -1,6 +1,7 @@
 package com.sleeplessdog.matchthewords.di
 
 
+import com.sleeplessdog.matchthewords.backend.data.db.AppDatabaseProvider
 import com.sleeplessdog.matchthewords.backend.data.db.global.GlobalDatabase
 import com.sleeplessdog.matchthewords.backend.data.db.user.UserDatabase
 import com.sleeplessdog.matchthewords.backend.data.repository.GroupsRepository
@@ -57,7 +58,7 @@ val databaseModule = module {
     // -------- Repository --------
     single {
         WordsRepository(
-            globalDao = get(), userDao = get()
+            get()
         )
     }
 
@@ -69,17 +70,13 @@ val databaseModule = module {
     }
 
     single {
-        UpdateWordProgressUseCase(
-            userDao = get()
-        )
+        UpdateWordProgressUseCase(get())
     }
 
+    single { AppDatabaseProvider(get()) }
 
 
-    single { GroupsRepository(get(), get()) }
-
-
-
+    single { GroupsRepository(get()) }
     single { ToggleCategoryUC(get()) }
     single { SaveSelectionUC(get()) }
     single { SettingsSaveLevelsUC(get()) }
@@ -89,8 +86,6 @@ val databaseModule = module {
      * group uc
      */
     single { CreateUserGroupUC(get()) }
-
-
     single { GetSelectedGroupsUC(get()) }
     single { GetWordsCountForGroupUC(get()) }
     single { GetGlobalGroupsOnceUC(get()) }

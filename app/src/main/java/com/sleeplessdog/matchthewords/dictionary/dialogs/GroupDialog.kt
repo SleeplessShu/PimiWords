@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.sleeplessdog.matchthewords.R
-import com.sleeplessdog.matchthewords.dictionary.DialogType
+import com.sleeplessdog.matchthewords.dictionary.models.DialogType
 import com.sleeplessdog.matchthewords.ui.theme.DarkTextDefault
 import com.sleeplessdog.matchthewords.ui.theme.Gray05
 import com.sleeplessdog.matchthewords.ui.theme.GreenPrimary

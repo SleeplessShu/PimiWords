@@ -1,4 +1,4 @@
-package com.sleeplessdog.matchthewords.dictionary
+package com.sleeplessdog.matchthewords.dictionary.models
 
 enum class DialogType {
     NEW_PAIR,

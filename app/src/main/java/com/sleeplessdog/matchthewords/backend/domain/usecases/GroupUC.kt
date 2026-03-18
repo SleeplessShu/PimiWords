@@ -151,22 +151,3 @@ class ObserveUserGroupsForGroupsUC(
     operator fun invoke(): Flow<List<GroupDictionaryDomain>> =
         repo.observeUserGroupsForDictionary()
 }
-
-
-/*class GetGroupTitleByIdUC(
-    private val repo: GroupsRepository,
-) {
-    suspend operator fun invoke(
-        groupId: String, groupType: GroupType,
-    ): String {
-        return repo.getGroupTitleById(groupId, groupType)
-    }
-}*/
-
-/*class ObserveFeaturedGroupsUC(
-    private val repo: GroupsRepository,
-) {
-    operator fun invoke(limit: Int): Flow<List<GlobalGroupPresentationEntity>> = flow {
-        emit(repo.getAllGroups().take(limit))
-    }
-}*/

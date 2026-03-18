@@ -5,7 +5,9 @@ import android.os.Looper
 import com.sleeplessdog.matchthewords.backend.data.repository.AppPrefs
 import com.sleeplessdog.matchthewords.backend.data.repository.AppPrefsImpl
 import com.sleeplessdog.matchthewords.dictionary.GroupDictionaryUiMapper
+import com.sleeplessdog.matchthewords.dictionary.dictionary_screen.DatabaseSyncController
 import com.sleeplessdog.matchthewords.dictionary.dictionary_screen.DictionaryViewModel
+import com.sleeplessdog.matchthewords.dictionary.dictionary_screen.FirebaseAuthController
 import com.sleeplessdog.matchthewords.dictionary.group_screen.GroupViewModel
 import com.sleeplessdog.matchthewords.dictionary.models.GroupSettingsUiMapper
 import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
@@ -34,7 +36,7 @@ val presentationModule = module {
         GameSelectViewModel(
             appPrefs = get(),
             landingManager = get(),
-            authRepository = get(),
+            //authRepository = get(),
         )
     }
 
@@ -74,6 +76,8 @@ val presentationModule = module {
             groupDictionaryUiMapper = get(),
             renameUserGroup = get(),
             deleteUserGroup = get(),
+            syncController = get(),
+            authController = get(),
         )
     }
 
@@ -145,5 +149,7 @@ val presentationModule = module {
     single { ProgressController() }
     single { GroupSettingsUiMapper(get()) }
     single { GroupDictionaryUiMapper(get()) }
+    single { DatabaseSyncController(get(), get()) }
+    single { FirebaseAuthController(get()) }
 
 }

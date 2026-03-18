@@ -5,8 +5,10 @@ object ConstantsPaths {
 
     const val FIREBASE_KEY =
         "https://match-the-words-d26c2-default-rtdb.europe-west1.firebasedatabase.app"
+    const val FIREBASE_STORAGE_BUCKET = "gs://your-project-id.appspot.com"
+
     const val NETWORK_DATABASE_PATH_ON_FIREBASE = "actual_db/global_dictionary.db"
-    const val LOCAL_DATABASE_DICTIONARY_NAME = "global_dictionary.db"
+    const val GLOBAL_DATABASE_DICTIONARY_NAME = "global_dictionary.db"
     const val USER_DATABASE_DICTIONARY_NAME = "user_dictionary.db"
     const val ASSETS_DATABASE_DICTIONARY_PATH = "databases/global_dictionary.db"
 
@@ -18,7 +20,8 @@ object ConstantsPaths {
     const val SHARED_PREFS_THEME_KEY = "themePreferences"
 
     const val SHARED_PREFS_DATABASE_SETTINGS = "db_prefs"
-    const val LOCAL_DATABASE_DICTIONARY_DATE = "local_db_date"
+    const val GLOBAL_DATABASE_DICTIONARY_DATE = "global_db_date"
+    const val USER_DATABASE_DICTIONARY_DATE = "user_db_date"
 
     //---DEBUGGING TAG NAMES---
     const val TAG_MAIN_ACTIVITY = "MainActivity_Debugging"

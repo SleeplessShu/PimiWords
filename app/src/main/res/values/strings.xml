@@ -214,6 +214,11 @@
     <string name="dictionary">Словарь</string>
 
     <!--dictionary-->
+    <string name="sync_overlay_title">Синхронизация</string>
+    <string name="sync_label_auth">Авторизация</string>
+    <string name="sync_label_global_db">Глобальная база</string>
+    <string name="sync_label_user_db">Личная база</string>
+    <string name="sync_refresh">Обновить</string>
     <string name="create_group">Создать группу</string>
     <string name="new_group">Новая группа</string>
     <string name="new_word">Новое слово</string>

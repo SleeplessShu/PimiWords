@@ -1,8 +1,7 @@
 package com.sleeplessdog.matchthewords.backend.data.repository
 
-import com.sleeplessdog.matchthewords.backend.data.db.global.GlobalDao
+import com.sleeplessdog.matchthewords.backend.data.db.AppDatabaseProvider
 import com.sleeplessdog.matchthewords.backend.data.db.global.GlobalDictionaryEntity
-import com.sleeplessdog.matchthewords.backend.data.db.user.UserDao
 import com.sleeplessdog.matchthewords.backend.data.db.user.UserGroupEntity
 import com.sleeplessdog.matchthewords.backend.data.db.user.UserWordEntity
 import com.sleeplessdog.matchthewords.backend.domain.models.CombinedWord
@@ -16,8 +15,7 @@ import com.sleeplessdog.matchthewords.game.presentation.models.Word
 import com.sleeplessdog.matchthewords.utils.ConstantsPaths
 
 class WordsRepository(
-    private val globalDao: GlobalDao,
-    private val userDao: UserDao,
+    private val databaseProvider: AppDatabaseProvider,
 ) {
     /**
      * возвращает список пар слов для игры
@@ -29,6 +27,8 @@ class WordsRepository(
         wordsNeeded: Int,
         categories: Set<WordsGroupsList>,
     ): List<Pair<Word, Word>> {
+        val globalDao = databaseProvider.getGlobalDatabase().globalDao()
+        val userDao = databaseProvider.getUserDatabase().userDao()
 
         val categoryKeys = categories.filter { it != WordsGroupsList.RANDOM }.map { it.key }.toSet()
             .takeIf { it.isNotEmpty() }
@@ -98,6 +98,10 @@ class WordsRepository(
      * для сохранения слов в конце игры
      */
     suspend fun addGlobalWordsListToUserWords(globalIds: List<Int>) {
+
+        val globalDao = databaseProvider.getGlobalDatabase().globalDao()
+        val userDao = databaseProvider.getUserDatabase().userDao()
+
         if (globalIds.isEmpty()) return
 
         val savedGroup = getDefaultUserGroup()
@@ -127,6 +131,10 @@ class WordsRepository(
     }
 
     suspend fun addSingleWordToSavedWordsUC(word: WordUi) {
+
+        val globalDao = databaseProvider.getGlobalDatabase().globalDao()
+        val userDao = databaseProvider.getUserDatabase().userDao()
+
         val savedGroup = getDefaultUserGroup()
         val globalEntity = globalDao.getById(word.id)
         userDao.insertWord(
@@ -151,6 +159,8 @@ class WordsRepository(
         originLanguage: Language,
         translateLanguage: Language,
     ) {
+        val userDao = databaseProvider.getUserDatabase().userDao()
+
         val fields = MutableWordBuilder()
 
         fields.set(originLanguage, origin)
@@ -179,6 +189,8 @@ class WordsRepository(
         originLanguage: Language,
         translateLanguage: Language,
     ) {
+        val userDao = databaseProvider.getUserDatabase().userDao()
+
         val fields = MutableWordBuilder()
 
         fields.set(originLanguage, origin)
@@ -198,10 +210,12 @@ class WordsRepository(
     }
 
     suspend fun deleteWord(groupId: String, wordId: Long) {
+        val userDao = databaseProvider.getUserDatabase().userDao()
         userDao.deleteWordByGroupIdAndWordId(groupId, wordId)
     }
 
     suspend fun moveWord(wordId: Long, targetGroupId: String) {
+        val userDao = databaseProvider.getUserDatabase().userDao()
         userDao.moveWordToGroup(wordId, targetGroupId)
     }
 
@@ -241,6 +255,7 @@ class WordsRepository(
     }
 
     private suspend fun getDefaultUserGroup(): UserGroupEntity {
+        val userDao = databaseProvider.getUserDatabase().userDao()
         return userDao.getGroupByKey(ConstantsPaths.SAVED_GROUP_KEY)
             ?: error("Saved words group not found")
     }

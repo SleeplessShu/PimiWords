@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sleeplessdog.matchthewords.backend.data.repository.AppPrefs
-import com.sleeplessdog.matchthewords.backend.data.repository.AuthRepository
 import com.sleeplessdog.matchthewords.game.presentation.controller.LandingPagesController
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
 import com.sleeplessdog.matchthewords.game.presentation.models.LandingKeys
@@ -17,8 +16,6 @@ import kotlinx.coroutines.launch
 class GameSelectViewModel(
     private val appPrefs: AppPrefs,
     private val landingManager: LandingPagesController,
-    //private val userDbController: UserDatabaseController,
-    private val authRepository: AuthRepository,
 ) : ViewModel() {
 
     private val _uiLanguage = MutableLiveData<Language>()
@@ -36,8 +33,6 @@ class GameSelectViewModel(
     private val _navigateToGame = MutableLiveData<GameType?>()
     val navigateToGame: LiveData<GameType?> = _navigateToGame
 
-    private val _requestGoogleSignIn = MutableLiveData<Unit>()
-    val requestGoogleSignIn: LiveData<Unit> = _requestGoogleSignIn
 
     init {
         /**
@@ -56,46 +51,14 @@ class GameSelectViewModel(
         val ui = appPrefs.getUiLanguage()
         rebuild(ui)
 
-        if (!isFirstRun) {
-            checkAuthRequirement()
-        }
         Log.d("DEBUG", "Первый запуск $isFirstRun: ")
     }
 
-    /**
-     * Запускает процесс авторизации через Google. В случае успеха обновляем словарь пользователя.
-     */
-    fun onGoogleIdTokenReceived(token: String) {
-        viewModelScope.launch {
-            authRepository.signInWithGoogle(token)
-                .onSuccess {
-                    beginUpdateUserDictionary()
-                }
-                .onFailure {
-                    Log.e("AUTH", "Auth error", it)
-                }
-        }
-    }
-
-    /**
-     * Восстанавливает БД пользовательского словаря из облака.
-     */
-    fun beginUpdateUserDictionary() {
-        viewModelScope.launch {
-            //userDbController.restoreFromCloud()
-        }
-    }
-
-    /**
-     * Делаем запись в sharedPrefs о том, что первый запуск приложения закончен
-     * и лендинг больше показывать не нужно
-     */
     fun onLandingShown() {
         _showLanding.value = false
         if (!ALWAYS_SHOW_FIRST_LANDING) {
             landingManager.setShown(LandingKeys.APP_FIRST_LAUNCH)
             Log.d("DEBUG", "setLandingShown")
-            checkAuthRequirement()
         }
     }
 
@@ -114,15 +77,6 @@ class GameSelectViewModel(
         _navigateToGame.value = null
     }
 
-    fun checkAuthRequirement() {
-        Log.d(
-            "DEBUG",
-            "проверка необходимости авторизации. Авторизация нужна ${!authRepository.isUserAuthorized()}"
-        )
-        if (!authRepository.isUserAuthorized()) {
-            _requestGoogleSignIn.value = Unit
-        }
-    }
 
     private fun rebuild(ui: Language) {
         _availableLanguages.value = Language.entries.filter { it != ui }

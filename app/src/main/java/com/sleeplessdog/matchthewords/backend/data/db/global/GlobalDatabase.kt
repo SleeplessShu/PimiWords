@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.sleeplessdog.matchthewords.utils.ConstantsPaths.GLOBAL_DATABASE_DICTIONARY_NAME
 
 
 @Database(
@@ -22,7 +23,7 @@ abstract class GlobalDatabase : RoomDatabase() {
             Room.databaseBuilder(
                 context,
                 GlobalDatabase::class.java,
-                "global_dictionary.db"
+                GLOBAL_DATABASE_DICTIONARY_NAME
             )
                 .fallbackToDestructiveMigration()
                 .build()

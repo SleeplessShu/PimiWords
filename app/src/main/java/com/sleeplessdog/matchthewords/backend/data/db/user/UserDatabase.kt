@@ -8,6 +8,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.sleeplessdog.matchthewords.backend.domain.models.AppStatisticsEntity
 import com.sleeplessdog.matchthewords.backend.domain.models.DailyStatsEntity
 import com.sleeplessdog.matchthewords.backend.domain.models.UserSettingsEntity
+import com.sleeplessdog.matchthewords.utils.ConstantsPaths.USER_DATABASE_DICTIONARY_NAME
 
 @Database(
     entities = [
@@ -31,7 +32,7 @@ abstract class UserDatabase : RoomDatabase() {
             Room.databaseBuilder(
                 context,
                 UserDatabase::class.java,
-                "user.db"
+                USER_DATABASE_DICTIONARY_NAME
             )
                 .addCallback(object : Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {

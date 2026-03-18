@@ -6,7 +6,7 @@ import android.os.Looper
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
-import com.sleeplessdog.matchthewords.backend.data.repository.AuthRepository
+import com.sleeplessdog.matchthewords.backend.data.repository.FirebaseAuthRepository
 import com.sleeplessdog.matchthewords.utils.ConstantsPaths.FIREBASE_KEY
 import com.sleeplessdog.matchthewords.utils.ConstantsPaths.SHARED_PREFS_DATABASE_SETTINGS
 import com.sleeplessdog.matchthewords.utils.ConstantsPaths.SHARED_PREFS_SCORE_KEY
@@ -43,7 +43,7 @@ val dataModule = module {
         androidContext().getSharedPreferences(SHARED_PREFS_SCORE_REPOSITORY, Context.MODE_PRIVATE)
     }
 
-    single<AuthRepository> { AuthRepository(get()) }
+    single<FirebaseAuthRepository> { FirebaseAuthRepository(get()) }
     single { FirebaseAuth.getInstance() }
 
     /*single<AppDictionaryRepository> {

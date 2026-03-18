@@ -11,10 +11,12 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.ActivityMainBinding
-import com.sleeplessdog.matchthewords.game.presentation.controller.GlobalDatabaseController
+import com.sleeplessdog.matchthewords.dictionary.dictionary_screen.DatabaseSyncController
 import com.sleeplessdog.matchthewords.utils.ConstantsPaths.TAG_MAIN_ACTIVITY
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import org.koin.android.ext.android.getKoin
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,27 +32,35 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                // Анонимный вход в Firebase для доступа к Storage
-                Log.d(TAG_MAIN_ACTIVITY, "Попытка входа в Firebase...")
-                Firebase.auth.signInAnonymously().await()
-                Log.d(TAG_MAIN_ACTIVITY, "Вход выполнен успешно")
 
-                // Инициализация контроллера и загрузка базы
-                val dbLoader = GlobalDatabaseController(this@MainActivity)
-                val result = dbLoader.prepareDatabase()
+                Log.d(TAG_MAIN_ACTIVITY, "Firebase auth check...")
 
-                if (result.isSuccess) {
-                    Log.d(TAG_MAIN_ACTIVITY, "База данных успешно подготовлена")
-                } else {
-                    Log.e(
-                        TAG_MAIN_ACTIVITY, "Ошибка при подготовке БД: ${result.exceptionOrNull()}"
+                val currentUser = Firebase.auth.currentUser
+                val isGoogleUser = currentUser?.providerData
+                    ?.any { it.providerId == "google.com" } == true
+
+                if (currentUser == null) {
+                    // Никого нет — анонимный для доступа к глобальной БД
+                    Firebase.auth.signInAnonymously().await()
+                    Log.d(TAG_MAIN_ACTIVITY, "Firebase anonymous auth success")
+                } else if (isGoogleUser) {
+                    // Уже залогинен через Google — ничего не трогаем
+                    Log.d(
+                        TAG_MAIN_ACTIVITY,
+                        "Already signed in with Google, uid=${currentUser.uid}"
                     )
-
+                } else {
+                    // Анонимный с прошлого раза — оставляем как есть
+                    Log.d(TAG_MAIN_ACTIVITY, "Anonymous user exists, uid=${currentUser.uid}")
                 }
-            } catch (e: Exception) {
-                Log.e(TAG_MAIN_ACTIVITY, "Критическая ошибка инициализации: ${e.message}")
-                // Фоллбэк: пытаемся запустить приложение, надеясь на локальную копию
 
+                val syncController: DatabaseSyncController = getKoin().get()
+                syncController.prepareGlobalDatabaseOnly()
+
+                Log.d(TAG_MAIN_ACTIVITY, "Global DB prepared")
+
+            } catch (e: Exception) {
+                Log.e(TAG_MAIN_ACTIVITY, "Global DB init error: ${e.message}")
             }
         }
         setupNavigation()
@@ -95,7 +105,7 @@ class MainActivity : AppCompatActivity() {
     fun setBottomNavVisibility(isVisible: Boolean) {
         binding.bottomNavigationView.isVisible = isVisible
     }
-    
+
     fun getBottomNavHeight(): Int {
         return binding.bottomNavigationView.height
     }

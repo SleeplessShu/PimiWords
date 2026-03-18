@@ -34,11 +34,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
 import com.sleeplessdog.matchthewords.R
-import com.sleeplessdog.matchthewords.dictionary.DialogType
 import com.sleeplessdog.matchthewords.dictionary.WordActionsMenu
 import com.sleeplessdog.matchthewords.dictionary.dialogs.DeletingDialog
 import com.sleeplessdog.matchthewords.dictionary.dialogs.MovingDialog
 import com.sleeplessdog.matchthewords.dictionary.dialogs.WordsPairDialog
+import com.sleeplessdog.matchthewords.dictionary.models.DialogType
 import com.sleeplessdog.matchthewords.ui.theme.BlackPrimary
 import com.sleeplessdog.matchthewords.ui.theme.DarkTextDefault
 import com.sleeplessdog.matchthewords.ui.theme.Gray05
