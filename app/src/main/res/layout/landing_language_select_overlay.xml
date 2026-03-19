@@ -9,65 +9,69 @@
     android:focusable="true"
     android:visibility="gone">
 
+    <!-- Guideline на 42% высоты — граница между перцем и контентом -->
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_top"
+        android:id="@+id/guideline_mid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.40" />
+        app:layout_constraintGuide_percent="0.42" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.50" />
-
+    <!-- Перец строго в верхней зоне до guideline -->
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animationIdleView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/text"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:lottie_autoPlay="false"
         app:lottie_loop="false"
+        android:layout_marginTop="-160dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline_mid"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:lottie_rawRes="@raw/animation_base_loop" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animationActionView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/text"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        android:layout_marginTop="-160dp"
         app:lottie_autoPlay="false"
         app:lottie_loop="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline_mid"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:lottie_rawRes="@raw/animation_base_loop" />
 
+    <!-- Текст сразу под guideline -->
     <TextView
         android:id="@+id/text"
-        android:layout_marginBottom="20dp"
         style="@style/Text.H2.Simple"
-        android:textColor="@color/white"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="-12dp"
+        android:layout_marginBottom="12dp"
+        android:gravity="center"
         android:text="@string/landing_language_select"
-        app:layout_constraintBottom_toTopOf="@+id/rvLanguages"
-        app:layout_constraintEnd_toEndOf="@+id/rvLanguages"
-        app:layout_constraintStart_toStartOf="@id/rvLanguages" />
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/guideline_mid"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Список занимает всё оставшееся место -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvLanguages"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintTop_toBottomOf="@id/text"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

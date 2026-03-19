@@ -20,6 +20,7 @@
 
     <color name="pink">#E91E63</color>
 
+    <color name="background">#D8282828</color>
     <color name="gray_tilda">#3F3F3F</color>
     <color name="gray_01">#2B2A2A</color>
     <color name="gray_02">#353535</color>
