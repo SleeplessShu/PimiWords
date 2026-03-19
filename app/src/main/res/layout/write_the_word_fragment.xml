@@ -1,53 +1,67 @@
-<!-- write_the_word_fragment.xml -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:paddingHorizontal="20dp"
     android:paddingTop="20dp"
     android:paddingBottom="16dp">
 
+    <!-- Слово-подсказка сверху -->
     <TextView
         android:id="@+id/tvPrompt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:height="110dp"
+        android:layout_width="0dp"
+        android:layout_height="110dp"
         android:background="@drawable/bg_panoramic_view_default_r_16"
         android:gravity="center"
         android:textColor="@color/dark_text_default"
         android:textSize="35sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Панорамный вид" />
 
+    <!-- Введённые буквы -->
     <TextView
         android:id="@+id/tvInput"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:fontFamily="monospace"
         android:gravity="center"
         android:paddingTop="20dp"
-        android:textColor="@android:color/white"
+        android:textColor="@color/white"
         android:textSize="32sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvPrompt"
         tools:text="_ _ _ _ _ _ _\n_ _ _ _ _ _ _ _ _ _" />
 
+    <!-- Буквы-кнопки — занимают всё свободное пространство -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvLetters"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="12dp"
         android:clipToPadding="false"
-        android:paddingHorizontal="8dp" />
+        android:paddingHorizontal="8dp"
+        app:layout_constraintBottom_toTopOf="@id/llButtons"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvInput" />
 
+    <!-- Кнопки удаления -->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/llButtons"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="12dp"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/btnCheck"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <ImageButton
             android:id="@+id/btnClear"
@@ -74,17 +88,17 @@
             app:tint="@color/btn_icon_tint" />
     </LinearLayout>
 
-    <Space
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
+    <!-- Кнопка проверки всегда внизу -->
     <Button
         android:id="@+id/btnCheck"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="64dp"
         android:contentDescription="@string/btn_check"
         android:text="Проверить"
         android:textColor="@color/dark_text_used"
-        android:textSize="20sp" />
-</LinearLayout>
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

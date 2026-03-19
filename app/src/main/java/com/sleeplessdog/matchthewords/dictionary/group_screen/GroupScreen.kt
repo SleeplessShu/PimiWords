@@ -117,7 +117,8 @@ fun GroupScreen(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(
-                        end = 16.dp, bottom = 120.dp
+                        end = 16.dp,
+                        bottom = 60.dp
                     )
             ) {
                 Icon(
@@ -236,7 +237,8 @@ fun WordAndTranslationTable(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                start = 20.dp, end = 20.dp, top = 16.dp, bottom = 80.dp
+                start = 20.dp, end = 20.dp, top = 16.dp,
+                //bottom = 80.dp
             )
             .clip(RoundedCornerShape(12.dp))
             .verticalScroll(scrollState)

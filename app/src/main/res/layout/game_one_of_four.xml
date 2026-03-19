@@ -16,21 +16,22 @@
         android:textSize="50sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/b1" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/b1"
         style="@style/Words_style"
         android:layout_width="0dp"
         android:layout_height="68dp"
-        android:layout_marginStart="@dimen/padding_small"
-        android:layout_marginTop="200dp"
+        android:layout_marginStart="20dp"
         android:layout_marginEnd="4dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/bg_card_default"
         android:textColor="@color/green_primary"
         app:layout_constraintEnd_toStartOf="@id/b2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/b3"
         tools:text="умный" />
 
     <androidx.appcompat.widget.AppCompatButton
@@ -39,7 +40,7 @@
         android:layout_width="0dp"
         android:layout_height="68dp"
         android:layout_marginStart="4dp"
-        android:layout_marginEnd="@dimen/padding_small"
+        android:layout_marginEnd="20dp"
         android:background="@drawable/bg_card_default"
         android:textColor="@color/green_primary"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,15 +53,14 @@
         style="@style/Words_style"
         android:layout_width="0dp"
         android:layout_height="68dp"
-        android:layout_marginStart="@dimen/padding_small"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
         android:layout_marginEnd="4dp"
+        android:layout_marginBottom="60dp"
         android:background="@drawable/bg_card_default"
         android:textColor="@color/green_primary"
         app:layout_constraintEnd_toStartOf="@id/b4"
         app:layout_constraintStart_toStartOf="parent"
-
-        app:layout_constraintTop_toBottomOf="@id/b1"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:text="умный" />
 
     <androidx.appcompat.widget.AppCompatButton
@@ -69,10 +69,10 @@
         android:layout_width="0dp"
         android:layout_height="68dp"
         android:layout_marginStart="4dp"
-        android:layout_marginEnd="@dimen/padding_small"
+        android:layout_marginEnd="20dp"
         android:background="@drawable/bg_card_default"
         android:textColor="@color/green_primary"
-        app:layout_constraintEnd_toEndOf="@id/original"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/b3"
         app:layout_constraintTop_toTopOf="@id/b3"
         tools:text="умный" />

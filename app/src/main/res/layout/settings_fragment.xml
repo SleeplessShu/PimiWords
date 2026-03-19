@@ -19,174 +19,239 @@
         android:orientation="vertical"
         app:layout_constraintGuide_end="20dp" />
 
-
+    <!-- Заголовок — остаётся фиксированным вверху -->
     <TextView
-        android:id="@+id/tv_words_category"
-        style="@style/Text.H3.HeadlineSmall"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:text="@string/std_groups"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="@id/rightBorder"
-        app:layout_constraintStart_toStartOf="@id/leftBorder"
-        app:layout_constraintTop_toBottomOf="@id/settingsHeader" />
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/words_groups_chips"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_m"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="@id/rightBorder"
-        app:layout_constraintStart_toStartOf="@id/leftBorder"
-        app:layout_constraintTop_toBottomOf="@id/tv_words_category">
-
-        <com.google.android.flexbox.FlexboxLayout
-            android:id="@+id/cgFeaturedCategories"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            app:alignItems="center"
-            app:dividerDrawableHorizontal="@drawable/divider_8dp"
-            app:dividerDrawableVertical="@drawable/divider_8dp"
-            app:flexWrap="wrap"
-            app:justifyContent="center"
-            app:showDivider="middle"
-            app:singleLine="false"
-            app:singleSelection="false" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/btnShowAllCategories"
-        style="@style/Text.T4.TextSmall"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:gravity="center"
-        android:text="@string/show_all"
-        android:textColor="@color/green_secondary"
-        app:layout_constraintEnd_toEndOf="@id/rightBorder"
-        app:layout_constraintStart_toStartOf="@id/leftBorder"
-        app:layout_constraintTop_toBottomOf="@id/words_groups_chips" />
-
-    <!-- Уровень языка -->
-    <TextView
-        android:id="@+id/tvLanguageLevel"
-        style="@style/Text.H3.HeadlineSmall"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:text="@string/lang_level"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="@id/rightBorder"
-        app:layout_constraintStart_toStartOf="@id/leftBorder"
-        app:layout_constraintTop_toBottomOf="@id/btnShowAllCategories" />
-
-    <androidx.constraintlayout.helper.widget.Flow
-        android:id="@+id/levelFlow"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        app:constraint_referenced_ids="btnA1,btnA2,btnB1,btnB2,btnC1,btnC2"
-        app:flow_horizontalAlign="center"
-        app:flow_horizontalGap="8dp"
-        app:flow_horizontalStyle="packed"
-        app:flow_maxElementsWrap="4"
-        app:flow_verticalAlign="center"
-        app:flow_verticalGap="6dp"
-        app:flow_wrapMode="chain"
-        app:layout_constraintEnd_toEndOf="@id/rightBorder"
-        app:layout_constraintStart_toStartOf="@id/leftBorder"
-        app:layout_constraintTop_toBottomOf="@id/tvLanguageLevel" />
-
-    <com.google.android.material.chip.Chip
-        android:id="@+id/btnA1"
-        style="@style/Settings.Level.Button"
-        android:text="@string/level_a1" />
-
-    <com.google.android.material.chip.Chip
-        android:id="@+id/btnA2"
-        style="@style/Settings.Level.Button"
-        android:checkable="true"
-        android:text="@string/level_a2" />
-
-    <com.google.android.material.chip.Chip
-        android:id="@+id/btnB1"
-        style="@style/Settings.Level.Button"
-        android:text="@string/level_b1" />
-
-    <com.google.android.material.chip.Chip
-        android:id="@+id/btnB2"
-        style="@style/Settings.Level.Button"
-        android:checkable="true"
-        android:text="@string/level_b2" />
-
-    <com.google.android.material.chip.Chip
-        android:id="@+id/btnC1"
-        style="@style/Settings.Level.Button"
-        android:checkable="true"
-        android:text="@string/level_c1" />
-
-    <com.google.android.material.chip.Chip
-        android:id="@+id/btnC2"
-        style="@style/Settings.Level.Button"
-        android:checkable="true"
-        android:text="@string/level_c2" />
-
-
-    <!-- Сложность игры -->
-    <TextView
-        android:id="@+id/game_difficult"
-        style="@style/Text.H3.HeadlineSmall"
+        android:id="@+id/settingsHeader"
+        style="@style/Text.H2.HeadlineLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/game_difficult"
+        android:layout_marginVertical="12dp"
+        android:text="@string/settings_menu"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@id/rightBorder"
         app:layout_constraintStart_toStartOf="@id/leftBorder"
-        app:layout_constraintTop_toBottomOf="@id/levelFlow" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-
-    <androidx.constraintlayout.helper.widget.Flow
-        android:id="@+id/diffFlow"
-        android:layout_width="0dp"
+    <ImageView
+        android:id="@+id/ivFlagUi"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        app:constraint_referenced_ids="cardEasy,cardMedium,cardHard,cardExpert"
-        app:flow_horizontalAlign="center"
-        app:flow_horizontalGap="8dp"
-        app:flow_horizontalStyle="packed"
-        app:flow_maxElementsWrap="2"
-        app:flow_verticalAlign="center"
-        app:flow_verticalGap="8dp"
-        app:flow_wrapMode="aligned"
-        app:layout_constraintEnd_toEndOf="@id/rightBorder"
+        android:contentDescription="@string/empty"
+        android:src="@drawable/ic_language_flag_spanish_l"
+        app:layout_constraintBottom_toBottomOf="@id/settingsHeader"
         app:layout_constraintStart_toStartOf="@id/leftBorder"
-        app:layout_constraintTop_toBottomOf="@id/game_difficult" />
+        app:layout_constraintTop_toTopOf="@id/settingsHeader" />
 
-    <include
-        android:id="@+id/cardEasy"
-        layout="@layout/item_difficulty_card" />
+    <ImageView
+        android:id="@+id/ivFlagStudy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:contentDescription="@string/empty"
+        android:src="@drawable/ic_language_flag_spanish_l"
+        app:layout_constraintBottom_toBottomOf="@id/settingsHeader"
+        app:layout_constraintEnd_toEndOf="@id/rightBorder"
+        app:layout_constraintTop_toTopOf="@id/settingsHeader" />
 
-    <include
-        android:id="@+id/cardMedium"
-        layout="@layout/item_difficulty_card" />
+    <!-- Весь скроллабл контент -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollContent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/settingsHeader">
 
-    <include
-        android:id="@+id/cardHard"
-        layout="@layout/item_difficulty_card" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="24dp">
 
-    <include
-        android:id="@+id/cardExpert"
-        layout="@layout/item_difficulty_card" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/leftBorderInner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="20dp" />
 
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/rightBorderInner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="20dp" />
 
+            <TextView
+                android:id="@+id/tv_words_category"
+                style="@style/Text.H3.HeadlineSmall"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="@string/std_groups"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="@id/rightBorderInner"
+                app:layout_constraintStart_toStartOf="@id/leftBorderInner"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/words_groups_chips"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_m"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="@id/rightBorderInner"
+                app:layout_constraintStart_toStartOf="@id/leftBorderInner"
+                app:layout_constraintTop_toBottomOf="@id/tv_words_category">
+
+                <com.google.android.flexbox.FlexboxLayout
+                    android:id="@+id/cgFeaturedCategories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    app:alignItems="center"
+                    app:dividerDrawableHorizontal="@drawable/divider_8dp"
+                    app:dividerDrawableVertical="@drawable/divider_8dp"
+                    app:flexWrap="wrap"
+                    app:justifyContent="center"
+                    app:showDivider="middle"
+                    app:singleLine="false"
+                    app:singleSelection="false" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/btnShowAllCategories"
+                style="@style/Text.T4.TextSmall"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:gravity="center"
+                android:text="@string/show_all"
+                android:textColor="@color/green_secondary"
+                app:layout_constraintEnd_toEndOf="@id/rightBorderInner"
+                app:layout_constraintStart_toStartOf="@id/leftBorderInner"
+                app:layout_constraintTop_toBottomOf="@id/words_groups_chips" />
+
+            <!-- Уровень языка -->
+            <TextView
+                android:id="@+id/tvLanguageLevel"
+                style="@style/Text.H3.HeadlineSmall"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="@string/lang_level"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="@id/rightBorderInner"
+                app:layout_constraintStart_toStartOf="@id/leftBorderInner"
+                app:layout_constraintTop_toBottomOf="@id/btnShowAllCategories" />
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/levelFlow"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:constraint_referenced_ids="btnA1,btnA2,btnB1,btnB2,btnC1,btnC2"
+                app:flow_horizontalAlign="center"
+                app:flow_horizontalGap="8dp"
+                app:flow_horizontalStyle="packed"
+                app:flow_maxElementsWrap="4"
+                app:flow_verticalAlign="center"
+                app:flow_verticalGap="6dp"
+                app:flow_wrapMode="chain"
+                app:layout_constraintEnd_toEndOf="@id/rightBorderInner"
+                app:layout_constraintStart_toStartOf="@id/leftBorderInner"
+                app:layout_constraintTop_toBottomOf="@id/tvLanguageLevel" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/btnA1"
+                style="@style/Settings.Level.Button"
+                android:text="@string/level_a1" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/btnA2"
+                style="@style/Settings.Level.Button"
+                android:checkable="true"
+                android:text="@string/level_a2" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/btnB1"
+                style="@style/Settings.Level.Button"
+                android:text="@string/level_b1" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/btnB2"
+                style="@style/Settings.Level.Button"
+                android:checkable="true"
+                android:text="@string/level_b2" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/btnC1"
+                style="@style/Settings.Level.Button"
+                android:checkable="true"
+                android:text="@string/level_c1" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/btnC2"
+                style="@style/Settings.Level.Button"
+                android:checkable="true"
+                android:text="@string/level_c2" />
+
+            <!-- Сложность игры -->
+            <TextView
+                android:id="@+id/game_difficult"
+                style="@style/Text.H3.HeadlineSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/game_difficult"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="@id/rightBorderInner"
+                app:layout_constraintStart_toStartOf="@id/leftBorderInner"
+                app:layout_constraintTop_toBottomOf="@id/levelFlow" />
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/diffFlow"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:constraint_referenced_ids="cardEasy,cardMedium,cardHard,cardExpert"
+                app:flow_horizontalAlign="center"
+                app:flow_horizontalGap="8dp"
+                app:flow_horizontalStyle="packed"
+                app:flow_maxElementsWrap="2"
+                app:flow_verticalAlign="center"
+                app:flow_verticalGap="8dp"
+                app:flow_wrapMode="aligned"
+                app:layout_constraintEnd_toEndOf="@id/rightBorderInner"
+                app:layout_constraintStart_toStartOf="@id/leftBorderInner"
+                app:layout_constraintTop_toBottomOf="@id/game_difficult" />
+
+            <include
+                android:id="@+id/cardEasy"
+                layout="@layout/item_difficulty_card" />
+
+            <include
+                android:id="@+id/cardMedium"
+                layout="@layout/item_difficulty_card" />
+
+            <include
+                android:id="@+id/cardHard"
+                layout="@layout/item_difficulty_card" />
+
+            <include
+                android:id="@+id/cardExpert"
+                layout="@layout/item_difficulty_card" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Оверлеи поверх скролла — остаются как были -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/languageSelectRoot"
         android:layout_width="0dp"
@@ -244,40 +309,6 @@
             app:layout_constraintTop_toBottomOf="@id/tv_LanguageList" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/settingsHeader"
-        style="@style/Text.H2.HeadlineLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="12dp"
-        android:text="@string/settings_menu"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="@id/rightBorder"
-        app:layout_constraintStart_toStartOf="@id/leftBorder"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/ivFlagUi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/empty"
-        android:src="@drawable/ic_language_flag_spanish_l"
-        app:layout_constraintBottom_toBottomOf="@id/settingsHeader"
-        app:layout_constraintStart_toStartOf="@id/leftBorder"
-        app:layout_constraintTop_toTopOf="@id/settingsHeader" />
-
-    <ImageView
-        android:id="@+id/ivFlagStudy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:contentDescription="@string/empty"
-        android:src="@drawable/ic_language_flag_spanish_l"
-        app:layout_constraintBottom_toBottomOf="@id/settingsHeader"
-        app:layout_constraintEnd_toEndOf="@id/rightBorder"
-        app:layout_constraintTop_toTopOf="@id/settingsHeader" />
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/rootTopics"
         android:layout_width="match_parent"
@@ -293,7 +324,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-        <!-- Заголовок -->
 
         <TextView
             android:id="@+id/header"
@@ -307,7 +337,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Прокручиваемая часть -->
         <ScrollView
             android:id="@+id/categoriesScroll"
             android:layout_width="0dp"
@@ -374,15 +403,15 @@
             android:layout_width="4dp"
             android:layout_height="match_parent"
             android:layout_gravity="end"
-            android:src="@drawable/bg_language_panel_r24"
-            app:tint="@color/green_primary"
             android:layout_marginVertical="160dp"
             android:layout_marginEnd="16dp"
             android:clickable="false"
             android:focusable="false"
+            android:src="@drawable/bg_language_panel_r24"
             app:layout_constraintBottom_toTopOf="@id/bottomButtons"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/header" />
+            app:layout_constraintTop_toBottomOf="@id/header"
+            app:tint="@color/green_primary" />
 
         <ImageView
             android:id="@+id/tumblerPimi"
@@ -449,8 +478,6 @@
                 app:layout_constraintStart_toEndOf="@id/btnCancel"
                 app:rippleColor="@color/white" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

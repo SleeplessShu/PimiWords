@@ -108,14 +108,14 @@ class GameFragment : Fragment() {
                 GameState.LOADING -> {
                     childFragmentManager.beginTransaction()
                         .replace(R.id.flFragmentContainer, LoadingFragment()).commit()
-                    binding.tvHeader.setText(R.string.state_title_loading)
+
                     binding.statsBlock.isVisible = false
                     binding.buttonBack.isVisible = false
                 }
 
                 GameState.GAME -> {
                     launchGame()
-                    binding.tvHeader.setText(R.string.empty)
+                    
                     binding.statsBlock.isVisible = true
                     binding.buttonBack.isVisible = true
                 }
@@ -123,7 +123,7 @@ class GameFragment : Fragment() {
                 GameState.END_OF_GAME -> {
                     childFragmentManager.beginTransaction()
                         .replace(R.id.flFragmentContainer, EndGameFragment()).commit()
-                    binding.tvHeader.setText(R.string.empty)
+
                     binding.statsBlock.isVisible = false
                     binding.buttonBack.isVisible = false
                 }

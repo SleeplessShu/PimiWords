@@ -46,8 +46,8 @@ class DictionaryComposeFragment : Fragment() {
 
         return ComposeView(requireContext()).apply {
 
-            val bottomPadding =
-                (requireActivity() as MainActivity).getBottomNavHeight()
+            val bottomPadding = 0
+            //(requireActivity() as MainActivity).getBottomNavHeight()
 
             setViewCompositionStrategy(
                 ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed

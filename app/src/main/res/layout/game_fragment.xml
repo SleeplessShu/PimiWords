@@ -16,51 +16,37 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageButton
-                android:id="@+id/buttonBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:background="@drawable/ic_nav_cancel"
-                android:contentDescription="@string/exit_button"
-                app:layout_constraintBottom_toBottomOf="@id/tvHeader"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tvHeader" />
-
-            <TextView
-                android:id="@+id/tvHeader"
-                style="@style/Header_ver2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/padding_medium"
-                android:layout_marginVertical="@dimen/padding_medium"
-                android:gravity="center"
-                android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/statsBlock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="@dimen/padding_medium"
+                android:paddingBottom="12dp"
                 android:clipChildren="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
+                <ImageButton
+                    android:id="@+id/buttonBack"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/ic_nav_cancel"
+                    android:contentDescription="@string/exit_button"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@id/heart1" />
+
                 <TextView
                     android:id="@+id/tvScores"
                     style="@style/Stats"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/padding_medium"
+                    android:layout_marginVertical="12dp"
                     android:textSize="22sp"
                     app:layout_constraintEnd_toEndOf="@id/statsBlock"
                     app:layout_constraintTop_toBottomOf="@id/heart1"
-                    tools:text="0000000" />
+                    tools:text="0" />
 
                 <TextView
                     android:id="@+id/scores"
@@ -124,10 +110,9 @@
                 android:id="@+id/flFragmentContainer"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/tvHeader"
-                app:layout_constraintStart_toStartOf="@+id/tvHeader"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/statsBlock" />
 
             <View

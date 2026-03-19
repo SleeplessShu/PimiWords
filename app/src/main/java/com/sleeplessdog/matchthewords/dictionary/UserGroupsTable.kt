@@ -53,7 +53,7 @@ fun UserGroupsTable(
                 start = 20.dp,
                 end = 20.dp,
                 top = 16.dp,
-                bottom = 80.dp
+                //bottom = 80.dp
             )
             .clip(RoundedCornerShape(12.dp))
     ) {

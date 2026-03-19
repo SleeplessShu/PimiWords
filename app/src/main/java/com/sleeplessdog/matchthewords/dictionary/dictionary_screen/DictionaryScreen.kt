@@ -366,7 +366,7 @@ fun DictionaryTabs(
                     .align(Alignment.BottomEnd)
                     .padding(
                         end = 16.dp,
-                        bottom = 120.dp
+                        bottom = 60.dp
                     )
             ) {
                 Icon(
