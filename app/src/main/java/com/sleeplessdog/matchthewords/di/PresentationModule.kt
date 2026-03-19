@@ -36,7 +36,6 @@ val presentationModule = module {
         GameSelectViewModel(
             appPrefs = get(),
             landingManager = get(),
-            //authRepository = get(),
         )
     }
 
@@ -81,23 +80,6 @@ val presentationModule = module {
         )
     }
 
-
-    /*viewModel {
-        GroupViewModel(
-            observeWordsInUserGroup = get(),
-            getGlobalGroupWordsOnce = get(),
-            appPrefs = get(),
-            savedStateHandle = get(),
-        )
-    }*/
-
-    /*    viewModel { UserGroupViewModel() }*/
-
-
-    /*    viewModel() {
-            DatabaseViewModel(get(), get())
-        }*/
-
     viewModel() {
         OneOfFourViewModel(get())
     }
@@ -115,7 +97,7 @@ val presentationModule = module {
     }
 
     viewModel {
-        EndGameViewModel(get())
+        EndGameViewModel(get(), get())
     }
 
     viewModel {
@@ -151,5 +133,4 @@ val presentationModule = module {
     single { GroupDictionaryUiMapper(get()) }
     single { DatabaseSyncController(get(), get()) }
     single { FirebaseAuthController(get()) }
-
 }

@@ -45,6 +45,8 @@ class DatabaseSyncController(
     private val _deployCompleted = MutableSharedFlow<DatabaseInstance>(extraBufferCapacity = 1)
     val deployCompleted: SharedFlow<DatabaseInstance> = _deployCompleted
 
+    fun getUid() = currentUid ?: "unknown"
+
     /*private val uid = FirebaseAuth.getInstance().uid
     private val userRef =
         storage.reference.child("user/${uid}/${ConstantsPaths.USER_DATABASE_DICTIONARY_NAME}")
