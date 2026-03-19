@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.EndGameFragmentBinding
 import com.sleeplessdog.matchthewords.game.presentation.GameFragmentDirections
@@ -146,9 +147,9 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
                         acceptButton = getString(R.string.report),
                         onAcceptClick = {
                             childViewModel.sendReport()
-                            binding.onActionDoneRoot.isVisible = true
+                            //binding.onActionDoneRoot.isVisible = true
                             binding.btnReportWords.isEnabled = false
-                            playResultAnimation(EndGameWordsAction.REPORT_ABOUT_MISTAKE)
+                            showSuccessSnackbar(getString(R.string.report_sent))
                         })
                 }
 
@@ -158,9 +159,8 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
                         acceptButton = getString(R.string.save),
                         onAcceptClick = {
                             childViewModel.saveSelectedWords()
-                            binding.onActionDoneRoot.isVisible = true
                             binding.btnSaveWords.isEnabled = false
-                            playResultAnimation(EndGameWordsAction.SAVE_WORDS_TO_USERS_DICTIONARY)
+                            showSuccessSnackbar(getString(R.string.words_saved))
                         })
                 }
             }
@@ -203,35 +203,11 @@ class EndGameFragment : Fragment(R.layout.end_game_fragment) {
         }
     }
 
-    /**
-     * воспроизведение анимации после отправки жалобы/сохранения слов
-     */
-    private fun playResultAnimation(type: EndGameWordsAction) {
-        when (type) {
-            EndGameWordsAction.REPORT_ABOUT_MISTAKE -> {
-                lottieController.playOnceCut(
-                    where = binding.onActionDone,
-                    what = R.raw.animation_error_report_260113,
-                    cutFromStartFrames = 1,
-                    cutFromEndFrames = 1,
-                    hideOnEnd = true,
-                ) {
-                    binding.onActionDoneRoot.isVisible = false
-                }
-            }
-
-            EndGameWordsAction.SAVE_WORDS_TO_USERS_DICTIONARY -> {
-                lottieController.playOnceCut(
-                    where = binding.onActionDone,
-                    what = R.raw.animation_save_to_dictionary_260113,
-                    cutFromStartFrames = 1,
-                    cutFromEndFrames = 1,
-                    hideOnEnd = true,
-                ) {
-                    binding.onActionDoneRoot.isVisible = false
-                }
-            }
-        }
+    private fun showSuccessSnackbar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
+            .setBackgroundTint(requireContext().getColor(R.color.green_primary))
+            .setTextColor(requireContext().getColor(R.color.gray_02))
+            .show()
     }
 
     /**
