@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sleeplessdog.matchthewords.backend.domain.usecases.AddWordToUserDictionaryUC
+import com.sleeplessdog.matchthewords.backend.domain.usecases.ReportWordMistakeUC
 import com.sleeplessdog.matchthewords.game.presentation.models.EndGameActionStatus
 import com.sleeplessdog.matchthewords.game.presentation.models.EndGameWordsAction
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 
 class EndGameViewModel(
     private val addWordToUserDictionary: AddWordToUserDictionaryUC,
+    private val reportWordMistake: ReportWordMistakeUC,
 ) : ViewModel() {
     private val _actionsWithWords = MutableLiveData<EndGameActionStatus>()
     val actionsWithWords: LiveData<EndGameActionStatus> = _actionsWithWords
@@ -32,6 +34,7 @@ class EndGameViewModel(
                 started = SharingStarted.WhileSubscribed(5_000),
                 initialValue = false
             )
+
 
     fun updateSelection(ids: List<Int>) {
         _selectedWordIds.value = ids.toSet()
@@ -55,7 +58,9 @@ class EndGameViewModel(
     fun sendReport() {
         val ids = _selectedWordIds.value.toList()
         if (ids.isEmpty()) return
-        Log.d("DEBUG", "sendReport: $ids ОТПРАВКА ОТЧЁТА НЕ РЕАЛИЗОВАНА")
+        viewModelScope.launch {
+            reportWordMistake(ids)
+        }
         hideActions()
     }
 

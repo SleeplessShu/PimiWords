@@ -26,6 +26,7 @@ import com.sleeplessdog.matchthewords.backend.domain.usecases.ObserveUserGroupsF
 import com.sleeplessdog.matchthewords.backend.domain.usecases.ObserveUserGroupsUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.ObserveWordsInUserGroupUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.RenameUserGroupUC
+import com.sleeplessdog.matchthewords.backend.domain.usecases.ReportWordMistakeUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.SaveSelectionUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.ToggleCategoryUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.score.UpdateScoreProgressUseCase
@@ -107,4 +108,5 @@ val databaseModule = module {
     single { ObserveUserGroupsForGroupsUC(get()) }
     single { AddWordToUserGroupUC(get()) }
     single { AddSingleWordToSavedWordsUC(get()) }
+    single { ReportWordMistakeUC(get(), get(), get()) }
 }
