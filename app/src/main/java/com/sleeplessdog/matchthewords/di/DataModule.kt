@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.sleeplessdog.matchthewords.backend.data.repository.FirebaseAuthRepository
 import com.sleeplessdog.matchthewords.utils.ConstantsPaths.FIREBASE_KEY
@@ -29,6 +30,10 @@ val dataModule = module {
 
     single {
         FirebaseStorage.getInstance()
+    }
+
+    single {
+        FirebaseFirestore.getInstance()
     }
 
     single(named(SHARED_PREFS_THEME_KEY)) {

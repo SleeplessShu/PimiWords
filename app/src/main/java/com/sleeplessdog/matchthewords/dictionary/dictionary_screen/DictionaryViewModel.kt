@@ -3,6 +3,7 @@ package com.sleeplessdog.matchthewords.dictionary.dictionary_screen
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.sleeplessdog.matchthewords.backend.domain.models.CombinedGroupsDictionaryUi
 import com.sleeplessdog.matchthewords.backend.domain.usecases.CreateUserGroupUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.DeleteUserGroupUC
@@ -90,6 +91,8 @@ class DictionaryViewModel(
             val authorized = authController.isUserAuthorized()
 
             if (authorized) {
+                val userUID = syncController.getUid()
+                FirebaseCrashlytics.getInstance().setUserId(userUID)
 
                 _syncState.update {
                     it.copy(auth = AuthState.AUTHORIZED)
