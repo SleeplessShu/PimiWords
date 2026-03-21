@@ -3,6 +3,7 @@ package com.sleeplessdog.matchthewords.backend.domain.usecases
 import com.sleeplessdog.matchthewords.backend.data.repository.WordsRepository
 import com.sleeplessdog.matchthewords.dictionary.group_screen.WordUi
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
+import com.sleeplessdog.matchthewords.game.presentation.models.Word
 
 class AddWordToUserGroupUC(
     private val repository: WordsRepository,
@@ -81,5 +82,18 @@ class MoveWordToUserGroupUC(
         targetGroupId: String,
     ) {
         repository.moveWord(wordId, targetGroupId)
+    }
+}
+
+class GetWordPairsFromUserGroupUC(
+    private val repository: WordsRepository,
+) {
+    suspend operator fun invoke(
+        lang1: Language,
+        lang2: Language,
+        groupKey: String,
+        wordsNeeded: Int,
+    ): List<Pair<Word, Word>> {
+        return repository.getWordPairsFromUserGroup(lang1, lang2, groupKey, wordsNeeded)
     }
 }

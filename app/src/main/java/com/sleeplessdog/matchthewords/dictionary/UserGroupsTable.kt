@@ -43,6 +43,7 @@ fun UserGroupsTable(
     onNavigateToUserGroup: (String, String) -> Unit,
     onRenameGroup: (String, String) -> Unit,
     onDeleteGroup: (String, String) -> Unit,
+    onPlayGroup: (String) -> Unit,
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -69,7 +70,8 @@ fun UserGroupsTable(
                 rowIndex = index,
                 onClick = { onNavigateToUserGroup(group.key, group.title) },
                 onRenameClick = { onRenameGroup(group.key, group.title) },
-                onDeleteClick = { onDeleteGroup(group.key, group.title) }
+                onDeleteClick = { onDeleteGroup(group.key, group.title) },
+                onPlayClick = { onPlayGroup(group.key) }
             )
             if (index != groups.lastIndex) {
                 Divider(color = BlackPrimary, thickness = 1.dp)
@@ -82,12 +84,12 @@ fun UserGroupsTable(
 fun UserGroupTableRow(
     rowIndex: Int,
     title: String,
-    //groupKey: String,
     iconKey: Int,
     wordsCount: Int? = null,
     onClick: () -> Unit,
     onRenameClick: () -> Unit,
     onDeleteClick: () -> Unit,
+    onPlayClick: () -> Unit,
 ) {
     val clickableIconPainter = painterResource(id = R.drawable.icon_dots_three_outline_vertical)
     var menuExpanded by remember { mutableStateOf(false) }
@@ -148,7 +150,8 @@ fun UserGroupTableRow(
                     expanded = menuExpanded,
                     onDismiss = { menuExpanded = false },
                     onRename = onRenameClick,
-                    onDelete = onDeleteClick
+                    onDelete = onDeleteClick,
+                    onPlay = onPlayClick,
                 )
             }
         }

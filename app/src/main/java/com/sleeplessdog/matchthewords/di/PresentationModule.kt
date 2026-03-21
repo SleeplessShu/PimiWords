@@ -48,7 +48,8 @@ val presentationModule = module {
             updateWordProgress = get(),
             updateScoreProgress = get(),
             getSelectedGroupsUC = get(),
-            appPrefs = get()
+            appPrefs = get(),
+            getWordPairsFromUserGroupUC = get(),
         )
     }
 

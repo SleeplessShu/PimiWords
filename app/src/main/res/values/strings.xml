@@ -238,6 +238,7 @@
     <string name="button_cancel_v2">Отмена</string>
     <string name="button_yes_v2">Да</string>
     <string name="button_save">Сохранить</string>
+    <string name="button_play">Сыграть</string>
     <string name="button_rename">Переименовать</string>
     <string name="button_move">Перенести</string>
     <string name="button_rename_v2">Новое имя</string>

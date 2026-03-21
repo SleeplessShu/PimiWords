@@ -18,6 +18,15 @@ class GameSelectViewModel(
     private val landingManager: LandingPagesController,
 ) : ViewModel() {
 
+    private var forcedGroupKey: String? = null
+    private var forcedGroupIsUser: Boolean = false
+
+    data class NavigateToGame(
+        val gameType: GameType,
+        val groupKey: String?,
+        val groupIsUser: Boolean = false,
+    )
+
     private val _uiLanguage = MutableLiveData<Language>()
     val uiLanguage: LiveData<Language> = _uiLanguage
 
@@ -30,9 +39,11 @@ class GameSelectViewModel(
     private val _showLanding = MutableLiveData<Boolean>()
     val showLanding: LiveData<Boolean> = _showLanding
 
-    private val _navigateToGame = MutableLiveData<GameType?>()
-    val navigateToGame: LiveData<GameType?> = _navigateToGame
+    private val _navigateToGame = MutableLiveData<NavigateToGame?>()
+    val navigateToGame: LiveData<NavigateToGame?> = _navigateToGame
 
+    private val _forcedGroup = MutableLiveData<String?>(forcedGroupKey)
+    val forcedGroup: LiveData<String?> = _forcedGroup
 
     init {
         /**
@@ -54,6 +65,11 @@ class GameSelectViewModel(
         Log.d("DEBUG", "Первый запуск $isFirstRun: ")
     }
 
+    fun setForcedGroup(key: String?, isUser: Boolean = false) {
+        forcedGroupKey = key
+        forcedGroupIsUser = isUser
+    }
+
     fun onLandingShown() {
         _showLanding.value = false
         if (!ALWAYS_SHOW_FIRST_LANDING) {
@@ -70,13 +86,16 @@ class GameSelectViewModel(
     }
 
     fun onGamePicked(type: GameType) {
-        _navigateToGame.value = type
+        _navigateToGame.value = NavigateToGame(
+            gameType = type,
+            groupKey = forcedGroupKey,
+            groupIsUser = forcedGroupIsUser
+        )
     }
 
     fun onNavigateConsumed() {
         _navigateToGame.value = null
     }
-
 
     private fun rebuild(ui: Language) {
         _availableLanguages.value = Language.entries.filter { it != ui }
