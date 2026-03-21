@@ -1,6 +1,5 @@
 package com.sleeplessdog.matchthewords.dictionary
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -38,7 +37,7 @@ import com.sleeplessdog.matchthewords.ui.theme.textSize16Bold
 fun StandardGroupsTable(
     groups: List<GroupUiDictionary>,
     onNavigateToGlobalGroup: (String, String) -> Unit,
-    bottomPadding: Int,
+    onPlayGroup: (String) -> Unit,
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -61,6 +60,7 @@ fun StandardGroupsTable(
                 title = group.title,
                 groupKey = group.key,
                 onClick = { onNavigateToGlobalGroup(group.key, group.title) },
+                onPlayClick = { onPlayGroup(group.key) }
             )
 
             if (index != groups.lastIndex) {
@@ -77,6 +77,7 @@ fun StandardGroupTableRow(
     title: String,
     groupKey: String,
     onClick: () -> Unit,
+    onPlayClick: () -> Unit,
 ) {
     val context = LocalContext.current
     val iconPainter = painterResource(id = iconKey)
@@ -123,7 +124,7 @@ fun StandardGroupTableRow(
             modifier = Modifier
                 .size(24.dp)
                 .clickable {
-                    Toast.makeText(context, "Плей нажат", Toast.LENGTH_SHORT).show()
+                    onPlayClick()
                 })
         Spacer(modifier = Modifier.padding(end = 12.dp))
     }

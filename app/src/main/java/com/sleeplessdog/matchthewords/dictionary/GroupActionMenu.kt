@@ -13,6 +13,7 @@ fun GroupActionsMenu(
     onDismiss: () -> Unit,
     onRename: () -> Unit,
     onDelete: () -> Unit,
+    onPlay: () -> Unit,
 ) {
     DropdownMenu(
         expanded = expanded,
@@ -22,6 +23,14 @@ fun GroupActionsMenu(
         tonalElevation = 6.dp,
         shadowElevation = 8.dp,
     ) {
+        ActionMenuItem(
+            icon = R.drawable.icon_play_circle,
+            titleId = R.string.button_play,
+            onClick = {
+                onDismiss()
+                onPlay()
+            }
+        )
         ActionMenuItem(
             icon = R.drawable.icon_edit,
             titleId = R.string.button_rename,

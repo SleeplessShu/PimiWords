@@ -62,7 +62,7 @@ fun DictionaryUi(
     viewModel: DictionaryViewModel,
     onNavigateToUserGroup: (String, String) -> Unit,
     onNavigateToGlobalGroup: (String, String) -> Unit,
-    bottomPadding: Int,
+    onPlayGroup: (String, Boolean) -> Unit,
 ) {
     val state by viewModel.groupState.collectAsState()
 
@@ -74,7 +74,7 @@ fun DictionaryUi(
         onNavigateToGlobalGroup = onNavigateToGlobalGroup,
         addNewUserGroup = viewModel::addNewUserGroup,
         onRefresh = viewModel::refreshGroups,
-        bottomPadding = bottomPadding,
+        onPlayGroup = onPlayGroup,
     )
 }
 
@@ -88,7 +88,7 @@ fun DictionaryScreen(
     onNavigateToGlobalGroup: (String, String) -> Unit,
     addNewUserGroup: (String) -> Unit,
     onRefresh: () -> Unit,
-    bottomPadding: Int,
+    onPlayGroup: (String, Boolean) -> Unit,
 ) {
     var renameGroup by remember { mutableStateOf<Pair<String, String>?>(null) }
     var deleteGroup by remember { mutableStateOf<Pair<String, String>?>(null) }
@@ -152,7 +152,7 @@ fun DictionaryScreen(
             addNewUserGroup = addNewUserGroup,
             isRefreshing = isRefreshing,
             onRefresh = onRefresh,
-            bottomPadding = bottomPadding
+            onPlayGroup = onPlayGroup,
         )
     }
 }
@@ -284,7 +284,7 @@ fun DictionaryTabs(
     onDeleteGroup: (String, String) -> Unit,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
-    bottomPadding: Int,
+    onPlayGroup: (String, Boolean) -> Unit,
 ) {
     var selectedTab by rememberSaveable {
         mutableIntStateOf(GroupsTab.USERS.ordinal)
@@ -343,6 +343,7 @@ fun DictionaryTabs(
                             onNavigateToUserGroup = onNavigateToUserGroup,
                             onRenameGroup = onRenameGroup,
                             onDeleteGroup = onDeleteGroup,
+                            onPlayGroup = { groupKey -> onPlayGroup(groupKey, true) },
                         )
                     }
 
@@ -350,7 +351,7 @@ fun DictionaryTabs(
                         StandardGroupsTable(
                             groups = globalGroups,
                             onNavigateToGlobalGroup = onNavigateToGlobalGroup,
-                            bottomPadding = bottomPadding
+                            onPlayGroup = { groupKey -> onPlayGroup(groupKey, false) },
                         )
                     }
                 }

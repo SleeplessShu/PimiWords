@@ -16,9 +16,25 @@
         android:name="com.sleeplessdog.matchthewords.game.presentation.GameFragment"
         android:label="GameFragment">
 
+        <argument
+            android:name="gameType"
+            app:argType="com.sleeplessdog.matchthewords.game.presentation.models.GameType"
+            app:nullable="false" />
+
+        <!-- добавили groupKey -->
+        <argument
+            android:name="groupKey"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="groupIsUser"
+            app:argType="boolean"
+            android:defaultValue="false" />
+
         <action
             android:id="@+id/action_gameFragment_to_GameSelectFragment"
             app:destination="@id/gameSelectFragment"
+            app:popUpTo="@id/gameSelectFragment"
             app:popUpToInclusive="true" />
 
         <action
@@ -30,39 +46,67 @@
         <action
             android:id="@+id/action_gameFragment_to_scoreFragment"
             app:destination="@id/scoreFragment"
-            app:popUpTo="@+id/gameFragment"
+            app:popUpTo="@id/gameFragment"
             app:popUpToInclusive="true" />
-
-        <argument
-            android:name="gameType"
-            app:argType="com.sleeplessdog.matchthewords.game.presentation.models.GameType"
-            app:nullable="false" />
     </fragment>
 
     <fragment
         android:id="@+id/gameSelectFragment"
         android:name="com.sleeplessdog.matchthewords.game.presentation.fragments.GameSelectFragment"
         android:label="GameSelectFragment">
+
+
+        <argument
+            android:name="groupKey"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="groupIsUser"
+            app:argType="boolean"
+            android:defaultValue="false" />
+
         <action
             android:id="@+id/action_gameSelectFragment_to_gameFragment"
             app:destination="@id/gameFragment"
-            app:popUpToInclusive="true" />
+            app:popUpTo="@id/gameSelectFragment"
+            app:popUpToInclusive="true">
+            <argument
+                android:name="groupKey"
+                app:argType="string"
+                android:defaultValue="" />
+            <argument
+                android:name="groupIsUser"
+                app:argType="boolean"
+                android:defaultValue="false" />
+        </action>
     </fragment>
 
     <fragment
-        android:id="@+id/wordsFragment"
-        android:name="com.sleeplessdog.matchthewords.dictionary.dictionary_screen.DictionaryComposeFragment"
-        android:label="WordsFragment">
-        <action android:id="@+id/action_wordsFragment_to_settingsFragment" />
-    </fragment>
+        android:id="@+id/dictionaryComposeFragment"
+        android:name="com.sleeplessdog.matchthewords.dictionary.dictionary_screen.DictionaryComposeFragment">
+        <action
+            android:id="@+id/action_dictionaryComposeFragment_to_gameSelectFragment"
+            app:destination="@id/gameSelectFragment">
+            <argument
+                android:name="groupKey"
+                app:argType="string"
+                android:defaultValue="" />
+            <argument
+                android:name="groupIsUser"
+                app:argType="boolean"
+                android:defaultValue="false" />
+        </action>
 
+    </fragment>
 
     <fragment
         android:id="@+id/scoreFragment"
         android:name="com.sleeplessdog.matchthewords.score.presentation.ScoreFragment"
         android:label="ScoreFragment">
+
         <action
             android:id="@+id/action_scoreFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
     </fragment>
+
 </navigation>

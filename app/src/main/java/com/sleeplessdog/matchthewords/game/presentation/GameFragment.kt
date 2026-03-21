@@ -53,7 +53,12 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val currentType = args.gameType
+        val groupKey = args.groupKey.takeIf { it.isNotEmpty() }
+        val groupIsUser = args.groupIsUser
+
         viewModel.setGame(currentType)
+        viewModel.setForcedGroup(groupKey, groupIsUser)
+
         heartsController = HeartsController(
             listOf(binding.heart1, binding.heart2, binding.heart3),
         )
@@ -115,7 +120,7 @@ class GameFragment : Fragment() {
 
                 GameState.GAME -> {
                     launchGame()
-                    
+
                     binding.statsBlock.isVisible = true
                     binding.buttonBack.isVisible = true
                 }
