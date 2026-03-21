@@ -10,6 +10,7 @@ import com.sleeplessdog.matchthewords.backend.data.repository.AppPrefs
 import com.sleeplessdog.matchthewords.backend.domain.models.WordsController
 import com.sleeplessdog.matchthewords.backend.domain.models.WordsGroupsList
 import com.sleeplessdog.matchthewords.backend.domain.usecases.GetSelectedGroupsUC
+import com.sleeplessdog.matchthewords.backend.domain.usecases.GetWordPairsFromUserGroupUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.score.UpdateScoreProgressUseCase
 import com.sleeplessdog.matchthewords.backend.domain.usecases.score.UpdateWordProgressUseCase
 import com.sleeplessdog.matchthewords.game.presentation.controller.LandingPagesController
@@ -27,12 +28,12 @@ import com.sleeplessdog.matchthewords.game.presentation.models.StatsState
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
 import com.sleeplessdog.matchthewords.game.presentation.parentControllers.ProgressController
 import com.sleeplessdog.matchthewords.utils.GamePrices
+import com.sleeplessdog.matchthewords.utils.GamePrices.DELAY_BEFORE_END_GAME
 import com.sleeplessdog.matchthewords.utils.SupportFunctions
 import com.sleeplessdog.matchthewords.utils.TimeConstants
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-const val DELAY_BEFORE_END_GAME = 1000L
 
 class GameViewModel(
 
@@ -42,6 +43,7 @@ class GameViewModel(
     private val updateWordProgress: UpdateWordProgressUseCase,
     private val updateScoreProgress: UpdateScoreProgressUseCase,
     private val getSelectedGroupsUC: GetSelectedGroupsUC,
+    private val getWordPairsFromUserGroupUC: GetWordPairsFromUserGroupUC,
     private val appPrefs: AppPrefs,
 ) : ViewModel() {
 
@@ -69,6 +71,14 @@ class GameViewModel(
     private val _endGameStats = MutableLiveData<EndGameStats>()
     val endGameStats: LiveData<EndGameStats> = _endGameStats
 
+    private var forcedGroupKey: String? = null
+    private var forcedGroupIsUser: Boolean = false
+
+    fun setForcedGroup(key: String?, isUser: Boolean = false) {
+        forcedGroupKey = key
+        forcedGroupIsUser = isUser
+    }
+
     // «игровая экономика»
     private var score = 0
     private var lives = 3
@@ -94,7 +104,6 @@ class GameViewModel(
     private suspend fun prepareData() {
         onLoading()
 
-        // 1. Загружаем выбранные категории
         val selectedGroups = getSelectedGroupsUC.get()
 
         val enums: Set<WordsGroupsList> =
@@ -102,13 +111,11 @@ class GameViewModel(
                 WordsGroupsList.values().find { it.key == key }
             }.toSet()
 
-        // 2. Читаем префы
         val interfaceLang = appPrefs.getUiLanguage()
         val studyLang = appPrefs.getStudyLanguage()
         val difficultLevel = appPrefs.getDifficulty()
         val wordsLevel = appPrefs.getLevels()
 
-        // 3. Обновляем настройки одним махом
         _gameSettings.value = GameSettings(
             language1 = interfaceLang,
             language2 = studyLang,
@@ -135,7 +142,6 @@ class GameViewModel(
             prepareData()
             setupGameStats()
 
-            // шаг 3: загрузить слова
             val ok = loadWordsFromDatabase()
             if (!ok) return@launch
 
@@ -290,9 +296,48 @@ class GameViewModel(
         val settings = _gameSettings.value ?: GameSettings()
         Log.d("DEBUG", "loadWordsFromDatabase: ${settings.category} ${settings.level}")
 
-        val pairs = wordsController.getWordPairs(
-            settings.language1, settings.language2, settings.level, wordsNeeded, settings.category
-        )
+        val category = if (forcedGroupKey != null) {
+            Log.d("DEBUG", "loadWordsFromDatabase: $forcedGroupKey")
+            setOfNotNull(
+                WordsGroupsList.values().find { it.key == forcedGroupKey }
+            )
+        } else {
+            settings.category
+        }
+
+        val pairs = when {
+            forcedGroupKey != null && forcedGroupIsUser -> {
+                Log.d("DEBUG", "loadWordsFromDatabase: user group $forcedGroupKey")
+                getWordPairsFromUserGroupUC(
+                    settings.language1,
+                    settings.language2,
+                    forcedGroupKey!!,
+                    wordsNeeded
+                )
+            }
+
+            forcedGroupKey != null -> {
+                Log.d("DEBUG", "loadWordsFromDatabase: global group $forcedGroupKey")
+                val category = setOfNotNull(
+                    WordsGroupsList.values().find { it.key == forcedGroupKey }
+                )
+                wordsController.getWordPairs(
+                    settings.language1, settings.language2, settings.level, wordsNeeded, category
+                )
+            }
+
+            else -> {
+                Log.d("DEBUG", "loadWordsFromDatabase: settings ${settings.category}")
+                wordsController.getWordPairs(
+                    settings.language1,
+                    settings.language2,
+                    settings.level,
+                    wordsNeeded,
+                    settings.category
+                )
+            }
+        }
+
 
         if (pairs.isEmpty()) {
             onGameEnd()

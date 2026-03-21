@@ -244,6 +244,38 @@ class WordsRepository(
         }
     }
 
+    suspend fun getWordPairsFromUserGroup(
+        lang1: Language,
+        lang2: Language,
+        groupKey: String,
+        wordsNeeded: Int,
+    ): List<Pair<Word, Word>> {
+        val userDao = databaseProvider.getUserDatabase().userDao()
+
+        val userWords = userDao.getWordsByGroupKey(groupKey)
+
+        val pool = userWords.map { u ->
+            CombinedWord(
+                globalId = null,
+                userWordId = u.id,
+                english = u.english,
+                spanish = u.spanish,
+                russian = u.russian,
+                french = u.french,
+                german = u.german,
+                armenian = u.armenian,
+                serbian = u.serbian
+            )
+        }.shuffled().take(wordsNeeded)
+
+        return pool.mapNotNull { w ->
+            val w1 = w.toWord(lang1)
+            val w2 = w.toWord(lang2)
+            if (!w1.isValid || !w2.isValid) null
+            else w1 to w2
+        }
+    }
+
     fun valueFor(language: Language, value: String?): String? = when (language) {
         Language.ENGLISH -> value
         Language.SPANISH -> value

@@ -21,6 +21,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
@@ -114,7 +115,9 @@ class DictionaryComposeFragment : Fragment() {
                                     )
                                 )
                             },
-                            bottomPadding = bottomPadding
+                            onPlayGroup = { groupKey, isUser ->
+                                navigateToGameSelect(groupKey, isUser)
+                            },
                         )
                     }
 
@@ -201,5 +204,14 @@ class DictionaryComposeFragment : Fragment() {
                         Toast.makeText(requireContext(), "Logged out", Toast.LENGTH_SHORT).show()
                     }
             }
+    }
+
+    private fun navigateToGameSelect(groupKey: String, isUser: Boolean) {
+        val action = DictionaryComposeFragmentDirections
+            .actionDictionaryComposeFragmentToGameSelectFragment(
+                groupKey = groupKey,
+                groupIsUser = isUser
+            )
+        findNavController().navigate(action)
     }
 }

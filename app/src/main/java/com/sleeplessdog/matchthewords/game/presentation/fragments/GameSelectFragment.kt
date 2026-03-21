@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.GameSelectFragmentBinding
@@ -20,6 +21,7 @@ import com.sleeplessdog.matchthewords.main.MainActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GameSelectFragment : Fragment() {
+    private val args: GameSelectFragmentArgs by navArgs()
 
     private val viewModel: GameSelectViewModel by viewModel()
     private var _binding: GameSelectFragmentBinding? = null
@@ -39,7 +41,11 @@ class GameSelectFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //resetAuth()
+
+        val groupKey = args.groupKey.takeIf { it.isNotEmpty() }
+        val isUser = args.groupIsUser
+        viewModel.setForcedGroup(groupKey, isUser)
+
         setupLanguageList()
         setupLanguageButton()
         setupLanguageManager()
@@ -176,9 +182,13 @@ class GameSelectFragment : Fragment() {
             }
         }
 
-        viewModel.navigateToGame.observe(viewLifecycleOwner) { type ->
-            if (type != null) {
-                val dir = GameSelectFragmentDirections.actionGameSelectFragmentToGameFragment(type)
+        viewModel.navigateToGame.observe(viewLifecycleOwner) { event ->
+            if (event != null) {
+                val dir = GameSelectFragmentDirections.actionGameSelectFragmentToGameFragment(
+                    gameType = event.gameType,
+                    groupKey = event.groupKey ?: "",
+                    groupIsUser = event.groupIsUser
+                )
                 findNavController().navigate(dir)
                 viewModel.onNavigateConsumed()
             }

@@ -77,6 +77,9 @@ interface UserDao {
 
     // ---------- Words ----------
 
+    @Query("SELECT * FROM UserWords WHERE groupId = :groupKey")
+    suspend fun getWordsByGroupKey(groupKey: String): List<UserWordEntity>
+
     @Query("SELECT * FROM UserWords")
     suspend fun getAllWords(): List<UserWordEntity>
 
@@ -182,4 +185,6 @@ WHERE id = :wordId
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveSettings(settings: UserSettingsEntity)
+
+
 }
