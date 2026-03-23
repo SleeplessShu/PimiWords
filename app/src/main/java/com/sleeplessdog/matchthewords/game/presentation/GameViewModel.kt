@@ -11,8 +11,7 @@ import com.sleeplessdog.matchthewords.backend.domain.models.WordsController
 import com.sleeplessdog.matchthewords.backend.domain.models.WordsGroupsList
 import com.sleeplessdog.matchthewords.backend.domain.usecases.GetSelectedGroupsUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.GetWordPairsFromUserGroupUC
-import com.sleeplessdog.matchthewords.backend.domain.usecases.score.UpdateScoreProgressUseCase
-import com.sleeplessdog.matchthewords.backend.domain.usecases.score.UpdateWordProgressUseCase
+import com.sleeplessdog.matchthewords.backend.domain.usecases.ProcessGameResultUC
 import com.sleeplessdog.matchthewords.game.presentation.controller.LandingPagesController
 import com.sleeplessdog.matchthewords.game.presentation.interfaces.GameEvent
 import com.sleeplessdog.matchthewords.game.presentation.models.DifficultLevel
@@ -36,16 +35,16 @@ import kotlinx.coroutines.launch
 
 
 class GameViewModel(
-
     private val wordsController: WordsController,
     private val progressController: ProgressController,
     private val landingManager: LandingPagesController,
-    private val updateWordProgress: UpdateWordProgressUseCase,
-    private val updateScoreProgress: UpdateScoreProgressUseCase,
     private val getSelectedGroupsUC: GetSelectedGroupsUC,
     private val getWordPairsFromUserGroupUC: GetWordPairsFromUserGroupUC,
+    private val processGameResultUC: ProcessGameResultUC,
     private val appPrefs: AppPrefs,
 ) : ViewModel() {
+
+    private var gameStartTimeMs: Long = 0L
 
     // Верхнее состояние экрана игры
     private val _gameState = MutableLiveData(MatchState())
@@ -148,6 +147,7 @@ class GameViewModel(
             _wordsPairs.value = allPairs
             viewModelScope.launch {
                 delay(TimeConstants.LOADING_PROCESS)
+                gameStartTimeMs = System.currentTimeMillis()
                 _gameState.value = _gameState.value?.copy(state = GameState.GAME)
                 landingScreenCheck()
             }
@@ -351,34 +351,38 @@ class GameViewModel(
     // ------------ Конец игры/сброс ------------
     fun onGameEnd() {
 
-        val stats = SessionStats(
-            correctIds = sessionCorrectIds.toList(), mistakeIds = sessionWrongIds.toList()
-        )
-        val todaysScore = 9999//scoreInteractor.getTodaysResult()
-        val sessionPairs = allPairs
+        val durationMinutes = ((System.currentTimeMillis() - gameStartTimeMs) / 1000 / 60)
+            .toInt()
+            .coerceAtLeast(1)
 
+        val stats = SessionStats(
+            correctIds = sessionCorrectIds.toList(),
+            mistakeIds = sessionWrongIds.toList()
+        )
         viewModelScope.launch {
             delay(DELAY_BEFORE_END_GAME)
-            _gameState.value = _gameState.value?.copy(
-                state = GameState.END_OF_GAME,
+
+            processGameResultUC(
+                score = score,
+                correctIds = stats.correctIds,
+                wrongIds = stats.mistakeIds,
+                durationMinutes = durationMinutes,
+                groupKey = forcedGroupKey,
+                isUserGroup = forcedGroupIsUser
             )
+
+            _gameState.value = _gameState.value?.copy(state = GameState.END_OF_GAME)
             _statsState.value = _statsState.value?.copy(
-                lives = lives, todaysScore = todaysScore.toString()
+                lives = lives
             )
+
+            _gameState.value = _gameState.value?.copy(state = GameState.END_OF_GAME)
             _endGameStats.value = EndGameStats(
                 isWin = lives > 0,
                 mistakesCount = sessionWrongIds.size,
                 score = score,
                 wordsCount = sessionCorrectIds.size,
-                sessionPairs = sessionPairs
-            )
-
-            updateWordProgress.update(correctIds = stats.correctIds, mistakeIds = stats.mistakeIds)
-            updateScoreProgress.update(
-                score = score,
-                stats.correctIds.size,
-                stats.mistakeIds.size,
-                0
+                sessionPairs = allPairs
             )
         }
     }
