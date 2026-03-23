@@ -97,4 +97,10 @@ AND groupKey IN (:groupKeys)
     """
     )
     suspend fun getGroupTitleById(groupId: String): String?
+
+    @Query("SELECT COUNT(*) FROM GlobalDictionary WHERE difficulty = :level")
+    suspend fun countWordsByLevel(level: LanguageLevel): Int
+
+    @Query("SELECT id FROM GlobalDictionary WHERE difficulty = :level AND isDeleted = 0")
+    suspend fun getWordIdsByLevel(level: LanguageLevel): List<Long>
 }

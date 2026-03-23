@@ -45,16 +45,19 @@ val presentationModule = module {
             wordsController = get(),
             progressController = get(),
             landingManager = get(),
-            updateWordProgress = get(),
-            updateScoreProgress = get(),
             getSelectedGroupsUC = get(),
             appPrefs = get(),
             getWordPairsFromUserGroupUC = get(),
+            processGameResultUC = get(),
         )
     }
 
 
-    viewModel { ScoreViewModel() }
+    viewModel {
+        ScoreViewModel(
+            getScoreUiState = get()
+        )
+    }
     viewModel {
         GroupViewModel(
             observeUserGroupsForGroups = get(),

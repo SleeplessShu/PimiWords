@@ -6,6 +6,7 @@ object GamePrices {
     const val ANSWER_PRICE: Int = 20
 
     //IS LEARNED CONDITION
-    const val LEARNED_THRESHOLD: Int = 5
+
     const val DELAY_BEFORE_END_GAME = 200L
+    const val LEARNED_THRESHOLD = 3
 }

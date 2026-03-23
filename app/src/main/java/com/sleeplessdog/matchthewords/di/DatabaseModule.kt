@@ -5,6 +5,7 @@ import com.sleeplessdog.matchthewords.backend.data.db.AppDatabaseProvider
 import com.sleeplessdog.matchthewords.backend.data.db.global.GlobalDatabase
 import com.sleeplessdog.matchthewords.backend.data.db.user.UserDatabase
 import com.sleeplessdog.matchthewords.backend.data.repository.GroupsRepository
+import com.sleeplessdog.matchthewords.backend.data.repository.StatsRepository
 import com.sleeplessdog.matchthewords.backend.data.repository.WordsRepository
 import com.sleeplessdog.matchthewords.backend.domain.models.WordsController
 import com.sleeplessdog.matchthewords.backend.domain.usecases.AddSingleWordToSavedWordsUC
@@ -16,6 +17,7 @@ import com.sleeplessdog.matchthewords.backend.domain.usecases.DeleteWordFromUser
 import com.sleeplessdog.matchthewords.backend.domain.usecases.EditWordInUserGroupUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.GetGlobalGroupWordsOnceUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.GetGlobalGroupsOnceUC
+import com.sleeplessdog.matchthewords.backend.domain.usecases.GetScoreUiStateUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.GetSelectedGroupsUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.GetWordPairsFromUserGroupUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.GetWordsCountForGroupUC
@@ -26,12 +28,11 @@ import com.sleeplessdog.matchthewords.backend.domain.usecases.ObserveAllGroupsFo
 import com.sleeplessdog.matchthewords.backend.domain.usecases.ObserveUserGroupsForGroupsUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.ObserveUserGroupsUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.ObserveWordsInUserGroupUC
+import com.sleeplessdog.matchthewords.backend.domain.usecases.ProcessGameResultUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.RenameUserGroupUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.ReportWordMistakeUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.SaveSelectionUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.ToggleCategoryUC
-import com.sleeplessdog.matchthewords.backend.domain.usecases.score.UpdateScoreProgressUseCase
-import com.sleeplessdog.matchthewords.backend.domain.usecases.score.UpdateWordProgressUseCase
 import com.sleeplessdog.matchthewords.backend.domain.usecases.settings.SettingsObserveLevelsUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.settings.SettingsSaveLevelsUC
 import org.koin.android.ext.koin.androidContext
@@ -57,10 +58,20 @@ val databaseModule = module {
         get<UserDatabase>().userDao()
     }
 
+    single {
+        get<UserDatabase>().wordProgressDao()
+    }
+
     // -------- Repository --------
     single {
         WordsRepository(
             get()
+        )
+    }
+
+    single {
+        StatsRepository(
+            databaseProvider = get()
         )
     }
 
@@ -71,9 +82,7 @@ val databaseModule = module {
         )
     }
 
-    single {
-        UpdateWordProgressUseCase(get())
-    }
+
 
     single { AppDatabaseProvider(get()) }
 
@@ -83,7 +92,6 @@ val databaseModule = module {
     single { SaveSelectionUC(get()) }
     single { SettingsSaveLevelsUC(get()) }
     single { SettingsObserveLevelsUC(get()) }
-    single { UpdateScoreProgressUseCase(get()) }
     /**
      * group uc
      */
@@ -111,4 +119,9 @@ val databaseModule = module {
     single { AddSingleWordToSavedWordsUC(get()) }
     single { GetWordPairsFromUserGroupUC(get()) }
     single { ReportWordMistakeUC(get(), get(), get()) }
+    /**
+     * score uc
+     */
+    single { ProcessGameResultUC(get()) }
+    single { GetScoreUiStateUC(get(), get(), get()) }
 }
