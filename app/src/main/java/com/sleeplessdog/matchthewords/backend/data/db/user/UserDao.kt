@@ -5,8 +5,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.sleeplessdog.matchthewords.backend.domain.models.AppStatisticsEntity
-import com.sleeplessdog.matchthewords.backend.domain.models.DailyStatsEntity
 import com.sleeplessdog.matchthewords.backend.domain.models.UserSettingsEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -158,26 +156,6 @@ WHERE id = :wordId
         wordId: Long,
         targetGroupId: String,
     )
-
-    // ---------- Progress ----------
-
-    @Query("SELECT * FROM UserWordProgress WHERE globalId = :globalId")
-    suspend fun getProgress(globalId: Long): UserWordProgressEntity?
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveProgress(progress: UserWordProgressEntity)
-
-    @Query("SELECT * FROM DailyStats WHERE date = :date")
-    suspend fun getDailyStats(date: String): DailyStatsEntity?
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveDailyStats(stats: DailyStatsEntity)
-
-    @Query("SELECT value FROM AppStatistics WHERE `key` = :statKey")
-    suspend fun getStat(statKey: String): String?
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun setStat(stat: AppStatisticsEntity)
 
     // ---------- Settings ----------
     @Query("SELECT * FROM UserSettings WHERE id = 1")

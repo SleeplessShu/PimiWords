@@ -1,3 +1,4 @@
+/*
 package com.sleeplessdog.matchthewords.score.data
 
 import androidx.room.Database
@@ -14,4 +15,4 @@ abstract class UserDatabase : RoomDatabase() {
 
     abstract fun userAwardDao(): UserAwardDao
     abstract fun awardProgressDao(): AwardProgressDao
-}
+}*/
