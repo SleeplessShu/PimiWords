@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 
 sealed class DictionaryUiEvent {
     object RequestGoogleSignIn : DictionaryUiEvent()
+    object ResetGoogleSignIn : DictionaryUiEvent()
 }
 
 class DictionaryViewModel(
@@ -201,7 +202,17 @@ class DictionaryViewModel(
     }
 
     fun refreshSync() {
-        startSync()
+        viewModelScope.launch {
+            _pendingEvent.value = DictionaryUiEvent.ResetGoogleSignIn
+            _syncState.update {
+                DictionarySyncState(
+                    auth = AuthState.UNKNOWN,
+                    globalDb = DataTransferStatus.UNKNOWN,
+                    userDb = DataTransferStatus.UNKNOWN
+                )
+            }
+            checkAuthorization()
+        }
     }
 
     fun onAuthFailed() {

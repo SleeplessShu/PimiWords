@@ -47,9 +47,6 @@ class DictionaryComposeFragment : Fragment() {
 
         return ComposeView(requireContext()).apply {
 
-            val bottomPadding = 0
-            //(requireActivity() as MainActivity).getBottomNavHeight()
-
             setViewCompositionStrategy(
                 ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
             )
@@ -64,32 +61,27 @@ class DictionaryComposeFragment : Fragment() {
 
                     enterTransition = {
                         slideInHorizontally(
-                            initialOffsetX = { it },
-                            animationSpec = tween(400)
+                            initialOffsetX = { it }, animationSpec = tween(400)
                         ) + fadeIn(tween(400))
                     },
 
                     exitTransition = {
                         slideOutHorizontally(
-                            targetOffsetX = { -it },
-                            animationSpec = tween(400)
+                            targetOffsetX = { -it }, animationSpec = tween(400)
                         ) + fadeOut(tween(400))
                     },
 
                     popEnterTransition = {
                         slideInHorizontally(
-                            initialOffsetX = { -it },
-                            animationSpec = tween(400)
+                            initialOffsetX = { -it }, animationSpec = tween(400)
                         ) + fadeIn(tween(400))
                     },
 
                     popExitTransition = {
                         slideOutHorizontally(
-                            targetOffsetX = { it },
-                            animationSpec = tween(400)
+                            targetOffsetX = { it }, animationSpec = tween(400)
                         ) + fadeOut(tween(400))
-                    }
-                ) {
+                    }) {
 
                     // =======================
                     // DICTIONARY SCREEN
@@ -110,8 +102,7 @@ class DictionaryComposeFragment : Fragment() {
                             onNavigateToGlobalGroup = { groupId, groupTitle ->
                                 composeNavController.navigate(
                                     DictionaryDestinations.groupRoute(
-                                        groupId, groupTitle,
-                                        GroupType.GLOBAL
+                                        groupId, groupTitle, GroupType.GLOBAL
                                     )
                                 )
                             },
@@ -125,10 +116,7 @@ class DictionaryComposeFragment : Fragment() {
                     // GROUP SCREEN
                     // =======================
                     composable(
-                        route = "${DictionaryDestinations.GROUP}/" +
-                                "{${DictionaryDestinations.ARG_GROUP_ID}}/" +
-                                "{${DictionaryDestinations.ARG_GROUP_NAME}}/" +
-                                "{${DictionaryDestinations.ARG_GROUP_TYPE}}"
+                        route = "${DictionaryDestinations.GROUP}/" + "{${DictionaryDestinations.ARG_GROUP_ID}}/" + "{${DictionaryDestinations.ARG_GROUP_NAME}}/" + "{${DictionaryDestinations.ARG_GROUP_TYPE}}"
                     ) { backStackEntry ->
 
                         val groupViewModel: GroupViewModel =
@@ -152,7 +140,12 @@ class DictionaryComposeFragment : Fragment() {
                     when (event) {
                         DictionaryUiEvent.RequestGoogleSignIn -> {
                             startGoogleSignIn()
-                            viewModelDictionary.clearPendingEvent() // сбрасываем после обработки
+                            viewModelDictionary.clearPendingEvent()
+                        }
+
+                        DictionaryUiEvent.ResetGoogleSignIn -> {
+                            resetAuth()
+                            viewModelDictionary.clearPendingEvent()
                         }
 
                         null -> Unit
@@ -197,20 +190,17 @@ class DictionaryComposeFragment : Fragment() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
         val signInClient = GoogleSignIn.getClient(requireActivity(), gso)
 
-        signInClient.signOut()
-            .addOnCompleteListener(requireActivity()) {
-                signInClient.revokeAccess()
-                    .addOnCompleteListener(requireActivity()) {
-                        Toast.makeText(requireContext(), "Logged out", Toast.LENGTH_SHORT).show()
-                    }
+        signInClient.signOut().addOnCompleteListener(requireActivity()) {
+            signInClient.revokeAccess().addOnCompleteListener(requireActivity()) {
+                Toast.makeText(requireContext(), "Logged out", Toast.LENGTH_SHORT).show()
             }
+        }
     }
 
     private fun navigateToGameSelect(groupKey: String, isUser: Boolean) {
-        val action = DictionaryComposeFragmentDirections
-            .actionDictionaryComposeFragmentToGameSelectFragment(
-                groupKey = groupKey,
-                groupIsUser = isUser
+        val action =
+            DictionaryComposeFragmentDirections.actionDictionaryComposeFragmentToGameSelectFragment(
+                groupKey = groupKey, groupIsUser = isUser
             )
         findNavController().navigate(action)
     }

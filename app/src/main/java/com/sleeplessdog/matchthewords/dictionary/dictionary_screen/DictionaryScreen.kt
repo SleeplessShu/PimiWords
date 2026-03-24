@@ -73,6 +73,7 @@ fun DictionaryUi(
         onNavigateToUserGroup = onNavigateToUserGroup,
         onNavigateToGlobalGroup = onNavigateToGlobalGroup,
         addNewUserGroup = viewModel::addNewUserGroup,
+        onRefreshSync = viewModel::refreshSync,
         onRefresh = viewModel::refreshGroups,
         onPlayGroup = onPlayGroup,
     )
@@ -88,6 +89,7 @@ fun DictionaryScreen(
     onNavigateToGlobalGroup: (String, String) -> Unit,
     addNewUserGroup: (String) -> Unit,
     onRefresh: () -> Unit,
+    onRefreshSync: () -> Unit,
     onPlayGroup: (String, Boolean) -> Unit,
 ) {
     var renameGroup by remember { mutableStateOf<Pair<String, String>?>(null) }
@@ -123,8 +125,8 @@ fun DictionaryScreen(
     if (showSyncOverlay) {
         SyncStateOverlay(
             syncState = syncState,
-            onRefresh = {
-                onRefresh()
+            onRefreshSync = {
+                onRefreshSync()
                 showSyncOverlay = false
             },
             onDismiss = { showSyncOverlay = false }
@@ -191,7 +193,7 @@ fun HeaderDictionary(
 @Composable
 fun SyncStateOverlay(
     syncState: DictionarySyncState,
-    onRefresh: () -> Unit,
+    onRefreshSync: () -> Unit,
     onDismiss: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -236,7 +238,7 @@ fun SyncStateOverlay(
             Spacer(modifier = Modifier.height(8.dp))
 
             Button(
-                onClick = onRefresh,
+                onClick = onRefreshSync,
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = GreenPrimary,
