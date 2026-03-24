@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.sleeplessdog.matchthewords.utils.ConstantsPaths.ASSETS_DATABASE_DICTIONARY_PATH
 import com.sleeplessdog.matchthewords.utils.ConstantsPaths.GLOBAL_DATABASE_DICTIONARY_NAME
 
 
@@ -25,7 +26,7 @@ abstract class GlobalDatabase : RoomDatabase() {
                 GlobalDatabase::class.java,
                 GLOBAL_DATABASE_DICTIONARY_NAME
             )
-                .fallbackToDestructiveMigration()
+                .createFromAsset(ASSETS_DATABASE_DICTIONARY_PATH)
                 .build()
     }
 }

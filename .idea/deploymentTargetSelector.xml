@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="matchthewords.app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-03-18T22:05:37.243480800Z">
+        <DropdownSelection timestamp="2026-03-24T14:57:08.484778300Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=TE988D1ZM1B030624" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=27211JEGR22442" />
             </handle>
           </Target>
         </DropdownSelection>

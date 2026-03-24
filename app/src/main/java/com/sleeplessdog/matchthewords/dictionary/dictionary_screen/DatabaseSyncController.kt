@@ -47,10 +47,6 @@ class DatabaseSyncController(
 
     fun getUid() = currentUid ?: "unknown"
 
-    /*private val uid = FirebaseAuth.getInstance().uid
-    private val userRef =
-        storage.reference.child("user/${uid}/${ConstantsPaths.USER_DATABASE_DICTIONARY_NAME}")
-*/
     private val prefs = context.getSharedPreferences(
         ConstantsPaths.SHARED_PREFS_DATABASE_SETTINGS, Context.MODE_PRIVATE
     )
@@ -81,14 +77,14 @@ class DatabaseSyncController(
             val serverDate = metadata.updatedTimeMillis
             val localDate = prefs.getLong(ConstantsPaths.GLOBAL_DATABASE_DICTIONARY_DATE, 0)
 
-            if (!globalDbFile.exists() || serverDate > localDate) {
+            if (serverDate > localDate) {
 
                 downloadGlobalDatabase(serverDate)
 
             } else {
 
                 _syncState.update {
-                    it.copy(globalDb = DataTransferStatus.SUCCESS)
+                    it.copy(globalDb = DataTransferStatus.ASSETS)
                 }
             }
 
