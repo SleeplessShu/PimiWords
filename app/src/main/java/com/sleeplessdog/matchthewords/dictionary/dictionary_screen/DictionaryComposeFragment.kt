@@ -139,7 +139,7 @@ class DictionaryComposeFragment : Fragment() {
                 viewModelDictionary.pendingEvent.collect { event ->
                     when (event) {
                         DictionaryUiEvent.RequestGoogleSignIn -> {
-                            startGoogleSignIn()
+                            showAuthDialog()
                             viewModelDictionary.clearPendingEvent()
                         }
 
@@ -153,6 +153,21 @@ class DictionaryComposeFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun showAuthDialog() {
+        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.auth_dialog_title))
+            .setMessage(getString(R.string.auth_dialog_message))
+            .setPositiveButton(getString(R.string.auth_dialog_confirm)) { _, _ ->
+                viewModelDictionary.clearPendingEvent()
+                startGoogleSignIn()
+            }
+            .setNegativeButton(getString(R.string.auth_dialog_decline)) { _, _ ->
+                viewModelDictionary.onAuthDeclined()
+            }
+            .setCancelable(false)
+            .show()
     }
 
     private fun startGoogleSignIn() {

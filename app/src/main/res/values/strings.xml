@@ -215,6 +215,11 @@
     <string name="dictionary">Словарь</string>
 
     <!--dictionary-->
+    <string name="auth_dialog_title">Синхронизация</string>
+    <string name="auth_dialog_message">Войдите через Google чтобы сохранять прогресс и словарь в облаке</string>
+    <string name="auth_dialog_confirm">Войти</string>
+    <string name="auth_dialog_decline">Не сейчас</string>
+
     <string name="sync_overlay_title">Синхронизация</string>
     <string name="sync_label_auth">Авторизация</string>
     <string name="sync_label_global_db">Глобальная база</string>

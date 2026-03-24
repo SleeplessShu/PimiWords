@@ -38,6 +38,9 @@ class DictionaryViewModel(
     private val authController: FirebaseAuthController,
 
     ) : ViewModel() {
+
+    private var authDeclinedThisSession = false
+
     private val _syncState = MutableStateFlow(
         DictionarySyncState(
             auth = AuthState.UNKNOWN,
@@ -87,6 +90,8 @@ class DictionaryViewModel(
     private fun checkAuthorization() {
         viewModelScope.launch {
 
+            if (authDeclinedThisSession) return@launch
+
             _syncState.update { it.copy(auth = AuthState.UNKNOWN) }
 
             val authorized = authController.isUserAuthorized()
@@ -113,6 +118,12 @@ class DictionaryViewModel(
                 }
             }
         }
+    }
+
+    fun onAuthDeclined() {
+        authDeclinedThisSession = true
+        _syncState.update { it.copy(auth = AuthState.NOT_AUTHORIZED) }
+        _pendingEvent.value = null
     }
 
     fun clearPendingEvent() {
@@ -203,6 +214,7 @@ class DictionaryViewModel(
 
     fun refreshSync() {
         viewModelScope.launch {
+            authDeclinedThisSession = false
             _pendingEvent.value = DictionaryUiEvent.ResetGoogleSignIn
             _syncState.update {
                 DictionarySyncState(
