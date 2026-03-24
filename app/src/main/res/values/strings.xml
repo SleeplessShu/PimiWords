@@ -211,7 +211,7 @@
     <string name="award_figured_out_desc">Закрыл все ошибки в одной категории</string>
 
     <!--toast-->
-    <string name="error_auth_declined">Ошибка авторизации</string>
+    <string name="error_auth_declined">Ошибка авторизации </string>
     <string name="dictionary">Словарь</string>
 
     <!--dictionary-->
