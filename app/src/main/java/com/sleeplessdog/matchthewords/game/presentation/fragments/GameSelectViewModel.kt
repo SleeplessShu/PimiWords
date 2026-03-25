@@ -1,21 +1,32 @@
 package com.sleeplessdog.matchthewords.game.presentation.fragments
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sleeplessdog.matchthewords.backend.data.repository.AppPrefs
+import com.sleeplessdog.matchthewords.backend.domain.usecases.ObserveAllGroupsForSettingsUC
+import com.sleeplessdog.matchthewords.dictionary.models.GroupSettingsUiMapper
 import com.sleeplessdog.matchthewords.game.presentation.controller.LandingPagesController
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
 import com.sleeplessdog.matchthewords.game.presentation.models.LandingKeys
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
 import com.sleeplessdog.matchthewords.utils.LandingRepeatController.ALWAYS_SHOW_FIRST_LANDING
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class GameSelectViewModel(
     private val appPrefs: AppPrefs,
     private val landingManager: LandingPagesController,
+    private val observeAllGroupsForSettings: ObserveAllGroupsForSettingsUC,
+    private val groupSettingsUiMapper: GroupSettingsUiMapper,
+    private val app: Application,
 ) : ViewModel() {
 
     private var forcedGroupKey: String? = null
@@ -26,6 +37,33 @@ class GameSelectViewModel(
         val groupKey: String?,
         val groupIsUser: Boolean = false,
     )
+
+    private val _forcedGroupTitle = MutableLiveData<String?>(null)
+    val forcedGroupTitle: LiveData<String?> = _forcedGroupTitle
+
+    val selectedGroupTitles: StateFlow<List<String>> =
+        observeAllGroupsForSettings()
+            .map { domain ->
+                (domain.userGroups + domain.globalGroups)
+                    .filter { it.isSelected }
+                    .map { group ->
+                        val mapped = groupSettingsUiMapper.map(group)
+                        when {
+                            // пользовательская группа — берём title напрямую
+                            mapped.title != null -> mapped.title
+                            // глобальная — берём через ресурс (переведено)
+                            mapped.titleRes != 0 -> app.getString(mapped.titleRes)
+                            // fallback
+                            else -> group.key
+                        }
+                    }
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList()
+            )
+
 
     private val _uiLanguage = MutableLiveData<Language>()
     val uiLanguage: LiveData<Language> = _uiLanguage
@@ -68,6 +106,34 @@ class GameSelectViewModel(
     fun setForcedGroup(key: String?, isUser: Boolean = false) {
         forcedGroupKey = key
         forcedGroupIsUser = isUser
+
+        if (key == null) {
+            _forcedGroupTitle.value = null
+            return
+        }
+
+        viewModelScope.launch {
+            val domain = observeAllGroupsForSettings().first()
+            val allGroups = domain.userGroups + domain.globalGroups
+            val found = allGroups.find { it.key == key }
+
+            _forcedGroupTitle.value = if (found != null) {
+                val mapped = groupSettingsUiMapper.map(found)
+                when {
+                    mapped.title != null -> mapped.title
+                    mapped.titleRes != 0 -> app.getString(mapped.titleRes)
+                    else -> key
+                }
+            } else {
+                key
+            }
+        }
+    }
+
+    fun clearForcedGroup() {
+        forcedGroupKey = null
+        forcedGroupIsUser = false
+        _forcedGroupTitle.value = null
     }
 
     fun onLandingShown() {

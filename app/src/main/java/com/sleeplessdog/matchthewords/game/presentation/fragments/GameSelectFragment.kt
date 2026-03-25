@@ -6,6 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +21,7 @@ import com.sleeplessdog.matchthewords.game.presentation.controller.toLanguageSel
 import com.sleeplessdog.matchthewords.game.presentation.models.GameType
 import com.sleeplessdog.matchthewords.game.presentation.view.LanguageMenuManager
 import com.sleeplessdog.matchthewords.main.MainActivity
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GameSelectFragment : Fragment() {
@@ -147,6 +151,12 @@ class GameSelectFragment : Fragment() {
     }
 
     private fun setupObservers() {
+
+        binding.btnClearForcedGroup.setOnClickListener {
+            viewModel.clearForcedGroup()
+            updateGroupsDisplay()
+        }
+
         viewModel.availableLanguages.observe(viewLifecycleOwner) { langs ->
             val selected = viewModel.studyLanguage.value
             langAdapter.submit(langs, selected)
@@ -160,7 +170,17 @@ class GameSelectFragment : Fragment() {
             }
         }
 
+        viewModel.forcedGroupTitle.observe(viewLifecycleOwner) {
+            updateGroupsDisplay()
+        }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.selectedGroupTitles.collect {
+                    updateGroupsDisplay()
+                }
+            }
+        }
 
         viewModel.showLanding.observe(viewLifecycleOwner) { shouldShow ->
             if (shouldShow) {
@@ -273,6 +293,25 @@ class GameSelectFragment : Fragment() {
         }
     }
 
+    private fun updateGroupsDisplay() {
+        val forcedTitle = viewModel.forcedGroupTitle.value
+
+        if (forcedTitle != null) {
+            binding.tvGroupsLabel.text = getString(R.string.game_group_label)
+            binding.tvGroupsList.text = forcedTitle
+            binding.btnClearForcedGroup.visibility = View.VISIBLE
+        } else {
+            binding.btnClearForcedGroup.visibility = View.GONE
+            val titles = viewModel.selectedGroupTitles.value
+            if (titles.isEmpty()) {
+                binding.tvGroupsLabel.text = getString(R.string.game_no_groups_selected)
+                binding.tvGroupsList.text = ""
+            } else {
+                binding.tvGroupsLabel.text = getString(R.string.selected_groups_label)
+                binding.tvGroupsList.text = titles.joinToString("\n")
+            }
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -36,6 +36,9 @@ val presentationModule = module {
         GameSelectViewModel(
             appPrefs = get(),
             landingManager = get(),
+            observeAllGroupsForSettings = get(),
+            groupSettingsUiMapper = get(),
+            app = get(),
         )
     }
 

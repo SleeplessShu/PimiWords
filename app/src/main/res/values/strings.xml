@@ -36,7 +36,7 @@
     <string name="score_text">%d</string>
     <string name="report_sent">Сообщение отправлено</string>
     <string name="words_saved">Слова сохранены в словарь</string>
-    <string name="button_new_game">Новая игра</string>
+    <string name="button_new_game">Главное меню</string>
     <string name="button_to_settings">Настройки</string>
     <string name="button_restart_round">Повтор</string>
     <string name="eg_errors">ошибок</string>
@@ -51,6 +51,10 @@
     <string name="ROW">Да/Нет</string>
     <string name="MC">Выбери\nВерное</string>
     <string name="WTW">Собери\nСлово</string>
+    <string name="selected_groups_label">Группы слов для игры:</string>
+    <string name="game_group_label">Группа для игры:</string>
+    <string name="game_no_groups_selected">Группы не выбраны — зайди в настройки</string>
+    <string name="clear_forced_group">Сбросить выбранную группу</string>
 
     <!--bottom menu-->
     <string name="games">Игры</string>
@@ -230,7 +234,7 @@
     <string name="new_word">Новое слово</string>
     <string name="edit_word">Редактируемое слово</string>
 
-    <string name="enter_group_name">Введите название</string>
+    <string name="enter_group_name">Имя группы</string>
     <string name="enter_word_origin">Слово</string>
     <string name="enter_word_translate">Перевод</string>
     <string name="words_edit">Редактировать</string>
