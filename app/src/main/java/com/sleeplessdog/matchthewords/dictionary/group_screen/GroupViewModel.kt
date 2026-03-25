@@ -16,10 +16,15 @@ import com.sleeplessdog.matchthewords.dictionary.dictionary_screen.DictionaryDes
 import com.sleeplessdog.matchthewords.dictionary.dictionary_screen.DictionaryDestinations.ARG_GROUP_NAME
 import com.sleeplessdog.matchthewords.dictionary.dictionary_screen.DictionaryDestinations.ARG_GROUP_TYPE
 import com.sleeplessdog.matchthewords.dictionary.models.UserGroupShort
+import com.sleeplessdog.matchthewords.payments.PremiumGate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+
+sealed class GroupUiEvent {
+    object ShowPremiumDialog : GroupUiEvent()
+}
 
 class GroupViewModel(
     private val observeUserGroupsForGroups: ObserveUserGroupsForGroupsUC,
@@ -31,11 +36,15 @@ class GroupViewModel(
     private val deleteWordFromUserGroup: DeleteWordFromUserGroupUC,
     private val moveWordToUserGroup: MoveWordToUserGroupUC,
     private val appPrefs: AppPrefs,
+    private val premiumGate: PremiumGate,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
+
     val ui = appPrefs.getUiLanguage()
     val study = appPrefs.getStudyLanguage()
 
+    private val _pendingEvent = MutableStateFlow<GroupUiEvent?>(null)
+    val pendingEvent: StateFlow<GroupUiEvent?> = _pendingEvent
 
     private val groupId: String = savedStateHandle.get<String>(ARG_GROUP_ID) ?: ""
 
@@ -118,14 +127,43 @@ class GroupViewModel(
 
     fun addNewUserWordsPair(origin: String, translate: String) {
         viewModelScope.launch {
-            addWordToUserGroup(
-                groupId = groupId,
-                origin = origin,
-                translate = translate,
-                study = study,
-                ui = ui
-            )
+            val wordsCount = state.value.wordsCount
+            val isPremium = premiumGate.check()
+            when {
+                wordsCount >= 10 -> {
+                    addWordToUserGroup(
+                        groupId = groupId,
+                        origin = origin,
+                        translate = translate,
+                        study = study,
+                        ui = ui
+                    )
+                }
+
+                isPremium -> {
+                    addWordToUserGroup(
+                        groupId = groupId,
+                        origin = origin,
+                        translate = translate,
+                        study = study,
+                        ui = ui
+                    )
+                }
+
+                else -> {
+                    showPremiumDialog()
+                }
+
+            }
         }
+    }
+
+    private fun showPremiumDialog() {
+        _pendingEvent.value = GroupUiEvent.ShowPremiumDialog
+    }
+
+    fun clearPendingEvent() {
+        _pendingEvent.value = null
     }
 
     fun onEditWord(wordUi: WordUi) {

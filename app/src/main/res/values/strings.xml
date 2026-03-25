@@ -281,4 +281,10 @@
     <string name="language_armenian">Армянский</string>
     <string name="language_serbian">Сербский</string>
 
+    <!--premium-->
+    <string name="premium_dialog_title">Премиум функция</string>
+    <string name="premium_dialog_message">Создание более 3 групп доступно в премиум версии.</string>
+    <string name="premium_dialog_message_groups">Создание более 10 записей доступно в премиум версии.</string>
+    <string name="premium_dialog_confirm">Узнать подробнее</string>
+    <string name="premium_dialog_decline">Не сейчас</string>
 </resources>

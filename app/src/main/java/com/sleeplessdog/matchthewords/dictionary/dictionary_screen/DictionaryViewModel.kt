@@ -13,6 +13,7 @@ import com.sleeplessdog.matchthewords.dictionary.GroupDictionaryUiMapper
 import com.sleeplessdog.matchthewords.dictionary.authorisation.AuthState
 import com.sleeplessdog.matchthewords.dictionary.authorisation.DataTransferStatus
 import com.sleeplessdog.matchthewords.dictionary.authorisation.DictionarySyncState
+import com.sleeplessdog.matchthewords.payments.PremiumGate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -26,6 +27,7 @@ import kotlinx.coroutines.launch
 sealed class DictionaryUiEvent {
     object RequestGoogleSignIn : DictionaryUiEvent()
     object ResetGoogleSignIn : DictionaryUiEvent()
+    object ShowPremiumDialog : DictionaryUiEvent()
 }
 
 class DictionaryViewModel(
@@ -36,6 +38,7 @@ class DictionaryViewModel(
     private val groupDictionaryUiMapper: GroupDictionaryUiMapper,
     private val syncController: DatabaseSyncController,
     private val authController: FirebaseAuthController,
+    private val premiumGate: PremiumGate,
 
     ) : ViewModel() {
 
@@ -168,13 +171,29 @@ class DictionaryViewModel(
         }
     }
 
-    fun addNewUserGroup(name: String) {
+    fun tryCreateUserGroup(groupName: String) {
         viewModelScope.launch {
-            createUserGroup(
-                groupName = name,
-            )
+            val userGroupsSize = groupState.value.userGroups.size
+            val isPremium = premiumGate.check()
+
+            when {
+                userGroupsSize <= 3 -> newUserGroup(groupName)
+                isPremium -> newUserGroup(groupName)
+                else -> showPremiumDialog()
+            }
         }
     }
+
+    private fun showPremiumDialog() {
+        _pendingEvent.value = DictionaryUiEvent.ShowPremiumDialog
+    }
+
+    private suspend fun newUserGroup(groupName: String) {
+        createUserGroup(
+            groupName = groupName,
+        )
+    }
+
 
     fun renameGroup(groupKey: String, newName: String) {
         viewModelScope.launch {

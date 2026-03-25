@@ -138,4 +138,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
 
     debugImplementation("androidx.compose.ui:ui-tooling:1.6.2")
+
+    implementation("com.android.billingclient:billing-ktx:7.0.0")
 }

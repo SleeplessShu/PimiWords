@@ -1,5 +1,7 @@
 package com.sleeplessdog.matchthewords.di
 
+import com.sleeplessdog.matchthewords.payments.BillingManager
+import com.sleeplessdog.matchthewords.payments.PremiumGate
 import com.sleeplessdog.matchthewords.score.domain.AwardEngine
 import org.koin.dsl.module
 
@@ -13,4 +15,6 @@ val domainModule = module {
             ServerDateInteractorImpl(get())
         }*/
     single { AwardEngine(get(), get()) }
+    single { BillingManager(get(), get()) }
+    single { PremiumGate(get(), get()) }
 }

@@ -73,6 +73,7 @@ val presentationModule = module {
             moveWordToUserGroup = get(),
             appPrefs = get(),
             addSingleWordToSavedWords = get(),
+            premiumGate = get(),
         )
     }
     viewModel {
@@ -84,6 +85,7 @@ val presentationModule = module {
             deleteUserGroup = get(),
             syncController = get(),
             authController = get(),
+            premiumGate = get(),
         )
     }
 

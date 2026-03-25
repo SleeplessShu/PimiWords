@@ -29,6 +29,7 @@ import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.dictionary.DictionaryUi
 import com.sleeplessdog.matchthewords.dictionary.group_screen.GroupType
 import com.sleeplessdog.matchthewords.dictionary.group_screen.GroupUi
+import com.sleeplessdog.matchthewords.dictionary.group_screen.GroupUiEvent
 import com.sleeplessdog.matchthewords.dictionary.group_screen.GroupViewModel
 import com.sleeplessdog.matchthewords.main.MainActivity
 import kotlinx.coroutines.launch
@@ -38,6 +39,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class DictionaryComposeFragment : Fragment() {
 
     private val viewModelDictionary: DictionaryViewModel by viewModel()
+    private val viewModelGroups: GroupViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -148,12 +150,59 @@ class DictionaryComposeFragment : Fragment() {
                             viewModelDictionary.clearPendingEvent()
                         }
 
+                        DictionaryUiEvent.ShowPremiumDialog -> {
+                            showPremiumDialog()
+                            viewModelDictionary.clearPendingEvent()
+                        }
+
+                        null -> Unit
+                    }
+                }
+                viewModelGroups.pendingEvent.collect { event ->
+                    when (event) {
+                        GroupUiEvent.ShowPremiumDialog -> {
+                            showPremiumDialogGroups()
+                            viewModelGroups.clearPendingEvent()
+                        }
+
                         null -> Unit
                     }
                 }
             }
         }
     }
+
+    private fun showPremiumDialog() {
+        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.premium_dialog_title))
+            .setMessage(getString(R.string.premium_dialog_message))
+            .setPositiveButton(getString(R.string.premium_dialog_confirm)) { _, _ ->
+                navigateToPremium()
+            }
+            .setNegativeButton(getString(R.string.premium_dialog_decline)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun showPremiumDialogGroups() {
+        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.premium_dialog_title))
+            .setMessage(getString(R.string.premium_dialog_message_groups))
+            .setPositiveButton(getString(R.string.premium_dialog_confirm)) { _, _ ->
+                navigateToPremium()
+            }
+            .setNegativeButton(getString(R.string.premium_dialog_decline)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun navigateToPremium() {
+        // навигация на экран покупки — добавишь когда будет готов экран
+        // findNavController().navigate(R.id.action_to_premiumFragment)
+    }
+
 
     private fun showAuthDialog() {
         androidx.appcompat.app.AlertDialog.Builder(requireContext())

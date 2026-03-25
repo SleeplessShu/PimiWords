@@ -72,7 +72,7 @@ fun DictionaryUi(
         standardGroups = state.globalGroups,
         onNavigateToUserGroup = onNavigateToUserGroup,
         onNavigateToGlobalGroup = onNavigateToGlobalGroup,
-        addNewUserGroup = viewModel::addNewUserGroup,
+        addNewUserGroup = viewModel::tryCreateUserGroup,
         onRefreshSync = viewModel::refreshSync,
         onRefresh = viewModel::refreshGroups,
         onPlayGroup = onPlayGroup,

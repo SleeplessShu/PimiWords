@@ -22,6 +22,9 @@ interface AppPrefs {
 
     fun getDifficulty(): DifficultLevel
     fun saveDifficulty(level: DifficultLevel)
+
+    fun setPremium(value: Boolean)
+    fun isPremium(): Boolean
 }
 
 class AppPrefsImpl(
@@ -110,9 +113,16 @@ class AppPrefsImpl(
         fallback
     }
 
+    // ---------- SUBSCRIPTION ----------
+    override fun setPremium(value: Boolean) {
+        prefs.edit().putBoolean(PREMIUM_STATUS, value).apply()
+    }
+
+    override fun isPremium(): Boolean = prefs.getBoolean("is_premium", false)
+
     companion object {
         private const val PREFS_NAME = "app_prefs"
-
+        private const val PREMIUM_STATUS = "is_premium"
         private const val KEY_UI_LANG = "ui_lang"
         private const val KEY_STUDY_LANG = "study_lang"
         private const val KEY_LEVELS = "levels"
