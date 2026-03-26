@@ -287,4 +287,10 @@
     <string name="premium_dialog_message_groups">Создание более 10 записей доступно в премиум версии.</string>
     <string name="premium_dialog_confirm">Узнать подробнее</string>
     <string name="premium_dialog_decline">Не сейчас</string>
+
+    <!--words_pack-->
+    <string name="word_packs_title">Готовые наборы слов</string>
+    <string name="word_packs_empty">Наборы для этой пары языков не найдены</string>
+    <string name="word_pack_install">Установить</string>
+    <string name="word_pack_installed">«%s» добавлен в словарь</string>
 </resources>

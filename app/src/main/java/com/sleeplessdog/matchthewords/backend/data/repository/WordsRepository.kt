@@ -10,6 +10,7 @@ import com.sleeplessdog.matchthewords.backend.domain.models.MutableWordBuilder
 import com.sleeplessdog.matchthewords.backend.domain.models.WordsGroupsList
 import com.sleeplessdog.matchthewords.backend.domain.models.set
 import com.sleeplessdog.matchthewords.dictionary.group_screen.WordUi
+import com.sleeplessdog.matchthewords.dictionary.models.WordPackEntry
 import com.sleeplessdog.matchthewords.game.presentation.models.Language
 import com.sleeplessdog.matchthewords.game.presentation.models.Word
 import com.sleeplessdog.matchthewords.utils.ConstantsPaths
@@ -290,5 +291,22 @@ class WordsRepository(
         val userDao = databaseProvider.getUserDatabase().userDao()
         return userDao.getGroupByKey(ConstantsPaths.SAVED_GROUP_KEY)
             ?: error("Saved words group not found")
+    }
+
+    suspend fun addWordPackEntry(groupId: String, entry: WordPackEntry) {
+        val userDao = databaseProvider.getUserDatabase().userDao()
+        userDao.insertWord(
+            UserWordEntity(
+                groupId = groupId,
+                globalId = null,
+                english = entry.english,
+                russian = entry.russian,
+                serbian = entry.serbian,
+                spanish = entry.spanish,
+                french = entry.french,
+                german = entry.german,
+                armenian = entry.armenian,
+            )
+        )
     }
 }
