@@ -33,28 +33,4 @@
         app:layout_constraintStart_toEndOf="@id/bOrigin"
         app:layout_constraintTop_toTopOf="@id/bOrigin"
         tools:text="intelligente" />
-
-    <ImageView
-        android:id="@+id/origin_pimi"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:elevation="8dp"
-        android:src="@drawable/pimi_game_end_victory"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/bOrigin"
-        app:layout_constraintEnd_toEndOf="@id/bOrigin"
-        app:layout_constraintStart_toStartOf="@id/bOrigin"
-        app:layout_constraintTop_toTopOf="@id/bOrigin" />
-
-    <ImageView
-        android:id="@+id/translation_pimi"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:elevation="8dp"
-        android:src="@drawable/pimi_game_end_victory"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/bTranslate"
-        app:layout_constraintEnd_toEndOf="@id/bTranslate"
-        app:layout_constraintStart_toStartOf="@id/bTranslate"
-        app:layout_constraintTop_toTopOf="@id/bTranslate" />
 </androidx.constraintlayout.widget.ConstraintLayout>
