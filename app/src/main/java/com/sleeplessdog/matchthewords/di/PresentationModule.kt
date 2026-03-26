@@ -10,6 +10,7 @@ import com.sleeplessdog.matchthewords.dictionary.dictionary_screen.DictionaryVie
 import com.sleeplessdog.matchthewords.dictionary.dictionary_screen.FirebaseAuthController
 import com.sleeplessdog.matchthewords.dictionary.group_screen.GroupViewModel
 import com.sleeplessdog.matchthewords.dictionary.models.GroupSettingsUiMapper
+import com.sleeplessdog.matchthewords.dictionary.word_packs.WordPacksViewModel
 import com.sleeplessdog.matchthewords.game.presentation.GameViewModel
 import com.sleeplessdog.matchthewords.game.presentation.controller.LandingPagesController
 import com.sleeplessdog.matchthewords.game.presentation.fragments.EndGameViewModel
@@ -91,6 +92,9 @@ val presentationModule = module {
 
     viewModel() {
         OneOfFourViewModel(get())
+    }
+    viewModel() {
+        WordPacksViewModel(get(), get(), get())
     }
 
     viewModel() {

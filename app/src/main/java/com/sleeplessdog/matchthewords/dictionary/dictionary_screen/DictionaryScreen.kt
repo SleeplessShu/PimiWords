@@ -2,6 +2,7 @@ package com.sleeplessdog.matchthewords.dictionary
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,10 +14,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.PrimaryTabRow
@@ -36,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -49,6 +51,8 @@ import com.sleeplessdog.matchthewords.dictionary.dialogs.DeletingDialog
 import com.sleeplessdog.matchthewords.dictionary.dialogs.GroupDialog
 import com.sleeplessdog.matchthewords.dictionary.dictionary_screen.DictionaryViewModel
 import com.sleeplessdog.matchthewords.dictionary.models.DialogType
+import com.sleeplessdog.matchthewords.dictionary.word_packs.WordPacksOverlay
+import com.sleeplessdog.matchthewords.dictionary.word_packs.WordPacksViewModel
 import com.sleeplessdog.matchthewords.ui.theme.BlackPrimary
 import com.sleeplessdog.matchthewords.ui.theme.DarkTextDefault
 import com.sleeplessdog.matchthewords.ui.theme.Gray03
@@ -56,6 +60,7 @@ import com.sleeplessdog.matchthewords.ui.theme.GreenPrimary
 import com.sleeplessdog.matchthewords.ui.theme.White
 import com.sleeplessdog.matchthewords.ui.theme.textSize20Medium
 import com.sleeplessdog.matchthewords.ui.theme.textSize24Medium
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun DictionaryUi(
@@ -164,6 +169,15 @@ fun HeaderDictionary(
     syncState: DictionarySyncState,
     onOpenOverlay: () -> Unit,
 ) {
+    val wordPacksViewModel: WordPacksViewModel = koinViewModel()
+    var showWordPacks by remember { mutableStateOf(false) }
+
+    if (showWordPacks) {
+        WordPacksOverlay(
+            viewModel = wordPacksViewModel,
+            onDismiss = { showWordPacks = false }
+        )
+    }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -176,7 +190,7 @@ fun HeaderDictionary(
             modifier = Modifier
                 .align(Alignment.CenterStart)
                 .padding(start = 20.dp)
-                .size(28.dp)
+                .size(36.dp)
                 .clickable { onOpenOverlay() }
         )
 
@@ -185,6 +199,17 @@ fun HeaderDictionary(
             style = textSize24Medium,
             color = DarkTextDefault,
             modifier = Modifier.align(Alignment.Center)
+        )
+
+        Icon(
+            painter = painterResource(R.drawable.ic_add_pack),
+            tint = White,
+            contentDescription = null,
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .padding(end = 20.dp)
+                .size(36.dp)
+                .clickable { showWordPacks = true }
         )
     }
 }
@@ -288,6 +313,8 @@ fun DictionaryTabs(
     onRefresh: () -> Unit,
     onPlayGroup: (String, Boolean) -> Unit,
 ) {
+
+
     var selectedTab by rememberSaveable {
         mutableIntStateOf(GroupsTab.USERS.ordinal)
     }
@@ -361,20 +388,23 @@ fun DictionaryTabs(
         }
 
         if (selectedTab == GroupsTab.USERS.ordinal) {
-            FloatingActionButton(
-                onClick = { showDialog = true },
-                containerColor = DarkTextDefault,
-                contentColor = BlackPrimary,
+            Box(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(
-                        end = 16.dp,
-                        bottom = 60.dp
-                    )
+                    .padding(end = 16.dp, bottom = 60.dp)
+                    .size(56.dp)
+                    .background(DarkTextDefault, RoundedCornerShape(16.dp))
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onTap = { showDialog = true },
+                        )
+                    },
+                contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painter = painterResource(R.drawable.icon_add),
-                    contentDescription = "Add group"
+                    contentDescription = "Add group",
+                    tint = BlackPrimary
                 )
             }
         }
