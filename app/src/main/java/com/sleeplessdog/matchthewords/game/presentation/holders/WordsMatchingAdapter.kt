@@ -1,8 +1,6 @@
 package com.sleeplessdog.matchthewords.game.presentation.holders
 
-import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -55,44 +53,30 @@ class WordsMatchingAdapter(
     private fun bindFull(holder: ViewHolderWordsMatching, position: Int) {
         val (origin, translate) = wordsPairs[position]
 
-        // текст
         holder.origin.text = origin.text
         holder.translate.text = translate.text
 
-        // клики
         holder.origin.setOnClickListener { onWordClick(origin) }
         holder.translate.setOnClickListener { onWordClick(translate) }
 
-        // состояние
         applyState(holder, origin, isLeft = true)
         applyState(holder, translate, isLeft = false)
     }
 
     private fun applyState(holder: ViewHolderWordsMatching, word: Word, isLeft: Boolean) {
         val btn = if (isLeft) holder.origin else holder.translate
-        val pimi = if (isLeft) holder.originPimi else holder.translatePimi
         val state = stateFor(word)
         val ctx = holder.itemView.context
 
-        // фон + enabled + основной цвет
         btn.setBackgroundResource(state.backgroundRes)
         btn.isEnabled = state.enabled
         btn.setTextColor(ContextCompat.getColor(ctx, state.textColorRes))
 
-        // доп. логика для used
         val isUsed = word.id in usedWords
         if (isUsed) {
-            // текст “прячем”
-            // вариант 1: прозрачный
-            // btn.setTextColor(Color.TRANSPARENT)
 
-            // вариант 2: цвет фона кнопки (если фон тёмный):
-            btn.setTextColor(Color.TRANSPARENT) // подбери свой
+            btn.setTextColor(ContextCompat.getColor(ctx, R.color.gray_tilda))
 
-            // показываем pimi
-            pimi.visibility = View.VISIBLE
-        } else {
-            pimi.visibility = View.GONE
         }
     }
 
@@ -111,8 +95,6 @@ class WordsMatchingAdapter(
 
     private fun isSelected(word: Word): Boolean =
         selectedWords.any { it === word }
-
-    // --- публичные апдейты ---
 
     fun updateWordsList(newWordsPairs: List<Pair<Word, Word>>) {
         wordsPairs = newWordsPairs
