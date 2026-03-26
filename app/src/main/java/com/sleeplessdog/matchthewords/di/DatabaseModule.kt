@@ -19,9 +19,11 @@ import com.sleeplessdog.matchthewords.backend.domain.usecases.GetGlobalGroupWord
 import com.sleeplessdog.matchthewords.backend.domain.usecases.GetGlobalGroupsOnceUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.GetScoreUiStateUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.GetSelectedGroupsUC
+import com.sleeplessdog.matchthewords.backend.domain.usecases.GetWordPacksUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.GetWordPairsFromUserGroupUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.GetWordsCountForGroupUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.GetWordsCountUserGroupUC
+import com.sleeplessdog.matchthewords.backend.domain.usecases.InstallWordPackUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.MoveWordToUserGroupUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.ObserveAllGroupsForDictionaryUC
 import com.sleeplessdog.matchthewords.backend.domain.usecases.ObserveAllGroupsForSettingsUC
@@ -124,4 +126,16 @@ val databaseModule = module {
      */
     single { ProcessGameResultUC(get()) }
     single { GetScoreUiStateUC(get(), get(), get()) }
+    /**
+     * word packs
+     */
+    single { GetWordPacksUC(get()) }
+    single {
+        InstallWordPackUC(
+            groupsRepository = get(),
+            wordsRepository = get(),
+            storage = get(),
+            appPrefs = get(),
+        )
+    }
 }
