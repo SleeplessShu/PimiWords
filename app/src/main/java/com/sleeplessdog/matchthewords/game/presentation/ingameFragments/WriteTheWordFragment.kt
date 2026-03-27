@@ -94,17 +94,21 @@ class WriteTheWordFragment : Fragment(R.layout.write_the_word_fragment) {
                         R.color.dark_text_default
                     )
                 )
+                binding.tvCorrectAnswer.text = ui.correctAnswer
+                binding.correctAnswerRoot.isVisible = ui.correctAnswer.isNotEmpty()
             }
         }
 
         childVM.events.observe(viewLifecycleOwner) { e ->
+
             parentVM.onGameEvent(e)
         }
 
         binding.btnClearLetter.setOnClickListener { childVM.onDeleteLetter() }
         binding.btnClear.setOnClickListener { childVM.onClear() }
         binding.btnCheck.setOnClickListener { childVM.onCheck() }
-        binding.btnSkip.setOnClickListener { childVM.onCheck() }
+        binding.btnSkip.setOnClickListener { childVM.onSkip() }
+        binding.btnNext.setOnClickListener { childVM.onNext() }
     }
 }
 
