@@ -65,21 +65,20 @@ class WriteTheWordViewModel : ViewModel(), InGameLogic {
 
         _ui.value = WriteTheWordUi(
             prompt = prompt,
-            target = targetClean,            // показываем и в UI, чтобы было видно "эталон" (если нужно)
+            target = targetClean,
             input = "",
             letters = letters,
             locked = false,
-            isCheckCorrect = false,   // сброс цвета, не показываем подсветку с прошлого слова
+            isCheckCorrect = false,
             isCheckEnabled = false
         )
     }
 
-    /** оставляем часть ДО '/', плюс trim */
     private fun cleanTranslation(raw: String): String {
         val beforeSlash = raw.substringBefore('/')
         return beforeSlash
-            .replace("\\s".toRegex(), "")  // удаляем все пробелы включая невидимые
-            .replace("\u00A0", "")         // на всякий удаляем неразрывный пробел
+            .replace("\\s".toRegex(), " ")
+            .replace("\u00A0", " ")
             .trim()
     }
 
@@ -135,18 +134,43 @@ class WriteTheWordViewModel : ViewModel(), InGameLogic {
         )
     }
 
+    fun onSkip() {
+        onCheck()
+    }
+
     fun onCheck() {
         val state = _ui.value ?: return
-
         val ok = state.input.equals(targetClean, ignoreCase = true)
 
         _ui.value = state.copy(
             locked = true,
             isCheckCorrect = ok,
-            isCheckEnabled = false
+            isCheckEnabled = false,
+            correctAnswer = if (!ok) targetClean else ""
         )
-        events.value = if (ok) GameEvent.Correct(currentIds) else GameEvent.Wrong(currentIds)
-        handler.postDelayed({ nextQuestion() }, TimeConstants.NEXT_QUESTION)
+        when (ok) {
+            true -> {
+                GameEvent.Correct(currentIds)
+                handler.postDelayed({
+                    _ui.value = _ui.value?.copy(correctAnswer = "")
+                    nextQuestion()
+                }, TimeConstants.NEXT_QUESTION)
+            }
+
+            false -> {
+                GameEvent.Wrong(currentIds)
+
+            }
+
+        }
+
+    }
+
+    fun onNext() {
+        handler.postDelayed({
+            _ui.value = _ui.value?.copy(correctAnswer = "")
+            nextQuestion()
+        }, TimeConstants.NEXT_QUESTION)
     }
 
     override fun onCleared() {

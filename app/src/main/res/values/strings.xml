@@ -150,6 +150,7 @@
     <string name="btn_clear_letter">Удалить букву</string>
     <string name="btn_skip">Пропустить</string>
     <string name="btn_check">Проверить</string>
+    <string name="btn_continue">Продолжим</string>
 
     <!--GameFragment-->
     <string name="score_in_game">Счёт</string>

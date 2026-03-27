@@ -123,7 +123,7 @@ class LettersAdapter(
                 binding.tLetter.text = item.char.toString()
             } else {
                 binding.tLetter.text = ""
-                binding.iconSpace.setImageResource(R.drawable.ic_group_abstract)
+                binding.iconSpace.setImageResource(R.drawable.ic_space_bar)
             }
 
             val enabled = !item.used && !locked
