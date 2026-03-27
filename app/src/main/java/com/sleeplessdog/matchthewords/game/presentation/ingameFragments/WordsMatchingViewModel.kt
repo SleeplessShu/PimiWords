@@ -21,30 +21,24 @@ class WordsMatchingViewModel(
 
     private val handler = Handler(Looper.getMainLooper())
 
-    // ВЕСЬ пул пар (все страницы)
     private var allPairs: List<Pair<Word, Word>> = emptyList()
 
-    // Пагинация
     private var currentPage = 0
     private var currentPagePairs: List<Pair<Word, Word>> = emptyList()
 
-    // Трекинг собранных пар на текущей странице — по id
     private val matchedIdsOnPage = mutableSetOf<Int>()
 
-    // Состояние для UI
     private val _state = MutableLiveData(
         IngameWordsState(
             selectedWords = emptyList(),
             errorWords = emptyList(),
             correctWords = emptyList(),
             usedWords = emptyList(),
-            // добавим поле locked в data-класс если его ещё нет
             locked = false
         )
     )
     val state: LiveData<IngameWordsState> = _state
 
-    // Текущая страница для адаптера
     private val _pagePairs = MutableLiveData<List<Pair<Word, Word>>>()
     val pagePairs: LiveData<List<Pair<Word, Word>>> = _pagePairs
 
@@ -62,16 +56,11 @@ class WordsMatchingViewModel(
         when (selected.size) {
             0 -> _state.value = s.copy(selectedWords = listOf(clickedWord))
             1 -> {
-                // замена выбора на той же стороне
                 if (clickedWord.language == selected[0].language && clickedWord.id != selected[0].id) {
                     _state.value = s.copy(selectedWords = listOf(clickedWord))
-                }
-                // снятие выбора той же карточкой
-                else if (clickedWord.id == selected[0].id && clickedWord.language == selected[0].language) {
+                } else if (clickedWord.id == selected[0].id && clickedWord.language == selected[0].language) {
                     _state.value = s.copy(selectedWords = emptyList())
-                }
-                // проверяем пару
-                else {
+                } else {
                     checkPair(selected[0], clickedWord)
                 }
             }
@@ -119,7 +108,7 @@ class WordsMatchingViewModel(
                 selectedWords = emptyList(),
                 errorWords = emptyList(),
                 correctWords = s.correctWords + listOf(a, b),
-                locked = true
+                locked = false
             )
 
             handler.postDelayed({
@@ -133,7 +122,6 @@ class WordsMatchingViewModel(
                     locked = false
                 )
 
-                // если собраны все пары на странице — следующая страница
                 if (matchedIdsOnPage.size >= currentPagePairs.size) {
                     openPage(currentPage + 1)
                 }
@@ -144,7 +132,7 @@ class WordsMatchingViewModel(
             _state.value = s.copy(
                 selectedWords = emptyList(),
                 errorWords = listOf(a, b),
-                locked = true
+                locked = false
             )
             handler.postDelayed({
                 val cur = _state.value ?: return@postDelayed
