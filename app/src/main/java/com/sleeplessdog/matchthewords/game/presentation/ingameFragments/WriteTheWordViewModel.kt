@@ -14,7 +14,6 @@ import com.sleeplessdog.matchthewords.utils.TimeConstants
 
 class WriteTheWordViewModel : ViewModel(), InGameLogic {
 
-    // === контракт игр: только GameEvent наружу ===
     override val events = MutableLiveData<GameEvent>()
 
     private val handler = Handler(Looper.getMainLooper())
@@ -26,10 +25,9 @@ class WriteTheWordViewModel : ViewModel(), InGameLogic {
     private val _ui = MutableLiveData(WriteTheWordUi())
     val ui: LiveData<WriteTheWordUi> = _ui
 
-    // текущие данные вопроса
     private var currentIds: List<Int> = emptyList()
-    private var targetRaw = ""          // исходный перевод (как пришёл)
-    private var targetClean = ""        // часть ДО '/' (обрезанная)
+    private var targetRaw = ""
+    private var targetClean = ""
     private var letters: MutableList<WriteTheWordLetterUi> = mutableListOf()
 
     override fun setPool(pairs: List<Pair<Word, Word>>) {
@@ -61,7 +59,6 @@ class WriteTheWordViewModel : ViewModel(), InGameLogic {
         targetRaw = translation
         targetClean = cleanTranslation(translation)
 
-        // генерим буквы именно из "чистой" строки ДО слеша
         letters = targetClean.mapIndexed { i, c -> WriteTheWordLetterUi(i, c) }
             .shuffled()
             .toMutableList()
@@ -93,10 +90,10 @@ class WriteTheWordViewModel : ViewModel(), InGameLogic {
         if (state.locked) return
 
         val l = letters[position]
-        if (l.used) return               // уже использована — игнор
+        if (l.used) return
 
         letters[position] = l.copy(used = true)
-        usedIndicesStack.add(position)   // сохраняем позицию
+        usedIndicesStack.add(position)
 
         val newInput = state.input + l.char
         val enabled = newInput.length == targetClean.length && newInput.isNotEmpty()
@@ -141,7 +138,6 @@ class WriteTheWordViewModel : ViewModel(), InGameLogic {
     fun onCheck() {
         val state = _ui.value ?: return
 
-        // сравниваем с targetClean (часть ДО '/'), регистр не важен
         val ok = state.input.equals(targetClean, ignoreCase = true)
 
         _ui.value = state.copy(

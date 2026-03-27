@@ -148,6 +148,7 @@
     <string name="done">Готово!</string>
     <string name="btn_clear_word">Удалить слово</string>
     <string name="btn_clear_letter">Удалить букву</string>
+    <string name="btn_skip">Пропустить</string>
     <string name="btn_check">Проверить</string>
 
     <!--GameFragment-->

@@ -56,7 +56,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="24dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@id/btnCheck"
@@ -73,14 +73,23 @@
             android:src="@drawable/delete_word"
             app:tint="@color/btn_icon_tint" />
 
-        <Space
-            android:layout_width="66dp"
-            android:layout_height="0dp" />
+        <Button
+            android:id="@+id/btnSkip"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_button_rounded_12"
+            android:text="@string/btn_skip"
+            android:textColor="@color/white"
+            android:layout_marginHorizontal="12dp"
+            app:backgroundTint="@color/gray_06"
+            android:contentDescription="@string/btn_skip"
+            android:textSize="20sp" />
 
         <ImageButton
             android:id="@+id/btnClearLetter"
             android:layout_width="48dp"
             android:layout_height="48dp"
+
             android:background="@drawable/bg_button_rounded_12"
             android:backgroundTint="@color/btn_bg_tint"
             android:contentDescription="@string/btn_clear_letter"

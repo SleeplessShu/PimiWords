@@ -28,7 +28,7 @@ class WriteTheWordFragment : Fragment(R.layout.write_the_word_fragment) {
     private lateinit var adapter: LettersAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
     ): View? {
         _binding = WriteTheWordFragmentBinding.inflate(inflater, container, false)
         return binding.root
@@ -104,6 +104,7 @@ class WriteTheWordFragment : Fragment(R.layout.write_the_word_fragment) {
         binding.btnClearLetter.setOnClickListener { childVM.onDeleteLetter() }
         binding.btnClear.setOnClickListener { childVM.onClear() }
         binding.btnCheck.setOnClickListener { childVM.onCheck() }
+        binding.btnSkip.setOnClickListener { childVM.onCheck() }
     }
 }
 
