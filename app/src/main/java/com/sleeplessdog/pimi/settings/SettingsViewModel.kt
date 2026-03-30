@@ -1,6 +1,7 @@
 package com.sleeplessdog.pimi.settings
 
 import android.app.Application
+import android.content.Context
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getString
 import androidx.lifecycle.LiveData
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class SettingsViewModel(
 
@@ -40,6 +42,8 @@ class SettingsViewModel(
     private val _studyLanguageList = MutableLiveData<List<Language>>()
     val studyLanguageList: LiveData<List<Language>> = _studyLanguageList
 
+    private val _restartActivity = MutableLiveData<Unit>()
+    val restartActivity: LiveData<Unit> = _restartActivity
 
     private val _levels = MutableLiveData<Set<LanguageLevel>>()
     val levels: LiveData<Set<LanguageLevel>> = _levels
@@ -102,7 +106,9 @@ class SettingsViewModel(
                 val study = _studyLanguage.value ?: Language.SPANISH
                 _uiLanguage.value = newLang
                 appPrefs.save(newLang, study)
+                applyLocale(newLang)
                 rebuild(newLang, study)
+                _restartActivity.value = Unit
             }
 
             LanguageAdapterState.STUDY -> {
@@ -112,6 +118,15 @@ class SettingsViewModel(
                 rebuild(ui, newLang)
             }
         }
+    }
+
+
+    fun applyLocale(newUiLang: Language): Context {
+        val locale = newUiLang.toLocale()
+        Locale.setDefault(locale)
+        val config = app.resources.configuration
+        config.setLocale(locale)
+        return app.createConfigurationContext(config)
     }
 
     fun loadDifficulty() {
