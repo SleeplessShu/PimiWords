@@ -119,7 +119,7 @@ class WordsMatchingViewModel(
                 selectedWords = emptyList(),
                 errorWords = emptyList(),
                 correctWords = s.correctWords + listOf(a, b),
-                locked = true
+                locked = false
             )
 
             handler.postDelayed({
@@ -144,7 +144,7 @@ class WordsMatchingViewModel(
             _state.value = s.copy(
                 selectedWords = emptyList(),
                 errorWords = listOf(a, b),
-                locked = true
+                locked = false
             )
             handler.postDelayed({
                 val cur = _state.value ?: return@postDelayed
