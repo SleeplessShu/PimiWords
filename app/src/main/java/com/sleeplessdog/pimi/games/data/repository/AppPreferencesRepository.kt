@@ -5,9 +5,17 @@ import android.content.SharedPreferences
 import com.sleeplessdog.pimi.settings.DifficultyLevel
 import com.sleeplessdog.pimi.settings.Language
 import com.sleeplessdog.pimi.settings.LanguageLevel
+import com.sleeplessdog.pimi.utils.ConstantsPaths.IS_PREMIUM
+import com.sleeplessdog.pimi.utils.ConstantsPaths.KEY_DIFFICULTY
+import com.sleeplessdog.pimi.utils.ConstantsPaths.KEY_LEVELS
+import com.sleeplessdog.pimi.utils.ConstantsPaths.KEY_STUDY_LANG
+import com.sleeplessdog.pimi.utils.ConstantsPaths.KEY_UI_LANG
+import com.sleeplessdog.pimi.utils.ConstantsPaths.PREFS_NAME
+import com.sleeplessdog.pimi.utils.ConstantsPaths.PREMIUM_STATUS
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import java.util.Locale
 
 interface AppPrefs {
 
@@ -60,8 +68,15 @@ class AppPrefsImpl(
     }
 
     override fun getUiLanguage(): Language {
-        val name = prefs.getString(KEY_UI_LANG, Language.RUSSIAN.name)
-        return safeLang(name, Language.RUSSIAN)
+        val stored = prefs.getString(KEY_UI_LANG, null)
+        if (stored != null) return Language.valueOf(stored)
+
+        val systemLocale = Locale.getDefault().language
+        val detected =
+            Language.entries.find { it.toLocale().language == systemLocale } ?: Language.ENGLISH
+
+        prefs.edit().putString(KEY_UI_LANG, detected.name).apply()
+        return detected
     }
 
     override fun getStudyLanguage(): Language {
@@ -118,15 +133,6 @@ class AppPrefsImpl(
         prefs.edit().putBoolean(PREMIUM_STATUS, value).apply()
     }
 
-    override fun isPremium(): Boolean = prefs.getBoolean("is_premium", false)
-
-    companion object {
-        private const val PREFS_NAME = "app_prefs"
-        private const val PREMIUM_STATUS = "is_premium"
-        private const val KEY_UI_LANG = "ui_lang"
-        private const val KEY_STUDY_LANG = "study_lang"
-        private const val KEY_LEVELS = "levels"
-        private const val KEY_DIFFICULTY = "difficulty"
-    }
+    override fun isPremium(): Boolean = prefs.getBoolean(IS_PREMIUM, false)
 }
 

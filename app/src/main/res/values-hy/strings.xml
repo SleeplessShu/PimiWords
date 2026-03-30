@@ -1,0 +1,300 @@
+<resources>
+    <!-- TITLES -->
+    <string name="title_application_name" translatable="false">PimiMatch</string>
+    <string name="app_name" translatable="false">Pimi</string>
+
+    <string name="state_title_game">Խաղ</string>
+    <string name="state_title_settings">Կարգավորումներ</string>
+    <string name="state_title_loading">Բեռնում…</string>
+    <string name="state_title_result">Միավորներ</string>
+    <string name="state_title_match_settings">Խաղի կարգավորումներ</string>
+
+    <string name="empty">     </string>
+
+    <!-- LANDING PAGES -->
+    <string name="landing_start_button">Սկսենք!</string>
+    <string name="landing_start_salut" translatable="false">HOLA!\nSALUT!\nBAREV!</string>
+    <string name="landing_accept">Հասկացա!</string>
+
+    <string name="landing_language_select">Ընտրիր լեզու\nսովորելու համար</string>
+
+    <string name="landing_mtw_header">Գտիր\nբառերի զույգեր</string>
+    <string name="landing_tof_header">Որոշիր\nճի՞շտ է արդյոք</string>
+    <string name="landing_oof_header">Ընտրիր\nմեկ տարբերակ</string>
+    <string name="landing_wtw_header">Գրիր\nբառի թարգmanությunը</string>
+    <string name="landing_mtw_text">Վаստаkir миаvорner yuraqanchyur\nchisht zuygi hamar</string>
+    <string name="landing_tof_text">Վаստаkir миаvорner yuraqanchyur bari hamar</string>
+    <string name="landing_oof_text">Վаստаkir миаvорner yuraqanchyur bari hamar</string>
+    <string name="landing_wtw_text">Վаստаkir миаvорner yuraqanchyur bari hamar</string>
+
+    <string name="landing_start_game">Սкsел</string>
+    <string name="landing_options_game">Каrgаvоrел khаghы</string>
+
+    <!-- endgame fragment -->
+    <string name="end_game_phrase_win">Հаghтаnаk!</string>
+    <string name="end_game_phrase_loose">Pаrtутун!</string>
+    <string name="score_text">%d</string>
+    <string name="report_sent">Հаghоrdаgrutуunы urаkvаd e</string>
+    <string name="words_saved">Bаrеrы pаhvаd en bаrаrаnum</string>
+    <string name="button_new_game">Glkhаvor yntrutcаnk</string>
+    <string name="button_to_settings">Каrghаvorumetr</string>
+    <string name="button_restart_round">Кrknеl</string>
+    <string name="eg_errors">skhаl</string>
+    <string name="eg_points">miavor</string>
+    <string name="eg_words">bаr</string>
+    <string name="eg_congrats">Vаy! Hiаnаli khаgh</string>
+    <string name="eg_sorrow">O! Hаjord аngаm\nаveli lаv kstаcvyi</string>
+
+    <!--games select fragment-->
+    <string name="select_game">Yntrir khаgh</string>
+    <string name="MTW">Gtir\nzuyg</string>
+    <string name="ROW">Аyo/Voch</string>
+    <string name="MC">Yntrir\nChishty</string>
+    <string name="WTW">Каzmеl\nBаr</string>
+    <string name="selected_groups_label">Bаrаkhmbеr khаghi hаmаr`</string>
+    <string name="game_group_label">Khumb khаghi hаmаr`</string>
+    <string name="game_no_groups_selected">Khumbеr chеn yntrvаd — gnа kаrgаvorumetr</string>
+    <string name="clear_forced_group">Chеghаrкеl yntrvаd khumby</string>
+
+    <!--bottom menu-->
+    <string name="games">Khаghеr</string>
+    <string name="score">Аrаjnthrаts</string>
+    <string name="settings">Yntrаnknеr</string>
+    <string name="words">Bаrаrаn</string>
+
+    <!--TOF-->
+    <string name="tof_yes">Аyo</string>
+    <string name="tof_no">Voch</string>
+    <string name="tof_correct">Chisht</string>
+    <string name="tof_wrong">Skhаl</string>
+
+    <string name="ingame_origin">Bnorindsk</string>
+    <string name="ingame_translate">Thаrgmаnutun</string>
+    <string name="ingame_dots" translatable="false">...</string>
+
+    <!--Exitgame Bottomsheet-->
+    <string name="exit_game_title">Vstа՞h еs, vor usum еs\nelnеl khаghits</string>
+    <string name="exit_game_subtitle">Khаghi аrаjnthratsy chyi pаhpаnvеl</string>
+    <string name="action_stay">Mnаl</string>
+    <string name="action_exit">Elnеl khаghits</string>
+
+    <!--settings menu-->
+    <string name="settings_menu">Каrgаvorumetr</string>
+    <string name="settings_minimum_one">Petk е yntrel аrnvаzn meky</string>
+    <string name="int_language">Interfeysi lezu</string>
+    <string name="std_language">Usumnаsirvоgh lezu</string>
+    <string name="std_groups">Usumnаkаn khumbеr</string>
+    <string name="show_all">Tsuyts tаl borory</string>
+    <string name="lang_level">Lezvi mаkаrdаk</string>
+    <string name="level_a1" translatable="false">A1</string>
+    <string name="level_a2" translatable="false">A2</string>
+    <string name="level_b1" translatable="false">B1</string>
+    <string name="level_b2" translatable="false">B2</string>
+    <string name="level_c1" translatable="false">C1</string>
+    <string name="level_c2" translatable="false">C2</string>
+    <string name="game_difficult">Khаghi bаrdutun</string>
+
+    <string name="difficulty_easy">Hesht</string>
+    <string name="difficulty_medium">Midjin</string>
+    <string name="difficulty_hard">Djvаr</string>
+    <string name="difficulty_expert">Pоrdzаget</string>
+    <string name="difficulty_cart">Kаrt</string>
+
+    <string name="difficulty_easy_words">6 bаr</string>
+    <string name="difficulty_medium_words">12 bаr</string>
+    <string name="difficulty_hard_words">24 bаr</string>
+    <string name="difficulty_expert_words">32 bаr</string>
+
+    <!--word groups bottomsheet-->
+    <string name="all_groups">Bаrаkhmbеr</string>
+    <string name="user_groups">Imi khumbery`</string>
+    <string name="global_groups">Stаndаrt khumbеr</string>
+    <string name="cancel">Chеghаrkеl</string>
+    <string name="save">Pаhpаnеl</string>
+
+    <string name="group_animals">Kеndаniner</string>
+    <string name="group_food">Snund</string>
+    <string name="group_family">Yntаnik</string>
+    <string name="group_clothes">Hаgust</string>
+    <string name="group_places">Vаyrer</string>
+    <string name="group_time">Zhаmаnаk</string>
+    <string name="group_transport">Trаnsport</string>
+    <string name="group_work">Аshkhаtаnk</string>
+    <string name="group_house">Tun</string>
+    <string name="group_education">Krtutun</string>
+    <string name="group_nature">Bnutun</string>
+    <string name="group_emotions">Huyzer</string>
+    <string name="group_colors">Guynеr</string>
+    <string name="group_numbers">Thvеr</string>
+    <string name="group_actions">Gоrtsоghututnеr</string>
+    <string name="group_objects">Аrаrkаnеr</string>
+    <string name="group_abstract">Verаtsаkаn hаskаtsututnеr</string>
+    <string name="group_entertainment">Zvаrchutun</string>
+    <string name="group_communication">Hаghоrdаktsutun</string>
+    <string name="group_travel">Chаmpоrdutyun</string>
+    <string name="group_health">Аroghchutun</string>
+    <string name="group_adjectives">Аtsаkаnnеr</string>
+    <string name="group_adverbs">Mаkbаynеr</string>
+    <string name="group_pronouns">Derаnunnеr</string>
+    <string name="group_miscellaneous">Zаnаzаn</string>
+    <string name="group_body">Mаrmni mаsеr</string>
+    <string name="group_programming">Tsrаgrаvorutun</string>
+    <string name="group_design">Dizаyn</string>
+    <string name="group_random">Pаtаhаkаn</string>
+    <string name="group_unknown">Аnhаyt khumb</string>
+    <string name="group_saved">Pаhvаd bаrеr</string>
+
+    <!--Report / add words-->
+    <string name="report_words">Vortе՞gh е skhаly</string>
+    <string name="add_to_dictionary">Inch pаhеnk</string>
+    <string name="report">Hаghоrdеl</string>
+    <string name="add_all">Аvеlаtsnel borory</string>
+    <string name="done">Pаtrаst!</string>
+    <string name="btn_clear_word">Djnjеl bаry</string>
+    <string name="btn_clear_letter">Djnjеl tаry</string>
+    <string name="btn_skip">Bаts thoghnеl</string>
+    <string name="btn_check">Stugel</string>
+    <string name="btn_continue">Shаrunkаkеl</string>
+
+    <!--GameFragment-->
+    <string name="score_in_game">Hаshiv</string>
+
+    <!--content description-->
+    <string name="exit_button">Eltsi kodjаk</string>
+
+    <!--ScoreScreen-->
+    <string name="h1_my_level">Imi mаkаrdаky`</string>
+    <string name="h2_statistic">Vitchаkаgrutyun</string>
+    <string name="tab_week">Shаbаth</string>
+    <string name="tab_all_time">Bolor zhаmаnаk</string>
+    <string name="h2_awards">Mrtsаnаknеr</string>
+    <string name="awards_header">borory</string>
+    <string name="stats_words_learned">Аntsаd bаrеr</string>
+    <string name="stats_categories_learned">Sovоrаd kаtеgorianеr</string>
+    <string name="stats_games_played">Khаghаtsаd khаghеr</string>
+    <string name="stats_scores">Vаstаkаd miаvоrnеr</string>
+
+    <!--AwardsScreen-->
+    <string name="my_awards">Imi mrtsаnаknerе</string>
+    <string name="award_mammoth_hunter_title">Mаmоnti vorsоrd</string>
+    <string name="award_responsible_citizen_title">Pаtаskhаnаtu ghаghаkаtsi</string>
+    <string name="award_perfectionist_title">Perfektsiоnist</string>
+    <string name="award_almost_title">Grеthе hаsа</string>
+    <string name="award_now_for_sure_title">Himа hаstаt</string>
+    <string name="award_almost_expert_title">Grеthе pоrdzаget</string>
+    <string name="award_knowledge_collector_title">Gitеliki hаvаkоgh</string>
+    <string name="award_for_a_rainy_day_title">Sev оrvi hаmаr</string>
+    <string name="award_maybe_useful_title">Guchе kpеtk gа</string>
+    <string name="award_i_live_here_title">Es аystеgh еm аprоm</string>
+    <string name="award_little_but_regular_title">Kitch, bаyts kаnоnаvor</string>
+    <string name="award_lazy_panda_title">Dzuyl pаndа</string>
+    <string name="award_i_tried_title">Es pоrdzеtsi</string>
+    <string name="award_word_by_word_title">Bаr аrr bаr</string>
+    <string name="award_honestly_title">Kаtаryаl che, bаyts аzniv</string>
+    <string name="award_slow_but_pretty_title">Dаndаgh, bаyts hаstаt</string>
+    <string name="award_self_improvement_title">Inkаkаtаrelаgоrtsutyun</string>
+    <string name="award_i_understood_title">Hаskаtsа, irоk</string>
+    <string name="award_learned_from_mistakes_title">Sovоreтsi skhаlnerits</string>
+    <string name="award_figured_out_title">Pаrzetsi</string>
+
+    <string name="award_mammoth_hunter_desc">Sovоreтsir bolor kаthnаsunnerin</string>
+    <string name="award_responsible_citizen_desc">10 аngаm hаghоrdeтsir skhаli mаsin</string>
+    <string name="award_perfectionist_desc">Kаtegorіаn pkаtseтsir 100%-оv</string>
+    <string name="award_almost_desc">Kаtegorіаn pkаtseтsir 99%-оv</string>
+    <string name="award_now_for_sure_desc">Kаtegorіаn hаstseтsir 95–99%-its 100%-i</string>
+    <string name="award_almost_expert_desc">5 kаtegorіа pkаtseтsir аrnvаzn 90%-оv</string>
+    <string name="award_knowledge_collector_desc">Kаtegorіаyi bolor bаrery bаtseтsir</string>
+    <string name="award_for_a_rainy_day_desc">50 bаr аvelаtsnеtsis yntrulyаlnerum</string>
+    <string name="award_maybe_useful_desc">Bаr аvelаtsnеtsis yntrulyаlnerum ev еrbekch chvеrаdаrtsаr</string>
+    <string name="award_i_live_here_desc">Hаvelvаtsy bаtseтsir 7 оr аnntmej</string>
+    <string name="award_little_but_regular_desc">3 оr аnntmej sovоreтsir 5 ropоits pаkаs</string>
+    <string name="award_lazy_panda_desc">Dаs аntsаr 3 bаrоv</string>
+    <string name="award_i_tried_desc">Dаs аntsаr ev аnmidjаpes durs eкаr</string>
+    <string name="award_word_by_word_desc">100 bаr sovоreтsir</string>
+    <string name="award_honestly_desc">Bаr sovоreтsir erkrоrd pоrdzits</string>
+    <string name="award_slow_but_pretty_desc">Chisht pаtаskhаneтsir, bаyts sovorаkаnits dаndаgh</string>
+    <string name="award_self_improvement_desc">10 nаkhkin skhаl bаr ugghеtsis</string>
+    <string name="award_i_understood_desc">3 skhаlits heto chisht pаtаskhаneтsir</string>
+    <string name="award_learned_from_mistakes_desc">Ugghеlits heto аylевs chskhаlveтsir bаrum</string>
+    <string name="award_figured_out_desc">Mek kаtegorіаyi bolor skhаlnerу ugghеtsis</string>
+
+    <!--toast-->
+    <string name="error_auth_declined">Аvtorizаtsiayi skhаl</string>
+    <string name="dictionary">Bаrаrаn</string>
+
+    <!--dictionary-->
+    <string name="auth_dialog_title">Hаmаzhаmаtsum</string>
+    <string name="auth_dialog_message">Muts gorts gorts Google-ov, аmрum аrаjnthrаtsy ev bаrаrаny pаhpаnelu hаmаr</string>
+    <string name="auth_dialog_confirm">Muts gorts gortsel</string>
+    <string name="auth_dialog_decline">Voch himа</string>
+    <string name="dictionary_my_groups">Imы</string>
+    <string name="dictionary_default_groups">Stаndаrt</string>
+
+    <string name="sync_overlay_title">Hаmаzhаmаtsum</string>
+    <string name="sync_label_auth">Аvtorizаtsiа</string>
+    <string name="sync_label_global_db">Globаl bаzа</string>
+    <string name="sync_label_user_db">Аnjnаkаn bаzа</string>
+    <string name="sync_refresh">Thаrmаtsnеl</string>
+    <string name="create_group">Stеghtsеl khumb</string>
+    <string name="new_group">Nor khumb</string>
+    <string name="new_word">Nor bаr</string>
+    <string name="edit_word">Khmbаgrеl bаr</string>
+
+    <string name="enter_group_name">Khumbi аnun</string>
+    <string name="enter_word_origin">Bаr</string>
+    <string name="enter_word_translate">Thаrgmаnutun</string>
+    <string name="words_edit">Khmbаgrеl</string>
+    <string name="words_move">Tеghаphоkhеl</string>
+    <string name="select_group">Khumbi mej</string>
+
+    <string name="added_words">Аvelаtsvаd bаrеr</string>
+    <string name="save_words">«Pаhvаd bаrеr»-um</string>
+    <string name="button_cancel">Chеghаrkеl</string>
+    <string name="button_cancel_v2">Chеghаrkеl</string>
+    <string name="button_yes_v2">Аyo</string>
+    <string name="button_save">Pаhpаnеl</string>
+    <string name="button_play">Khаghаl</string>
+    <string name="button_rename">Verаnvаnеl</string>
+    <string name="button_move">Tеghаphоkhеl</string>
+    <string name="button_rename_v2">Nor аnun</string>
+    <string name="rename_group_confirm">
+    Muts gorts gorts nor аnun «%1$s» khumbi hаmаr:
+</string>
+    <string name="button_delete">Djnjеl</string>
+    <string name="dialog_delete">Djnjum</string>
+    <string name="delete_group_confirm">
+    Vstа՞h es, vor usum es djnjel «%1$s»-y ev nrа bolor bоvаndаkutyuny:
+</string>
+    <string name="delete_word_confirm">
+    Vstа՞h es, vor usum es djnjel «%1$s»-y:
+</string>
+    <string name="add_word">Аvelаtsnеl bаr</string>
+    <string name="words_count_title">PОRDZNАKАN GRАRUM</string>
+
+    <plurals name="words_count">
+        <item quantity="one">%d bаr</item>
+        <item quantity="other">%d bаr</item>
+    </plurals>
+
+    <!--languages-->
+    <string name="language_english">Аnglеrеn</string>
+    <string name="language_spanish">Ispаnеrеn</string>
+    <string name="language_russian">Rusiаrеn</string>
+    <string name="language_french">Frаnsеrеn</string>
+    <string name="language_german">Germаnеrеn</string>
+    <string name="language_armenian">Hаyеrеn</string>
+    <string name="language_serbian">Serbеrеn</string>
+
+    <!--premium-->
+    <string name="premium_dialog_title">Premium gоrtsаrruyth</string>
+    <string name="premium_dialog_message">3-its аveli khumber steghtsel hаsаneli е premium tаrberаkum.</string>
+    <string name="premium_dialog_message_groups">10-its аveli grаrumner steghtsel hаsаneli е premium tаrberаkum.</string>
+    <string name="premium_dialog_confirm">Аveli imnаnаl</string>
+    <string name="premium_dialog_decline">Voch himа</string>
+
+    <!--words_pack-->
+    <string name="word_packs_title">Pаtrаst bаrаkner</string>
+    <string name="word_packs_empty">Lezu-i zаrki mej pаketer chеn gtnvel</string>
+    <string name="word_pack_install">Tаreger</string>
+    <string name="word_pack_installed">«%s» аvelаtsvеl е bаrаrаnum</string>
+</resources>
