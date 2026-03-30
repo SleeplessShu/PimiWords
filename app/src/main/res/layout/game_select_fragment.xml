@@ -57,7 +57,7 @@
             app:layout_constraintTop_toBottomOf="@id/languageSelect" />
 
         <!-- БОЛЬШАЯ КАРТОЧКА Matching The Words -->
-        <com.sleeplessdog.matchthewords.game.presentation.view.GameOptionViewLong
+        <com.sleeplessdog.pimi.gameSelect.GameOptionViewLong
             android:id="@+id/match6"
 
             android:layout_width="0dp"
@@ -77,7 +77,7 @@
             app:layout_constraintTop_toBottomOf="@id/match6">
 
             <!-- ПЕРВАЯ КАРТОЧКА ВО ВТОРОМ РЯДУ -->
-            <com.sleeplessdog.matchthewords.game.presentation.view.GameOptionViewShort
+            <com.sleeplessdog.pimi.gameSelect.GameOptionViewShort
                 android:id="@+id/trueOrFalse"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -86,7 +86,7 @@
                 android:layout_weight="50" />
 
             <!-- ВТОРАЯ КАРТОЧКА ВО ВТОРОМ РЯДУ -->
-            <com.sleeplessdog.matchthewords.game.presentation.view.GameOptionViewShort
+            <com.sleeplessdog.pimi.gameSelect.GameOptionViewShort
                 android:id="@+id/multiChoise"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -95,7 +95,7 @@
                 android:layout_weight="50" />
         </LinearLayout>
         <!-- НИЖНЯЯ ШИРОКАЯ КАРТОЧКА -->
-        <com.sleeplessdog.matchthewords.game.presentation.view.GameOptionViewLong
+        <com.sleeplessdog.pimi.gameSelect.GameOptionViewLong
             android:id="@+id/writeTheWord"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

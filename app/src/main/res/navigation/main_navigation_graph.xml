@@ -7,18 +7,18 @@
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.sleeplessdog.matchthewords.game.presentation.fragments.SettingsFragment"
+        android:name="com.sleeplessdog.pimi.settings.SettingsFragment"
         android:label="settings_fragment"
         tools:layout="@layout/settings_fragment" />
 
     <fragment
         android:id="@+id/gameFragment"
-        android:name="com.sleeplessdog.matchthewords.game.presentation.GameFragment"
+        android:name="com.sleeplessdog.pimi.games.presentation.GameFragment"
         android:label="GameFragment">
 
         <argument
             android:name="gameType"
-            app:argType="com.sleeplessdog.matchthewords.game.presentation.models.GameType"
+            app:argType="com.sleeplessdog.pimi.games.presentation.models.GameType"
             app:nullable="false" />
 
         <!-- добавили groupKey -->
@@ -52,7 +52,7 @@
 
     <fragment
         android:id="@+id/gameSelectFragment"
-        android:name="com.sleeplessdog.matchthewords.game.presentation.fragments.GameSelectFragment"
+        android:name="com.sleeplessdog.pimi.gameSelect.GameSelectFragment"
         android:label="GameSelectFragment">
 
 
@@ -83,7 +83,7 @@
 
     <fragment
         android:id="@+id/dictionaryComposeFragment"
-        android:name="com.sleeplessdog.matchthewords.dictionary.dictionary_screen.DictionaryComposeFragment">
+        android:name="com.sleeplessdog.pimi.dictionary.dictionary_screen.DictionaryComposeFragment">
         <action
             android:id="@+id/action_dictionaryComposeFragment_to_gameSelectFragment"
             app:destination="@id/gameSelectFragment">
@@ -101,7 +101,7 @@
 
     <fragment
         android:id="@+id/scoreFragment"
-        android:name="com.sleeplessdog.matchthewords.score.presentation.ScoreFragment"
+        android:name="com.sleeplessdog.pimi.score.presentation.ScoreFragment"
         android:label="ScoreFragment">
 
         <action

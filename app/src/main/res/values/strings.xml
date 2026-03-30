@@ -75,7 +75,9 @@
     <string name="action_exit">Выйти из игры</string>
 
     <!--settings menu-->
+
     <string name="settings_menu">Настройки</string>
+    <string name="settings_minimum_one">Надо выбрать хотя бы один</string>
     <string name="int_language">Язык интерфейса</string>
     <string name="std_language">Изучаемый язык</string>
     <string name="std_groups">Изучаемые группы</string>
@@ -225,6 +227,8 @@
     <string name="auth_dialog_message">Войдите через Google чтобы сохранять прогресс и словарь в облаке</string>
     <string name="auth_dialog_confirm">Войти</string>
     <string name="auth_dialog_decline">Не сейчас</string>
+    <string name="dictionary_my_groups">Мои</string>
+    <string name="dictionary_default_groups">Стандартные</string>
 
     <string name="sync_overlay_title">Синхронизация</string>
     <string name="sync_label_auth">Авторизация</string>
