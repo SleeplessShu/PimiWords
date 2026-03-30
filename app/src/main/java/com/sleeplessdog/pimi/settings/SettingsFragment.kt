@@ -20,6 +20,8 @@ import com.sleeplessdog.pimi.games.presentation.controller.PimiScrollViewAdapter
 import com.sleeplessdog.pimi.games.presentation.controller.PimiScrollbarController
 import com.sleeplessdog.pimi.games.presentation.controller.toFlagLargeRes
 import com.sleeplessdog.pimi.main.MainActivity
+import com.sleeplessdog.pimi.utils.ConstantsPaths.EXTRA_NAVIGATE_TO
+import com.sleeplessdog.pimi.utils.ConstantsPaths.NAV_SETTINGS
 import com.sleeplessdog.pimi.utils.SupportFunctions
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -51,6 +53,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
     private var preselected: Set<String> = emptySet()
     private var showAllTopics = false
     private var groupsLimit = FEATURED_LIMIT
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = SettingsFragmentBinding.bind(view)
@@ -132,6 +135,14 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
                     renderGroup(binding.cgDefaultCategories, state.globalGroups)
                 }
             }
+        }
+
+        vm.restartActivity.observe(viewLifecycleOwner) {
+            val intent = requireActivity().intent.apply {
+                putExtra(EXTRA_NAVIGATE_TO, NAV_SETTINGS)
+            }
+            requireActivity().finish()
+            startActivity(intent)
         }
 
         vm.levels.observe(viewLifecycleOwner) { selected ->

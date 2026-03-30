@@ -1,6 +1,7 @@
 package com.sleeplessdog.pimi.settings
 
 import com.sleeplessdog.pimi.games.domain.models.MutableWordBuilder
+import java.util.Locale
 
 enum class Language {
     ENGLISH,
@@ -10,6 +11,16 @@ enum class Language {
     GERMAN,
     ARMENIAN,
     SERBIAN;
+
+    fun toLocale(): Locale = when (this) {
+        Language.ENGLISH -> Locale("en")
+        Language.RUSSIAN -> Locale("ru")
+        Language.SPANISH -> Locale("es")
+        Language.FRENCH -> Locale("fr")
+        Language.GERMAN -> Locale("de")
+        Language.ARMENIAN -> Locale("hy")
+        Language.SERBIAN -> Locale("sr")
+    }
 
     fun apply(value: String, entity: MutableWordBuilder) {
         when (this) {
@@ -22,4 +33,6 @@ enum class Language {
             SERBIAN -> entity.serbian = value
         }
     }
+
+
 }

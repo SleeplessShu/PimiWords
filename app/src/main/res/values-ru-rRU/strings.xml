@@ -33,7 +33,7 @@
     <!-- endgame fragment -->
     <string name="end_game_phrase_win">Победа!</string>
     <string name="end_game_phrase_loose">Провал!</string>
-    <string name="score_text" translatable="false">%d</string>
+    <string name="score_text">%d</string>
     <string name="report_sent">Сообщение отправлено</string>
     <string name="words_saved">Слова сохранены в словарь</string>
     <string name="button_new_game">Главное меню</string>

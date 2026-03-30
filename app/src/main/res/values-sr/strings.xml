@@ -1,0 +1,291 @@
+<resources>
+    <!-- TITLES -->
+    <string name="state_title_game">Игра</string>
+    <string name="state_title_settings">Подешавања</string>
+    <string name="state_title_loading">Учитавање…</string>
+    <string name="state_title_result">Поени</string>
+    <string name="state_title_match_settings">Подешавања меча</string>
+
+    <string name="empty">     </string>
+
+    <!-- LANDING PAGES -->
+    <string name="landing_start_button">Почнимо!</string>
+    <string name="landing_accept">Разумем!</string>
+    <string name="landing_language_select">Изабери језик\nза учење</string>
+
+    <string name="landing_mtw_header">Спој\nпарове речи</string>
+    <string name="landing_tof_header">Одреди\nда ли је тачно</string>
+    <string name="landing_oof_header">Изабери\nједну опцију</string>
+    <string name="landing_wtw_header">Напиши\nпревод речи</string>
+    <string name="landing_mtw_text">Освајај поене за сваки\nтачан пар</string>
+    <string name="landing_tof_text">Освајај поене за сваку реч</string>
+    <string name="landing_oof_text">Освајај поене за сваку реч</string>
+    <string name="landing_wtw_text">Освајај поене за сваку реч</string>
+
+    <string name="landing_start_game">Почни</string>
+    <string name="landing_options_game">Подеси игру</string>
+
+    <!-- endgame fragment -->
+    <string name="end_game_phrase_win">Победа!</string>
+    <string name="end_game_phrase_loose">Пораз!</string>
+    <string name="report_sent">Порука је послата</string>
+    <string name="words_saved">Речи су сачуване у речник</string>
+    <string name="button_new_game">Главни мени</string>
+    <string name="button_to_settings">Подешавања</string>
+    <string name="button_restart_round">Понови</string>
+    <string name="eg_errors">грешака</string>
+    <string name="eg_points">поена</string>
+    <string name="eg_words">речи</string>
+    <string name="eg_congrats">Вау! Одлична игра</string>
+    <string name="eg_sorrow">Ој! Следећи пут\nће бити боље</string>
+
+    <!--games select fragment-->
+    <string name="select_game">Изабери игру</string>
+    <string name="MTW">Нађи\nпар</string>
+    <string name="ROW">Да/Не</string>
+    <string name="MC">Изабери\nТачно</string>
+    <string name="WTW">Састави\nРеч</string>
+    <string name="selected_groups_label">Групе речи за игру:</string>
+    <string name="game_group_label">Група за игру:</string>
+    <string name="game_no_groups_selected">Групе нису изабране — иди у подешавања</string>
+    <string name="clear_forced_group">Поништи изабрану групу</string>
+
+    <!--bottom menu-->
+    <string name="games">Игре</string>
+    <string name="score">Напредак</string>
+    <string name="settings">Опције</string>
+    <string name="words">Речник</string>
+
+    <!--TOF-->
+    <string name="tof_yes">Да</string>
+    <string name="tof_no">Не</string>
+    <string name="tof_correct">Тачно</string>
+    <string name="tof_wrong">Нетачно</string>
+
+    <string name="ingame_origin">Оригинал</string>
+    <string name="ingame_translate">Превод</string>
+
+    <!--Exitgame Bottomsheet-->
+    <string name="exit_game_title">Стварно желиш\nда изађеш из игре?</string>
+    <string name="exit_game_subtitle">Напредак игре неће бити сачуван</string>
+    <string name="action_stay">Остани</string>
+    <string name="action_exit">Изађи из игре</string>
+
+    <!--settings menu-->
+    <string name="settings_menu">Подешавања</string>
+    <string name="settings_minimum_one">Мораш да изабереш барем једно</string>
+    <string name="int_language">Језик интерфејса</string>
+    <string name="std_language">Језик који учиш</string>
+    <string name="std_groups">Групе за учење</string>
+    <string name="show_all">Прикажи све</string>
+    <string name="lang_level">Ниво језика</string>
+    <string name="game_difficult">Тежина игре</string>
+
+    <!-- названия уровней сложности игры -->
+    <string name="difficulty_easy">Лако</string>
+    <string name="difficulty_medium">Средње</string>
+    <string name="difficulty_hard">Тешко</string>
+    <string name="difficulty_expert">Експерт</string>
+    <string name="difficulty_cart">Картица</string>
+
+    <!-- количество слов -->
+    <string name="difficulty_easy_words">6 речи</string>
+    <string name="difficulty_medium_words">12 речи</string>
+    <string name="difficulty_hard_words">24 речи</string>
+    <string name="difficulty_expert_words">32 речи</string>
+
+    <!--группы слов боттомшит-->
+    <string name="all_groups">Групе речи</string>
+    <string name="user_groups">Моје групе:</string>
+    <string name="global_groups">Стандардне групе</string>
+    <string name="cancel">Откажи</string>
+    <string name="save">Сачувај</string>
+
+    <string name="group_animals">Животиње</string>
+    <string name="group_food">Храна</string>
+    <string name="group_family">Породица</string>
+    <string name="group_clothes">Одећа</string>
+    <string name="group_places">Места</string>
+    <string name="group_time">Време</string>
+    <string name="group_transport">Превоз</string>
+    <string name="group_work">Посао</string>
+    <string name="group_house">Кућа</string>
+    <string name="group_education">Образовање</string>
+    <string name="group_nature">Природа</string>
+    <string name="group_emotions">Емоције</string>
+    <string name="group_colors">Боје</string>
+    <string name="group_numbers">Бројеви</string>
+    <string name="group_actions">Радње</string>
+    <string name="group_objects">Предмети</string>
+    <string name="group_abstract">Апстрактни појмови</string>
+    <string name="group_entertainment">Забава</string>
+    <string name="group_communication">Комуникација</string>
+    <string name="group_travel">Путовања</string>
+    <string name="group_health">Здравље</string>
+    <string name="group_adjectives">Придеви</string>
+    <string name="group_adverbs">Прилози</string>
+    <string name="group_pronouns">Заменице</string>
+    <string name="group_miscellaneous">Разно</string>
+    <string name="group_body">Делови тела</string>
+    <string name="group_programming">Програмирање</string>
+    <string name="group_design">Дизајн</string>
+    <string name="group_random">Насумично</string>
+    <string name="group_unknown">Група непозната</string>
+    <string name="group_saved">Сачуване речи</string>
+
+    <!--Репорт/добавление слов-->
+    <string name="report_words">Где је грешка?</string>
+    <string name="add_to_dictionary">Шта да сачувамо?</string>
+    <string name="report">Пријави</string>
+    <string name="add_all">Додај све</string>
+    <string name="done">Готово!</string>
+    <string name="btn_clear_word">Обриши реч</string>
+    <string name="btn_clear_letter">Обриши слово</string>
+    <string name="btn_skip">Прескочи</string>
+    <string name="btn_check">Провери</string>
+    <string name="btn_continue">Настави</string>
+
+    <!--GameFragment-->
+    <string name="score_in_game">Резултат</string>
+
+    <!--описание контента-->
+    <string name="exit_button">Дугме за излаз</string>
+
+    <!--ScoreScreen-->
+    <string name="h1_my_level">Мој ниво:</string>
+    <string name="h2_statistic">Статистика</string>
+    <string name="tab_week">Недеља</string>
+    <string name="tab_all_time">Све време</string>
+    <string name="h2_awards">Награде</string>
+    <string name="awards_header">све</string>
+    <string name="stats_words_learned">Речи обрађено</string>
+    <string name="stats_categories_learned">Категорија научено</string>
+    <string name="stats_games_played">Игара одиграно</string>
+    <string name="stats_scores">Поена освојено</string>
+
+    <!--AwardsScreen-->
+    <string name="my_awards">Моје награде</string>
+    <string name="award_mammoth_hunter_title">Ловац на мамуте</string>
+    <string name="award_responsible_citizen_title">Одговорни грађанин</string>
+    <string name="award_perfectionist_title">Перфекциониста</string>
+    <string name="award_almost_title">Скоро па</string>
+    <string name="award_now_for_sure_title">Сад сигурно</string>
+    <string name="award_almost_expert_title">Скоро експерт</string>
+    <string name="award_knowledge_collector_title">Сакупљач знања</string>
+    <string name="award_for_a_rainy_day_title">За црне дане</string>
+    <string name="award_maybe_useful_title">Можда затреба</string>
+    <string name="award_i_live_here_title">Ја овде живим</string>
+    <string name="award_little_but_regular_title">Мало, али редовно</string>
+    <string name="award_lazy_panda_title">Лења панда</string>
+    <string name="award_i_tried_title">Трудио сам се</string>
+    <string name="award_word_by_word_title">Реч по реч</string>
+    <string name="award_honestly_title">Није савршено, али поштено</string>
+    <string name="award_slow_but_pretty_title">Споро, али лепо</string>
+    <string name="award_self_improvement_title">Рад на себи</string>
+    <string name="award_i_understood_title">Схватио сам, заиста</string>
+    <string name="award_learned_from_mistakes_title">Научио из грешака</string>
+    <string name="award_figured_out_title">Разрешио</string>
+
+    <string name="award_mammoth_hunter_desc">Научио све сисаре</string>
+    <string name="award_responsible_citizen_desc">Пријавио грешку 10 пута</string>
+    <string name="award_perfectionist_desc">Завршио категорију на 100%</string>
+    <string name="award_almost_desc">Завршио категорију на 99%</string>
+    <string name="award_now_for_sure_desc">Довео категорију са 95–99% на 100%</string>
+    <string name="award_almost_expert_desc">Завршио 5 категорија са најмање 90%</string>
+    <string name="award_knowledge_collector_desc">Отворио све речи у категорији</string>
+    <string name="award_for_a_rainy_day_desc">Додао 50 речи у омиљене</string>
+    <string name="award_maybe_useful_desc">Додао реч у омиљене и никад се није вратио</string>
+    <string name="award_i_live_here_desc">Отварао апликацију 7 дана заредом</string>
+    <string name="award_little_but_regular_desc">Учио 3 дана заредом мање од 5 минута</string>
+    <string name="award_lazy_panda_desc">Одрадио лекцију са 3 речи</string>
+    <string name="award_i_tried_desc">Одрадио лекцију и одмах изашао</string>
+    <string name="award_word_by_word_desc">Научио 100 речи</string>
+    <string name="award_honestly_desc">Научио реч из другог покушаја</string>
+    <string name="award_slow_but_pretty_desc">Одговарао тачно, али дуже него обично</string>
+    <string name="award_self_improvement_desc">Исправио 10 раније погрешних речи</string>
+    <string name="award_i_understood_desc">Одговорио тачно после 3 грешке</string>
+    <string name="award_learned_from_mistakes_desc">Више није грешио у речи после исправке</string>
+    <string name="award_figured_out_desc">Затворио све грешке у једној категорији</string>
+
+    <!--toast-->
+    <string name="error_auth_declined">Грешка ауторизације</string>
+    <string name="dictionary">Речник</string>
+
+    <!--dictionary-->
+    <string name="auth_dialog_title">Синхронизација</string>
+    <string name="auth_dialog_message">Пријави се преко Google-а да би сачувао напредак и речник у облаку</string>
+    <string name="auth_dialog_confirm">Пријави се</string>
+    <string name="auth_dialog_decline">Не сада</string>
+    <string name="dictionary_my_groups">Моје</string>
+    <string name="dictionary_default_groups">Стандардне</string>
+
+    <string name="sync_overlay_title">Синхронизација</string>
+    <string name="sync_label_auth">Ауторизација</string>
+    <string name="sync_label_global_db">Глобална база</string>
+    <string name="sync_label_user_db">Лична база</string>
+    <string name="sync_refresh">Освежи</string>
+    <string name="create_group">Направи групу</string>
+    <string name="new_group">Нова група</string>
+    <string name="new_word">Нова реч</string>
+    <string name="edit_word">Реч за уређивање</string>
+
+    <string name="enter_group_name">Назив групе</string>
+    <string name="enter_word_origin">Реч</string>
+    <string name="enter_word_translate">Превод</string>
+    <string name="words_edit">Уреди</string>
+    <string name="words_move">Премести</string>
+    <string name="select_group">У групу</string>
+
+    <string name="added_words">Додате речи</string>
+    <string name="save_words">у \"Сачуване речи\"</string>
+    <string name="button_cancel">Откажи</string>
+    <string name="button_cancel_v2">Отказивање</string>
+    <string name="button_yes_v2">Да</string>
+    <string name="button_save">Сачувај</string>
+    <string name="button_play">Играј</string>
+    <string name="button_rename">Преименуј</string>
+    <string name="button_move">Премести</string>
+    <string name="button_rename_v2">Ново име</string>
+    <string name="rename_group_confirm">
+    Унеси ново име за групу "%1$s".
+</string>
+    <string name="button_delete">Обриши</string>
+    <string name="dialog_delete">Брисање</string>
+    <string name="delete_group_confirm">
+    Да ли стварно желиш да обришеш "%1$s" и сав њен садржај?
+</string>
+    <string name="delete_word_confirm">
+    Да ли стварно желиш да обришеш "%1$s"?
+</string>
+    <string name="add_word">Додај реч</string>
+    <string name="words_count_title">ТЕСТОВНИ УНОС</string>
+
+    <plurals name="words_count">
+        <item quantity="one">%d реч</item>
+        <item quantity="few">%d речи</item>
+        <item quantity="many">%d речи</item>
+        <item quantity="other">%d речи</item>
+    </plurals>
+
+    <!--languages-->
+    <string name="language_english">Енглески</string>
+    <string name="language_spanish">Шпански</string>
+    <string name="language_russian">Руски</string>
+    <string name="language_french">Француски</string>
+    <string name="language_german">Немачки</string>
+    <string name="language_armenian">Јерменски</string>
+    <string name="language_serbian">Српски</string>
+
+    <!--premium-->
+    <string name="premium_dialog_title">Премиум функција</string>
+    <string name="premium_dialog_message">Прављење више од 3 групе доступно је у премиум верзији.</string>
+    <string name="premium_dialog_message_groups">Прављење више од 10 записа доступно је у премиум верзији.</string>
+    <string name="premium_dialog_confirm">Сазнај више</string>
+    <string name="premium_dialog_decline">Не сада</string>
+
+    <!--words_pack-->
+    <string name="word_packs_title">Готови пакети речи</string>
+    <string name="word_packs_empty">Пакети за овај пар језика нису пронађени</string>
+    <string name="word_pack_install">Инсталирај</string>
+    <string name="word_pack_installed">«%s» је додат у речник</string>
+</resources>
