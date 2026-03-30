@@ -1,0 +1,300 @@
+<resources>
+    <!-- TITLES -->
+    <string name="title_application_name" translatable="false">PimiMatch</string>
+    <string name="app_name" translatable="false">Pimi</string>
+
+    <string name="state_title_game">Jeu</string>
+    <string name="state_title_settings">Paramètres</string>
+    <string name="state_title_loading">Chargement…</string>
+    <string name="state_title_result">Points</string>
+    <string name="state_title_match_settings">Paramètres de la partie</string>
+
+    <string name="empty">     </string>
+
+    <!-- LANDING PAGES -->
+    <string name="landing_start_button">C\'est parti !</string>
+    <string name="landing_start_salut" translatable="false">HOLA!\nSALUT!\nBAREV!</string>
+    <string name="landing_accept">Compris !</string>
+
+    <string name="landing_language_select">Choisis une langue\nà apprendre</string>
+
+    <string name="landing_mtw_header">Associe\nles paires de mots</string>
+    <string name="landing_tof_header">Détermine\nsi c\'est correct</string>
+    <string name="landing_oof_header">Choisis\nune option</string>
+    <string name="landing_wtw_header">Écris\nla traduction</string>
+    <string name="landing_mtw_text">Gagne des points pour chaque\npaire correcte</string>
+    <string name="landing_tof_text">Gagne des points pour chaque mot</string>
+    <string name="landing_oof_text">Gagne des points pour chaque mot</string>
+    <string name="landing_wtw_text">Gagne des points pour chaque mot</string>
+
+    <string name="landing_start_game">Commencer</string>
+    <string name="landing_options_game">Configurer le jeu</string>
+
+    <!-- endgame fragment -->
+    <string name="end_game_phrase_win">Victoire !</string>
+    <string name="end_game_phrase_loose">Défaite !</string>
+    <string name="score_text">%d</string>
+    <string name="report_sent">Message envoyé</string>
+    <string name="words_saved">Mots sauvegardés dans le dictionnaire</string>
+    <string name="button_new_game">Menu principal</string>
+    <string name="button_to_settings">Paramètres</string>
+    <string name="button_restart_round">Recommencer</string>
+    <string name="eg_errors">erreurs</string>
+    <string name="eg_points">points</string>
+    <string name="eg_words">mots</string>
+    <string name="eg_congrats">Waouh ! Partie incroyable</string>
+    <string name="eg_sorrow">Aïe ! La prochaine fois\nce sera mieux</string>
+
+    <!--games select fragment-->
+    <string name="select_game">Choisis un jeu</string>
+    <string name="MTW">Trouve\nla paire</string>
+    <string name="ROW">Oui/Non</string>
+    <string name="MC">Choisis\nle Bon</string>
+    <string name="WTW">Forme\nle Mot</string>
+    <string name="selected_groups_label">Groupes de mots pour le jeu :</string>
+    <string name="game_group_label">Groupe pour le jeu :</string>
+    <string name="game_no_groups_selected">Aucun groupe sélectionné — va dans les paramètres</string>
+    <string name="clear_forced_group">Réinitialiser le groupe sélectionné</string>
+
+    <!--bottom menu-->
+    <string name="games">Jeux</string>
+    <string name="score">Progression</string>
+    <string name="settings">Options</string>
+    <string name="words">Dictionnaire</string>
+
+    <!--TOF-->
+    <string name="tof_yes">Oui</string>
+    <string name="tof_no">Non</string>
+    <string name="tof_correct">Correct</string>
+    <string name="tof_wrong">Incorrect</string>
+
+    <string name="ingame_origin">Original</string>
+    <string name="ingame_translate">Traduction</string>
+    <string name="ingame_dots" translatable="false">...</string>
+
+    <!--Exitgame Bottomsheet-->
+    <string name="exit_game_title">Tu veux vraiment\nquitter le jeu ?</string>
+    <string name="exit_game_subtitle">La progression du jeu ne sera pas sauvegardée</string>
+    <string name="action_stay">Rester</string>
+    <string name="action_exit">Quitter le jeu</string>
+
+    <!--settings menu-->
+    <string name="settings_menu">Paramètres</string>
+    <string name="settings_minimum_one">Au moins un doit être sélectionné</string>
+    <string name="int_language">Langue de l\'interface</string>
+    <string name="std_language">Langue apprise</string>
+    <string name="std_groups">Groupes d\'apprentissage</string>
+    <string name="show_all">Tout afficher</string>
+    <string name="lang_level">Niveau de langue</string>
+    <string name="level_a1" translatable="false">A1</string>
+    <string name="level_a2" translatable="false">A2</string>
+    <string name="level_b1" translatable="false">B1</string>
+    <string name="level_b2" translatable="false">B2</string>
+    <string name="level_c1" translatable="false">C1</string>
+    <string name="level_c2" translatable="false">C2</string>
+    <string name="game_difficult">Difficulté du jeu</string>
+
+    <string name="difficulty_easy">Facile</string>
+    <string name="difficulty_medium">Moyen</string>
+    <string name="difficulty_hard">Difficile</string>
+    <string name="difficulty_expert">Expert</string>
+    <string name="difficulty_cart">Carte</string>
+
+    <string name="difficulty_easy_words">6 mots</string>
+    <string name="difficulty_medium_words">12 mots</string>
+    <string name="difficulty_hard_words">24 mots</string>
+    <string name="difficulty_expert_words">32 mots</string>
+
+    <!--word groups bottomsheet-->
+    <string name="all_groups">Groupes de mots</string>
+    <string name="user_groups">Mes groupes :</string>
+    <string name="global_groups">Groupes standards</string>
+    <string name="cancel">Annuler</string>
+    <string name="save">Enregistrer</string>
+
+    <string name="group_animals">Animaux</string>
+    <string name="group_food">Nourriture</string>
+    <string name="group_family">Famille</string>
+    <string name="group_clothes">Vêtements</string>
+    <string name="group_places">Lieux</string>
+    <string name="group_time">Temps</string>
+    <string name="group_transport">Transport</string>
+    <string name="group_work">Travail</string>
+    <string name="group_house">Maison</string>
+    <string name="group_education">Éducation</string>
+    <string name="group_nature">Nature</string>
+    <string name="group_emotions">Émotions</string>
+    <string name="group_colors">Couleurs</string>
+    <string name="group_numbers">Nombres</string>
+    <string name="group_actions">Actions</string>
+    <string name="group_objects">Objets</string>
+    <string name="group_abstract">Concepts abstraits</string>
+    <string name="group_entertainment">Divertissement</string>
+    <string name="group_communication">Communication</string>
+    <string name="group_travel">Voyages</string>
+    <string name="group_health">Santé</string>
+    <string name="group_adjectives">Adjectifs</string>
+    <string name="group_adverbs">Adverbes</string>
+    <string name="group_pronouns">Pronoms</string>
+    <string name="group_miscellaneous">Divers</string>
+    <string name="group_body">Parties du corps</string>
+    <string name="group_programming">Programmation</string>
+    <string name="group_design">Design</string>
+    <string name="group_random">Aléatoire</string>
+    <string name="group_unknown">Groupe inconnu</string>
+    <string name="group_saved">Mots sauvegardés</string>
+
+    <!--Report / add words-->
+    <string name="report_words">Où est l\'erreur ?</string>
+    <string name="add_to_dictionary">Qu\'allons-nous sauvegarder ?</string>
+    <string name="report">Signaler</string>
+    <string name="add_all">Tout ajouter</string>
+    <string name="done">Terminé !</string>
+    <string name="btn_clear_word">Supprimer le mot</string>
+    <string name="btn_clear_letter">Supprimer la lettre</string>
+    <string name="btn_skip">Passer</string>
+    <string name="btn_check">Vérifier</string>
+    <string name="btn_continue">Continuer</string>
+
+    <!--GameFragment-->
+    <string name="score_in_game">Score</string>
+
+    <!--content description-->
+    <string name="exit_button">Bouton de sortie</string>
+
+    <!--ScoreScreen-->
+    <string name="h1_my_level">Mon niveau :</string>
+    <string name="h2_statistic">Statistiques</string>
+    <string name="tab_week">Semaine</string>
+    <string name="tab_all_time">Tout le temps</string>
+    <string name="h2_awards">Récompenses</string>
+    <string name="awards_header">tout</string>
+    <string name="stats_words_learned">Mots étudiés</string>
+    <string name="stats_categories_learned">Catégories apprises</string>
+    <string name="stats_games_played">Parties jouées</string>
+    <string name="stats_scores">Points obtenus</string>
+
+    <!--AwardsScreen-->
+    <string name="my_awards">Mes récompenses</string>
+    <string name="award_mammoth_hunter_title">Chasseur de mammouths</string>
+    <string name="award_responsible_citizen_title">Citoyen responsable</string>
+    <string name="award_perfectionist_title">Perfectionniste</string>
+    <string name="award_almost_title">Presque là</string>
+    <string name="award_now_for_sure_title">Cette fois c\'est sûr</string>
+    <string name="award_almost_expert_title">Presque expert</string>
+    <string name="award_knowledge_collector_title">Collectionneur de savoirs</string>
+    <string name="award_for_a_rainy_day_title">En cas de besoin</string>
+    <string name="award_maybe_useful_title">Peut-être utile</string>
+    <string name="award_i_live_here_title">J\'habite ici</string>
+    <string name="award_little_but_regular_title">Peu mais régulier</string>
+    <string name="award_lazy_panda_title">Panda paresseux</string>
+    <string name="award_i_tried_title">J\'ai essayé</string>
+    <string name="award_word_by_word_title">Mot par mot</string>
+    <string name="award_honestly_title">Pas parfait, mais honnête</string>
+    <string name="award_slow_but_pretty_title">Lent mais régulier</string>
+    <string name="award_self_improvement_title">Travail sur soi</string>
+    <string name="award_i_understood_title">J\'ai compris, vraiment</string>
+    <string name="award_learned_from_mistakes_title">Appris de ses erreurs</string>
+    <string name="award_figured_out_title">Compris !</string>
+
+    <string name="award_mammoth_hunter_desc">A appris tous les mammifères</string>
+    <string name="award_responsible_citizen_desc">A signalé une erreur 10 fois</string>
+    <string name="award_perfectionist_desc">A complété une catégorie à 100%</string>
+    <string name="award_almost_desc">A complété une catégorie à 99%</string>
+    <string name="award_now_for_sure_desc">A amené une catégorie de 95–99% à 100%</string>
+    <string name="award_almost_expert_desc">A complété 5 catégories à au moins 90%</string>
+    <string name="award_knowledge_collector_desc">A débloqué tous les mots d\'une catégorie</string>
+    <string name="award_for_a_rainy_day_desc">A ajouté 50 mots aux favoris</string>
+    <string name="award_maybe_useful_desc">A ajouté un mot aux favoris et n\'est jamais revenu</string>
+    <string name="award_i_live_here_desc">A ouvert l\'application 7 jours de suite</string>
+    <string name="award_little_but_regular_desc">A étudié 3 jours de suite moins de 5 minutes</string>
+    <string name="award_lazy_panda_desc">A complété une leçon avec 3 mots</string>
+    <string name="award_i_tried_desc">A complété une leçon et est parti aussitôt</string>
+    <string name="award_word_by_word_desc">A appris 100 mots</string>
+    <string name="award_honestly_desc">A appris un mot à la deuxième tentative</string>
+    <string name="award_slow_but_pretty_desc">A répondu correctement mais plus lentement qu\'habitude</string>
+    <string name="award_self_improvement_desc">A corrigé 10 mots précédemment faux</string>
+    <string name="award_i_understood_desc">A répondu correctement après 3 erreurs</string>
+    <string name="award_learned_from_mistakes_desc">N\'a plus fait d\'erreur sur un mot après correction</string>
+    <string name="award_figured_out_desc">A corrigé toutes les erreurs d\'une catégorie</string>
+
+    <!--toast-->
+    <string name="error_auth_declined">Erreur d\'autorisation</string>
+    <string name="dictionary">Dictionnaire</string>
+
+    <!--dictionary-->
+    <string name="auth_dialog_title">Synchronisation</string>
+    <string name="auth_dialog_message">Connecte-toi avec Google pour sauvegarder ta progression et ton dictionnaire dans le cloud</string>
+    <string name="auth_dialog_confirm">Se connecter</string>
+    <string name="auth_dialog_decline">Pas maintenant</string>
+    <string name="dictionary_my_groups">Les miens</string>
+    <string name="dictionary_default_groups">Standards</string>
+
+    <string name="sync_overlay_title">Synchronisation</string>
+    <string name="sync_label_auth">Autorisation</string>
+    <string name="sync_label_global_db">Base globale</string>
+    <string name="sync_label_user_db">Base personnelle</string>
+    <string name="sync_refresh">Actualiser</string>
+    <string name="create_group">Créer un groupe</string>
+    <string name="new_group">Nouveau groupe</string>
+    <string name="new_word">Nouveau mot</string>
+    <string name="edit_word">Modifier le mot</string>
+
+    <string name="enter_group_name">Nom du groupe</string>
+    <string name="enter_word_origin">Mot</string>
+    <string name="enter_word_translate">Traduction</string>
+    <string name="words_edit">Modifier</string>
+    <string name="words_move">Déplacer</string>
+    <string name="select_group">Dans le groupe</string>
+
+    <string name="added_words">Mots ajoutés</string>
+    <string name="save_words">dans \"Mots sauvegardés\"</string>
+    <string name="button_cancel">Annuler</string>
+    <string name="button_cancel_v2">Annuler</string>
+    <string name="button_yes_v2">Oui</string>
+    <string name="button_save">Enregistrer</string>
+    <string name="button_play">Jouer</string>
+    <string name="button_rename">Renommer</string>
+    <string name="button_move">Déplacer</string>
+    <string name="button_rename_v2">Nouveau nom</string>
+    <string name="rename_group_confirm">
+    Saisissez un nouveau nom pour le groupe "%1$s".
+</string>
+    <string name="button_delete">Supprimer</string>
+    <string name="dialog_delete">Suppression</string>
+    <string name="delete_group_confirm">
+    Voulez-vous vraiment supprimer "%1$s" et tout son contenu ?
+</string>
+    <string name="delete_word_confirm">
+    Voulez-vous vraiment supprimer "%1$s" ?
+</string>
+    <string name="add_word">Ajouter un mot</string>
+    <string name="words_count_title">ENTRÉE DE TEST</string>
+
+    <plurals name="words_count">
+        <item quantity="one">%d mot</item>
+        <item quantity="other">%d mots</item>
+    </plurals>
+
+    <!--languages-->
+    <string name="language_english">Anglais</string>
+    <string name="language_spanish">Espagnol</string>
+    <string name="language_russian">Russe</string>
+    <string name="language_french">Français</string>
+    <string name="language_german">Allemand</string>
+    <string name="language_armenian">Arménien</string>
+    <string name="language_serbian">Serbe</string>
+
+    <!--premium-->
+    <string name="premium_dialog_title">Fonctionnalité premium</string>
+    <string name="premium_dialog_message">La création de plus de 3 groupes est disponible dans la version premium.</string>
+    <string name="premium_dialog_message_groups">La création de plus de 10 entrées est disponible dans la version premium.</string>
+    <string name="premium_dialog_confirm">En savoir plus</string>
+    <string name="premium_dialog_decline">Pas maintenant</string>
+
+    <!--words_pack-->
+    <string name="word_packs_title">Packs de mots prêts à l\'emploi</string>
+    <string name="word_packs_empty">Aucun pack trouvé pour cette paire de langues</string>
+    <string name="word_pack_install">Installer</string>
+    <string name="word_pack_installed">"%s" ajouté au dictionnaire</string>
+</resources>

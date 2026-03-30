@@ -1,5 +1,6 @@
 package com.sleeplessdog.pimi.main
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -12,10 +13,16 @@ import com.google.firebase.ktx.Firebase
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.ActivityMainBinding
 import com.sleeplessdog.pimi.dictionary.dictionary_screen.DatabaseSyncController
+import com.sleeplessdog.pimi.settings.Language
+import com.sleeplessdog.pimi.utils.ConstantsPaths.EXTRA_NAVIGATE_TO
+import com.sleeplessdog.pimi.utils.ConstantsPaths.KEY_UI_LANG
+import com.sleeplessdog.pimi.utils.ConstantsPaths.NAV_SETTINGS
+import com.sleeplessdog.pimi.utils.ConstantsPaths.PREFS_NAME
 import com.sleeplessdog.pimi.utils.ConstantsPaths.TAG_MAIN_ACTIVITY
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import org.koin.android.ext.android.getKoin
+import java.util.Locale
 
 
 class MainActivity : AppCompatActivity() {
@@ -28,56 +35,59 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         binding.bottomNavigationView.isVisible = false
 
         lifecycleScope.launch {
             try {
-
-                Log.d(TAG_MAIN_ACTIVITY, "Firebase auth check...")
-
                 val currentUser = Firebase.auth.currentUser
-                val isGoogleUser =
-                    currentUser?.providerData?.any { it.providerId == "google.com" } == true
 
                 if (currentUser == null) {
-                    // Никого нет — анонимный для доступа к глобальной БД
                     Firebase.auth.signInAnonymously().await()
-                    Log.d(TAG_MAIN_ACTIVITY, "Firebase anonymous auth success")
-                } else if (isGoogleUser) {
-                    // Уже залогинен через Google — ничего не трогаем
-                    Log.d(
-                        TAG_MAIN_ACTIVITY, "Already signed in with Google, uid=${currentUser.uid}"
-                    )
-                } else {
-                    // Анонимный с прошлого раза — оставляем как есть
-                    Log.d(TAG_MAIN_ACTIVITY, "Anonymous user exists, uid=${currentUser.uid}")
                 }
 
                 val syncController: DatabaseSyncController = getKoin().get()
                 syncController.prepareGlobalDatabaseOnly()
 
-                Log.d(TAG_MAIN_ACTIVITY, "Global DB prepared")
-
             } catch (e: Exception) {
-                Log.e(TAG_MAIN_ACTIVITY, "Global DB init error: ${e.message}")
+                Log.e(TAG_MAIN_ACTIVITY, "onCreate: $e")
             }
         }
         setupNavigation()
+
+        intent.getStringExtra(EXTRA_NAVIGATE_TO)?.let { destination ->
+            when (destination) {
+                NAV_SETTINGS -> {
+                    binding.bottomNavigationView.selectedItemId = R.id.settingsFragment
+                }
+            }
+            intent.removeExtra(EXTRA_NAVIGATE_TO)
+        }
     }
 
-    /**
-     * Метод для настройки навигации.
-     * Вызывается только когда мы уверены, что файл БД существует.
-     */
+    override fun attachBaseContext(newBase: Context) {
+        val prefs = newBase.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val langName = prefs.getString(KEY_UI_LANG, null)
+
+        val language = langName?.let {
+            runCatching { Language.valueOf(it) }.getOrNull()
+        } ?: Language.ENGLISH
+
+        val locale = language.toLocale()
+        Locale.setDefault(locale)
+
+        val config = newBase.resources.configuration
+        config.setLocale(locale)
+        val context = newBase.createConfigurationContext(config)
+
+        super.attachBaseContext(context)
+    }
+
     private fun setupNavigation() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container) as? NavHostFragment
 
         if (navHostFragment == null) {
-            Log.e(
-                TAG_MAIN_ACTIVITY,
-                "initAppAfterDbReady: fragment_container is not a NavHostFragment or is null"
-            )
             return
         }
 
@@ -98,14 +108,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Публичный метод для управления видимостью bottom меню из фрагментов
-     */
     fun setBottomNavVisibility(isVisible: Boolean) {
         binding.bottomNavigationView.isVisible = isVisible
-    }
-
-    fun getBottomNavHeight(): Int {
-        return binding.bottomNavigationView.height
     }
 }
