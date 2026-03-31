@@ -34,6 +34,9 @@ object ConstantsPaths {
     //---Intent navigation---
     const val EXTRA_NAVIGATE_TO = "extra_navigate_to"
     const val NAV_SETTINGS = "nav_settings"
+    const val NAV_SCORE_MAIN = "score_main"
+    const val NAV_AWARDS = "awards"
+
 
     //---DEBUGGING TAG NAMES---
     const val TAG_MAIN_ACTIVITY = "MainActivity_Debugging"

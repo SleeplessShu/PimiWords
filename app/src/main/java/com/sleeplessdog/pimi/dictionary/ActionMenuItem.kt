@@ -16,7 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sleeplessdog.pimi.utils.DarkTextDefault
-import com.sleeplessdog.pimi.utils.textSize16SemiBold
+import com.sleeplessdog.pimi.utils.t2Title
 
 @Composable
 fun ActionMenuItem(
@@ -36,14 +36,14 @@ fun ActionMenuItem(
             painter = painterResource(icon),
             contentDescription = null,
             tint = DarkTextDefault,
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier.size(28.dp)
         )
 
         Spacer(Modifier.width(12.dp))
 
         Text(
             text = stringResource(titleId),
-            style = textSize16SemiBold,
+            style = t2Title,
             color = DarkTextDefault
         )
     }

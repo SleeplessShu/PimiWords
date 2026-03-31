@@ -58,8 +58,8 @@ import com.sleeplessdog.pimi.utils.DarkTextDefault
 import com.sleeplessdog.pimi.utils.Gray03
 import com.sleeplessdog.pimi.utils.GreenPrimary
 import com.sleeplessdog.pimi.utils.White
-import com.sleeplessdog.pimi.utils.textSize20Medium
-import com.sleeplessdog.pimi.utils.textSize24Medium
+import com.sleeplessdog.pimi.utils.t1Title
+import com.sleeplessdog.pimi.utils.t2Title
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -180,7 +180,7 @@ fun HeaderDictionary(
 
         Text(
             text = stringResource(R.string.dictionary),
-            style = textSize24Medium,
+            style = t1Title,
             color = DarkTextDefault,
             modifier = Modifier.align(Alignment.Center)
         )
@@ -220,7 +220,7 @@ fun SyncStateOverlay(
         ) {
             Text(
                 text = stringResource(R.string.sync_overlay_title),
-                style = textSize24Medium,
+                style = t1Title,
                 color = DarkTextDefault,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -253,7 +253,7 @@ fun SyncStateOverlay(
                 )
             ) {
                 Text(
-                    text = stringResource(R.string.sync_refresh), style = textSize20Medium
+                    text = stringResource(R.string.sync_refresh), style = t2Title
                 )
             }
         }
@@ -273,7 +273,7 @@ private fun SyncStateRow(iconRes: Int, label: String) {
         )
         Spacer(modifier = Modifier.width(12.dp))
         Text(
-            text = label, style = textSize20Medium, color = DarkTextDefault
+            text = label, style = t2Title, color = DarkTextDefault
         )
     }
 }
@@ -326,7 +326,7 @@ fun DictionaryTabs(
                         unselectedContentColor = Gray03,
                         text = {
                             Text(
-                                style = textSize20Medium, text = stringResource(tab.label)
+                                style = t2Title, text = stringResource(tab.label)
                             )
                         })
                 }

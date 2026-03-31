@@ -3,7 +3,6 @@ package com.sleeplessdog.pimi.dictionary.group_screen
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sleeplessdog.pimi.dictionary.models.UserGroupShort
 import com.sleeplessdog.pimi.games.data.repository.AppPrefs
 import com.sleeplessdog.pimi.games.domain.usecases.AddSingleWordToSavedWordsUC
 import com.sleeplessdog.pimi.games.domain.usecases.AddWordToUserGroupUC

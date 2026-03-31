@@ -4,6 +4,7 @@ import android.app.Application
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.pimi.games.domain.models.GroupUiSettings
 import com.sleeplessdog.pimi.games.domain.models.WordGroup
+import com.sleeplessdog.pimi.utils.ConstantsPaths.SAVED_GROUP_KEY
 import com.sleeplessdog.pimi.utils.groupIconRes
 import com.sleeplessdog.pimi.utils.groupTitleRes
 
@@ -13,7 +14,7 @@ class GroupSettingsUiMapper(
 
     fun map(group: WordGroup): GroupUiSettings {
 
-        val isSavedWords = group.key == "saved_words"
+        val isSavedWords = group.key == SAVED_GROUP_KEY
         val isCustomUserGroup = group.isUser && !isSavedWords
 
         val titleRes = if (isCustomUserGroup) 0

@@ -1,4 +1,4 @@
-package com.sleeplessdog.pimi.dictionary.models
+package com.sleeplessdog.pimi.dictionary.word_packs
 
 import com.sleeplessdog.pimi.settings.Language
 

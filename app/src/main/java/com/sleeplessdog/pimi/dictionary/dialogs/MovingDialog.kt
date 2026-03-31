@@ -34,17 +34,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.dictionary.group_screen.UserGroupShort
 import com.sleeplessdog.pimi.dictionary.group_screen.WordUi
 import com.sleeplessdog.pimi.dictionary.models.DialogType
-import com.sleeplessdog.pimi.dictionary.models.UserGroupShort
 import com.sleeplessdog.pimi.utils.DarkTextDefault
 import com.sleeplessdog.pimi.utils.Gray05
 import com.sleeplessdog.pimi.utils.Gray07
 import com.sleeplessdog.pimi.utils.GreenPrimary
-import com.sleeplessdog.pimi.utils.textSize14SemiBold
-import com.sleeplessdog.pimi.utils.textSize16Bold
-import com.sleeplessdog.pimi.utils.textSize16SemiBold
-import com.sleeplessdog.pimi.utils.textSize24Bold
+import com.sleeplessdog.pimi.utils.t1Title
+import com.sleeplessdog.pimi.utils.t3Text
+import com.sleeplessdog.pimi.utils.t4Text
 
 @Composable
 fun MovingDialog(
@@ -77,7 +76,7 @@ fun MovingDialog(
 
                 Text(
                     text = stringResource(R.string.words_move),
-                    style = textSize24Bold,
+                    style = t1Title,
                     color = DarkTextDefault,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
@@ -94,14 +93,14 @@ fun MovingDialog(
                         .padding(12.dp)
                 ) {
                     Text(
-                        text = word.word, style = textSize16Bold, color = DarkTextDefault
+                        text = word.word, style = t3Text, color = DarkTextDefault
                     )
 
                     Spacer(Modifier.height(4.dp))
 
                     Text(
                         text = word.translation,
-                        style = textSize14SemiBold,
+                        style = t4Text,
                         color = DarkTextDefault.copy(alpha = 0.6f)
                     )
                 }
@@ -110,7 +109,7 @@ fun MovingDialog(
 
                 Text(
                     text = stringResource(R.string.select_group),
-                    style = textSize16SemiBold,
+                    style = t3Text,
                     color = DarkTextDefault
                 )
 
@@ -152,7 +151,7 @@ fun MovingDialog(
 
                             Text(
                                 text = group.title,
-                                style = textSize16SemiBold,
+                                style = t3Text,
                                 color = DarkTextDefault
                             )
                         }

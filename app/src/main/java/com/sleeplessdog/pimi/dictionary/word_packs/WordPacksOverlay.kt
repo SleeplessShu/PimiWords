@@ -29,15 +29,14 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sleeplessdog.matchthewords.R
-import com.sleeplessdog.pimi.dictionary.models.WordPackUi
 import com.sleeplessdog.pimi.utils.BlackPrimary
 import com.sleeplessdog.pimi.utils.DarkTextDefault
 import com.sleeplessdog.pimi.utils.Gray05
 import com.sleeplessdog.pimi.utils.GreenPrimary
-import com.sleeplessdog.pimi.utils.textSize14SemiBold
-import com.sleeplessdog.pimi.utils.textSize16Bold
-import com.sleeplessdog.pimi.utils.textSize20Medium
-import com.sleeplessdog.pimi.utils.textSize24Medium
+import com.sleeplessdog.pimi.utils.t1Title
+import com.sleeplessdog.pimi.utils.t2Title
+import com.sleeplessdog.pimi.utils.t3Text
+import com.sleeplessdog.pimi.utils.t4Text
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,7 +71,7 @@ fun WordPacksOverlay(
         ) {
             Text(
                 text = stringResource(R.string.word_packs_title),
-                style = textSize24Medium,
+                style = t1Title,
                 color = DarkTextDefault,
                 modifier = Modifier
                     .padding(bottom = 16.dp)
@@ -91,7 +90,7 @@ fun WordPacksOverlay(
                     if (s.packs.isEmpty()) {
                         Text(
                             text = stringResource(R.string.word_packs_empty),
-                            style = textSize20Medium,
+                            style = t2Title,
                             color = DarkTextDefault.copy(alpha = 0.6f),
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         )
@@ -118,7 +117,7 @@ fun WordPacksOverlay(
                 else -> Unit
             }
 
-            // статус установки
+
             if (installState is WordPacksViewModel.InstallState.Success) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
@@ -127,7 +126,7 @@ fun WordPacksOverlay(
                         (installState as WordPacksViewModel.InstallState.Success).packName
                     ),
                     color = GreenPrimary,
-                    style = textSize20Medium,
+                    style = t2Title,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
             }
@@ -150,12 +149,12 @@ private fun WordPackItem(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = pack.name, style = textSize16Bold, color = DarkTextDefault
+                text = pack.name, style = t3Text, color = DarkTextDefault
             )
             Text(
                 text = pluralStringResource(
                     R.plurals.words_count, pack.wordsCount, pack.wordsCount
-                ), style = textSize14SemiBold, color = DarkTextDefault.copy(alpha = 0.6f)
+                ), style = t4Text, color = DarkTextDefault.copy(alpha = 0.6f)
             )
         }
 
@@ -170,7 +169,9 @@ private fun WordPackItem(
                 )
             } else {
                 Text(
-                    text = stringResource(R.string.word_pack_install), style = textSize14SemiBold
+                    text = stringResource(R.string.word_pack_install),
+                    style = t3Text,
+                    color = BlackPrimary
                 )
             }
         }

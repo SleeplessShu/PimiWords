@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -30,8 +29,8 @@ import com.sleeplessdog.pimi.games.domain.models.GroupUiDictionary
 import com.sleeplessdog.pimi.utils.BlackPrimary
 import com.sleeplessdog.pimi.utils.DarkTextDefault
 import com.sleeplessdog.pimi.utils.Gray05
-import com.sleeplessdog.pimi.utils.textSize14SemiBold
-import com.sleeplessdog.pimi.utils.textSize16Bold
+import com.sleeplessdog.pimi.utils.t3Text
+import com.sleeplessdog.pimi.utils.t4Text
 
 @Composable
 fun StandardGroupsTable(
@@ -98,7 +97,7 @@ fun StandardGroupTableRow(
         Spacer(modifier = Modifier.width(16.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                style = textSize16Bold,
+                style = t3Text,
                 color = DarkTextDefault,
                 text = title,
                 maxLines = 1,
@@ -110,7 +109,7 @@ fun StandardGroupTableRow(
                 text = pluralStringResource(
                     R.plurals.words_count, wordsCount, wordsCount
                 ),
-                style = textSize14SemiBold,
+                style = t4Text,
                 color = DarkTextDefault.copy(alpha = 0.6f),
             )
         }
@@ -119,7 +118,7 @@ fun StandardGroupTableRow(
             tint = DarkTextDefault,
             contentDescription = "Кнопка действия",
             modifier = Modifier
-                .size(24.dp)
+                .size(28.dp)
                 .clickable {
                     onPlayClick()
                 })

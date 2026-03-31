@@ -21,7 +21,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Панорамный вид" />
 
-    <!-- Введённые буквы -->
     <TextView
         android:id="@+id/tvInput"
         android:layout_width="0dp"
@@ -37,7 +36,6 @@
         app:layout_constraintTop_toBottomOf="@id/tvPrompt"
         tools:text="_ _ _ _ _ _ _\n_ _ _ _ _ _ _ _ _ _" />
 
-    <!-- Буквы-кнопки — занимают всё свободное пространство -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvLetters"
         android:layout_width="0dp"
@@ -51,7 +49,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvInput" />
 
-    <!-- Кнопки удаления -->
     <LinearLayout
         android:id="@+id/llButtons"
         android:layout_width="0dp"
@@ -98,7 +95,6 @@
             app:tint="@color/btn_icon_tint" />
     </LinearLayout>
 
-    <!-- Кнопка проверки всегда внизу -->
     <Button
         android:id="@+id/btnCheck"
         android:layout_width="0dp"

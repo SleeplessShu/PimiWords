@@ -35,9 +35,9 @@ import com.sleeplessdog.pimi.utils.Gray03
 import com.sleeplessdog.pimi.utils.Gray05
 import com.sleeplessdog.pimi.utils.Gray07
 import com.sleeplessdog.pimi.utils.GreenPrimary
-import com.sleeplessdog.pimi.utils.textSize16SemiBold
-import com.sleeplessdog.pimi.utils.textSize20Medium
-import com.sleeplessdog.pimi.utils.textSize24Bold
+import com.sleeplessdog.pimi.utils.t1Title
+import com.sleeplessdog.pimi.utils.t2Title
+import com.sleeplessdog.pimi.utils.t3Text
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,7 +75,7 @@ fun WordsPairDialog(
                 }
                 Text(
                     text = stringResource(text),
-                    style = textSize24Bold,
+                    style = t1Title,
                     color = DarkTextDefault,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
@@ -92,13 +92,13 @@ fun WordsPairDialog(
                         }
                         Text(
                             text = text,
-                            style = textSize20Medium,
+                            style = t2Title,
                             color = Gray07,
                         )
                     },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
-                    textStyle = textSize16SemiBold.copy(color = GreenPrimary),
+                    textStyle = t3Text.copy(color = GreenPrimary),
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
@@ -126,13 +126,13 @@ fun WordsPairDialog(
                         }
                         Text(
                             text = text,
-                            style = textSize20Medium,
+                            style = t2Title,
                             color = Gray07,
                         )
                     },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
-                    textStyle = textSize16SemiBold.copy(color = GreenPrimary),
+                    textStyle = t3Text.copy(color = GreenPrimary),
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
