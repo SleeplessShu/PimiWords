@@ -25,9 +25,6 @@ class AddWordToUserGroupUC(
     }
 }
 
-/**
- * endGame функция для добавления слов из основного словаря в словарь пользователя
- */
 class AddWordToUserDictionaryUC(
     private val repository: WordsRepository,
 ) {

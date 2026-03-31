@@ -49,5 +49,6 @@ val dataModule = module {
     }
 
     single<FirebaseAuthRepository> { FirebaseAuthRepository(get()) }
+
     single { FirebaseAuth.getInstance() }
 }

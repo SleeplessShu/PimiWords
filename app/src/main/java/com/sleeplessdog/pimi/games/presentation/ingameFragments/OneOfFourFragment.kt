@@ -57,7 +57,6 @@ class OneOfFourFragment : Fragment(R.layout.game_one_of_four) {
             parentVM.onGameEvent(e)
         }
 
-        // Клики
         binding.b1.setOnClickListener { childVM.onAnswerClick(0) }
         binding.b2.setOnClickListener { childVM.onAnswerClick(1) }
         binding.b3.setOnClickListener { childVM.onAnswerClick(2) }

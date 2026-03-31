@@ -2,6 +2,8 @@ package com.sleeplessdog.pimi.games.presentation.parentControllers
 
 import com.sleeplessdog.pimi.games.presentation.models.GameType
 import com.sleeplessdog.pimi.settings.DifficultyLevel
+import com.sleeplessdog.pimi.utils.GamePrices.MATCH8_STEP_SIZE
+import com.sleeplessdog.pimi.utils.GamePrices.WTW_STEP_SIZE
 import com.sleeplessdog.pimi.utils.SupportFunctions
 
 class ProgressController() {
@@ -34,9 +36,4 @@ class ProgressController() {
 
     fun advancesOnWrong(type: GameType): Boolean =
         type == GameType.TRUEorFALSE
-
-    private companion object {
-        const val MATCH8_STEP_SIZE = 6
-        const val WTW_STEP_SIZE = 6
-    }
 }

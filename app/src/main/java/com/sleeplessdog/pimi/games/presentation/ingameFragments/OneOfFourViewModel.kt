@@ -22,17 +22,13 @@ class OneOfFourViewModel(
 
     override val events = MutableLiveData<GameEvent>()
 
-    // Пул доступных пар: всё, что использовали в вопросе (база + 3 ложных), выбывает
     private val questions = mutableListOf<Pair<Word, Word>>()
 
-    // UI
     private val _ui = MutableLiveData(GameUiOOF())
     val ui: LiveData<GameUiOOF> get() = _ui
 
-    // текущее состояние вопроса
     private var current: OneOfFourQuestion? = null
 
-    // защита от отложенных коллбеков после перехода к новому вопросу
     private var questionSeq: Int = 0
 
     override fun setPool(pairs: List<Pair<Word, Word>>) {
@@ -46,7 +42,6 @@ class OneOfFourViewModel(
         if (state.locked) return
         if (buttonIndex !in 0..3) return
 
-        // новая проверка на локальный стейт кнопки
         val btnState = state.states.getOrNull(buttonIndex) ?: ButtonState.DEFAULT
         if (!btnState.enabled) return
 

@@ -5,9 +5,6 @@ import androidx.core.content.edit
 import com.sleeplessdog.pimi.gameSelect.LandingKeys
 import com.sleeplessdog.pimi.utils.ConstantsPaths.LANDING_SCREENS_PREFS
 
-/***
- * Класс для управления показом экранов приветствия
- */
 class LandingPagesController(context: Context) {
     private val prefs = context.getSharedPreferences(LANDING_SCREENS_PREFS, Context.MODE_PRIVATE)
 

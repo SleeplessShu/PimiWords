@@ -46,21 +46,17 @@ class GameViewModel(
 
     private var gameStartTimeMs: Long = 0L
 
-    // Верхнее состояние экрана игры
     private val _gameState = MutableLiveData(MatchState())
     val gameState: LiveData<MatchState> = _gameState
     private val _statsState = MutableLiveData(StatsState())
     val statsState: LiveData<StatsState> = _statsState
 
-    //навигация
     private val _navigateToGame = MutableLiveData<GameType?>()
     val navigateToGame: LiveData<GameType?> = _navigateToGame
 
-    // Настройки матча
     private val _gameSettings = MutableLiveData(GameSettings())
     val gameSettings: LiveData<GameSettings> = _gameSettings
 
-    // Пул пар для конкретного раунда/страницы — его потребляют ВСЕ дочерние VM
     private val _wordsPairs = MutableLiveData<List<Pair<Word, Word>>>()
     val wordsPairs: LiveData<List<Pair<Word, Word>>> = _wordsPairs
 
@@ -78,7 +74,6 @@ class GameViewModel(
         forcedGroupIsUser = isUser
     }
 
-    // «игровая экономика»
     private var score = 0
     private var lives = 3
     private var difficultLevel = 18
@@ -87,31 +82,25 @@ class GameViewModel(
     private var progressSegments: Int = 1
     private var currentStep: Int = 0
 
-    // кеш загруженных пар
     private var allPairs: List<Pair<Word, Word>> = emptyList()
 
-    // ------------ Game select ------------
     fun setGame(gameType: GameType) {
         _gameState.value = _gameState.value?.copy(gameType = gameType)
     }
 
-    // ------------ Навигация по экрану ------------
     private suspend fun prepareData() {
         onLoading()
 
         val selectedGroups = getSelectedGroupsUC.get()
-        Log.d("DEBUG_GAME", "selectedGroups raw: $selectedGroups")
 
         val enums: Set<WordsGroupsList> = selectedGroups.mapNotNull { key ->
             WordsGroupsList.values().find { it.key == key }
         }.toSet()
-        Log.d("DEBUG_GAME", "enums mapped: $enums")
         val interfaceLang = appPrefs.getUiLanguage()
         val studyLang = appPrefs.getStudyLanguage()
         val difficultLevel = appPrefs.getDifficulty()
         val wordsLevel = appPrefs.getLevels()
-        Log.d("DEBUG_GAME", "langs: $interfaceLang → $studyLang")
-        Log.d("DEBUG_GAME", "difficulty: $difficultLevel, levels: $wordsLevel")
+
         _gameSettings.value = GameSettings(
             language1 = interfaceLang,
             language2 = studyLang,
@@ -203,8 +192,6 @@ class GameViewModel(
 
     }
 
-
-    // ------------ Экономика ------------
     fun reactOnCorrect() {
         addScoreAndLive()
         advanceStepOnCorrect()
@@ -276,7 +263,6 @@ class GameViewModel(
         }
     }
 
-    // ------------ Загрузка пар ------------
     private suspend fun loadWordsFromDatabase(): Boolean {
         val wordsNeeded = when (_gameState.value!!.gameType) {
             GameType.WriteTheWord -> difficultLevel / 6
@@ -285,27 +271,22 @@ class GameViewModel(
         }
 
         val settings = _gameSettings.value ?: GameSettings()
-        Log.d("DEBUG", "loadWordsFromDatabase: ${settings.category} ${settings.level}")
 
         val category = if (forcedGroupKey != null) {
-            Log.d("DEBUG", "loadWordsFromDatabase: $forcedGroupKey forced key")
             setOfNotNull(
                 WordsGroupsList.values().find { it.key == forcedGroupKey })
         } else {
-            Log.d("DEBUG", "loadWordsFromDatabase: ${settings.category} settings.category")
             settings.category
         }
 
         val pairs = when {
             forcedGroupKey != null && forcedGroupIsUser -> {
-                Log.d("DEBUG", "loadWordsFromDatabase: user group $forcedGroupKey")
                 getWordPairsFromUserGroupUC(
                     settings.language1, settings.language2, forcedGroupKey!!, wordsNeeded
                 )
             }
 
             forcedGroupKey != null -> {
-                Log.d("DEBUG", "loadWordsFromDatabase: global group $forcedGroupKey")
                 val category = setOfNotNull(
                     WordsGroupsList.values().find { it.key == forcedGroupKey })
                 wordsController.getWordPairs(
@@ -314,12 +295,6 @@ class GameViewModel(
             }
 
             else -> {
-                Log.d(
-                    "DEBUG_GAME",
-                    "else branch: lang1=${settings.language1} lang2=${settings.language2}"
-                )
-                Log.d("DEBUG_GAME", "levels=${settings.level} needed=$wordsNeeded")
-                Log.d("DEBUG_GAME", "category=${settings.category}")
                 wordsController.getWordPairs(
                     settings.language1,
                     settings.language2,
@@ -340,7 +315,6 @@ class GameViewModel(
         return true
     }
 
-    // ------------ Конец игры/сброс ------------
     fun onGameEnd() {
 
         val durationMinutes =

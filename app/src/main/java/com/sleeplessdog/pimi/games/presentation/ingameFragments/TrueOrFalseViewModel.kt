@@ -28,7 +28,6 @@ class TrueOrFalseViewModel (
 
 
     override fun setPool(pairs: List<Pair<Word, Word>>) {
-        // готовим набор 1-разовых вопросов
         questions = shuffleFunctions.buildTrueFalseSetOnce(
             pairs,
             shuffleQuestionsOrder = true
@@ -47,9 +46,6 @@ class TrueOrFalseViewModel (
 
         events.value = if (ok) GameEvent.Correct(wordsIds) else GameEvent.Wrong(wordsIds)
         _ui.value = _ui.value?.copy(locked = true)
-
-        // РАНЬШЕ: handler.postDelayed({ nextQuestion() }, ...)
-        // ТЕПЕРЬ: не вызываем; фрагмент дергает advanceNow() после анимаций.
     }
 
     private fun nextQuestion() {
@@ -63,9 +59,9 @@ class TrueOrFalseViewModel (
         _ui.value = q.copy(locked = false)
     }
 
-    fun peekNext(): TfQuestionUi? = questions.getOrNull(index) // НЕ меняет индекс
+    fun peekNext(): TfQuestionUi? = questions.getOrNull(index)
 
-    fun advanceNow() { // подтверждаем переход к peekNext
+    fun advanceNow() {
         nextQuestion()
     }
 

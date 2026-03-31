@@ -18,9 +18,7 @@ import com.sleeplessdog.pimi.utils.ConstantsPaths
 class WordsRepository(
     private val databaseProvider: AppDatabaseProvider,
 ) {
-    /**
-     * возвращает список пар слов для игры
-     */
+
     suspend fun getWordPairs(
         lang1: Language,
         lang2: Language,
@@ -42,14 +40,12 @@ class WordsRepository(
             globalWords = globalDao.getWordsWGroups(levels, categoryKeys)
         }
 
-        //User words (включая user-only)
         val userWords = userDao.getAllWords()
 
         val userByGlobalId = userWords.filter { it.globalId != null }.associateBy { it.globalId!! }
 
         val userOnlyWords = userWords.filter { it.globalId == null }
 
-        //Merge global + user overrides
         val mergedGlobal = globalWords.map { g ->
             val u = userByGlobalId[g.id]
 
@@ -66,7 +62,6 @@ class WordsRepository(
             )
         }
 
-        //User-only → CombinedWord
         val mergedUserOnly = userOnlyWords.map { u ->
             CombinedWord(
                 globalId = null,
@@ -96,10 +91,6 @@ class WordsRepository(
         }
     }
 
-
-    /**
-     * для сохранения слов в конце игры
-     */
     suspend fun addGlobalWordsListToUserWords(globalIds: List<Int>) {
 
         val globalDao = databaseProvider.getGlobalDatabase().globalDao()
@@ -111,8 +102,6 @@ class WordsRepository(
 
         globalIds.distinct().forEach { id ->
             val globalId = id.toLong()
-
-            // если слово уже сохранено — пропускаем
             val exists = userDao.findByGlobalId(globalId)
             val globalEntity = globalDao.getById(globalId)
             if (exists != null) return@forEach
@@ -221,8 +210,6 @@ class WordsRepository(
         val userDao = databaseProvider.getUserDatabase().userDao()
         userDao.moveWordToGroup(wordId, targetGroupId)
     }
-
-    // ---------- helpers ----------
 
     private fun CombinedWord.toWord(language: Language): Word {
         val text = when (language) {

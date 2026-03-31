@@ -58,9 +58,6 @@ class SettingsRepository(
         }
     }
 
-    /**
-     * сохраняти в БД выбранные в настройках группы
-     */
     suspend fun saveSelection(keys: Set<String>) {
         val userDao = databaseProvider.getUserDatabase().userDao()
         val current = userDao.observeSettings().firstOrNull()

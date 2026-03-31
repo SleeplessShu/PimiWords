@@ -124,7 +124,6 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         """
         )
 
-        // удаляем старые таблицы которые больше не используются
         db.execSQL("DROP TABLE IF EXISTS UserWordProgress")
         db.execSQL("DROP TABLE IF EXISTS DailyStats")
         db.execSQL("DROP TABLE IF EXISTS AppStatistics")

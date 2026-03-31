@@ -7,6 +7,8 @@ object ConstantsPaths {
         "https://match-the-words-d26c2-default-rtdb.europe-west1.firebasedatabase.app"
     const val FIREBASE_STORAGE_BUCKET = "gs://your-project-id.appspot.com"
 
+    const val WORD_PACKS_PATH = "word_packs/index.json"
+
     const val NETWORK_DATABASE_PATH_ON_FIREBASE = "actual_db/global_dictionary.db"
     const val GLOBAL_DATABASE_DICTIONARY_NAME = "global_dictionary.db"
     const val USER_DATABASE_DICTIONARY_NAME = "user_dictionary.db"
@@ -40,11 +42,9 @@ object ConstantsPaths {
 
     //---DEBUGGING TAG NAMES---
     const val TAG_MAIN_ACTIVITY = "MainActivity_Debugging"
-
     const val TOTAL_POINTS = "total_points"
     const val CURRENT_STREAK = "current_streak"
     const val LAST_PLAY_DATE = "last_play_date" // yyyy-MM-dd
     const val TOTAL_GAMES = "total_games"
-
     const val SAVED_GROUP_KEY = "saved_words"
 }

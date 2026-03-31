@@ -9,6 +9,6 @@ data class WordProgressEntity(
     val correctCount: Int = 0,
     val wrongCount: Int = 0,
     val lastAnsweredAt: Long = 0L,
-    val isLearned: Boolean = false,  // true когда correctCount >= 3
+    val isLearned: Boolean = false,
     val groupKey: String = "",
 )

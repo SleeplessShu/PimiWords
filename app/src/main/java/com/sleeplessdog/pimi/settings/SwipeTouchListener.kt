@@ -12,7 +12,7 @@ class SwipeTouchListener(
     private val wouldBeCorrect: (isRightSwipe: Boolean) -> Boolean,
     private val onSwipeRightCommit: () -> Unit,
     private val onSwipeLeftCommit: () -> Unit,
-    private val canSwipe: () -> Boolean = { true }
+    private val canSwipe: () -> Boolean = { true },
 ) : View.OnTouchListener {
 
     private var downX = 0f
@@ -35,6 +35,7 @@ class SwipeTouchListener(
                 isSwiping = false
                 return true
             }
+
             MotionEvent.ACTION_MOVE -> {
                 val dx = event.rawX - downX
                 val dy = event.rawY - downY
@@ -47,6 +48,7 @@ class SwipeTouchListener(
                 card.rotation = (clamped / dragLimit) * maxRotation
                 return true
             }
+
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 if (!isSwiping) {
                     reset()
@@ -54,16 +56,17 @@ class SwipeTouchListener(
                 }
                 val dx = event.rawX - downX
                 val commitRight = dx > commitThreshold
-                val commitLeft  = dx < -commitThreshold
+                val commitLeft = dx < -commitThreshold
 
                 when {
                     commitRight -> {
-                        // НЕ красим и НЕ анимируем тут — фрагмент сделает всё сам
                         onSwipeRightCommit()
                     }
+
                     commitLeft -> {
                         onSwipeLeftCommit()
                     }
+
                     else -> reset()
                 }
                 return true
@@ -89,7 +92,6 @@ class SwipeTouchListener(
         else
             card.context.getColor(R.color.red_primary)
 
-        // окрашиваем только теперь
         tintCard(color)
 
         val dir = if (isRight) 1 else -1
@@ -110,7 +112,6 @@ class SwipeTouchListener(
             }
             .start()
     }
-
 
 
     private fun tintCard(color: Int) {

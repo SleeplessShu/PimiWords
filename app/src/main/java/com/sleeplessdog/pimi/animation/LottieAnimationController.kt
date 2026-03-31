@@ -49,7 +49,6 @@ class LottieAnimationController {
             setFrame(toStartFrame)
         }
 
-        // Подготовка FROM
         fromView.apply {
             removeAllAnimatorListeners()
             animate().cancel()
@@ -71,10 +70,8 @@ class LottieAnimationController {
             onFinished?.invoke()
         }
 
-        // слушатель завершения TO (нам нужен именно он)
         toView.addAnimatorListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
-                // если loopTo=true — сюда обычно не попадём
                 toView.removeAllAnimatorListeners()
                 callFinishedOnce()
             }
@@ -84,7 +81,6 @@ class LottieAnimationController {
             }
         })
 
-        // момент переключения FROM -> TO (обрезка хвоста)
         fromView.addAnimatorUpdateListener {
             if (switched) return@addAnimatorUpdateListener
 
@@ -101,8 +97,6 @@ class LottieAnimationController {
                 toView.isVisible = true
                 toView.playAnimation()
 
-                // на всякий случай: если toView стоит на нулевой длительности/кадре и сразу "закончилась"
-                // то onAnimationEnd может не прилететь. Тогда вызовем сразу, но только если не loop.
                 if (!loopTo && toView.maxFrame <= toView.frame) {
                     callFinishedOnce()
                 }
@@ -167,14 +161,12 @@ class LottieAnimationController {
                 imageView.isVisible = true
             }
 
-            // 2) обрезать хвост и завершить
             if (lottieView.frame >= cutFrame) {
                 finished = true
 
                 lottieView.pauseAnimation()
                 if (hideLottieAtEnd) lottieView.isVisible = false
 
-                // подчистить слушатели
                 lottieView.removeAllUpdateListeners()
                 lottieView.removeAllAnimatorListeners()
 
@@ -221,24 +213,19 @@ class LottieAnimationController {
                 (composition.startFrame + cutFromStartFrames).coerceAtLeast(composition.startFrame)
             val endFrame = (maxFrame - cutFromEndFrames).coerceAtMost(maxFrame)
 
-            // защита от кривых значений
             val safeStart = startFrame.coerceAtMost(endFrame)
             val safeEnd = endFrame.coerceAtLeast(safeStart)
 
             where.repeatCount = if (loop) LottieDrawable.INFINITE else 0
 
-            // важно: ограничиваем диапазон
             where.setMinAndMaxFrame(
                 safeStart.roundToInt(), safeEnd.roundToInt()
             )
 
-            // каждый запуск будет начинаться с minFrame
             where.setFrame(safeStart.roundToInt())
             where.playAnimation()
         }
 
-        // если композиция уже загружена — listener может не вызваться,
-        // поэтому вручную дернем конфиг на уже загруженной:
         where.composition?.let { composition ->
             val maxFrame = composition.endFrame
             val startFrame =
@@ -256,13 +243,12 @@ class LottieAnimationController {
     }
 
     fun playUnderOnce(
-        loopView: LottieAnimationView,          // верхний, который сейчас зациклен
-        underView: LottieAnimationView,         // нижний (под ним), где проиграем lottie2
+        loopView: LottieAnimationView,
+        underView: LottieAnimationView,
         @RawRes lottie2: Int,
         lottie2StartFrame: Int = 0,
         onFinished: (() -> Unit)? = null,
     ) {
-        // готовим underView
         underView.apply {
             removeAllAnimatorListeners()
             removeAllLottieOnCompositionLoadedListener()
@@ -276,11 +262,9 @@ class LottieAnimationController {
         }
 
         fun startUnderAndHideLoop() {
-            // 1️⃣ запускаем нижний
             underView.setFrame(lottie2StartFrame)
             underView.playAnimation()
 
-            // 2️⃣ В ЭТОТ ЖЕ КАДР прячем верхний
             loopView.apply {
                 removeAllAnimatorListeners()
                 removeAllLottieOnCompositionLoadedListener()
@@ -290,7 +274,6 @@ class LottieAnimationController {
             }
         }
 
-        // если композиция уже загружена
         if (underView.composition != null) {
             startUnderAndHideLoop()
         } else {
@@ -430,5 +413,4 @@ class LottieAnimationController {
             playAnimation()
         }
     }
-
 }

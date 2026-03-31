@@ -9,13 +9,13 @@ enum class ButtonState(
 ) {
     SELECTED(
         backgroundRes = R.drawable.bg_card_selected,
-        textColorRes = R.color.dark_text_selected, // яркий читаемый
+        textColorRes = R.color.dark_text_selected,
         enabled = true
     ),
 
     ERROR(
         backgroundRes = R.drawable.bg_card_error,
-        textColorRes = R.color.dark_text_selected, // яркий читаемый
+        textColorRes = R.color.dark_text_selected,
         enabled = false
     ),
 
@@ -26,12 +26,12 @@ enum class ButtonState(
     ),
     DISABLED(
         backgroundRes = R.drawable.bg_card_default,
-        textColorRes = R.color.dark_text_used,     // приглушённый
+        textColorRes = R.color.dark_text_used,
         enabled = false
     ),
     DEFAULT(
         backgroundRes = R.drawable.bg_card_default,
-        textColorRes = R.color.dark_text_default,  // обычный
+        textColorRes = R.color.dark_text_default,
         enabled = true
     )
 }

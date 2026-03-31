@@ -127,7 +127,6 @@ class WordsMatchingViewModel(
                 }
             }, TimeConstants.REACTION)
         } else {
-            // ошибка — подсветка и сброс
             events.value = GameEvent.Wrong(wordsIds)
             _state.value = s.copy(
                 selectedWords = emptyList(),

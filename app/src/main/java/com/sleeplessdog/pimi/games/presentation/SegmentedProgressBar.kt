@@ -84,7 +84,7 @@ class SegmentedProgressBar @JvmOverloads constructor(
         val avail = (width - paddingLeft - paddingRight).toFloat()
         if (avail <= 0f) return
         val pack = segmentWidth + gap
-        val count = floor((avail + gap) / pack).toInt() // "+ gap" чтобы хвост без лишнего пробела
+        val count = floor((avail + gap) / pack).toInt()
         segments = count.coerceIn(minSegments, maxSegments)
         invalidate()
     }
@@ -93,28 +93,24 @@ class SegmentedProgressBar @JvmOverloads constructor(
         val availW = (width - paddingLeft - paddingRight).toFloat()
         if (availW <= 0f || segments <= 0) return
 
-        // ширина сегмента: в COUNT делим всю ширину; в FIXED_SIZE — берём заданную
         val gapsTotal = gap * (segments - 1)
         val segW = if (mode == Mode.COUNT) {
             ((availW - gapsTotal) / segments)
         } else {
-            // центрируем, если осталось пустое пространство
             segmentWidth
         }
 
         val totalBarW = segW * segments + gapsTotal
-        var x = paddingLeft + max(0f, (availW - totalBarW) / 2f) // центрирование в FIXED_SIZE
+        var x = paddingLeft + max(0f, (availW - totalBarW) / 2f)
         val top = (height - barHeight) / 2f
         val bottom = top + barHeight
 
-        // фон
         repeat(segments) {
             rect.set(x, top, x + segW, bottom)
             canvas.drawRoundRect(rect, corner, corner, bgPaint)
             x += segW + gap
         }
 
-        // прогресс
         val progInSegs = progress.coerceIn(0f, 1f) * segments
         val full = floor(progInSegs).toInt()
         val part = progInSegs - full
@@ -133,7 +129,6 @@ class SegmentedProgressBar @JvmOverloads constructor(
         }
     }
 
-    // --- API ---
     fun setProgress(value: Float, animate: Boolean = false, duration: Long = 300) {
         val target = value.coerceIn(0f, 1f)
         if (!animate) {

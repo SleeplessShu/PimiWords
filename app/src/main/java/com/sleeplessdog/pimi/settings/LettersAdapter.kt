@@ -23,7 +23,6 @@ class LettersAdapter(
     var locked: Boolean = false
         set(value) {
             field = value
-            // переотрисуем, чтобы мгновенно заблокировать/разблокировать клики
             notifyDataSetChanged()
         }
 
@@ -44,14 +43,10 @@ class LettersAdapter(
         if (position == RecyclerView.NO_POSITION) return
         val item = currentList.getOrNull(position) ?: return
         if (locked || item.used) return
-
-        // 1) Мгновенно помечаем букву использованной и перерисовываем список
         val newItem = item.copy(used = true)
         val newList = currentList.toMutableList().also { it[position] = newItem }
         submitList(newList)
 
-        // 2) Отдаём событие во VM с небольшой задержкой,
-        //    чтобы ripple/нажатие визуально отыграло
         uiHandler.postDelayed({ onClick(position) }, PRESS_DELAY_MS)
     }
 
@@ -72,7 +67,7 @@ class LettersAdapter(
                         onReleaseHighlight()
                     }
                 }
-                false // разрешаем обработку клика
+                false
             }
 
             binding.root.setOnClickListener {
@@ -82,8 +77,6 @@ class LettersAdapter(
             }
         }
 
-
-        // При нажатии (желтый фон, серый текст)
         fun onPressHighlight() {
             val context = binding.root.context
             val background = binding.root.background as? GradientDrawable
@@ -91,7 +84,6 @@ class LettersAdapter(
             binding.tLetter.setTextColor(context.getColor(R.color.gray_05))
         }
 
-        // При отпускании (серый фон, серый текст — выделенный, к примеру)
         fun onReleaseHighlight() {
             val context = binding.root.context
             val background = binding.root.background as? GradientDrawable
@@ -99,7 +91,6 @@ class LettersAdapter(
             binding.tLetter.setTextColor(context.getColor(R.color.gray_05))
         }
 
-        // При обычном состоянии до нажатия (серый фон 05, белый текст)
         fun clearHighlight() {
             val context = binding.root.context
             val background = binding.root.background as? GradientDrawable

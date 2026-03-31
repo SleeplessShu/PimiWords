@@ -48,11 +48,8 @@ class GameSelectViewModel(
                     .map { group ->
                         val mapped = groupSettingsUiMapper.map(group)
                         when {
-                            // пользовательская группа — берём title напрямую
                             mapped.title != null -> mapped.title
-                            // глобальная — берём через ресурс (переведено)
                             mapped.titleRes != 0 -> app.getString(mapped.titleRes)
-                            // fallback
                             else -> group.key
                         }
                     }
@@ -83,11 +80,7 @@ class GameSelectViewModel(
     val forcedGroup: LiveData<String?> = _forcedGroup
 
     init {
-        /**
-         * проверяем необходимость показывать лэндинг
-         */
         val isFirstRun = landingManager.shouldShow(LandingKeys.APP_FIRST_LAUNCH)
-        Log.d("DEBUG", "Первый запуск $isFirstRun: ")
         _showLanding.value = isFirstRun
 
         viewModelScope.launch {
@@ -98,8 +91,6 @@ class GameSelectViewModel(
 
         val ui = appPrefs.getUiLanguage()
         rebuild(ui)
-
-        Log.d("DEBUG", "Первый запуск $isFirstRun: ")
     }
 
     fun setForcedGroup(key: String?, isUser: Boolean = false) {
@@ -139,7 +130,6 @@ class GameSelectViewModel(
         _showLanding.value = false
         if (!ALWAYS_SHOW_FIRST_LANDING) {
             landingManager.setShown(LandingKeys.APP_FIRST_LAUNCH)
-            Log.d("DEBUG", "setLandingShown")
         }
     }
 

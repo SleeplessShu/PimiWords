@@ -50,7 +50,6 @@ class MainActivity : AppCompatActivity() {
                 syncController.prepareGlobalDatabaseOnly()
 
             } catch (e: Exception) {
-                Log.e(TAG_MAIN_ACTIVITY, "onCreate: $e")
             }
         }
         setupNavigation()

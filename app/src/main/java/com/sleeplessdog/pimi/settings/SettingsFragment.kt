@@ -162,7 +162,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         chipC2.setOnClickListener { vm.toggleLevel(LanguageLevel.C2) }
 
         binding.ivFlagStudy.setOnClickListener {
-            currentLangMode = LanguageAdapterState.STUDY // Запоминаем режим
+            currentLangMode = LanguageAdapterState.STUDY
 
             languageMenuManager.show(R.string.std_language) {
                 val list = vm.studyLanguageList.value ?: emptyList()
@@ -173,7 +173,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         }
 
         binding.ivFlagUi.setOnClickListener {
-            currentLangMode = LanguageAdapterState.UI // Запоминаем режим
+            currentLangMode = LanguageAdapterState.UI
 
             languageMenuManager.show(R.string.int_language) {
                 val list = vm.uiLanguageList.value ?: emptyList()

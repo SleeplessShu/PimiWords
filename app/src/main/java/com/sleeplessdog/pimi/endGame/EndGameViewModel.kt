@@ -49,9 +49,6 @@ class EndGameViewModel(
         )
     }
 
-    /**
-     * отправляет список слов с ошибками на сервер
-     */
     fun sendReport() {
         val ids = _selectedWordIds.value.toList()
         if (ids.isEmpty()) return
@@ -61,16 +58,11 @@ class EndGameViewModel(
         hideActions()
     }
 
-    /**
-     * сохраняет выбранные слова в словарь пользователя
-     */
     fun saveSelectedWords() {
         val ids = _selectedWordIds.value.toList()
         if (ids.isEmpty()) return
-        Log.d("ENDGAMEVM", "saveSelectedWords: $ids")
         viewModelScope.launch {
-            val result = addWordToUserDictionary(ids)
-            Log.d("DEBUG", "результат добавления слов в словарь $result")
+            addWordToUserDictionary(ids)
         }
         hideActions()
     }

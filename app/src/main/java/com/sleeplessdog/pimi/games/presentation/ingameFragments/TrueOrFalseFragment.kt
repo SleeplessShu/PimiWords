@@ -65,16 +65,11 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
         topCard = binding.wordCardA.root
         nextCard = binding.wordCardB.root
         nextCard.visibility = View.INVISIBLE
-
-        // кнопки
         btnTrue = TofButton(binding.btnTrue, binding.icTrue, isTrue = true)
         btnFalse = TofButton(binding.btnFalse, binding.icFalse, isTrue = false)
-
-        // клики
         binding.btnTrue.setOnClickListener { onButtonPressed(btnTrue, true) }
         binding.btnFalse.setOnClickListener { onButtonPressed(btnFalse, false) }
 
-        // визуальный "press" при удержании (не мешаем клику)
         setPressTouch(binding.btnTrue, btnTrue)
         setPressTouch(binding.btnFalse, btnFalse)
 
@@ -90,13 +85,12 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
                     if (!isLocked) b.applyState(TOFButtonState.DEFAULT)
                 }
             }
-            false // не гасим click
+            false
         }
     }
 
     private fun onButtonPressed(button: TofButton, isRightBtn: Boolean) {
         if (isLocked) return
-        // имитация нажатия
         button.applyState(TOFButtonState.PRESSED)
         commitAnswer(isRightBtn, pressedButton = button)
     }
@@ -112,8 +106,6 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
         childVM.ui.observe(viewLifecycleOwner) { ui ->
             if (ui == null) return@observe
             currentIsCorrect = ui.isCorrect
-
-            // заполняем АКТИВНУЮ карточку (topCard)
             bindCard(topCard, ui)
             topCard.background = requireContext().getDrawable(R.drawable.bg_tof_card_r24)
             btnTrue.applyState(TOFButtonState.DEFAULT)
@@ -130,7 +122,6 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
     private fun bindCard(card: View, model: TfQuestionUi) {
         wordView(card).text = model.word.text
         translateView(card).text = model.shownTranslation.text
-        // дефолтный фон
         card.background = requireContext().getDrawable(R.drawable.bg_tof_card_r24)
     }
 
@@ -152,7 +143,6 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
         if (isLocked) return
         isLocked = true
 
-        // подготовка nextCard
         val preview = childVM.peekNext()
         if (preview != null) {
             bindCard(nextCard, preview)
@@ -195,18 +185,15 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
     private fun animateParallelSwap(isRight: Boolean, end: () -> Unit) {
         val dir = if (isRight) 1 else -1
 
-        // top уезжает
         topCard.animate().translationX(dir * topCard.width.toFloat())
             .translationY(-topCard.height * 0.35f).rotation(dir * 35f).alpha(0f).setDuration(220)
             .start()
 
-        // next въезжает
         nextCard.animate().alpha(1f).translationY(0f).scaleX(1f).scaleY(1f).setDuration(220)
             .withEndAction(end).start()
     }
 
     private fun swapCards() {
-        // вернуть старую topCard в исходное невидимое состояние — станет «next»
         topCard.apply {
             translationX = 0f
             translationY = 0f
@@ -216,13 +203,11 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
             background = requireContext().getDrawable(R.drawable.bg_tof_card_r24)
             setOnTouchListener(null)
         }
-        // поменять ссылки
         val tmp = topCard
         topCard = nextCard
         nextCard = tmp
     }
 
-    // утилита для альфы
     private fun colorWithAlpha(color: Int, alpha: Float): Int {
         val a = (alpha.coerceIn(0f, 1f) * 255).toInt()
         val r = Color.red(color);
@@ -233,8 +218,6 @@ class TrueOrFalseFragment : Fragment(R.layout.game_true_or_false) {
 
     private fun TofButton.applyState(state: TOFButtonState) {
         root.setBackgroundResource(state.backgroundRes)
-
-        // базовый тинт: зелёный для true, красный для false — в DEFAULT/PRESSED
         val autoTint = if (isTrue) R.color.green_primary else R.color.red_primary
         val tint = when (state) {
             TOFButtonState.DEFAULT, TOFButtonState.PRESSED -> autoTint

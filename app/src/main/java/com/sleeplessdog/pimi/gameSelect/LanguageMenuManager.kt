@@ -18,25 +18,17 @@ class LanguageMenuManager(
         bgSolid.setOnClickListener(closeListener)
     }
 
-    /**
-     * Универсальный метод показа
-     * @param titleResId - ID строки заголовка (R.string.std_language и т.д.)
-     * @param onUpdateData - Лямбда, в которой Фрагмент обновит данные адаптера
-     */
+
     fun show(titleResId: Int, onUpdateData: () -> Unit) {
-        // Если уже открыто и полностью видно - закрываем (режим toggle)
         if (root.isVisible && root.alpha == 1f) {
             hide()
             return
         }
 
-        // 1. Устанавливаем заголовок
         titleTv.setText(titleResId)
 
-        // 2. Выполняем обновление данных (вызывается код из фрагмента)
         onUpdateData()
 
-        // 3. Анимация появления меню
         root.visibility = View.VISIBLE
         root.alpha = 0f
         root.scaleY = 0f
@@ -47,7 +39,6 @@ class LanguageMenuManager(
             .setDuration(200)
             .start()
 
-        // 4. Анимация фона
         showBgIfNeeded()
     }
 

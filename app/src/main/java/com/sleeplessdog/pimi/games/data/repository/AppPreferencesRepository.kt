@@ -41,7 +41,6 @@ class AppPrefsImpl(
 
     private val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-    // ---------- LANGS ----------
     override fun observeUiLanguage(): Flow<Language> = callbackFlow {
         trySend(getUiLanguage())
 
@@ -88,7 +87,6 @@ class AppPrefsImpl(
         prefs.edit().putString(KEY_UI_LANG, ui.name).putString(KEY_STUDY_LANG, study.name).apply()
     }
 
-    // ---------- LEVELS ----------
     override fun getLevels(): Set<LanguageLevel> {
         val stored = prefs.getStringSet(KEY_LEVELS, null) ?: return setOf(LanguageLevel.A1)
 
@@ -99,7 +97,6 @@ class AppPrefsImpl(
         prefs.edit().putStringSet(KEY_LEVELS, levels.map { it.name }.toSet()).apply()
     }
 
-    // ---------- DIFFICULTY ----------
     override fun getDifficulty(): DifficultyLevel {
         val name = prefs.getString(KEY_DIFFICULTY, DifficultyLevel.EASY.name)
         return safeDifficulty(name, DifficultyLevel.EASY)
@@ -109,7 +106,6 @@ class AppPrefsImpl(
         prefs.edit().putString(KEY_DIFFICULTY, level.name).apply()
     }
 
-    // ---------- SAFE PARSERS ----------
     private fun safeLang(value: String?, fallback: Language): Language = try {
         Language.valueOf(value ?: "")
     } catch (_: Exception) {
@@ -128,7 +124,6 @@ class AppPrefsImpl(
         fallback
     }
 
-    // ---------- SUBSCRIPTION ----------
     override fun setPremium(value: Boolean) {
         prefs.edit().putBoolean(PREMIUM_STATUS, value).apply()
     }

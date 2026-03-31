@@ -29,12 +29,9 @@ data class CombinedGroupsSettingsUi(
     val globalGroups: List<GroupUiSettings> = emptyList(),
 )
 
-/**
- * используется в сеттингах, чтобы получить список всех групп
- */
 data class GlobalGroupUiEntity(
-    val groupId: String,        //технический id
-    val title: String,          //то, что показываем пользователю
+    val groupId: String,
+    val title: String,
     val wordsCount: Int = 0,
     val iconRes: Int,
 )
@@ -89,17 +86,3 @@ data class GroupDictionaryDomain(
     val wordsInGroup: Int = 0,
     val isUser: Boolean,
 )
-
-/*
-fun WordGroupPresentation.toDomain() = WordGroup(
-    key, title,isSelected, isUser, orderInBlock
-)
-
-data class GroupsUiState(
-    val featured: List<GroupUiSettings> = emptyList(),
-    val user: List<GroupUiSettings> = emptyList(),
-    val defaults: List<GroupUiSettings> = emptyList(),
-    val loading: Boolean = true,
-    val error: Throwable? = null,
-)
-*/

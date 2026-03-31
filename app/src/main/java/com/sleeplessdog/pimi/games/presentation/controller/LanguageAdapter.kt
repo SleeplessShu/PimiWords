@@ -57,9 +57,6 @@ class LanguageAdapter(
     }
 }
 
-/**
- * задаёт название отображаемое на всплывашке выбора языка
- */
 fun Language.toTitleRes(): Int = when (this) {
     Language.ENGLISH -> R.string.language_english
     Language.SPANISH -> R.string.language_spanish
@@ -70,9 +67,6 @@ fun Language.toTitleRes(): Int = when (this) {
     Language.SERBIAN -> R.string.language_serbian
 }
 
-/**
- * адаптер флага для всплывашки выбора языка
- */
 fun Language.toFlagSmallRes(): Int = when (this) {
     Language.ENGLISH -> R.drawable.ic_language_flag_british_s
     Language.SPANISH -> R.drawable.ic_language_flag_spanish_s
@@ -83,9 +77,6 @@ fun Language.toFlagSmallRes(): Int = when (this) {
     Language.SERBIAN -> R.drawable.ic_language_flag_serbian_s
 }
 
-/**
- * адаптер флага для иконки выбранного языка
- */
 fun Language.toFlagLargeRes(): Int = when (this) {
     Language.ENGLISH -> R.drawable.ic_language_flag_british_l
     Language.SPANISH -> R.drawable.ic_language_flag_spanish_l
@@ -96,9 +87,6 @@ fun Language.toFlagLargeRes(): Int = when (this) {
     Language.SERBIAN -> R.drawable.ic_language_flag_serbian_l
 }
 
-/**
- * анимация переключения языка
- */
 fun Language.toLanguageSelectAnimation(): Int = when (this) {
     Language.ENGLISH -> R.raw.animation_language_select_en
     Language.SPANISH -> R.raw.animation_language_select_es

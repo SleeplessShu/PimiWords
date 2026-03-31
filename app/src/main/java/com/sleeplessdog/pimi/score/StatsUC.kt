@@ -72,20 +72,16 @@ class GetScoreUiStateUC(
     }
 
     private suspend fun calculateLevel(): LanguageLevel {
-        // получаем все изученные id из user db
         val learnedIds = wordProgressDao.getLearnedWordIds().toSet()
 
         var playerLevel = LanguageLevel.A1
 
         for (level in LanguageLevel.values()) {
-            // считаем total в global db
             val total = globalDao.countWordsByLevel(level)
             if (total == 0) continue
 
-            // получаем id слов этого уровня из global db
             val wordIdsForLevel = globalDao.getWordIdsByLevel(level)
 
-            // пересечение — сколько из них изучено
             val learnedCount = wordIdsForLevel.count { it.toInt() in learnedIds }
             val percent = learnedCount.toFloat() / total
 

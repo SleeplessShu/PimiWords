@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.sleeplessdog.pimi.games.data.repository.AppPrefs
 import com.sleeplessdog.pimi.games.data.repository.GroupsRepository
 import com.sleeplessdog.pimi.games.data.repository.WordsRepository
+import com.sleeplessdog.pimi.utils.ConstantsPaths.WORD_PACKS_PATH
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
 
@@ -15,7 +16,7 @@ class GetWordPacksUC(
     suspend operator fun invoke(): Result<List<WordPackMeta>> {
         return try {
             val indexRef = storage.reference
-                .child("word_packs/index.json")
+                .child(WORD_PACKS_PATH)
 
             val bytes = indexRef.getBytes(1024 * 1024).await()
             val json = String(bytes)

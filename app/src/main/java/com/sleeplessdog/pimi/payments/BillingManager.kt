@@ -13,6 +13,9 @@ import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
 import com.android.billingclient.api.queryProductDetails
 import com.sleeplessdog.pimi.games.data.repository.AppPrefs
+import com.sleeplessdog.pimi.utils.SUBSCRIPTION.PRODUCT_LIFETIME
+import com.sleeplessdog.pimi.utils.SUBSCRIPTION.PRODUCT_SUBSCRIPTION_MONTHLY
+import com.sleeplessdog.pimi.utils.SUBSCRIPTION.PRODUCT_SUBSCRIPTION_YEARLY
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -24,12 +27,6 @@ class BillingManager(
 
     private val _isPremium = MutableStateFlow(false)
     val isPremium: StateFlow<Boolean> = _isPremium
-
-    companion object {
-        const val PRODUCT_SUBSCRIPTION_MONTHLY = "premium_monthly"
-        const val PRODUCT_SUBSCRIPTION_YEARLY = "premium_yearly"
-        const val PRODUCT_LIFETIME = "premium_lifetime"
-    }
 
     fun init() {
         billingClient = BillingClient.newBuilder(context)
@@ -49,13 +46,11 @@ class BillingManager(
             }
 
             override fun onBillingServiceDisconnected() {
-                // попробуем переподключиться при следующем запросе
             }
         })
     }
 
     private fun checkExistingPurchases() {
-        // проверяем подписки
         billingClient?.queryPurchasesAsync(
             QueryPurchasesParams.newBuilder()
                 .setProductType(BillingClient.ProductType.SUBS)
@@ -71,7 +66,6 @@ class BillingManager(
             }
         }
 
-        // проверяем разовую покупку
         billingClient?.queryPurchasesAsync(
             QueryPurchasesParams.newBuilder()
                 .setProductType(BillingClient.ProductType.INAPP)
@@ -117,13 +111,11 @@ class BillingManager(
             ?.firstOrNull()?.offerToken
 
         val productDetailsParams = if (offerToken != null) {
-            // подписка
             BillingFlowParams.ProductDetailsParams.newBuilder()
                 .setProductDetails(productDetails)
                 .setOfferToken(offerToken)
                 .build()
         } else {
-            // разовая покупка
             BillingFlowParams.ProductDetailsParams.newBuilder()
                 .setProductDetails(productDetails)
                 .build()
@@ -141,7 +133,6 @@ class BillingManager(
             _isPremium.value = true
             appPrefs.setPremium(true)
 
-            // подтверждаем покупку
             if (!purchase.isAcknowledged) {
                 val params = AcknowledgePurchaseParams.newBuilder()
                     .setPurchaseToken(purchase.purchaseToken)

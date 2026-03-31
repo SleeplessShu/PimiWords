@@ -56,9 +56,6 @@ class GameSelectFragment : Fragment() {
         setupObservers()
     }
 
-    /**
-     * настройка менеджера выбора языка в выпадающем меню фрагмента
-     */
     private fun setupLanguageManager() {
         languageMenuManager = LanguageMenuManager(
             root = binding.languageSelectRoot,
@@ -68,9 +65,6 @@ class GameSelectFragment : Fragment() {
         )
     }
 
-    /**
-     * настройка выбора языка во втором лэндинге
-     */
     private fun setupLanguageList() {
         langAdapter = LanguageAdapter(requireContext()) { picked ->
             viewModel.onLanguagePicked(picked)
@@ -99,9 +93,6 @@ class GameSelectFragment : Fragment() {
         }
     }
 
-    /**
-     * Настраивает содержимое кнопок выбора игры
-     */
     private fun setupGameCards() {
         binding.match6.setup(
             title = getString(R.string.MTW),
@@ -214,9 +205,6 @@ class GameSelectFragment : Fragment() {
         }
     }
 
-    /**
-     * Проигрывает анимацию в первом лендинге для занавесок
-     */
     private fun activateCurtains() {
         lottieController.switchBetweenTwo(
             resFrom = R.raw.animation_first_landing_curtains_v3,
@@ -229,9 +217,6 @@ class GameSelectFragment : Fragment() {
         )
     }
 
-    /**
-     * Проигрывает анимацию в первом лендинге для Пими
-     */
     private fun activatePimi() {
         lottieController.switchBetweenTwo(
             resFrom = R.raw.animation_first_landing_jogging_260101,
@@ -242,9 +227,6 @@ class GameSelectFragment : Fragment() {
         )
     }
 
-    /**
-     * Проигрывает анимацию во втором лендинге после клика по выбранному языку
-     */
     private fun playPimiWearHat(wearingHatAnimation: Int) {
         lottieController.playUnderOnce(
             loopView = binding.landingLanguageOverlayView.animationActionView,
@@ -254,9 +236,6 @@ class GameSelectFragment : Fragment() {
             onFinished = { closeLanguageLanding() })
     }
 
-    /**
-     * Показывает overlay выбора языка (2 лэндинг)
-     */
     private fun showOverlayToLanguageSelect() {
         binding.landingLanguageOverlayView.root.isVisible = true
         binding.rvLanguages
@@ -272,9 +251,6 @@ class GameSelectFragment : Fragment() {
         binding.landingLanguageOverlayView.animationActionView.playAnimation()
     }
 
-    /**
-     * Закрывает overlay выбора языка (2 лэндинг)
-     */
     private fun closeLanguageLanding() {
         binding.landingLanguageOverlayView.root.isVisible = false
         viewModel.onLandingShown()

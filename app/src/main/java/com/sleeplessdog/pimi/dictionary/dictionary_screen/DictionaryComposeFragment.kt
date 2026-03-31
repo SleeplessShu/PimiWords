@@ -86,9 +86,6 @@ class DictionaryComposeFragment : Fragment() {
                         ) + fadeOut(tween(400))
                     }) {
 
-                    // =======================
-                    // DICTIONARY SCREEN
-                    // =======================
                     composable(DictionaryDestinations.MAIN) {
 
                         DictionaryUi(
@@ -115,9 +112,6 @@ class DictionaryComposeFragment : Fragment() {
                         )
                     }
 
-                    // =======================
-                    // GROUP SCREEN
-                    // =======================
                     composable(
                         route = "${DictionaryDestinations.GROUP}/" + "{${DictionaryDestinations.ARG_GROUP_ID}}/" + "{${DictionaryDestinations.ARG_GROUP_NAME}}/" + "{${DictionaryDestinations.ARG_GROUP_TYPE}}"
                     ) { backStackEntry ->
@@ -196,8 +190,7 @@ class DictionaryComposeFragment : Fragment() {
     }
 
     private fun navigateToPremium() {
-        // навигация на экран покупки — добавишь когда будет готов экран
-        // findNavController().navigate(R.id.action_to_premiumFragment)
+        // навигация на экран покупки
     }
 
 

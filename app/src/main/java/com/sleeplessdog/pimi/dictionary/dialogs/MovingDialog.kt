@@ -84,7 +84,6 @@ fun MovingDialog(
 
                 Spacer(Modifier.height(16.dp))
 
-                // переносимое слово
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()

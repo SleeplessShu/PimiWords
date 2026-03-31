@@ -17,7 +17,6 @@ class WordsController(
         categories: Set<WordsGroupsList>,
     ): List<Pair<Word, Word>> {
 
-        // защита от мусорных вызовов
         if (wordsNeeded <= 0) return emptyList()
         if (language1 == language2) return emptyList()
 

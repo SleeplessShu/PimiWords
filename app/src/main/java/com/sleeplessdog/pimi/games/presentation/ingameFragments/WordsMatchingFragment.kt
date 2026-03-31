@@ -52,7 +52,6 @@ class WordsMatchingFragment : Fragment(R.layout.words_matching_fragment) {
     }
 
     private fun setupObservers() {
-        // Получаем ВЕСЬ пул от родителя — один раз на старт игры
         parentVM.wordsPairs.observe(viewLifecycleOwner) { allPairs ->
             if (!allPairs.isNullOrEmpty()) {
                 childVM.setPool(allPairs)
@@ -60,7 +59,6 @@ class WordsMatchingFragment : Fragment(R.layout.words_matching_fragment) {
             }
         }
 
-        // Текущая страница — в адаптер
         childVM.pagePairs.observe(viewLifecycleOwner) { page ->
             adapter.updateWordsList(page ?: emptyList())
         }

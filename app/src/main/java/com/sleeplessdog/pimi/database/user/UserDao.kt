@@ -84,9 +84,6 @@ interface UserDao {
     @Query("SELECT * FROM UserWords WHERE groupId IN (:groupIds)")
     suspend fun getWordsByGroups(groupIds: Set<Long>): List<UserWordEntity>
 
-    /**
-     * подписка на содержимое юзергруппы
-     */
     @Query(
         """
         SELECT * 
@@ -157,7 +154,6 @@ WHERE id = :wordId
         targetGroupId: String,
     )
 
-    // ---------- Settings ----------
     @Query("SELECT * FROM UserSettings WHERE id = 1")
     fun observeSettings(): Flow<UserSettingsEntity?>
 

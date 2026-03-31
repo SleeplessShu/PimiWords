@@ -13,6 +13,9 @@ import com.sleeplessdog.pimi.dictionary.authorisation.DataTransferStatus
 import com.sleeplessdog.pimi.dictionary.authorisation.DatabaseInstance
 import com.sleeplessdog.pimi.dictionary.authorisation.DatabaseSyncState
 import com.sleeplessdog.pimi.utils.ConstantsPaths
+import com.sleeplessdog.pimi.utils.DictionaryDestinations.DICTIONARY_TEMP_ASSETS
+import com.sleeplessdog.pimi.utils.DictionaryDestinations.DICTIONARY_TEMP_GLOBAL
+import com.sleeplessdog.pimi.utils.DictionaryDestinations.DICTIONARY_TEMP_USER_DB
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -105,13 +108,9 @@ class DatabaseSyncController(
 
 
     suspend fun checkUserDatabase() {
-        val uid = currentUid
-        Log.d(TAG_SYNC, "checkUserDatabase called, uid=$uid")
-
         val ref = userRef
 
         if (ref == null) {
-            Log.d(TAG_SYNC, "checkUserDatabase: ref is null, uid is null!")
             _syncState.update { it.copy(userDb = DataTransferStatus.ERROR) }
             return
         }
@@ -192,7 +191,6 @@ class DatabaseSyncController(
 
                 if (e.errorCode == StorageException.ERROR_OBJECT_NOT_FOUND) {
 
-                    // файла на сервере нет — делаем первый backup
                     _syncState.update {
                         it.copy(userDb = DataTransferStatus.UPLOADING)
                     }
@@ -220,7 +218,7 @@ class DatabaseSyncController(
             it.copy(globalDb = DataTransferStatus.DOWNLOADING)
         }
 
-        val temp = File(context.cacheDir, "temp_global_db")
+        val temp = File(context.cacheDir, DICTIONARY_TEMP_GLOBAL)
 
         globalRef.getFile(temp).await()
 
@@ -240,7 +238,7 @@ class DatabaseSyncController(
 
     private suspend fun copyGlobalFromAssets() {
 
-        val temp = File(context.cacheDir, "temp_assets_db")
+        val temp = File(context.cacheDir, DICTIONARY_TEMP_ASSETS)
 
         context.assets.open(ConstantsPaths.ASSETS_DATABASE_DICTIONARY_PATH).use { input ->
             FileOutputStream(temp).use { output ->
@@ -268,7 +266,7 @@ class DatabaseSyncController(
             _syncState.update { it.copy(userDb = DataTransferStatus.ERROR) }
             return
         }
-        val temp = File(context.cacheDir, "temp_user_db")
+        val temp = File(context.cacheDir, DICTIONARY_TEMP_USER_DB)
 
         ref.getFile(temp).await()
 
@@ -294,7 +292,6 @@ class DatabaseSyncController(
         }
 
         val uid = currentUid ?: run {
-            Log.e(TAG_SYNC, "UPLOAD FAILED: uid is null")
             _syncState.update { it.copy(userDb = DataTransferStatus.ERROR) }
             return
         }
@@ -332,94 +329,53 @@ class DatabaseSyncController(
 
             DatabaseInstance.GLOBAL -> {
 
-                Log.d(TAG_SYNC, "GLOBAL DEPLOY BEGIN")
-
                 _syncState.update {
-                    Log.d(TAG_SYNC, "STATE -> DEPLOYING GLOBAL")
                     it.copy(globalDb = DataTransferStatus.DEPLOYING)
                 }
 
                 databaseProvider.withGlobalDatabaseLock {
 
-                    Log.d(TAG_SYNC, "LOCK ACQUIRED GLOBAL")
                     delay(100)
-                    Log.d(TAG_SYNC, "Closing global database")
                     databaseProvider.closeGlobalDatabase()
-                    Log.d(TAG_SYNC, "Global database closed")
 
                     val wal = File(target.path + "-wal")
                     val shm = File(target.path + "-shm")
 
-                    Log.d(TAG_SYNC, "Deleting WAL=${wal.exists()} SHM=${shm.exists()}")
-
                     wal.delete()
                     shm.delete()
 
-                    Log.d(TAG_SYNC, "Ensuring parent dir")
                     target.parentFile?.mkdirs()
-
-                    Log.d(TAG_SYNC, "Copying temp -> target")
 
                     temp.copyTo(target, overwrite = true)
 
-                    Log.d(TAG_SYNC, "Copy finished size=${target.length()}")
-
-                    Log.d(TAG_SYNC, "Opening global database")
                     databaseProvider.openGlobalDatabase()
-
-                    Log.d(TAG_SYNC, "Global database reopened")
                 }
-
-                Log.d(TAG_SYNC, "LOCK RELEASED GLOBAL")
             }
 
             DatabaseInstance.USER -> {
 
-                Log.d(TAG_SYNC, "USER DEPLOY BEGIN")
-
                 _syncState.update {
-                    Log.d(TAG_SYNC, "STATE -> DEPLOYING USER")
                     it.copy(userDb = DataTransferStatus.DEPLOYING)
                 }
 
                 databaseProvider.withUserDatabaseLock {
 
-                    Log.d(TAG_SYNC, "LOCK ACQUIRED USER")
-
-                    Log.d(TAG_SYNC, "Closing user database")
                     databaseProvider.closeUserDatabase()
-
-                    Log.d(TAG_SYNC, "User database closed")
 
                     val wal = File(target.path + "-wal")
                     val shm = File(target.path + "-shm")
 
-                    Log.d(TAG_SYNC, "Deleting WAL=${wal.exists()} SHM=${shm.exists()}")
-
                     wal.delete()
                     shm.delete()
 
-                    Log.d(TAG_SYNC, "Ensuring parent dir")
                     target.parentFile?.mkdirs()
-
-                    Log.d(TAG_SYNC, "Copying temp -> target")
 
                     temp.copyTo(target, overwrite = true)
 
-                    Log.d(TAG_SYNC, "Copy finished size=${target.length()}")
-
-                    Log.d(TAG_SYNC, "Opening user database")
                     databaseProvider.openUserDatabase()
-
-                    Log.d(TAG_SYNC, "User database reopened")
                 }
-
-                Log.d(TAG_SYNC, "LOCK RELEASED USER")
             }
         }
-        Log.d(TAG_SYNC, "deployDatabase END type=$type")
         _deployCompleted.emit(type)
-
-        Log.d(TAG_SYNC, "deployDatabase END type=$type")
     }
 }

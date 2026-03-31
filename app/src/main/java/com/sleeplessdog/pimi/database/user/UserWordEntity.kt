@@ -26,7 +26,7 @@ data class UserWordEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 
-    val globalId: Long?, // null = user-only слово
+    val globalId: Long?,
 
     val groupId: String,
 

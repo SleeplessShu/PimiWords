@@ -80,8 +80,6 @@ class WordsMatchingAdapter(
         }
     }
 
-
-    /** Единый маппинг слова → состояние. */
     private fun stateFor(word: Word): ButtonState = when {
         isError(word) -> ButtonState.ERROR
         word.id in usedWords -> ButtonState.DISABLED

@@ -56,7 +56,6 @@ val presentationModule = module {
         )
     }
 
-
     viewModel {
         ScoreViewModel(
             getScoreUiState = get()

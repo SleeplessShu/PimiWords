@@ -6,10 +6,6 @@ import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.pimi.games.presentation.states.HeartState
 import com.sleeplessdog.pimi.games.presentation.states.StaticHeartState
 
-/**
- * Управляет визуальным отображением «жизней» (сердечек) в игре с использованием Lottie‑анимаций.
- * Меняет состояние сердечек (цвет, видимость, анимации) в зависимости от текущего количества жизней.
- */
 class HeartsController(
     private val hearts: List<LottieAnimationView>,
 ) {
@@ -29,9 +25,6 @@ class HeartsController(
 
     private var prevHeartsQuantity: Int = 0
 
-    /**
-     * Обновляет отображение сердечек согласно текущему количеству жизней.
-     */
     fun render(heartsQuantity: Int) {
         val prevStates = staticHeartState[prevHeartsQuantity.coerceIn(0, 3)] ?: return
         val currStates = staticHeartState[heartsQuantity.coerceIn(0, 3)] ?: return
@@ -49,9 +42,6 @@ class HeartsController(
         prevHeartsQuantity = heartsQuantity.coerceIn(0, 3)
     }
 
-    /**
-     * Определяет анимационное состояние сердечка на основе перехода между предыдущим и текущим статическим состоянием.
-     */
     private fun determineHeartState(
         prev: StaticHeartState,
         curr: StaticHeartState,
@@ -74,9 +64,6 @@ class HeartsController(
         }
     }
 
-    /**
-     *  Применяет Lottie‑анимацию к указанному представлению сердечка.
-     */
     private fun applyHeartAnimated(
         lav: LottieAnimationView,
         state: HeartState,

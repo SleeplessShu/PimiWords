@@ -7,6 +7,7 @@ import com.sleeplessdog.pimi.database.user.UserStatsEntity
 import com.sleeplessdog.pimi.database.user.WordProgressEntity
 import com.sleeplessdog.pimi.score.StatsRepository
 import com.sleeplessdog.pimi.score.domain.models.AwardId
+import com.sleeplessdog.pimi.utils.GamePrices.LEARNED_THRESHOLD
 import java.time.LocalDate
 
 class AwardEngine(
@@ -29,7 +30,6 @@ class AwardEngine(
         checkAllAwards(result)
     }
 
-    // возвращает количество слов которые стали "изученными" в этой сессии
     private suspend fun updateWordProgress(result: GameResult): Int {
         val now = System.currentTimeMillis()
         var newlyLearned = 0
@@ -92,12 +92,11 @@ class AwardEngine(
             )
         )
 
-        // логируем сессию
         statsRepository.insertSession(
             SessionLogEntity(
                 date = today,
                 durationMinutes = durationMinutes,
-                wordsCount = 0, // заполняется снаружи если нужно
+                wordsCount = 0,
                 isCompleted = true
             )
         )
@@ -118,17 +117,14 @@ class AwardEngine(
         checkNowForSure(result)
     }
 
-    // 100 изученных слов
     private suspend fun checkWordByWord(stats: UserStatsEntity) {
         if (stats.totalWordsLearned >= 100) unlock(AwardId.WORD_BY_WORD)
     }
 
-    // 7 дней подряд
     private suspend fun checkILiveHere(stats: UserStatsEntity) {
         if (stats.currentStreak >= 7) unlock(AwardId.I_LIVE_HERE)
     }
 
-    // 3 дня подряд < 5 минут
     private suspend fun checkLittleButRegular() {
         val last3 = statsRepository.getLast7Sessions().take(3)
         if (last3.size >= 3 && last3.all { it.durationMinutes in 1..4 }) {
@@ -136,14 +132,12 @@ class AwardEngine(
         }
     }
 
-    // урок из 3 слов
     private suspend fun checkLazyPanda(result: GameResult) {
         if (result.correctIds.size <= 3 && result.correctIds.isNotEmpty()) {
             unlock(AwardId.LAZY_PANDA)
         }
     }
 
-    // правильно со второй попытки (1 ошибка, потом правильно)
     private suspend fun checkHonestly(result: GameResult) {
         result.correctIds.forEach { id ->
             val progress = statsRepository.getWordProgress(id) ?: return@forEach
@@ -154,7 +148,6 @@ class AwardEngine(
         }
     }
 
-    // правильно после 3+ ошибок
     private suspend fun checkIUnderstood(result: GameResult) {
         result.correctIds.forEach { id ->
             val progress = statsRepository.getWordProgress(id) ?: return@forEach
@@ -165,7 +158,6 @@ class AwardEngine(
         }
     }
 
-    // исправил 10 ошибочных слов (правильно после ошибок, 3+ раза)
     private suspend fun checkSelfImprovement(result: GameResult) {
         val fixed = result.correctIds.count { id ->
             val p = statsRepository.getWordProgress(id)
@@ -174,10 +166,9 @@ class AwardEngine(
         if (fixed > 0) incrementProgress(AwardId.SELF_IMPROVEMENT, fixed, target = 10)
     }
 
-    // PERFECTIONIST (100%) и ALMOST (99%)
     private suspend fun checkPerfectAndAlmost(result: GameResult) {
         val groupKey = result.groupKey ?: return
-        if (result.isUserGroup) return // для юзерских групп не считаем
+        if (result.isUserGroup) return
 
         val totalInGroup = globalDao.countWordsByGroup(groupKey)
         if (totalInGroup == 0) return
@@ -191,7 +182,6 @@ class AwardEngine(
         }
     }
 
-    // NOW_FOR_SURE — довёл с 95-99% до 100%
     private suspend fun checkNowForSure(result: GameResult) {
         val groupKey = result.groupKey ?: return
         if (result.isUserGroup) return
@@ -202,9 +192,7 @@ class AwardEngine(
         val learnedInGroup = statsRepository.countLearnedInGroup(groupKey)
         val percent = learnedInGroup.toFloat() / totalInGroup
 
-        // текущий процент 100% — значит только что добрались
         if (percent >= 1.0f) {
-            // проверяем что прогресс не захардкожен, это честное достижение
             val previousLearned = learnedInGroup - result.correctIds.size
             val previousPercent = previousLearned.toFloat() / totalInGroup
             if (previousPercent in 0.95f..0.99f) {
@@ -213,7 +201,6 @@ class AwardEngine(
         }
     }
 
-    // 5 категорий по 90%+
     private suspend fun checkAlmostExpert() {
         val allGroups = globalDao.getAllGroupKeys()
         var count = 0
@@ -245,9 +232,5 @@ class AwardEngine(
         )
 
         if (newProgress >= target) unlock(id)
-    }
-
-    companion object {
-        const val LEARNED_THRESHOLD = 3
     }
 }

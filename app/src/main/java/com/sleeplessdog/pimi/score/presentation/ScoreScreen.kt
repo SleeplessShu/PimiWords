@@ -137,8 +137,6 @@ fun ScoreScreen(
     }
 }
 
-/* ---------- STATS TOGGLE ---------- */
-
 @Composable
 private fun StatsPeriodToggle(
     selected: StatsPeriod,

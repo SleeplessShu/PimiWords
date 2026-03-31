@@ -9,7 +9,7 @@ enum class TOFButtonState(
 ) {
     DEFAULT(
         backgroundRes = R.drawable.bg_card_default,
-        tintColorRes = android.R.color.transparent, // авто подставим в apply()
+        tintColorRes = android.R.color.transparent,
         offsetY = 0f
     ),
     PRESSED(

@@ -85,22 +85,15 @@ val databaseModule = module {
         )
     }
 
-
-
     single { AppDatabaseProvider(get()) }
 
-    /**
-     * settings uc
-     */
     single { SettingsRepository(get()) }
     single { SettingsToggleCategoryUC(get()) }
     single { SettingsSaveSelectionUC(get()) }
     single { SettingsSaveLevelsUC(get()) }
     single { SettingsObserveLevelsUC(get()) }
     single { ObserveAllGroupsForSettingsUC(get()) }
-    /**
-     * group uc
-     */
+
     single { GroupsRepository(get()) }
     single { CreateUserGroupUC(get()) }
     single { GetSelectedGroupsUC(get()) }
@@ -112,9 +105,7 @@ val databaseModule = module {
     single { GetGlobalGroupWordsOnceUC(get()) }
     single { RenameUserGroupUC(get()) }
     single { DeleteUserGroupUC(get()) }
-    /**
-     * word uc
-     */
+
     single { AddWordToUserDictionaryUC(get()) }
     single { EditWordInUserGroupUC(get()) }
     single { DeleteWordFromUserGroupUC(get()) }
@@ -125,14 +116,10 @@ val databaseModule = module {
     single { AddSingleWordToSavedWordsUC(get()) }
     single { GetWordPairsFromUserGroupUC(get()) }
     single { ReportWordMistakeUC(get(), get(), get()) }
-    /**
-     * score uc
-     */
+
     single { ProcessGameResultUC(get()) }
     single { GetScoreUiStateUC(get(), get(), get()) }
-    /**
-     * word packs
-     */
+
     single { GetWordPacksUC(get()) }
     single {
         InstallWordPackUC(
