@@ -2,8 +2,6 @@ package com.sleeplessdog.pimi.dictionary.word_packs
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sleeplessdog.pimi.dictionary.models.WordPackUi
-import com.sleeplessdog.pimi.dictionary.models.WordPackUiMapper
 import com.sleeplessdog.pimi.games.data.repository.AppPrefs
 import com.sleeplessdog.pimi.settings.Language
 import kotlinx.coroutines.flow.MutableStateFlow

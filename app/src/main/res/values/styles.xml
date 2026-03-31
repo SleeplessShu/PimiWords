@@ -239,4 +239,49 @@
         <item name="rippleColor">@color/white</item>
     </style>
 
+
+    <!-- T-1 Title Large — 24/30 -->
+    <style name="Text.T1.TitleLarge.View" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:fontFamily">@font/open_sans_bold</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:lineHeight">30sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <!-- T-2 Title Small — 20/24 -->
+    <style name="Text.T2.TitleSmall.View" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:fontFamily">@font/open_sans_bold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:lineHeight">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <!-- T-3 Text Large — 16/20 -->
+    <style name="Text.T3.TextLarge.View" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:fontFamily">@font/open_sans_bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineHeight">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <!-- T-4 Text Small — 14/20 -->
+    <style name="Text.T4.TextSmall.View" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:fontFamily">@font/open_sans_bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineHeight">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <!-- T-4 Numbers — 20/24 (для статистики) -->
+    <style name="Text.T4.Numbers.View" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:fontFamily">@font/open_sans_bold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:lineHeight">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
 </resources>

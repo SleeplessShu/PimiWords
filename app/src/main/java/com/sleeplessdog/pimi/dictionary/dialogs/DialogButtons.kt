@@ -16,7 +16,7 @@ import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.pimi.dictionary.models.DialogType
 import com.sleeplessdog.pimi.utils.Gray03
 import com.sleeplessdog.pimi.utils.GreenPrimary
-import com.sleeplessdog.pimi.utils.textSize16SemiBold
+import com.sleeplessdog.pimi.utils.t3Text
 
 @Composable
 fun DialogButtons(
@@ -37,7 +37,7 @@ fun DialogButtons(
             Text(
                 text = stringResource(R.string.button_cancel_v2),
                 color = Gray03,
-                style = textSize16SemiBold
+                style = t3Text
             )
         }
 
@@ -58,7 +58,7 @@ fun DialogButtons(
             Text(
                 text = stringResource(onConfirmText),
                 color = GreenPrimary,
-                style = textSize16SemiBold
+                style = t3Text
             )
         }
     }

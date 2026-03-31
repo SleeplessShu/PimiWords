@@ -5,7 +5,7 @@ import com.sleeplessdog.pimi.database.global.GlobalDictionaryEntity
 import com.sleeplessdog.pimi.database.user.UserGroupEntity
 import com.sleeplessdog.pimi.database.user.UserWordEntity
 import com.sleeplessdog.pimi.dictionary.group_screen.WordUi
-import com.sleeplessdog.pimi.dictionary.models.WordPackEntry
+import com.sleeplessdog.pimi.dictionary.word_packs.WordPackEntry
 import com.sleeplessdog.pimi.games.domain.models.CombinedWord
 import com.sleeplessdog.pimi.games.domain.models.MutableWordBuilder
 import com.sleeplessdog.pimi.games.domain.models.WordsGroupsList
@@ -86,7 +86,7 @@ class WordsRepository(
         } else {
             mergedGlobal.shuffled().take(wordsNeeded)
         }
-        
+
         return pool.mapNotNull { w ->
             val w1 = w.toWord(lang1)
             val w2 = w.toWord(lang2)

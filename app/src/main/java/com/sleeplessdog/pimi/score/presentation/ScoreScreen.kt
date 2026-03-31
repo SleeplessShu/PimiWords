@@ -67,15 +67,14 @@ import com.sleeplessdog.pimi.utils.BlackPrimary
 import com.sleeplessdog.pimi.utils.Gray02
 import com.sleeplessdog.pimi.utils.GreenPrimary
 import com.sleeplessdog.pimi.utils.White
-import com.sleeplessdog.pimi.utils.h1Header
-import com.sleeplessdog.pimi.utils.h2Header
+import com.sleeplessdog.pimi.utils.t1Title
+import com.sleeplessdog.pimi.utils.t2Title
 import com.sleeplessdog.pimi.utils.t4Text
 import com.sleeplessdog.pimi.utils.t4TextNumbers
-import com.sleeplessdog.pimi.utils.t5Text
 import kotlinx.coroutines.delay
 
 @Composable
-public fun ScoreScreen(
+fun ScoreScreen(
     state: ScoreUiState,
     navController: NavController,
 ) {
@@ -94,17 +93,33 @@ public fun ScoreScreen(
                 .navigationBarsPadding()
         ) {
             Column(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .align(Alignment.TopCenter)
+                modifier = Modifier.padding(horizontal = 20.dp)
             ) {
+                // хедер такой же высоты как в словаре
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.h1_my_level),
+                        style = t1Title,
+                        color = White,
+                        modifier = Modifier.align(Alignment.CenterStart)
+                    )
+                    Text(
+                        text = state.level.toString(),
+                        style = t1Title,
+                        color = White,
+                        modifier = Modifier.align(Alignment.CenterEnd)
+                    )
+                }
 
-                HeaderSection(level = state.level.toString())
-
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(8.dp))
 
                 StatsPeriodToggle(
-                    selected = selectedPeriod, onSelected = { selectedPeriod = it })
+                    selected = selectedPeriod, onSelected = { selectedPeriod = it }
+                )
 
                 Spacer(Modifier.height(16.dp))
 
@@ -122,27 +137,6 @@ public fun ScoreScreen(
     }
 }
 
-/* ---------- HEADER ---------- */
-
-@Composable
-private fun HeaderSection(level: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 20.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-
-    ) {
-        Text(
-            text = stringResource(R.string.h1_my_level), style = h1Header, color = White
-        )
-        Text(
-            text = level, style = h1Header, color = White
-        )
-    }
-}
-
 /* ---------- STATS TOGGLE ---------- */
 
 @Composable
@@ -157,7 +151,7 @@ private fun StatsPeriodToggle(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = stringResource(R.string.h2_statistic), style = h2Header, color = White)
+        Text(text = stringResource(R.string.h2_statistic), style = t2Title, color = White)
 
         Box(
             modifier = Modifier
@@ -189,8 +183,8 @@ private fun StatsPeriodToggle(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        "Неделя",
-                        style = t5Text,
+                        stringResource(R.string.tab_week),
+                        style = t4Text,
                         color = if (selected == StatsPeriod.WEEK) Gray02 else White
                     )
                 }
@@ -203,8 +197,8 @@ private fun StatsPeriodToggle(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        "Все время",
-                        style = t5Text,
+                        stringResource(R.string.tab_all_time),
+                        style = t4Text,
                         color = if (selected == StatsPeriod.ALL_TIME) Gray02 else White
                     )
                 }
@@ -226,7 +220,7 @@ private fun StatisticsList(stats: StatItem) {
 private fun StatRow(value: StatItem) {
     Column(
         verticalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier.animateContentSize() // Плавное изменение высоты всей секции
+        modifier = Modifier.animateContentSize()
     ) {
         StatItemLine(stringResource(R.string.stats_words_learned), value.wordsLearned)
         StatItemLine(stringResource(R.string.stats_categories_learned), value.categoriesLearned)
@@ -251,7 +245,6 @@ private fun StatItemLine(label: String, number: Int) {
 private fun AnimatedValue(value: Int, style: TextStyle) {
     AnimatedContent(
         targetState = value, transitionSpec = {
-            // Если новое число больше — выезжает сверху, если меньше — снизу
             if (targetState > initialState) {
                 (slideInVertically { height -> height } + fadeIn()).togetherWith(slideOutVertically { height -> -height } + fadeOut())
             } else {
@@ -272,10 +265,10 @@ private fun AwardsHeader(navController: NavController) {
     Row(
         modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Text(text = stringResource(R.string.h2_awards), style = h2Header, color = White)
+        Text(text = stringResource(R.string.h2_awards), style = t2Title, color = White)
         Text(
             text = stringResource(R.string.awards_header),
-            style = h2Header,
+            style = t2Title,
             color = GreenPrimary,
             modifier = Modifier.clickable { navController.navigate("awards") })
     }
@@ -362,9 +355,6 @@ fun LockedAwardIcon(award: AwardMeta) {
         }
     }
 }
-
-
-/* ---------- PREVIEW ---------- */
 
 @Preview(showSystemUi = true, device = "spec:width=411dp,height=891dp")
 @Preview(showSystemUi = true, device = "spec:width=360dp,height=640dp,dpi=300")

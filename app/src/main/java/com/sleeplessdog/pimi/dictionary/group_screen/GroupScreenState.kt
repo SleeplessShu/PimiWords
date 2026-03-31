@@ -1,7 +1,5 @@
 package com.sleeplessdog.pimi.dictionary.group_screen
 
-import com.sleeplessdog.pimi.dictionary.models.UserGroupShort
-
 data class GroupScreenState(
     val groupType: GroupType = GroupType.GLOBAL,
     val groupId: String = "",

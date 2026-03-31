@@ -34,8 +34,8 @@ import com.sleeplessdog.pimi.games.domain.models.GroupUiDictionary
 import com.sleeplessdog.pimi.utils.BlackPrimary
 import com.sleeplessdog.pimi.utils.DarkTextDefault
 import com.sleeplessdog.pimi.utils.Gray05
-import com.sleeplessdog.pimi.utils.textSize14SemiBold
-import com.sleeplessdog.pimi.utils.textSize16Bold
+import com.sleeplessdog.pimi.utils.t3Text
+import com.sleeplessdog.pimi.utils.t4Text
 
 @Composable
 fun UserGroupsTable(
@@ -63,7 +63,6 @@ fun UserGroupsTable(
         groups.forEachIndexed { index, group ->
             UserGroupTableRow(
                 title = group.title,
-                //groupKey = group.key,
                 iconKey = group.iconRes,
                 wordsCount = group.wordsInGroup,
                 rowIndex = index,
@@ -113,7 +112,7 @@ fun UserGroupTableRow(
         ) {
             Text(
                 text = title,
-                style = textSize16Bold,
+                style = t3Text,
                 color = DarkTextDefault,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -125,7 +124,7 @@ fun UserGroupTableRow(
                     text = pluralStringResource(
                         R.plurals.words_count, wordsCount, wordsCount
                     ),
-                    style = textSize14SemiBold,
+                    style = t4Text,
                     color = DarkTextDefault.copy(alpha = 0.6f),
                     modifier = Modifier.padding(top = 4.dp)
                 )

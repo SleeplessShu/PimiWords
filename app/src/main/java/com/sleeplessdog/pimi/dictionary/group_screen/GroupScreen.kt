@@ -42,10 +42,10 @@ import com.sleeplessdog.pimi.dictionary.models.DialogType
 import com.sleeplessdog.pimi.utils.BlackPrimary
 import com.sleeplessdog.pimi.utils.DarkTextDefault
 import com.sleeplessdog.pimi.utils.Gray05
-import com.sleeplessdog.pimi.utils.textSize14SemiBold
-import com.sleeplessdog.pimi.utils.textSize16Bold
-import com.sleeplessdog.pimi.utils.textSize16SemiBold
-import com.sleeplessdog.pimi.utils.textSize24Medium
+import com.sleeplessdog.pimi.utils.t1Title
+import com.sleeplessdog.pimi.utils.t3Text
+import com.sleeplessdog.pimi.utils.t4Text
+
 
 @Composable
 fun GroupUi(
@@ -189,12 +189,13 @@ fun HeaderUserGroup(
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.CenterStart)
-                .padding(start = 16.dp)
+                .padding(start = 20.dp)
+                .size(36.dp)
                 .clickable { onClick() })
 
         Text(
             text = title,
-            style = textSize24Medium,
+            style = t1Title,
             color = DarkTextDefault,
             modifier = Modifier.align(Alignment.Center)
         )
@@ -215,7 +216,7 @@ fun RowNumberWords(count: Int) {
         Text(
             text = pluralStringResource(
                 R.plurals.words_count, count, count
-            ), style = textSize16SemiBold, color = DarkTextDefault
+            ), style = t3Text, color = DarkTextDefault
         )
     }
 }
@@ -237,7 +238,6 @@ fun WordAndTranslationTable(
             .fillMaxWidth()
             .padding(
                 start = 20.dp, end = 20.dp, top = 16.dp,
-                //bottom = 80.dp
             )
             .clip(RoundedCornerShape(12.dp))
             .verticalScroll(scrollState)
@@ -292,14 +292,14 @@ fun WordAndTranslationTableRow(
         ) {
 
             Text(
-                text = title, style = textSize16Bold, color = DarkTextDefault
+                text = title, style = t3Text, color = DarkTextDefault
             )
 
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
                 text = translation,
-                style = textSize14SemiBold,
+                style = t4Text,
                 color = DarkTextDefault.copy(alpha = 0.6f)
             )
         }

@@ -31,8 +31,9 @@ import com.sleeplessdog.pimi.dictionary.models.DialogType
 import com.sleeplessdog.pimi.utils.DarkTextDefault
 import com.sleeplessdog.pimi.utils.Gray05
 import com.sleeplessdog.pimi.utils.GreenPrimary
-import com.sleeplessdog.pimi.utils.textSize16SemiBold
-import com.sleeplessdog.pimi.utils.textSize24Bold
+import com.sleeplessdog.pimi.utils.t1Title
+import com.sleeplessdog.pimi.utils.t3Text
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,7 +72,7 @@ fun GroupDialog(
                 }
                 Text(
                     text = message,
-                    style = textSize24Bold,
+                    style = t1Title,
                     color = DarkTextDefault,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
@@ -84,7 +85,7 @@ fun GroupDialog(
                     onValueChange = { text = it },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
-                    textStyle = textSize16SemiBold.copy(color = DarkTextDefault),
+                    textStyle = t3Text.copy(color = DarkTextDefault),
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,

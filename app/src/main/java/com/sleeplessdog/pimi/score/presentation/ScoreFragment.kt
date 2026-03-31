@@ -19,6 +19,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.sleeplessdog.pimi.score.domain.models.AwardsCatalog
 import com.sleeplessdog.pimi.score.presentation.models.ScoreUiState
+import com.sleeplessdog.pimi.utils.ConstantsPaths.NAV_AWARDS
+import com.sleeplessdog.pimi.utils.ConstantsPaths.NAV_SCORE_MAIN
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -40,46 +42,35 @@ class ScoreFragment : Fragment() {
                 val composeNavController = rememberNavController()
                 NavHost(
                     navController = composeNavController,
-                    startDestination = "score_main",
+                    startDestination = NAV_SCORE_MAIN,
                     enterTransition = {
-                        // Новый экран заезжает справа налево
                         slideInHorizontally(
-                            initialOffsetX = { fullWidth -> fullWidth },
-                            animationSpec = tween(400)
+                            initialOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(400)
                         ) + fadeIn(animationSpec = tween(400))
                     },
                     exitTransition = {
-                        // Старый экран уезжает влево
                         slideOutHorizontally(
-                            targetOffsetX = { fullWidth -> -fullWidth },
-                            animationSpec = tween(400)
+                            targetOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(400)
                         ) + fadeOut(animationSpec = tween(400))
                     },
                     popEnterTransition = {
-                        // При нажатии "Назад" старый экран заезжает слева направо
                         slideInHorizontally(
-                            initialOffsetX = { fullWidth -> -fullWidth },
-                            animationSpec = tween(400)
+                            initialOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(400)
                         ) + fadeIn(animationSpec = tween(400))
                     },
                     popExitTransition = {
-                        // При нажатии "Назад" текущий экран уезжает вправо
                         slideOutHorizontally(
-                            targetOffsetX = { fullWidth -> fullWidth },
-                            animationSpec = tween(400)
+                            targetOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(400)
                         ) + fadeOut(animationSpec = tween(400))
-                    }
-                ) {
-                    composable("score_main") {
+                    }) {
+                    composable(NAV_SCORE_MAIN) {
                         ScoreScreen(
-                            state = state,
-                            navController = composeNavController
+                            state = state, navController = composeNavController
                         )
                     }
-                    composable("awards") {
+                    composable(NAV_AWARDS) {
                         AwardScreen(
-                            awards = AwardsCatalog.all,
-                            navController = composeNavController
+                            awards = AwardsCatalog.all, navController = composeNavController
                         )
                     }
                 }
@@ -91,5 +82,4 @@ class ScoreFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
     }
-
 }

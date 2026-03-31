@@ -21,8 +21,8 @@ import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.pimi.dictionary.models.DialogType
 import com.sleeplessdog.pimi.utils.DarkTextDefault
 import com.sleeplessdog.pimi.utils.Gray05
-import com.sleeplessdog.pimi.utils.textSize16SemiBold
-import com.sleeplessdog.pimi.utils.textSize24Bold
+import com.sleeplessdog.pimi.utils.t1Title
+import com.sleeplessdog.pimi.utils.t3Text
 
 
 @Composable
@@ -51,7 +51,7 @@ fun DeletingDialog(
             ) {
                 Text(
                     text = stringResource(R.string.dialog_delete),
-                    style = textSize24Bold,
+                    style = t1Title,
                     color = DarkTextDefault,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
@@ -65,7 +65,7 @@ fun DeletingDialog(
                 }
                 Text(
                     text = question,
-                    style = textSize16SemiBold,
+                    style = t3Text,
                     color = DarkTextDefault.copy(alpha = 0.8f),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center

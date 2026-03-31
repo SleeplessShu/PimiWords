@@ -3,8 +3,6 @@ package com.sleeplessdog.pimi.dictionary.word_packs
 import com.google.common.reflect.TypeToken
 import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
-import com.sleeplessdog.pimi.dictionary.models.WordPack
-import com.sleeplessdog.pimi.dictionary.models.WordPackMeta
 import com.sleeplessdog.pimi.games.data.repository.AppPrefs
 import com.sleeplessdog.pimi.games.data.repository.GroupsRepository
 import com.sleeplessdog.pimi.games.data.repository.WordsRepository

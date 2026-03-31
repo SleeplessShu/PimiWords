@@ -38,8 +38,8 @@ import com.sleeplessdog.pimi.score.domain.models.AwardsCatalog
 import com.sleeplessdog.pimi.score.models.AwardMeta
 import com.sleeplessdog.pimi.utils.BlackPrimary
 import com.sleeplessdog.pimi.utils.White
-import com.sleeplessdog.pimi.utils.h1Header
-import com.sleeplessdog.pimi.utils.h2Header
+import com.sleeplessdog.pimi.utils.t1Title
+import com.sleeplessdog.pimi.utils.t2Title
 import com.sleeplessdog.pimi.utils.t4Text
 
 @Composable
@@ -82,7 +82,7 @@ private fun AwardsHeader(
                         navController.popBackStack()
                     }
                 })
-        Text(text = stringResource(R.string.my_awards), style = h1Header, color = White)
+        Text(text = stringResource(R.string.my_awards), style = t1Title, color = White)
         Spacer(modifier = Modifier.height(24.dp))
     }
 }
@@ -133,7 +133,7 @@ private fun AwardCard(award: AwardMeta) {
         Spacer(modifier = Modifier.height(14.dp))
         Text(
             text = stringResource(award.title),
-            style = h2Header,
+            style = t2Title,
             color = White,
             textAlign = TextAlign.Center
         )
