@@ -1,6 +1,5 @@
 package com.sleeplessdog.pimi.games.presentation
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,6 +25,7 @@ import com.sleeplessdog.pimi.games.presentation.models.Word
 import com.sleeplessdog.pimi.games.presentation.parentControllers.ProgressController
 import com.sleeplessdog.pimi.score.ProcessGameResultUC
 import com.sleeplessdog.pimi.settings.DifficultyLevel
+import com.sleeplessdog.pimi.settings.LanguageLevel
 import com.sleeplessdog.pimi.utils.GamePrices
 import com.sleeplessdog.pimi.utils.GamePrices.DELAY_BEFORE_END_GAME
 import com.sleeplessdog.pimi.utils.SupportFunctions
@@ -91,11 +91,11 @@ class GameViewModel(
     private suspend fun prepareData() {
         onLoading()
 
-        val selectedGroups = getSelectedGroupsUC.get()
+        val selectedGroups = getSelectedGroupsUC()
 
-        val enums: Set<WordsGroupsList> = selectedGroups.mapNotNull { key ->
+        /*val enums: Set<WordsGroupsList> = selectedGroups.mapNotNull { key ->
             WordsGroupsList.values().find { it.key == key }
-        }.toSet()
+        }.toSet()*/
         val interfaceLang = appPrefs.getUiLanguage()
         val studyLang = appPrefs.getStudyLanguage()
         val difficultLevel = appPrefs.getDifficulty()
@@ -106,7 +106,7 @@ class GameViewModel(
             language2 = studyLang,
             difficult = difficultLevel,
             level = wordsLevel,
-            category = enums
+            category = selectedGroups
         )
     }
 
@@ -189,7 +189,6 @@ class GameViewModel(
     private fun showLanding(landingConditions: LandingConditions) {
 
         _gameState.value = _gameState.value?.copy(landingConditions = landingConditions)
-
     }
 
     fun reactOnCorrect() {
@@ -272,35 +271,37 @@ class GameViewModel(
 
         val settings = _gameSettings.value ?: GameSettings()
 
-        val category = if (forcedGroupKey != null) {
-            setOfNotNull(
-                WordsGroupsList.values().find { it.key == forcedGroupKey })
-        } else {
-            settings.category
-        }
-
         val pairs = when {
             forcedGroupKey != null && forcedGroupIsUser -> {
-                getWordPairsFromUserGroupUC(
-                    settings.language1, settings.language2, forcedGroupKey!!, wordsNeeded
+                wordsController.getWordPairs(
+                    language1 = settings.language1,
+                    language2 = settings.language2,
+                    levels = setOf(LanguageLevel.ALL),
+                    wordsNeeded = wordsNeeded,
+                    categories = setOf(forcedGroupKey!!)
                 )
             }
 
             forcedGroupKey != null -> {
                 val category = setOfNotNull(
-                    WordsGroupsList.values().find { it.key == forcedGroupKey })
+                    WordsGroupsList.values().find { it.key == forcedGroupKey }.toString()
+                )
                 wordsController.getWordPairs(
-                    settings.language1, settings.language2, settings.level, wordsNeeded, category
+                    language1 = settings.language1,
+                    language2 = settings.language2,
+                    levels = setOf(LanguageLevel.ALL),
+                    wordsNeeded = wordsNeeded,
+                    categories = category
                 )
             }
 
             else -> {
                 wordsController.getWordPairs(
-                    settings.language1,
-                    settings.language2,
-                    settings.level,
-                    wordsNeeded,
-                    settings.category
+                    language1 = settings.language1,
+                    language2 = settings.language2,
+                    levels = settings.level,
+                    wordsNeeded = wordsNeeded,
+                    categories = settings.category
                 )
             }
         }

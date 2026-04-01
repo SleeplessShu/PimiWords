@@ -1,7 +1,6 @@
 package com.sleeplessdog.pimi.games.data.repository
 
 import com.sleeplessdog.pimi.database.AppDatabaseProvider
-import com.sleeplessdog.pimi.database.global.GlobalDictionaryEntity
 import com.sleeplessdog.pimi.database.user.UserGroupEntity
 import com.sleeplessdog.pimi.database.user.UserWordEntity
 import com.sleeplessdog.pimi.dictionary.group_screen.WordUi
@@ -24,31 +23,40 @@ class WordsRepository(
         lang2: Language,
         levels: Set<LanguageLevel>,
         wordsNeeded: Int,
-        categories: Set<WordsGroupsList>,
+        categories: Set<String>,
     ): List<Pair<Word, Word>> {
         val globalDao = databaseProvider.getGlobalDatabase().globalDao()
         val userDao = databaseProvider.getUserDatabase().userDao()
 
-        val categoryKeys = categories.filter { it != WordsGroupsList.RANDOM }.map { it.key }.toSet()
-            .takeIf { it.isNotEmpty() }
+        val globalGroupKeys = WordsGroupsList.values().map { it.key }.toSet()
+        val globalCategoryKeys = categories.filter { it in globalGroupKeys }.toSet()
+        val userGroupKeys = categories.filter {
+            it !in globalGroupKeys
+                    && it != WordsGroupsList.RANDOM.toString()
+        }.toSet()
+        val isRandom = categories.contains(WordsGroupsList.RANDOM.toString())
+                || categories.isEmpty()
 
-        //Global words
-        var globalWords = emptyList<GlobalDictionaryEntity>()
-        if (categoryKeys.isNullOrEmpty()) {
-            globalWords = globalDao.getWordsWOGroups(levels)
-        } else {
-            globalWords = globalDao.getWordsWGroups(levels, categoryKeys)
+        val globalWords = when {
+            isRandom && globalCategoryKeys.isEmpty() -> globalDao.getWordsWOGroups(levels)
+            globalCategoryKeys.isNotEmpty() -> globalDao.getWordsWGroups(levels, globalCategoryKeys)
+            else -> emptyList()
         }
 
-        val userWords = userDao.getAllWords()
+        val userGroupWords = if (userGroupKeys.isNotEmpty()) {
+            userGroupKeys.flatMap { groupKey ->
+                userDao.getWordsByGroupKey(groupKey)
+            }
+        } else {
+            emptyList()
+        }
 
-        val userByGlobalId = userWords.filter { it.globalId != null }.associateBy { it.globalId!! }
-
-        val userOnlyWords = userWords.filter { it.globalId == null }
+        val userAllWords = userDao.getAllWords()
+        val userByGlobalId = userAllWords.filter { it.globalId != null }
+            .associateBy { it.globalId!! }
 
         val mergedGlobal = globalWords.map { g ->
             val u = userByGlobalId[g.id]
-
             CombinedWord(
                 globalId = g.id,
                 userWordId = u?.id,
@@ -62,7 +70,7 @@ class WordsRepository(
             )
         }
 
-        val mergedUserOnly = userOnlyWords.map { u ->
+        val mergedUserGroup = userGroupWords.map { u ->
             CombinedWord(
                 globalId = null,
                 userWordId = u.id,
@@ -76,16 +84,11 @@ class WordsRepository(
             )
         }
 
-        val pool = if (categoryKeys.isNullOrEmpty()) {
-            (mergedGlobal + mergedUserOnly).shuffled().take(wordsNeeded)
-        } else {
-            mergedGlobal.shuffled().take(wordsNeeded)
-        }
+        val pool = (mergedGlobal + mergedUserGroup).shuffled().take(wordsNeeded)
 
         return pool.mapNotNull { w ->
             val w1 = w.toWord(lang1)
             val w2 = w.toWord(lang2)
-
             if (!w1.isValid || !w2.isValid) null
             else w1 to w2
         }

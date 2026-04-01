@@ -1,6 +1,5 @@
 package com.sleeplessdog.pimi.games.domain.usecases
 
-import com.sleeplessdog.pimi.database.user.UserDao
 import com.sleeplessdog.pimi.database.user.UserGroupEntity
 import com.sleeplessdog.pimi.dictionary.group_screen.WordUi
 import com.sleeplessdog.pimi.games.data.repository.GroupsRepository
@@ -53,20 +52,12 @@ class GetWordsCountForGroupUC(
 }
 
 class GetSelectedGroupsUC(
-    private val userDao: UserDao,
+    private val repository: GroupsRepository,
 ) {
-    suspend fun get(): Set<String> {
-        val raw = userDao.getSelectedGroups()
-
-        return raw
-            ?.split(",")
-            ?.map { it.trim() }
-            ?.filter { it.isNotEmpty() }
-            ?.toSet()
-            ?: emptySet()
+    suspend operator fun invoke(): Set<String> {
+        return repository.getSelectedGroupsUC()
     }
 }
-
 
 class ObserveWordsInUserGroupUC(
     private val repo: GroupsRepository,
