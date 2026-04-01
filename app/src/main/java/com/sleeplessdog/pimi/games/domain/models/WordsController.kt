@@ -1,8 +1,8 @@
 package com.sleeplessdog.pimi.games.domain.models
 
 import com.sleeplessdog.pimi.games.data.repository.WordsRepository
-import com.sleeplessdog.pimi.settings.Language
 import com.sleeplessdog.pimi.games.presentation.models.Word
+import com.sleeplessdog.pimi.settings.Language
 import com.sleeplessdog.pimi.settings.LanguageLevel
 
 class WordsController(
@@ -14,7 +14,7 @@ class WordsController(
         language2: Language,
         levels: Set<LanguageLevel>,
         wordsNeeded: Int,
-        categories: Set<WordsGroupsList>,
+        categories: Set<String>,
     ): List<Pair<Word, Word>> {
 
         if (wordsNeeded <= 0) return emptyList()

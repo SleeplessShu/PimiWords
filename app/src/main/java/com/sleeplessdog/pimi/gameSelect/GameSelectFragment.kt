@@ -14,8 +14,8 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sleeplessdog.matchthewords.R
 import com.sleeplessdog.matchthewords.databinding.GameSelectFragmentBinding
-import com.sleeplessdog.pimi.games.presentation.controller.LanguageAdapter
 import com.sleeplessdog.pimi.animation.LottieAnimationController
+import com.sleeplessdog.pimi.games.presentation.controller.LanguageAdapter
 import com.sleeplessdog.pimi.games.presentation.controller.toFlagLargeRes
 import com.sleeplessdog.pimi.games.presentation.controller.toLanguageSelectAnimation
 import com.sleeplessdog.pimi.games.presentation.models.GameType
@@ -48,6 +48,12 @@ class GameSelectFragment : Fragment() {
         val groupKey = args.groupKey.takeIf { it.isNotEmpty() }
         val isUser = args.groupIsUser
         viewModel.setForcedGroup(groupKey, isUser)
+
+        if (groupKey != null) {
+            binding.tvGroupsList.post {
+                flashView(binding.tvGroupsList)
+            }
+        }
 
         setupLanguageList()
         setupLanguageButton()
@@ -291,5 +297,27 @@ class GameSelectFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun flashView(view: View) {
+        view.animate()
+            .alpha(0.2f)
+            .setDuration(150)
+            .withEndAction {
+                view.animate()
+                    .alpha(1f)
+                    .setDuration(150)
+                    .withEndAction {
+                        view.animate()
+                            .alpha(0.2f)
+                            .setDuration(150)
+                            .withEndAction {
+                                view.animate()
+                                    .alpha(1f)
+                                    .setDuration(200)
+                                    .start()
+                            }.start()
+                    }.start()
+            }.start()
     }
 }

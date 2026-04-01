@@ -9,7 +9,7 @@ data class GameSettings(
     val language1: Language = Language.RUSSIAN,
     val language2: Language = Language.SPANISH,
     val level: Set<LanguageLevel> = setOf(LanguageLevel.A1),
-    val category: Set<WordsGroupsList> = setOf(WordsGroupsList.RANDOM),
+    val category: Set<String> = setOf(WordsGroupsList.RANDOM.toString()),
     val difficult: DifficultyLevel = DifficultyLevel.MEDIUM,
 )
 

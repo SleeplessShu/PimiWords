@@ -164,4 +164,16 @@ class GroupsRepository(
             GroupType.GLOBAL -> globalDao.getGroupTitleById(groupId) ?: groupId
         }
     }
+
+    suspend fun getSelectedGroupsUC(): Set<String> {
+        val userDao = databaseProvider.getUserDatabase().userDao()
+        val raw = userDao.getSelectedGroups()
+
+        return raw
+            ?.split(",")
+            ?.map { it.trim() }
+            ?.filter { it.isNotEmpty() }
+            ?.toSet()
+            ?: emptySet()
+    }
 }
