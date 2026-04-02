@@ -15,7 +15,7 @@ interface UserDao {
     @Query(
         """
     DELETE FROM UserGroups
-    WHERE groupKey = :groupKey
+    WHERE groupKey = :groupKey AND groupKey != 'saved_words'
 """
     )
     suspend fun deleteGroupByKey(groupKey: String)
