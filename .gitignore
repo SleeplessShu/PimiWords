@@ -8,3 +8,12 @@
 .externalNativeBuild
 .cxx
 local.properties
+google-services.json
+# Keystore файлы
+*.jks
+*.keystore
+release.keystore
+debug.keystore
+*.properties
+.gradle/
+build/
