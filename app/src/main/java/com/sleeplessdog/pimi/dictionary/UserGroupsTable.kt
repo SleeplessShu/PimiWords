@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.sleeplessdog.matchthewords.R
@@ -61,8 +62,13 @@ fun UserGroupsTable(
         Divider(color = BlackPrimary, thickness = 1.dp)
 
         groups.forEachIndexed { index, group ->
+            val displayTitle = if (group.titleRes != 0) {
+                stringResource(group.titleRes)
+            } else {
+                group.title
+            }
             UserGroupTableRow(
-                title = group.title,
+                title = displayTitle,
                 iconKey = group.iconRes,
                 wordsCount = group.wordsInGroup,
                 rowIndex = index,
@@ -88,6 +94,7 @@ fun UserGroupTableRow(
     onDeleteClick: () -> Unit,
     onPlayClick: () -> Unit,
 ) {
+    val isSavedWords = title == "saved_words"
     var menuExpanded by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
@@ -144,8 +151,8 @@ fun UserGroupTableRow(
                 GroupActionsMenu(
                     expanded = menuExpanded,
                     onDismiss = { menuExpanded = false },
-                    onRename = onRenameClick,
-                    onDelete = onDeleteClick,
+                    onRename = if (!isSavedWords) onRenameClick else null,
+                    onDelete = if (!isSavedWords) onDeleteClick else null,
                     onPlay = onPlayClick,
                 )
             }

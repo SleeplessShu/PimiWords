@@ -9,6 +9,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageException
 import com.google.firebase.storage.ktx.storage
 import com.sleeplessdog.pimi.database.AppDatabaseProvider
+import com.sleeplessdog.pimi.database.user.UserGroupEntity
 import com.sleeplessdog.pimi.dictionary.authorisation.DataTransferStatus
 import com.sleeplessdog.pimi.dictionary.authorisation.DatabaseInstance
 import com.sleeplessdog.pimi.dictionary.authorisation.DatabaseSyncState
@@ -377,5 +378,19 @@ class DatabaseSyncController(
             }
         }
         _deployCompleted.emit(type)
+    }
+
+    suspend fun ensureSavedWordsGroup() {
+        val userDao = databaseProvider.getUserDatabase().userDao()
+        val exists = userDao.getGroupByKey(ConstantsPaths.SAVED_GROUP_KEY)
+        if (exists == null) {
+            userDao.insertGroup(
+                UserGroupEntity(
+                    groupKey = ConstantsPaths.SAVED_GROUP_KEY,
+                    title = "saved words",
+                    icon = "ic_saved_words"
+                )
+            )
+        }
     }
 }

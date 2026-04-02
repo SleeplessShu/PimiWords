@@ -11,8 +11,8 @@ import com.sleeplessdog.pimi.utils.Gray05
 fun GroupActionsMenu(
     expanded: Boolean,
     onDismiss: () -> Unit,
-    onRename: () -> Unit,
-    onDelete: () -> Unit,
+    onRename: (() -> Unit)?,
+    onDelete: (() -> Unit)?,
     onPlay: () -> Unit,
 ) {
     DropdownMenu(
@@ -28,16 +28,20 @@ fun GroupActionsMenu(
                 onDismiss()
                 onPlay()
             })
-        ActionMenuItem(
-            icon = R.drawable.icon_edit, titleId = R.string.button_rename, onClick = {
-                onDismiss()
-                onRename()
-            })
-
-        ActionMenuItem(
-            icon = R.drawable.icon_delete, titleId = R.string.button_delete, onClick = {
-                onDismiss()
-                onDelete()
-            })
+        onRename?.let {
+            ActionMenuItem(
+                icon = R.drawable.icon_edit, titleId = R.string.button_rename, onClick = {
+                    onDismiss()
+                    it()
+                }
+            )
+        }
+        onDelete?.let {
+            ActionMenuItem(
+                icon = R.drawable.icon_delete, titleId = R.string.button_delete, onClick = {
+                    onDismiss()
+                    it()
+                })
+        }
     }
 }
