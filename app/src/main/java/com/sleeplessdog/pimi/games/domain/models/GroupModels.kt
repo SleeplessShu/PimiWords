@@ -13,8 +13,10 @@ data class CombinedGroupsDictionaryUi(
 data class GroupUiDictionary(
     val key: String,
     val title: String,
+    val titleRes: Int = 0,
+    val wordsInGroup: Int,
     val iconRes: Int,
-    val wordsInGroup: Int = 0,
+    val isUser: Boolean,
 )
 
 data class CombinedGroupsSettingsDomain(
