@@ -1,18 +1,17 @@
 package com.sleeplessdog.pimi.dictionary.dictionary_screen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.sleeplessdog.pimi.dictionary.GroupDictionaryUiMapper
+import com.sleeplessdog.pimi.dictionary.authorisation.AuthState
+import com.sleeplessdog.pimi.dictionary.authorisation.DataTransferStatus
+import com.sleeplessdog.pimi.dictionary.authorisation.DictionarySyncState
 import com.sleeplessdog.pimi.games.domain.models.CombinedGroupsDictionaryUi
 import com.sleeplessdog.pimi.games.domain.usecases.CreateUserGroupUC
 import com.sleeplessdog.pimi.games.domain.usecases.DeleteUserGroupUC
 import com.sleeplessdog.pimi.games.domain.usecases.ObserveAllGroupsForDictionaryUC
 import com.sleeplessdog.pimi.games.domain.usecases.RenameUserGroupUC
-import com.sleeplessdog.pimi.dictionary.GroupDictionaryUiMapper
-import com.sleeplessdog.pimi.dictionary.authorisation.AuthState
-import com.sleeplessdog.pimi.dictionary.authorisation.DataTransferStatus
-import com.sleeplessdog.pimi.dictionary.authorisation.DictionarySyncState
 import com.sleeplessdog.pimi.payments.PremiumGate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -79,12 +78,12 @@ class DictionaryViewModel(
         checkAuthorization()
         observeSyncState()
         observeDeployCompleted()
+        ensureSavedWordsGroup()
     }
 
     private fun observeDeployCompleted() {
         viewModelScope.launch {
             syncController.deployCompleted.collect { instance ->
-                Log.d("DICT_VM", "Deploy completed: $instance — refreshing groups")
                 groupRefreshTrigger.update { it + 1 }
             }
         }
@@ -243,6 +242,12 @@ class DictionaryViewModel(
                 )
             }
             checkAuthorization()
+        }
+    }
+
+    private fun ensureSavedWordsGroup() {
+        viewModelScope.launch {
+            syncController.ensureSavedWordsGroup()
         }
     }
 
