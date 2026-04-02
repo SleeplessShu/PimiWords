@@ -19,10 +19,6 @@ class GroupDictionaryUiMapper(
         val titleRes = if (isCustomUserGroup) 0
         else app.groupTitleRes(group.key)
 
-        val title = when (isCustomUserGroup) {
-            true -> group.title
-            false -> app.getString(titleRes)
-        }
 
         val iconRes = when {
             isCustomUserGroup -> R.drawable.ic_group_default
@@ -31,7 +27,12 @@ class GroupDictionaryUiMapper(
         }
 
         return GroupUiDictionary(
-            key = group.key, title = title, iconRes = iconRes, wordsInGroup = group.wordsInGroup
+            key = group.key,
+            title = group.title,
+            titleRes = titleRes,
+            wordsInGroup = group.wordsInGroup,
+            iconRes = iconRes,
+            isUser = group.isUser,
         )
     }
 }

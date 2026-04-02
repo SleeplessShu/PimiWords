@@ -1,7 +1,7 @@
 package com.sleeplessdog.pimi.gameSelect
 
 import android.app.Application
-import android.util.Log
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +12,8 @@ import com.sleeplessdog.pimi.games.presentation.controller.LandingPagesControlle
 import com.sleeplessdog.pimi.games.presentation.models.GameType
 import com.sleeplessdog.pimi.settings.Language
 import com.sleeplessdog.pimi.settings.ObserveAllGroupsForSettingsUC
+import com.sleeplessdog.pimi.utils.ConstantsPaths.KEY_UI_LANG
+import com.sleeplessdog.pimi.utils.ConstantsPaths.PREFS_NAME
 import com.sleeplessdog.pimi.utils.LandingRepeatController.ALWAYS_SHOW_FIRST_LANDING
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -49,7 +51,7 @@ class GameSelectViewModel(
                         val mapped = groupSettingsUiMapper.map(group)
                         when {
                             mapped.title != null -> mapped.title
-                            mapped.titleRes != 0 -> app.getString(mapped.titleRes)
+                            mapped.titleRes != 0 -> localizedContext().getString(mapped.titleRes)
                             else -> group.key
                         }
                     }
@@ -154,5 +156,18 @@ class GameSelectViewModel(
 
     private fun rebuild(ui: Language) {
         _availableLanguages.value = Language.entries.filter { it != ui }
+    }
+
+    private fun localizedContext(): Context {
+        val prefs = app.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val langName = prefs.getString(KEY_UI_LANG, null)
+        val language = langName?.let {
+            runCatching { Language.valueOf(it) }.getOrNull()
+        } ?: Language.ENGLISH
+
+        val locale = language.toLocale()
+        val config = app.resources.configuration
+        config.setLocale(locale)
+        return app.createConfigurationContext(config)
     }
 }

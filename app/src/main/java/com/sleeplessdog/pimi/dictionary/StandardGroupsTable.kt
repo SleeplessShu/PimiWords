@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.sleeplessdog.matchthewords.R
@@ -52,10 +53,15 @@ fun StandardGroupsTable(
     ) {
         groups.forEachIndexed { index, group ->
 
+            val displayTitle = if (group.titleRes != 0) {
+                stringResource(group.titleRes)
+            } else {
+                group.title
+            }
             StandardGroupTableRow(
                 wordsCount = group.wordsInGroup,
                 iconKey = group.iconRes,
-                title = group.title,
+                title = displayTitle,
                 groupKey = group.key,
                 onClick = { onNavigateToGlobalGroup(group.key, group.title) },
                 onPlayClick = { onPlayGroup(group.key) })
