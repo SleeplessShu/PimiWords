@@ -1,5 +1,6 @@
 package com.sleeplessdog.pimi.dictionary.dictionary_screen
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -197,15 +199,24 @@ class DictionaryComposeFragment : Fragment() {
 
 
     private fun showAuthDialog() {
-        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.auth_dialog_title))
             .setMessage(getString(R.string.auth_dialog_message))
             .setPositiveButton(getString(R.string.auth_dialog_confirm)) { _, _ ->
                 viewModelDictionary.clearPendingEvent()
                 startGoogleSignIn()
-            }.setNegativeButton(getString(R.string.auth_dialog_decline)) { _, _ ->
+            }
+            .setNegativeButton(getString(R.string.auth_dialog_decline)) { _, _ ->
                 viewModelDictionary.onAuthDeclined()
-            }.setCancelable(false).show()
+            }
+            .setCancelable(false)
+            .create()
+
+        dialog.show()
+
+        val green = ContextCompat.getColor(requireContext(), R.color.green_primary)
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(green)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(green)
     }
 
     private fun startGoogleSignIn() {
