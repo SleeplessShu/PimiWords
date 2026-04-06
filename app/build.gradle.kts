@@ -17,8 +17,8 @@ android {
         applicationId = "com.sleeplessdog.pimi"
         minSdk = 28
         targetSdk = 35
-        versionCode = 8
-        versionName = "1.08"
+        versionCode = 10
+        versionName = "1.010"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -57,6 +57,11 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+    bundle {
+        language {
+            enableSplit = false
         }
     }
 }

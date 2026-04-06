@@ -2,7 +2,6 @@ package com.sleeplessdog.pimi.main
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -18,7 +17,6 @@ import com.sleeplessdog.pimi.utils.ConstantsPaths.EXTRA_NAVIGATE_TO
 import com.sleeplessdog.pimi.utils.ConstantsPaths.KEY_UI_LANG
 import com.sleeplessdog.pimi.utils.ConstantsPaths.NAV_SETTINGS
 import com.sleeplessdog.pimi.utils.ConstantsPaths.PREFS_NAME
-import com.sleeplessdog.pimi.utils.ConstantsPaths.TAG_MAIN_ACTIVITY
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import org.koin.android.ext.android.getKoin
@@ -85,26 +83,48 @@ class MainActivity : AppCompatActivity() {
     private fun setupNavigation() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container) as? NavHostFragment
-
-        if (navHostFragment == null) {
-            return
-        }
+                ?: return
 
         val navController = navHostFragment.navController
         binding.bottomNavigationView.setupWithNavController(navController)
-        setBottomNavVisibility(true)
 
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.gameFragment -> {
-                    setBottomNavVisibility(false)
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
+            if (item.itemId == navController.currentDestination?.id) return@setOnItemSelectedListener true
+
+            val navOptions = androidx.navigation.navOptions {
+                popUpTo(R.id.gameSelectFragment) {
+                    saveState = false
+                    inclusive = false
+                }
+                launchSingleTop = true
+                restoreState = false
+            }
+
+            when (item.itemId) {
+                R.id.gameSelectFragment -> {
+                    navController.popBackStack(R.id.gameSelectFragment, false)
                 }
 
-                else -> {
-                    setBottomNavVisibility(true)
+                R.id.dictionaryComposeFragment -> {
+                    navController.navigate(R.id.dictionaryComposeFragment, null, navOptions)
+                }
+
+                R.id.scoreFragment -> {
+                    navController.navigate(R.id.scoreFragment, null, navOptions)
+                }
+
+                R.id.settingsFragment -> {
+                    navController.navigate(R.id.settingsFragment, null, navOptions)
                 }
             }
+            true
         }
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            setBottomNavVisibility(destination.id != R.id.gameFragment)
+        }
+
+        setBottomNavVisibility(true)
     }
 
     fun setBottomNavVisibility(isVisible: Boolean) {
