@@ -4,7 +4,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 import com.sleeplessdog.pimi.utils.Gray05
 
 @Composable

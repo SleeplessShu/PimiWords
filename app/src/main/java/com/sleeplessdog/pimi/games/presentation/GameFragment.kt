@@ -11,8 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.sleeplessdog.matchthewords.R
-import com.sleeplessdog.matchthewords.databinding.GameFragmentBinding
+import com.sleeplessdog.pimi.R
+import com.sleeplessdog.pimi.databinding.GameFragmentBinding
 import com.sleeplessdog.pimi.animation.LottieAnimationController
 import com.sleeplessdog.pimi.endGame.EndGameFragment
 import com.sleeplessdog.pimi.gameSelect.LandingConditions

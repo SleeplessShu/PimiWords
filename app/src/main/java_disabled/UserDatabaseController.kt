@@ -1,4 +1,4 @@
-package com.sleeplessdog.matchthewords.game.presentation.controller
+package com.sleeplessdog.pimi.game.presentation.controller
 
 import android.content.Context
 import android.net.Uri
@@ -7,8 +7,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.storage.StorageException
 import com.google.firebase.storage.storage
-import com.sleeplessdog.matchthewords.game.data.database.UserDictionaryDatabase
-import com.sleeplessdog.matchthewords.utils.ConstantsPaths.USER_DATABASE_DICTIONARY_NAME
+import com.sleeplessdog.pimi.game.data.database.UserDictionaryDatabase
+import com.sleeplessdog.pimi.utils.ConstantsPaths.USER_DATABASE_DICTIONARY_NAME
 import kotlinx.coroutines.tasks.await
 import java.io.File
 

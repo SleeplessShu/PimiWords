@@ -1,6 +1,6 @@
 kotlin version: 2.0.10
 error message: org.jetbrains.kotlin.backend.common.BackendException: Backend Internal error: Exception during IR lowering
-File being compiled: E:/_Code/MatchTheWords/app/src/main/java/com/sleeplessdog/matchthewords/game/presentation/fragments/LoadingFragment.kt
+File being compiled: E:/_Code/pimi/app/src/main/java/com/sleeplessdog/pimi/game/presentation/fragments/LoadingFragment.kt
 The root cause java.lang.RuntimeException was thrown at: org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:50)
 	at org.jetbrains.kotlin.backend.common.CodegenUtil.reportBackendException(CodegenUtil.kt:253)
 	at org.jetbrains.kotlin.backend.common.CodegenUtil.reportBackendException$default(CodegenUtil.kt:236)
@@ -50,8 +50,8 @@ The root cause java.lang.RuntimeException was thrown at: org.jetbrains.kotlin.ba
 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
 	at java.base/java.lang.Thread.run(Unknown Source)
 Caused by: java.lang.RuntimeException: Exception while generating code for:
-FUN name:pulse visibility:public modality:FINAL <> ($this:com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment, $receiver:android.view.View, scale:kotlin.Float, duration:kotlin.Long, startDelay:kotlin.Long) returnType:kotlin.Unit
-  $this: VALUE_PARAMETER name:<this> type:com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment
+FUN name:pulse visibility:public modality:FINAL <> ($this:com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment, $receiver:android.view.View, scale:kotlin.Float, duration:kotlin.Long, startDelay:kotlin.Long) returnType:kotlin.Unit
+  $this: VALUE_PARAMETER name:<this> type:com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment
   $receiver: VALUE_PARAMETER name:<this> type:android.view.View
   VALUE_PARAMETER name:scale index:0 type:kotlin.Float
   VALUE_PARAMETER name:duration index:1 type:kotlin.Long
@@ -62,58 +62,58 @@ FUN name:pulse visibility:public modality:FINAL <> ($this:com.sleeplessdog.match
     VAR name:scaleX type:@[FlexibleNullability] android.animation.ObjectAnimator? [val]
       CALL 'public open fun ofFloat <T> (p0: @[FlexibleNullability] T of android.animation.ObjectAnimator.ofFloat?, p1: @[FlexibleNullability] android.util.Property<@[FlexibleNullability] T of android.animation.ObjectAnimator.ofFloat?, @[FlexibleNullability] kotlin.Float?>?, vararg p2: kotlin.Float): @[FlexibleNullability] android.animation.ObjectAnimator? declared in android.animation.ObjectAnimator' type=@[FlexibleNullability] android.animation.ObjectAnimator? origin=null
         <T>: @[FlexibleNullability] android.view.View?
-        p0: GET_VAR '<this>: android.view.View declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse' type=android.view.View origin=null
+        p0: GET_VAR '<this>: android.view.View declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse' type=android.view.View origin=null
         p1: GET_FIELD 'FIELD IR_EXTERNAL_JAVA_DECLARATION_STUB name:SCALE_X type:@[FlexibleNullability] android.util.Property<@[FlexibleNullability] android.view.View?, @[FlexibleNullability] kotlin.Float?>? visibility:public [final,static]' type=@[FlexibleNullability] android.util.Property<@[FlexibleNullability] android.view.View?, @[FlexibleNullability] kotlin.Float?>? origin=null
         p2: BLOCK type=@[FlexibleNullability] kotlin.FloatArray? origin=null
           VAR IR_TEMPORARY_VARIABLE name:tmp0 type:@[FlexibleNullability] kotlin.FloatArray? [val]
             CONSTRUCTOR_CALL 'public constructor <init> (size: kotlin.Int) [primary] declared in kotlin.FloatArray' type=@[FlexibleNullability] kotlin.FloatArray? origin=null
               size: CONST Int type=kotlin.Int value=3
           CALL 'public final fun set (index: kotlin.Int, value: kotlin.Float): kotlin.Unit [operator] declared in kotlin.FloatArray' type=kotlin.Unit origin=null
-            $this: GET_VAR 'val tmp0: @[FlexibleNullability] kotlin.FloatArray? [val] declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse' type=@[FlexibleNullability] kotlin.FloatArray? origin=null
+            $this: GET_VAR 'val tmp0: @[FlexibleNullability] kotlin.FloatArray? [val] declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse' type=@[FlexibleNullability] kotlin.FloatArray? origin=null
             index: CONST Int type=kotlin.Int value=0
             value: CONST Float type=kotlin.Float value=1.0
           CALL 'public final fun set (index: kotlin.Int, value: kotlin.Float): kotlin.Unit [operator] declared in kotlin.FloatArray' type=kotlin.Unit origin=null
-            $this: GET_VAR 'val tmp0: @[FlexibleNullability] kotlin.FloatArray? [val] declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse' type=@[FlexibleNullability] kotlin.FloatArray? origin=null
+            $this: GET_VAR 'val tmp0: @[FlexibleNullability] kotlin.FloatArray? [val] declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse' type=@[FlexibleNullability] kotlin.FloatArray? origin=null
             index: CONST Int type=kotlin.Int value=1
-            value: GET_VAR 'scale: kotlin.Float declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse' type=kotlin.Float origin=null
+            value: GET_VAR 'scale: kotlin.Float declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse' type=kotlin.Float origin=null
           CALL 'public final fun set (index: kotlin.Int, value: kotlin.Float): kotlin.Unit [operator] declared in kotlin.FloatArray' type=kotlin.Unit origin=null
-            $this: GET_VAR 'val tmp0: @[FlexibleNullability] kotlin.FloatArray? [val] declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse' type=@[FlexibleNullability] kotlin.FloatArray? origin=null
+            $this: GET_VAR 'val tmp0: @[FlexibleNullability] kotlin.FloatArray? [val] declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse' type=@[FlexibleNullability] kotlin.FloatArray? origin=null
             index: CONST Int type=kotlin.Int value=2
             value: CONST Float type=kotlin.Float value=1.0
-          GET_VAR 'val tmp0: @[FlexibleNullability] kotlin.FloatArray? [val] declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse' type=@[FlexibleNullability] kotlin.FloatArray? origin=null
+          GET_VAR 'val tmp0: @[FlexibleNullability] kotlin.FloatArray? [val] declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse' type=@[FlexibleNullability] kotlin.FloatArray? origin=null
     VAR name:scaleY type:@[FlexibleNullability] android.animation.ObjectAnimator? [val]
       CALL 'public open fun ofFloat <T> (p0: @[FlexibleNullability] T of android.animation.ObjectAnimator.ofFloat?, p1: @[FlexibleNullability] android.util.Property<@[FlexibleNullability] T of android.animation.ObjectAnimator.ofFloat?, @[FlexibleNullability] kotlin.Float?>?, vararg p2: kotlin.Float): @[FlexibleNullability] android.animation.ObjectAnimator? declared in android.animation.ObjectAnimator' type=@[FlexibleNullability] android.animation.ObjectAnimator? origin=null
         <T>: @[FlexibleNullability] android.view.View?
-        p0: GET_VAR '<this>: android.view.View declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse' type=android.view.View origin=null
+        p0: GET_VAR '<this>: android.view.View declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse' type=android.view.View origin=null
         p1: GET_FIELD 'FIELD IR_EXTERNAL_JAVA_DECLARATION_STUB name:SCALE_Y type:@[FlexibleNullability] android.util.Property<@[FlexibleNullability] android.view.View?, @[FlexibleNullability] kotlin.Float?>? visibility:public [final,static]' type=@[FlexibleNullability] android.util.Property<@[FlexibleNullability] android.view.View?, @[FlexibleNullability] kotlin.Float?>? origin=null
         p2: BLOCK type=@[FlexibleNullability] kotlin.FloatArray? origin=null
           VAR IR_TEMPORARY_VARIABLE name:tmp0 type:@[FlexibleNullability] kotlin.FloatArray? [val]
             CONSTRUCTOR_CALL 'public constructor <init> (size: kotlin.Int) [primary] declared in kotlin.FloatArray' type=@[FlexibleNullability] kotlin.FloatArray? origin=null
               size: CONST Int type=kotlin.Int value=3
           CALL 'public final fun set (index: kotlin.Int, value: kotlin.Float): kotlin.Unit [operator] declared in kotlin.FloatArray' type=kotlin.Unit origin=null
-            $this: GET_VAR 'val tmp0: @[FlexibleNullability] kotlin.FloatArray? [val] declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse' type=@[FlexibleNullability] kotlin.FloatArray? origin=null
+            $this: GET_VAR 'val tmp0: @[FlexibleNullability] kotlin.FloatArray? [val] declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse' type=@[FlexibleNullability] kotlin.FloatArray? origin=null
             index: CONST Int type=kotlin.Int value=0
             value: CONST Float type=kotlin.Float value=1.0
           CALL 'public final fun set (index: kotlin.Int, value: kotlin.Float): kotlin.Unit [operator] declared in kotlin.FloatArray' type=kotlin.Unit origin=null
-            $this: GET_VAR 'val tmp0: @[FlexibleNullability] kotlin.FloatArray? [val] declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse' type=@[FlexibleNullability] kotlin.FloatArray? origin=null
+            $this: GET_VAR 'val tmp0: @[FlexibleNullability] kotlin.FloatArray? [val] declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse' type=@[FlexibleNullability] kotlin.FloatArray? origin=null
             index: CONST Int type=kotlin.Int value=1
-            value: GET_VAR 'scale: kotlin.Float declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse' type=kotlin.Float origin=null
+            value: GET_VAR 'scale: kotlin.Float declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse' type=kotlin.Float origin=null
           CALL 'public final fun set (index: kotlin.Int, value: kotlin.Float): kotlin.Unit [operator] declared in kotlin.FloatArray' type=kotlin.Unit origin=null
-            $this: GET_VAR 'val tmp0: @[FlexibleNullability] kotlin.FloatArray? [val] declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse' type=@[FlexibleNullability] kotlin.FloatArray? origin=null
+            $this: GET_VAR 'val tmp0: @[FlexibleNullability] kotlin.FloatArray? [val] declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse' type=@[FlexibleNullability] kotlin.FloatArray? origin=null
             index: CONST Int type=kotlin.Int value=2
             value: CONST Float type=kotlin.Float value=1.0
-          GET_VAR 'val tmp0: @[FlexibleNullability] kotlin.FloatArray? [val] declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse' type=@[FlexibleNullability] kotlin.FloatArray? origin=null
+          GET_VAR 'val tmp0: @[FlexibleNullability] kotlin.FloatArray? [val] declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse' type=@[FlexibleNullability] kotlin.FloatArray? origin=null
     COMPOSITE type=kotlin.Unit origin=null
       CALL 'public final fun apply <T> (block: @[ExtensionFunctionType] kotlin.Function1<T of kotlin.StandardKt.apply, kotlin.Unit>): T of kotlin.StandardKt.apply [inline] declared in kotlin.StandardKt' type=android.animation.AnimatorSet origin=null
         <T>: android.animation.AnimatorSet
         $receiver: CONSTRUCTOR_CALL 'public constructor <init> () declared in android.animation.AnimatorSet' type=android.animation.AnimatorSet origin=null
         block: BLOCK type=@[ExtensionFunctionType] kotlin.Function1<android.animation.AnimatorSet, kotlin.Unit> origin=LAMBDA
           COMPOSITE type=kotlin.Unit origin=null
-          FUNCTION_REFERENCE 'private final fun pulse$lambda$0 ($scaleX: @[FlexibleNullability] android.animation.ObjectAnimator?, $scaleY: @[FlexibleNullability] android.animation.ObjectAnimator?, $duration: kotlin.Long, $startDelay: kotlin.Long): kotlin.Unit declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment' type=@[ExtensionFunctionType] kotlin.Function1<android.animation.AnimatorSet, kotlin.Unit> origin=INLINE_LAMBDA reflectionTarget=null
-            $scaleX: GET_VAR 'val scaleX: @[FlexibleNullability] android.animation.ObjectAnimator? [val] declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse' type=@[FlexibleNullability] android.animation.ObjectAnimator? origin=null
-            $scaleY: GET_VAR 'val scaleY: @[FlexibleNullability] android.animation.ObjectAnimator? [val] declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse' type=@[FlexibleNullability] android.animation.ObjectAnimator? origin=null
-            $duration: GET_VAR 'duration: kotlin.Long declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse' type=kotlin.Long origin=null
-            $startDelay: GET_VAR 'startDelay: kotlin.Long declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse' type=kotlin.Long origin=null
+          FUNCTION_REFERENCE 'private final fun pulse$lambda$0 ($scaleX: @[FlexibleNullability] android.animation.ObjectAnimator?, $scaleY: @[FlexibleNullability] android.animation.ObjectAnimator?, $duration: kotlin.Long, $startDelay: kotlin.Long): kotlin.Unit declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment' type=@[ExtensionFunctionType] kotlin.Function1<android.animation.AnimatorSet, kotlin.Unit> origin=INLINE_LAMBDA reflectionTarget=null
+            $scaleX: GET_VAR 'val scaleX: @[FlexibleNullability] android.animation.ObjectAnimator? [val] declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse' type=@[FlexibleNullability] android.animation.ObjectAnimator? origin=null
+            $scaleY: GET_VAR 'val scaleY: @[FlexibleNullability] android.animation.ObjectAnimator? [val] declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse' type=@[FlexibleNullability] android.animation.ObjectAnimator? origin=null
+            $duration: GET_VAR 'duration: kotlin.Long declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse' type=kotlin.Long origin=null
+            $startDelay: GET_VAR 'startDelay: kotlin.Long declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse' type=kotlin.Long origin=null
       COMPOSITE type=kotlin.Unit origin=null
 
 	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:50)
@@ -139,34 +139,34 @@ FUN INLINE_LAMBDA name:pulse$lambda$0 visibility:private modality:FINAL <> ($rec
     VAR name:$i$a$-apply-LoadingFragment$pulse$1 type:kotlin.Int [val]
       CONST Int type=kotlin.Int value=0
     CALL 'public open fun playTogether (vararg p0: @[FlexibleNullability] android.animation.Animator?): kotlin.Unit declared in android.animation.AnimatorSet' type=kotlin.Unit origin=null
-      $this: GET_VAR '$this$apply: android.animation.AnimatorSet declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=android.animation.AnimatorSet origin=null
+      $this: GET_VAR '$this$apply: android.animation.AnimatorSet declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=android.animation.AnimatorSet origin=null
       p0: BLOCK type=@[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] android.animation.Animator?>? origin=null
         VAR IR_TEMPORARY_VARIABLE name:tmp0 type:@[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] android.animation.Animator?>? [val]
           CALL 'public final fun arrayOfNulls <T> (size: kotlin.Int): kotlin.Array<T of kotlin.arrayOfNulls?> declared in kotlin' type=@[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] android.animation.Animator?>? origin=null
             <T>: @[FlexibleNullability] android.animation.Animator?
             size: CONST Int type=kotlin.Int value=2
         CALL 'public final fun set (index: kotlin.Int, value: T of kotlin.Array): kotlin.Unit [operator] declared in kotlin.Array' type=kotlin.Unit origin=null
-          $this: GET_VAR 'val tmp0: @[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] android.animation.Animator?>? [val] declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=@[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] android.animation.Animator?>? origin=null
+          $this: GET_VAR 'val tmp0: @[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] android.animation.Animator?>? [val] declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=@[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] android.animation.Animator?>? origin=null
           index: CONST Int type=kotlin.Int value=0
-          value: GET_VAR '$scaleX: @[FlexibleNullability] android.animation.ObjectAnimator? declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=@[FlexibleNullability] android.animation.ObjectAnimator? origin=null
+          value: GET_VAR '$scaleX: @[FlexibleNullability] android.animation.ObjectAnimator? declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=@[FlexibleNullability] android.animation.ObjectAnimator? origin=null
         CALL 'public final fun set (index: kotlin.Int, value: T of kotlin.Array): kotlin.Unit [operator] declared in kotlin.Array' type=kotlin.Unit origin=null
-          $this: GET_VAR 'val tmp0: @[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] android.animation.Animator?>? [val] declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=@[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] android.animation.Animator?>? origin=null
+          $this: GET_VAR 'val tmp0: @[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] android.animation.Animator?>? [val] declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=@[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] android.animation.Animator?>? origin=null
           index: CONST Int type=kotlin.Int value=1
-          value: GET_VAR '$scaleY: @[FlexibleNullability] android.animation.ObjectAnimator? declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=@[FlexibleNullability] android.animation.ObjectAnimator? origin=null
-        GET_VAR 'val tmp0: @[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] android.animation.Animator?>? [val] declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=@[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] android.animation.Animator?>? origin=null
+          value: GET_VAR '$scaleY: @[FlexibleNullability] android.animation.ObjectAnimator? declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=@[FlexibleNullability] android.animation.ObjectAnimator? origin=null
+        GET_VAR 'val tmp0: @[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] android.animation.Animator?>? [val] declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=@[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] android.animation.Animator?>? origin=null
     CALL 'public open fun setDuration (p0: kotlin.Long): @[FlexibleNullability] android.animation.AnimatorSet? declared in android.animation.AnimatorSet' type=kotlin.Unit origin=EQ
-      $this: GET_VAR '$this$apply: android.animation.AnimatorSet declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=android.animation.AnimatorSet origin=null
-      p0: GET_VAR '$duration: kotlin.Long declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=kotlin.Long origin=null
+      $this: GET_VAR '$this$apply: android.animation.AnimatorSet declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=android.animation.AnimatorSet origin=null
+      p0: GET_VAR '$duration: kotlin.Long declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=kotlin.Long origin=null
     CALL 'public open fun setStartDelay (p0: kotlin.Long): kotlin.Unit declared in android.animation.AnimatorSet' type=kotlin.Unit origin=EQ
-      $this: GET_VAR '$this$apply: android.animation.AnimatorSet declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=android.animation.AnimatorSet origin=null
-      p0: GET_VAR '$startDelay: kotlin.Long declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=kotlin.Long origin=null
+      $this: GET_VAR '$this$apply: android.animation.AnimatorSet declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=android.animation.AnimatorSet origin=null
+      p0: GET_VAR '$startDelay: kotlin.Long declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=kotlin.Long origin=null
     CALL 'public open fun setInterpolator (p0: @[FlexibleNullability] android.animation.TimeInterpolator?): kotlin.Unit declared in android.animation.AnimatorSet' type=kotlin.Unit origin=EQ
-      $this: GET_VAR '$this$apply: android.animation.AnimatorSet declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=android.animation.AnimatorSet origin=null
+      $this: GET_VAR '$this$apply: android.animation.AnimatorSet declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=android.animation.AnimatorSet origin=null
       p0: CONSTRUCTOR_CALL 'public constructor <init> () declared in android.view.animation.AccelerateDecelerateInterpolator' type=android.view.animation.AccelerateDecelerateInterpolator origin=null
     SET_FIELD 'FIELD IR_EXTERNAL_JAVA_DECLARATION_STUB name:repeatCount type:kotlin.Int visibility:public [final,static]' type=kotlin.Unit origin=EQ
       value: CONST Int type=kotlin.Int value=-1
     CALL 'public open fun start (): kotlin.Unit declared in android.animation.AnimatorSet' type=kotlin.Unit origin=null
-      $this: GET_VAR '$this$apply: android.animation.AnimatorSet declared in com.sleeplessdog.matchthewords.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=android.animation.AnimatorSet origin=null
+      $this: GET_VAR '$this$apply: android.animation.AnimatorSet declared in com.sleeplessdog.pimi.game.presentation.fragments.LoadingFragment.pulse$lambda$0' type=android.animation.AnimatorSet origin=null
 
 	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:50)
 	at org.jetbrains.kotlin.backend.jvm.codegen.IrSourceCompilerForInline.generateLambdaBody(IrSourceCompilerForInline.kt:67)

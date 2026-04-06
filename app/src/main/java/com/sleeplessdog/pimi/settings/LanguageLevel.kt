@@ -7,5 +7,4 @@ enum class LanguageLevel {
     B2,
     C1,
     C2,
-    ALL,
 }

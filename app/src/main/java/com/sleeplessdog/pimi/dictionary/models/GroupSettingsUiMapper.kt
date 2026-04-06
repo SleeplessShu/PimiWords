@@ -1,7 +1,7 @@
 package com.sleeplessdog.pimi.dictionary.models
 
 import android.app.Application
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 import com.sleeplessdog.pimi.games.domain.models.GroupUiSettings
 import com.sleeplessdog.pimi.games.domain.models.WordGroup
 import com.sleeplessdog.pimi.utils.ConstantsPaths.SAVED_GROUP_KEY

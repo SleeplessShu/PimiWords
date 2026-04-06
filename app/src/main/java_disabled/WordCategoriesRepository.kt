@@ -1,6 +1,6 @@
-package com.sleeplessdog.matchthewords.game.domain.repositories
+package com.sleeplessdog.pimi.game.domain.repositories
 
-import com.sleeplessdog.matchthewords.backend.domain.models.WordGroup
+import com.sleeplessdog.pimi.backend.domain.models.WordGroup
 
 interface WordCategoriesRepository {
     /** Избранные для главного (ограничение по количеству). */

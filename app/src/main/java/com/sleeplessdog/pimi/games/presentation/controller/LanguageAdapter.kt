@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 import com.sleeplessdog.pimi.settings.Language
 
 class LanguageAdapter(

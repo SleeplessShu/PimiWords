@@ -1,4 +1,4 @@
-package com.sleeplessdog.matchthewords.game.domain.repositories
+package com.sleeplessdog.pimi.game.domain.repositories
 
 import androidx.lifecycle.LiveData
 

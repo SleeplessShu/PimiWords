@@ -1,4 +1,4 @@
-package com.sleeplessdog.matchthewords.server.domain
+package com.sleeplessdog.pimi.server.domain
 
 
 import com.google.firebase.database.FirebaseDatabase
@@ -8,7 +8,7 @@ import java.io.File
 import kotlin.coroutines.resume
 
 class ServerDbInteractorImpl(
-    private val database: FirebaseDatabase, private val storage: FirebaseStorage
+    private val database: FirebaseDatabase, private val storage: FirebaseStorage,
 ) : ServerDbInteractor {
 
     override suspend fun checkForUpdate(localDate: String): Result<String?> =
@@ -25,7 +25,6 @@ class ServerDbInteractorImpl(
                 cont.resume(Result.failure(it))
             }
         }
-
 
 
     override suspend fun downloadDatabase(localFile: File): Result<Unit> =

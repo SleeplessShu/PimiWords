@@ -1,5 +1,6 @@
 package com.sleeplessdog.pimi.games.data.repository
 
+import android.util.Log
 import com.sleeplessdog.pimi.database.AppDatabaseProvider
 import com.sleeplessdog.pimi.database.user.UserGroupEntity
 import com.sleeplessdog.pimi.database.user.UserWordEntity
@@ -37,11 +38,20 @@ class WordsRepository(
         val isRandom = categories.contains(WordsGroupsList.RANDOM.toString())
                 || categories.isEmpty()
 
+        Log.d("REPO_DEBUG", "categories: $categories")
+        Log.d("REPO_DEBUG", "globalGroupKeys sample: ${globalGroupKeys.take(5)}")
+        Log.d("REPO_DEBUG", "globalCategoryKeys: $globalCategoryKeys")
+        Log.d("REPO_DEBUG", "userGroupKeys: $userGroupKeys")
+        Log.d("REPO_DEBUG", "isRandom: $isRandom")
+        Log.d("REPO_DEBUG", "levels: $levels")
+
         val globalWords = when {
             isRandom && globalCategoryKeys.isEmpty() -> globalDao.getWordsWOGroups(levels)
             globalCategoryKeys.isNotEmpty() -> globalDao.getWordsWGroups(levels, globalCategoryKeys)
             else -> emptyList()
         }
+
+        Log.d("REPO_DEBUG", "globalWords count: ${globalWords.size}")
 
         val userGroupWords = if (userGroupKeys.isNotEmpty()) {
             userGroupKeys.flatMap { groupKey ->

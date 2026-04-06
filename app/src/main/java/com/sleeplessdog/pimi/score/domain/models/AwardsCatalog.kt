@@ -1,6 +1,6 @@
 package com.sleeplessdog.pimi.score.domain.models
 
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 import com.sleeplessdog.pimi.score.models.AwardMeta
 
 object AwardsCatalog {

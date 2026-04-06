@@ -33,7 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 import com.sleeplessdog.pimi.dictionary.WordActionsMenu
 import com.sleeplessdog.pimi.dictionary.dialogs.DeletingDialog
 import com.sleeplessdog.pimi.dictionary.dialogs.MovingDialog

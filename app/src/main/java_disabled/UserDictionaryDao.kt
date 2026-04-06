@@ -1,4 +1,4 @@
-package com.sleeplessdog.matchthewords.game.data.database
+package com.sleeplessdog.pimi.game.data.database
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.sleeplessdog.matchthewords.game.data.UserWordEntity
+import com.sleeplessdog.pimi.game.data.UserWordEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

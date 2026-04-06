@@ -1,7 +1,7 @@
 package com.sleeplessdog.pimi.dictionary
 
 import android.app.Application
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 import com.sleeplessdog.pimi.games.domain.models.GroupDictionaryDomain
 import com.sleeplessdog.pimi.games.domain.models.GroupUiDictionary
 import com.sleeplessdog.pimi.utils.groupIconRes

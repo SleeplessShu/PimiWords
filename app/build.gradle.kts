@@ -10,15 +10,15 @@ plugins {
 }
 
 android {
-    namespace = "com.sleeplessdog.matchthewords"
+    namespace = "com.sleeplessdog.pimi"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.sleeplessdog.matchthewords"
+        applicationId = "com.sleeplessdog.pimi"
         minSdk = 28
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        targetSdk = 35
+        versionCode = 6
+        versionName = "1.06"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -28,7 +28,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

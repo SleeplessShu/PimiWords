@@ -7,8 +7,8 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import com.sleeplessdog.matchthewords.R
-import com.sleeplessdog.matchthewords.databinding.GameSelectCardShortBinding
+import com.sleeplessdog.pimi.R
+import com.sleeplessdog.pimi.databinding.GameSelectCardShortBinding
 
 
 class GameOptionViewShort @JvmOverloads constructor(

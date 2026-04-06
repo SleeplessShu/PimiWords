@@ -12,8 +12,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.sleeplessdog.matchthewords.R
-import com.sleeplessdog.matchthewords.databinding.GameSelectFragmentBinding
+import com.sleeplessdog.pimi.R
+import com.sleeplessdog.pimi.databinding.GameSelectFragmentBinding
 import com.sleeplessdog.pimi.animation.LottieAnimationController
 import com.sleeplessdog.pimi.games.presentation.controller.LanguageAdapter
 import com.sleeplessdog.pimi.games.presentation.controller.toFlagLargeRes

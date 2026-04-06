@@ -1,4 +1,4 @@
-package com.sleeplessdog.matchthewords.game.domain.interactors
+package com.sleeplessdog.pimi.game.domain.interactors
 
 
 class WordsController() {

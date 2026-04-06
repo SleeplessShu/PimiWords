@@ -1,10 +1,10 @@
-package com.sleeplessdog.matchthewords.game.data.database
+package com.sleeplessdog.pimi.game.data.database
 
 
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Update
-import com.sleeplessdog.matchthewords.game.data.WordEntity
+import com.sleeplessdog.pimi.game.data.WordEntity
 
 @Dao
 interface WordDao {

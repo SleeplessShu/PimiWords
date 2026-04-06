@@ -1,6 +1,6 @@
-package com.sleeplessdog.matchthewords.game.domain.models
+package com.sleeplessdog.pimi.game.domain.models
 
-import com.sleeplessdog.matchthewords.game.presentation.models.Language
+import com.sleeplessdog.pimi.game.presentation.models.Language
 
 data class Dictionary(
     val id: Int,

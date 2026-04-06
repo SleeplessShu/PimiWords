@@ -13,8 +13,8 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.sleeplessdog.matchthewords.R
-import com.sleeplessdog.matchthewords.databinding.GameTrueOrFalseBinding
+import com.sleeplessdog.pimi.R
+import com.sleeplessdog.pimi.databinding.GameTrueOrFalseBinding
 import com.sleeplessdog.pimi.games.presentation.GameViewModel
 import com.sleeplessdog.pimi.games.presentation.models.TOFButtonState
 import com.sleeplessdog.pimi.games.presentation.models.TfQuestionUi

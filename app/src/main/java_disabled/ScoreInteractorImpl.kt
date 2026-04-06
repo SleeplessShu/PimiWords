@@ -1,12 +1,12 @@
-package com.sleeplessdog.matchthewords.game.domain.interactors
+package com.sleeplessdog.pimi.game.domain.interactors
 
 import androidx.lifecycle.LiveData
-import com.sleeplessdog.matchthewords.game.domain.api.ScoreInteractor
-import com.sleeplessdog.matchthewords.game.domain.repositories.ScoreRepository
+import com.sleeplessdog.pimi.game.domain.api.ScoreInteractor
+import com.sleeplessdog.pimi.game.domain.repositories.ScoreRepository
 
 class ScoreInteractorImpl(
-    private val scoreRepository: ScoreRepository
-): ScoreInteractor {
+    private val scoreRepository: ScoreRepository,
+) : ScoreInteractor {
     override fun updateTodaysResult(matchResult: Int) {
         scoreRepository.updateTodaysResult(matchResult)
     }

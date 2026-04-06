@@ -1,5 +1,6 @@
 package com.sleeplessdog.pimi.dictionary.dictionary_screen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -13,6 +14,7 @@ import com.sleeplessdog.pimi.games.domain.usecases.DeleteUserGroupUC
 import com.sleeplessdog.pimi.games.domain.usecases.ObserveAllGroupsForDictionaryUC
 import com.sleeplessdog.pimi.games.domain.usecases.RenameUserGroupUC
 import com.sleeplessdog.pimi.payments.PremiumGate
+import com.sleeplessdog.pimi.utils.ConstantsPaths.TAG_AUTH
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -97,9 +99,11 @@ class DictionaryViewModel(
             _syncState.update { it.copy(auth = AuthState.UNKNOWN) }
 
             val authorized = authController.isUserAuthorized()
+            Log.d(TAG_AUTH, "checkAuthorization: $authorized ")
 
             if (authorized) {
                 val userUID = syncController.getUid()
+                Log.d(TAG_AUTH, "userUID: $userUID")
                 FirebaseCrashlytics.getInstance().setUserId(userUID)
 
                 _syncState.update {

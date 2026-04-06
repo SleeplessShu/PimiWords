@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 import com.sleeplessdog.pimi.dictionary.models.GroupSettingsUiMapper
 import com.sleeplessdog.pimi.games.data.repository.AppPrefs
 import com.sleeplessdog.pimi.games.domain.models.CombinedGroupsSettingsUi

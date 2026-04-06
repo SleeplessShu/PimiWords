@@ -1,16 +1,16 @@
 package com.sleeplessdog.pimi.games.presentation
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 import com.sleeplessdog.pimi.endGame.EndGameStats
 import com.sleeplessdog.pimi.gameSelect.LandingConditions
 import com.sleeplessdog.pimi.gameSelect.LandingKeys
 import com.sleeplessdog.pimi.games.data.repository.AppPrefs
 import com.sleeplessdog.pimi.games.domain.models.WordsController
-import com.sleeplessdog.pimi.games.domain.models.WordsGroupsList
 import com.sleeplessdog.pimi.games.domain.usecases.GetSelectedGroupsUC
 import com.sleeplessdog.pimi.games.domain.usecases.GetWordPairsFromUserGroupUC
 import com.sleeplessdog.pimi.games.presentation.controller.LandingPagesController
@@ -271,27 +271,32 @@ class GameViewModel(
 
         val settings = _gameSettings.value ?: GameSettings()
 
+        Log.d("WORDS_DEBUG", "forcedGroupKey: $forcedGroupKey")
+        Log.d("WORDS_DEBUG", "forcedGroupIsUser: $forcedGroupIsUser")
+        Log.d("WORDS_DEBUG", "settings.category: ${settings.category}")
+        Log.d("WORDS_DEBUG", "settings.level: ${settings.level}")
+        Log.d("WORDS_DEBUG", "settings.language1: ${settings.language1}")
+        Log.d("WORDS_DEBUG", "settings.language2: ${settings.language2}")
+        Log.d("WORDS_DEBUG", "wordsNeeded: $wordsNeeded")
         val pairs = when {
             forcedGroupKey != null && forcedGroupIsUser -> {
                 wordsController.getWordPairs(
                     language1 = settings.language1,
                     language2 = settings.language2,
-                    levels = setOf(LanguageLevel.ALL),
+                    levels = LanguageLevel.values().toSet(),
                     wordsNeeded = wordsNeeded,
                     categories = setOf(forcedGroupKey!!)
                 )
             }
 
             forcedGroupKey != null -> {
-                val category = setOfNotNull(
-                    WordsGroupsList.values().find { it.key == forcedGroupKey }.toString()
-                )
+                Log.d("WORDS_DEBUG", "categories to load: ${setOf(forcedGroupKey!!)}")
                 wordsController.getWordPairs(
                     language1 = settings.language1,
                     language2 = settings.language2,
-                    levels = setOf(LanguageLevel.ALL),
+                    levels = LanguageLevel.values().toSet(),
                     wordsNeeded = wordsNeeded,
-                    categories = category
+                    categories = setOf(forcedGroupKey!!)
                 )
             }
 
@@ -305,7 +310,7 @@ class GameViewModel(
                 )
             }
         }
-
+        Log.d("WORDS_DEBUG", "pairs loaded: ${pairs.size}")
 
         if (pairs.isEmpty()) {
             onGameEnd()

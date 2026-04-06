@@ -4,7 +4,7 @@ import android.graphics.drawable.Drawable
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.graphics.drawable.DrawableCompat
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 import kotlin.math.abs
 
 class SwipeTouchListener(

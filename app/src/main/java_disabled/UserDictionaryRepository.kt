@@ -1,10 +1,10 @@
-package com.sleeplessdog.matchthewords.game.data.repositories
+package com.sleeplessdog.pimi.game.data.repositories
 
 import android.util.Log
-import com.sleeplessdog.matchthewords.game.data.UserWordEntity
-import com.sleeplessdog.matchthewords.game.data.WordEntity
-import com.sleeplessdog.matchthewords.game.data.database.UserDictionaryDao
-import com.sleeplessdog.matchthewords.utils.SupportFunctions
+import com.sleeplessdog.pimi.game.data.UserWordEntity
+import com.sleeplessdog.pimi.game.data.WordEntity
+import com.sleeplessdog.pimi.game.data.database.UserDictionaryDao
+import com.sleeplessdog.pimi.utils.SupportFunctions
 import kotlinx.coroutines.flow.Flow
 import kotlin.collections.map
 

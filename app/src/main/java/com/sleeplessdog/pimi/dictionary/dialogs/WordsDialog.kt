@@ -27,7 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 import com.sleeplessdog.pimi.dictionary.group_screen.WordUi
 import com.sleeplessdog.pimi.dictionary.models.DialogType
 import com.sleeplessdog.pimi.utils.DarkTextDefault
