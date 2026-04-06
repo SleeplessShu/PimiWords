@@ -1,4 +1,4 @@
-package com.sleeplessdog.matchthewords.game.data
+package com.sleeplessdog.pimi.game.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

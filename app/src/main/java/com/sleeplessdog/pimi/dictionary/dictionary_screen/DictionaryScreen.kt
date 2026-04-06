@@ -42,7 +42,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 import com.sleeplessdog.pimi.dictionary.authorisation.DictionarySyncState
 import com.sleeplessdog.pimi.dictionary.authorisation.toImageRes
 import com.sleeplessdog.pimi.dictionary.authorisation.toSummaryImageRes

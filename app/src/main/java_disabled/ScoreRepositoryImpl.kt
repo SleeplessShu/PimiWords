@@ -1,11 +1,11 @@
-package com.sleeplessdog.matchthewords.game.data.repositories
+package com.sleeplessdog.pimi.game.data.repositories
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.sleeplessdog.matchthewords.game.domain.repositories.ScoreRepository
-import com.sleeplessdog.matchthewords.utils.SupportFunctions
+import com.sleeplessdog.pimi.game.domain.repositories.ScoreRepository
+import com.sleeplessdog.pimi.utils.SupportFunctions
 
 class ScoreRepositoryImpl(
     private var sharedPreferences: SharedPreferences,

@@ -10,9 +10,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
-import com.sleeplessdog.matchthewords.R
-import com.sleeplessdog.matchthewords.databinding.ItemDifficultyCardBinding
-import com.sleeplessdog.matchthewords.databinding.SettingsFragmentBinding
+import com.sleeplessdog.pimi.R
+import com.sleeplessdog.pimi.databinding.ItemDifficultyCardBinding
+import com.sleeplessdog.pimi.databinding.SettingsFragmentBinding
 import com.sleeplessdog.pimi.gameSelect.LanguageMenuManager
 import com.sleeplessdog.pimi.games.domain.models.GroupUiSettings
 import com.sleeplessdog.pimi.games.presentation.controller.LanguageAdapter

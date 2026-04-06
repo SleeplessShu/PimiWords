@@ -1,25 +1,28 @@
-package com.sleeplessdog.matchthewords.game.data.database
+package com.sleeplessdog.pimi.game.data.database
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.sleeplessdog.matchthewords.game.data.WordCategoryEntity
+import com.sleeplessdog.pimi.game.data.WordCategoryEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WordCategoryDao {
 
     // Сначала пользовательские, затем дефолтные; внутри — по order_in_block и titleKey
-    @Query("""
+    @Query(
+        """
         SELECT * FROM word_categories
         ORDER BY is_user DESC, order_in_block ASC, title_key ASC
-    """)
+    """
+    )
     fun observeAll(): Flow<List<WordCategoryEntity>>
 
     // Избранные для главного экрана (например, первые 8)
-    @Query("""
+    @Query(
+        """
         SELECT * FROM word_categories
         ORDER BY 
             CASE WHEN is_selected = 1 THEN 0 ELSE 1 END,
@@ -27,7 +30,8 @@ interface WordCategoryDao {
             order_in_block ASC,
             title_key ASC
         LIMIT :limit
-    """)
+    """
+    )
     fun observeFeatured(limit: Int): Flow<List<WordCategoryEntity>>
 
     // Тоггл выбора

@@ -1,6 +1,6 @@
 package com.sleeplessdog.pimi.games.presentation.models
 
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 
 enum class ButtonState(
     val backgroundRes: Int,

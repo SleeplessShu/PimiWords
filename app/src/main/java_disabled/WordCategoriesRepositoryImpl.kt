@@ -1,11 +1,11 @@
-package com.sleeplessdog.matchthewords.game.data.repositories
+package com.sleeplessdog.pimi.game.data.repositories
 
-import com.sleeplessdog.matchthewords.backend.domain.models.toDomain
-import com.sleeplessdog.matchthewords.game.data.WordCategoryEntity
-import com.sleeplessdog.matchthewords.game.data.database.WordCategoryDao
-import com.sleeplessdog.matchthewords.game.domain.models.WordsGroupsList
-import com.sleeplessdog.matchthewords.game.domain.repositories.CategoriesGrouped
-import com.sleeplessdog.matchthewords.game.domain.repositories.WordCategoriesRepository
+import com.sleeplessdog.pimi.backend.domain.models.toDomain
+import com.sleeplessdog.pimi.game.data.WordCategoryEntity
+import com.sleeplessdog.pimi.game.data.database.WordCategoryDao
+import com.sleeplessdog.pimi.game.domain.models.WordsGroupsList
+import com.sleeplessdog.pimi.game.domain.repositories.CategoriesGrouped
+import com.sleeplessdog.pimi.game.domain.repositories.WordCategoriesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map

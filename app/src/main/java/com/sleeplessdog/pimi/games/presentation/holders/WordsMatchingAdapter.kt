@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 import com.sleeplessdog.pimi.games.presentation.models.ButtonState
 import com.sleeplessdog.pimi.games.presentation.models.Word
 import com.sleeplessdog.pimi.settings.ViewHolderWordsMatching

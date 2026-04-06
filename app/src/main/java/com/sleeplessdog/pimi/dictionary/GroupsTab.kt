@@ -1,7 +1,7 @@
 package com.sleeplessdog.pimi.dictionary
 
 import androidx.annotation.StringRes
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 
 enum class GroupsTab(
     val route: String,

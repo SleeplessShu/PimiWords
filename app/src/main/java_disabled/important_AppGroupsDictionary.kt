@@ -1,4 +1,4 @@
-package com.sleeplessdog.matchthewords.game.data
+package com.sleeplessdog.pimi.game.data
 
 import android.content.Context
 import androidx.room.Database

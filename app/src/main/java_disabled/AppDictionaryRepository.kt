@@ -1,10 +1,10 @@
-package com.sleeplessdog.matchthewords.game.data.repositories
+package com.sleeplessdog.pimi.game.data.repositories
 
 import android.util.Log
-import com.sleeplessdog.matchthewords.game.data.WordEntity
-import com.sleeplessdog.matchthewords.game.data.database.WordDao
-import com.sleeplessdog.matchthewords.game.domain.models.LanguageLevel
-import com.sleeplessdog.matchthewords.game.domain.models.WordsGroupsList
+import com.sleeplessdog.pimi.game.data.WordEntity
+import com.sleeplessdog.pimi.game.data.database.WordDao
+import com.sleeplessdog.pimi.game.domain.models.LanguageLevel
+import com.sleeplessdog.pimi.game.domain.models.WordsGroupsList
 
 class AppDictionaryRepository(private val wordDao: WordDao) {
 

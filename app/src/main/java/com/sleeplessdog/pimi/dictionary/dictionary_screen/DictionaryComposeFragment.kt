@@ -1,7 +1,7 @@
 package com.sleeplessdog.pimi.dictionary.dictionary_screen
 
-import android.app.Activity.RESULT_OK
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,14 +24,16 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 import com.sleeplessdog.pimi.dictionary.DictionaryUi
 import com.sleeplessdog.pimi.dictionary.group_screen.GroupType
 import com.sleeplessdog.pimi.dictionary.group_screen.GroupUi
 import com.sleeplessdog.pimi.dictionary.group_screen.GroupUiEvent
 import com.sleeplessdog.pimi.dictionary.group_screen.GroupViewModel
 import com.sleeplessdog.pimi.main.MainActivity
+import com.sleeplessdog.pimi.utils.ConstantsPaths.TAG_AUTH
 import com.sleeplessdog.pimi.utils.DictionaryDestinations
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -218,19 +220,20 @@ class DictionaryComposeFragment : Fragment() {
     private val googleSignInLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == RESULT_OK) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-            val account = task.result
+        Log.d(TAG_AUTH, "resultCode: ${result.resultCode}")
+
+        // читаем результат независимо от resultCode
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)
+            Log.d(TAG_AUTH, "account: ${account?.email}")
+            Log.d(TAG_AUTH, "idToken: ${account?.idToken}")
             account?.idToken?.let {
                 viewModelDictionary.onGoogleIdTokenReceived(it)
-            }
-        } else {
-            val message = getString(
-                R.string.error_auth_declined
-            ) + result.resultCode
-            Toast.makeText(
-                requireContext(), message, Toast.LENGTH_SHORT
-            ).show()
+            } ?: Log.d(TAG_AUTH, "idToken is NULL")
+        } catch (e: ApiException) {
+            Log.d(TAG_AUTH, "ApiException statusCode: ${e.statusCode}")
+            Log.d(TAG_AUTH, "ApiException message: ${e.message}")
             viewModelDictionary.onAuthFailed()
         }
     }

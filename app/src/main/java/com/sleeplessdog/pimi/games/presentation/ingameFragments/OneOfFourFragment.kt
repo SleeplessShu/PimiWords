@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import com.sleeplessdog.matchthewords.R
-import com.sleeplessdog.matchthewords.databinding.GameOneOfFourBinding
+import com.sleeplessdog.pimi.R
+import com.sleeplessdog.pimi.databinding.GameOneOfFourBinding
 import com.sleeplessdog.pimi.games.presentation.GameViewModel
 import com.sleeplessdog.pimi.games.presentation.models.ButtonState
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel

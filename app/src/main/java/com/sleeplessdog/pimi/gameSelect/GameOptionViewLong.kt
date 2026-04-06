@@ -6,8 +6,8 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import com.sleeplessdog.matchthewords.R
-import com.sleeplessdog.matchthewords.databinding.GameSelectCardLongBinding
+import com.sleeplessdog.pimi.R
+import com.sleeplessdog.pimi.databinding.GameSelectCardLongBinding
 
 class GameOptionViewLong @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyle: Int = 0,

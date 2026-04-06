@@ -12,8 +12,8 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
-import com.sleeplessdog.matchthewords.R
-import com.sleeplessdog.matchthewords.databinding.WriteTheWordFragmentBinding
+import com.sleeplessdog.pimi.R
+import com.sleeplessdog.pimi.databinding.WriteTheWordFragmentBinding
 import com.sleeplessdog.pimi.games.presentation.GameViewModel
 import com.sleeplessdog.pimi.settings.LettersAdapter
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel

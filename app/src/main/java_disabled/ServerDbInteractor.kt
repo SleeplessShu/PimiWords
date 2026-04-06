@@ -1,4 +1,4 @@
-package com.sleeplessdog.matchthewords.server.domain
+package com.sleeplessdog.pimi.server.domain
 
 import java.io.File
 

@@ -1,4 +1,4 @@
-package com.sleeplessdog.matchthewords.server.domain
+package com.sleeplessdog.pimi.server.domain
 
 interface ServerDateInteractor {
     fun getLocalDbDate(): String

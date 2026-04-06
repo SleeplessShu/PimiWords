@@ -3,7 +3,7 @@ package com.sleeplessdog.pimi.settings
 import android.view.View
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 
 class ViewHolderWordsMatching(view: View) : RecyclerView.ViewHolder(view) {
     val origin: Button = view.findViewById(R.id.bOrigin)

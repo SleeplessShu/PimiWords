@@ -113,7 +113,7 @@ class GameSelectViewModel(
                 val mapped = groupSettingsUiMapper.map(found)
                 when {
                     mapped.title != null -> mapped.title
-                    mapped.titleRes != 0 -> app.getString(mapped.titleRes)
+                    mapped.titleRes != 0 -> localizedContext().getString(mapped.titleRes)
                     else -> key
                 }
             } else {

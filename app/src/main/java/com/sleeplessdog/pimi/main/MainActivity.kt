@@ -10,8 +10,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.sleeplessdog.matchthewords.R
-import com.sleeplessdog.matchthewords.databinding.ActivityMainBinding
+import com.sleeplessdog.pimi.R
+import com.sleeplessdog.pimi.databinding.ActivityMainBinding
 import com.sleeplessdog.pimi.dictionary.dictionary_screen.DatabaseSyncController
 import com.sleeplessdog.pimi.settings.Language
 import com.sleeplessdog.pimi.utils.ConstantsPaths.EXTRA_NAVIGATE_TO

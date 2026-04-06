@@ -1,27 +1,71 @@
-PimiMatch — игра, в которую ты прокачиваешь язык, а не чувство вины.
+# Pimi — Word Learning App
 
-🎯 Учишь слова в формате “найди пару” — слово + перевод, без зубрёжки и нудных карточек.
-🧠 Адаптивная сложность — игра подстраивается под тебя: чем лучше играешь, тем хитрее становятся раунды.
-📚 Группы слов по темам — путешествия, еда, эмоции и другие категории, которые реально пригодятся.
-📊 Статистика и прогресс — смотри, как растёт твой словарный запас и серия победных раундов.
-🛠 Гибкие настройки — выбери языки интерфейса и изучения, уровни (A1–C2), сложность, любимые группы слов.
-🎮 Игровой формат — короткие сессии “на перекус мозгу”: открыл, сыграл раунд, словил удовольствие, выучил новые слова.
+A vocabulary trainer for people who need to remember words — without stress, 
+streaks, or guilt.
 
-Хочешь учить язык без боли и скуки — просто запускай игру и начинай подбирать пары.
+## Features
 
-## 📸 Screenshots
-### 🎮 Gameplay — match the words
+- **4 game modes** — match pairs, true/false, multiple choice, write the word
+- **7 languages** — Spanish, English, French, German, Serbian, Armenian, Russian
+- **Custom word groups** — add your own words, terms, or phrases
+- **Ready-made word packs** — by topic, loaded from cloud
+- **No pressure** — no daily reminders, no streaks, no guilt
+
+## Tech Stack
+
+- **UI** — Jetpack Compose + View Binding (mixed)
+- **Architecture** — MVVM, Koin DI
+- **Database** — Room (global dictionary + user data)
+- **Backend** — Firebase (Auth, Firestore, Storage, Crashlytics)
+- **Navigation** — Navigation Component + Safe Args
+- **Async** — Coroutines + Flow
+
+Pimi is a vocabulary trainer for people who actually need to remember words.
+
+No guilt. No daily streak threats. Open it, play, close it. Come back 
+whenever you want.
+
+🎮 4 GAME MODES
+Match pairs, true or false, one of four, write the word — pick what works 
+for you.
+
+📚 7 LANGUAGES
+Spanish, English, French, German, Serbian, Armenian, Russian.
+
+✏️ YOUR OWN WORDS
+Add the words you actually need — professional terms, travel phrases, 
+anything. Organize them into custom groups.
+
+📦 READY-MADE WORD PACKS
+Install topic-based vocabulary packs in one tap — driving, animals, 
+food and more.
+
+☁️ CLOUD SYNC
+Your dictionary stays with you across devices.
+
+📊 PROGRESS WITHOUT PRESSURE
+See how many words you've learned. Play when you feel like it.
+
+Pimi is for you if you:
+— moved to another country and need the local language
+— are preparing for a trip
+— just want to remember specific words for work or study
+
+Start with five minutes. Or just one word.
+
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/292f03ca-11f8-4652-80f6-72b00de142d4" width="32%">
-  <img src="https://github.com/user-attachments/assets/a739563f-4e6f-492e-b692-5df0ec2bf914" width="32%">
-  <img src="https://github.com/user-attachments/assets/d253b028-4d98-4a69-9b99-ff899ef17719" width="32%">
+  <img src="https://github.com/user-attachments/assets/e4d6a597-5625-4b18-9b73-9c4373e013e7" width="24%">
+  <img src="https://github.com/user-attachments/assets/515b4fb3-b4bc-470b-8716-e8a6fdb46c04" width="24%">
+  <img src="https://github.com/user-attachments/assets/96741681-57e1-4953-a3b2-5653de78bfe4" width="24%">
+  <img src="https://github.com/user-attachments/assets/0a312020-50fc-4c55-a260-5dcbbaf61263" width="24%">
 </p>
 
 ---
 
 ### ⚙️ Settings & personalization
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/123f5fe1-3bdd-4f7e-a553-892810001ed1" width="32%">
-  <img src="https://github.com/user-attachments/assets/cf4dbe7c-c2e7-4524-aa77-11e080865209" width="32%">
-  <img src="https://github.com/user-attachments/assets/e0c19acb-c2a1-40de-a3e9-065b3ac9c2b1" width="32%">
+  <img src="https://github.com/user-attachments/assets/15873ae4-857f-4d4c-92c8-afd23a52c58d" width="24%">
+  <img src="https://github.com/user-attachments/assets/9d91b130-7cfe-4bd0-983a-5915e95e910c" width="24%">
+  <img src="https://github.com/user-attachments/assets/107f08d1-6cfb-4080-825f-1647f834f18b" width="24%">
+  <img src="https://github.com/user-attachments/assets/b33dceaf-f783-40e7-b297-06a6974d6e0a" width="24%">
 </p>

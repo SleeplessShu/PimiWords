@@ -2,7 +2,7 @@ package com.sleeplessdog.pimi.games.presentation.parentControllers
 
 import androidx.core.view.isVisible
 import com.airbnb.lottie.LottieAnimationView
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 import com.sleeplessdog.pimi.games.presentation.states.HeartState
 import com.sleeplessdog.pimi.games.presentation.states.StaticHeartState
 

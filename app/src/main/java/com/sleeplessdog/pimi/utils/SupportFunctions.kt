@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import com.google.android.material.chip.Chip
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 import com.sleeplessdog.pimi.gameSelect.LandingKeys
 import com.sleeplessdog.pimi.games.domain.models.GroupUiSettings
 import com.sleeplessdog.pimi.games.presentation.models.GameType

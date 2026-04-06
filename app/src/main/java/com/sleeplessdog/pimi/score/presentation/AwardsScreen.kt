@@ -33,7 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 import com.sleeplessdog.pimi.score.domain.models.AwardsCatalog
 import com.sleeplessdog.pimi.score.models.AwardMeta
 import com.sleeplessdog.pimi.utils.BlackPrimary

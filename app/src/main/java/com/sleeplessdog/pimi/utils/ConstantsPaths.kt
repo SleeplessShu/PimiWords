@@ -41,6 +41,7 @@ object ConstantsPaths {
 
 
     //---DEBUGGING TAG NAMES---
+    const val TAG_AUTH = "auth_problem"
     const val TAG_MAIN_ACTIVITY = "MainActivity_Debugging"
     const val TOTAL_POINTS = "total_points"
     const val CURRENT_STREAK = "current_streak"

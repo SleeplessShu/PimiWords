@@ -1,22 +1,22 @@
-package com.sleeplessdog.matchthewords.settings.presentation
+package com.sleeplessdog.pimi.settings.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sleeplessdog.matchthewords.server.domain.ServerDateInteractor
-import com.sleeplessdog.matchthewords.server.domain.ServerDbInteractor
+import com.sleeplessdog.pimi.server.domain.ServerDateInteractor
+import com.sleeplessdog.pimi.server.domain.ServerDbInteractor
 import kotlinx.coroutines.launch
 import java.io.File
 
 class DatabaseViewModel(
-    private val interactor: ServerDbInteractor, private val dateManager: ServerDateInteractor
+    private val interactor: ServerDbInteractor, private val dateManager: ServerDateInteractor,
 ) : ViewModel() {
 
     private val _state = MutableLiveData<DbUpdateState>()
     val state: LiveData<DbUpdateState> = _state
 
-    fun getCurrentDatabaseDate(): String{
+    fun getCurrentDatabaseDate(): String {
         return dateManager.getLocalDbDate()
     }
 
@@ -27,7 +27,7 @@ class DatabaseViewModel(
             val localDate = dateManager.getLocalDbDate()
 
             val result = interactor.checkForUpdate(localDate)
-                if (result.isSuccess) {
+            if (result.isSuccess) {
                 val serverDate = result.getOrNull()
                 if (serverDate != null) {
                     _state.postValue(DbUpdateState.UpdateAvailable(serverDate))

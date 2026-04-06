@@ -1,10 +1,10 @@
-package com.sleeplessdog.matchthewords.server.data
+package com.sleeplessdog.pimi.server.data
 
 import android.content.SharedPreferences
-import com.sleeplessdog.matchthewords.server.domain.ServerDateRepository
+import com.sleeplessdog.pimi.server.domain.ServerDateRepository
 
 class ServerDateRepositoryImpl(
-    private val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences,
 ) : ServerDateRepository {
 
     override fun getLocalDbDate(): String {

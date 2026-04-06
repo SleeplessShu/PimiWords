@@ -1,6 +1,6 @@
 package com.sleeplessdog.pimi.dictionary.authorisation
 
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 
 data class DictionarySyncState(
     val auth: AuthState = AuthState.UNKNOWN,

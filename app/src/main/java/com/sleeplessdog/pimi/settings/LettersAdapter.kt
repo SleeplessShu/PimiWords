@@ -12,8 +12,8 @@ import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.sleeplessdog.matchthewords.R
-import com.sleeplessdog.matchthewords.databinding.ItemLetterBinding
+import com.sleeplessdog.pimi.R
+import com.sleeplessdog.pimi.databinding.ItemLetterBinding
 import com.sleeplessdog.pimi.games.presentation.models.WriteTheWordLetterUi
 
 class LettersAdapter(

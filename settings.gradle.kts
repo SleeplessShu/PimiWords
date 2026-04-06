@@ -20,6 +20,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "matchthewords"
+rootProject.name = "pimi"
 include(":app")
  

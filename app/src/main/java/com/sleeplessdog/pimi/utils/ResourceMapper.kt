@@ -1,7 +1,7 @@
 package com.sleeplessdog.pimi.utils
 
 import android.content.Context
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 
 
 fun Context.groupTitleRes(key: String): Int {

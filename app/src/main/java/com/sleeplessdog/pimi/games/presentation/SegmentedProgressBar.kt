@@ -7,7 +7,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
-import com.sleeplessdog.matchthewords.R
+import com.sleeplessdog.pimi.R
 import java.lang.Math.max
 import kotlin.math.floor
 

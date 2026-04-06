@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.NO_POSITION
-import com.sleeplessdog.matchthewords.databinding.EndGameRwCheckboxElementBinding
+import com.sleeplessdog.pimi.databinding.EndGameRwCheckboxElementBinding
 import com.sleeplessdog.pimi.games.presentation.models.Word
 
 data class SelectableWordPair(
