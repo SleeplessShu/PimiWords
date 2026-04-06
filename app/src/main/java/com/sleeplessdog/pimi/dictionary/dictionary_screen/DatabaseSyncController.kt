@@ -116,97 +116,60 @@ class DatabaseSyncController(
             return
         }
 
-        _syncState.update {
-            it.copy(userDb = DataTransferStatus.REFRESHING)
-        }
+        _syncState.update { it.copy(userDb = DataTransferStatus.REFRESHING) }
 
-        val localExists = userDbFile.exists()
-
+        val localExists = userDbFile.exists() && userDbFile.length() > 0
         val localDate = prefs.getLong(ConstantsPaths.USER_DATABASE_DICTIONARY_DATE, 0)
 
-        val localSize = if (localExists) userDbFile.length() else 0L
-
         try {
-
             val metadata = ref.metadata.await()
-
             val serverDate = metadata.updatedTimeMillis
-            val serverSize = metadata.sizeBytes
 
-            if (!localExists) {
-
-                _syncState.update {
-                    it.copy(userDb = DataTransferStatus.DOWNLOADING)
+            when {
+                !localExists -> {
+                    Log.d(TAG_SYNC, "local empty — downloading from server")
+                    _syncState.update { it.copy(userDb = DataTransferStatus.DOWNLOADING) }
+                    downloadUserDatabase(serverDate)
+                    _syncState.update { it.copy(userDb = DataTransferStatus.NETWORK) }
                 }
 
-                downloadUserDatabase(serverDate)
-
-                _syncState.update {
-                    it.copy(userDb = DataTransferStatus.NETWORK)
+                localDate > serverDate -> {
+                    Log.d(TAG_SYNC, "local newer — uploading to server")
+                    _syncState.update { it.copy(userDb = DataTransferStatus.UPLOADING) }
+                    uploadUserDatabase(localDate)
+                    _syncState.update { it.copy(userDb = DataTransferStatus.ASSETS) }
                 }
 
-                return
-            }
-
-            if (localDate > serverDate) {
-
-                _syncState.update {
-                    it.copy(userDb = DataTransferStatus.UPLOADING)
+                serverDate > localDate -> {
+                    Log.d(TAG_SYNC, "server newer — downloading")
+                    _syncState.update { it.copy(userDb = DataTransferStatus.DOWNLOADING) }
+                    downloadUserDatabase(serverDate)
+                    _syncState.update { it.copy(userDb = DataTransferStatus.NETWORK) }
                 }
 
-                uploadUserDatabase(localDate)
-
-                _syncState.update {
-                    it.copy(userDb = DataTransferStatus.ASSETS)
+                else -> {
+                    Log.d(TAG_SYNC, "in sync — nothing to do")
+                    _syncState.update { it.copy(userDb = DataTransferStatus.SUCCESS) }
                 }
-
-                return
-            }
-
-            if (serverDate > localDate && serverSize > localSize) {
-
-                _syncState.update {
-                    it.copy(userDb = DataTransferStatus.DOWNLOADING)
-                }
-
-                downloadUserDatabase(serverDate)
-
-                _syncState.update {
-                    it.copy(userDb = DataTransferStatus.NETWORK)
-                }
-
-                return
-            }
-
-            _syncState.update {
-                it.copy(userDb = DataTransferStatus.SUCCESS)
             }
 
         } catch (e: StorageException) {
-
-            if (localExists) {
-
-                _syncState.update {
-                    it.copy(userDb = DataTransferStatus.ASSETS)
-                }
-
-                if (e.errorCode == StorageException.ERROR_OBJECT_NOT_FOUND) {
-
-                    _syncState.update {
-                        it.copy(userDb = DataTransferStatus.UPLOADING)
-                    }
-
+            when {
+                e.errorCode == StorageException.ERROR_OBJECT_NOT_FOUND && localExists -> {
+                    Log.d(TAG_SYNC, "not on server — uploading")
+                    _syncState.update { it.copy(userDb = DataTransferStatus.UPLOADING) }
                     uploadUserDatabase(localDate)
-
-                    _syncState.update {
-                        it.copy(userDb = DataTransferStatus.ASSETS)
-                    }
+                    _syncState.update { it.copy(userDb = DataTransferStatus.ASSETS) }
                 }
 
-            } else {
+                !localExists -> {
+                    Log.d(TAG_SYNC, "no network, no local data")
+                    _syncState.update { it.copy(userDb = DataTransferStatus.NOT_CONNECTED) }
+                }
 
-                _syncState.update {
-                    it.copy(userDb = DataTransferStatus.NOT_CONNECTED)
+                else -> {
+                    Log.d(TAG_SYNC, "no network, using local")
+                    _syncState.update { it.copy(userDb = DataTransferStatus.ASSETS) }
                 }
             }
         }
