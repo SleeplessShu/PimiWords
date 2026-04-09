@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sleeplessdog.pimi.R
 import com.sleeplessdog.pimi.dictionary.WordActionsMenu
@@ -90,8 +91,13 @@ fun GroupScreen(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
+            val displayTitle = if (state.groupTitleRes != 0) {
+                stringResource(state.groupTitleRes)
+            } else {
+                state.groupTitle
+            }
             HeaderUserGroup(
-                title = state.groupTitle, onClick = onBackClick
+                title = displayTitle, onClick = onBackClick
             )
 
             Spacer(Modifier.height(8.dp))

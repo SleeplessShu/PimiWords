@@ -1,3 +1,6 @@
+# ===== ALL =====
+-keep class com.sleeplessdog.pimi.** { *; }
+
 # ===== KOTLIN =====
 -keep class kotlin.** { *; }
 -keep class kotlinx.** { *; }
@@ -101,3 +104,51 @@
 -keep public class * extends java.lang.Exception
 -keep class com.google.firebase.crashlytics.** { *; }
 -dontwarn com.google.firebase.crashlytics.**
+
+# ===== STATS & AWARDS =====
+-keep class com.sleeplessdog.pimi.score.** { *; }
+-keep class com.sleeplessdog.pimi.database.user.UserStatsEntity { *; }
+-keep class com.sleeplessdog.pimi.database.user.WordProgressEntity { *; }
+-keep class com.sleeplessdog.pimi.database.user.SessionLogEntity { *; }
+-keep class com.sleeplessdog.pimi.database.user.UserAwardEntity { *; }
+-keep class com.sleeplessdog.pimi.database.user.AwardProgressEntity { *; }
+
+# ===== WORD PACKS — Gson парсинг =====
+-keep class com.sleeplessdog.pimi.dictionary.word_packs.WordPack { *; }
+-keep class com.sleeplessdog.pimi.dictionary.word_packs.WordPackMeta { *; }
+-keep class com.sleeplessdog.pimi.dictionary.word_packs.WordPackEntry { *; }
+-keepclassmembers class com.sleeplessdog.pimi.dictionary.word_packs.** {
+    <fields>;
+}
+
+# ===== NAVIGATION =====
+-keep class com.sleeplessdog.pimi.gameSelect.**Args { *; }
+-keep class com.sleeplessdog.pimi.gameSelect.**Directions { *; }
+-keep class com.sleeplessdog.pimi.games.presentation.**Args { *; }
+-keep class com.sleeplessdog.pimi.games.presentation.**Directions { *; }
+-keep class com.sleeplessdog.pimi.dictionary.**Args { *; }
+-keep class com.sleeplessdog.pimi.dictionary.**Directions { *; }
+
+# ===== SETTINGS =====
+-keep class com.sleeplessdog.pimi.settings.Language { *; }
+-keep class com.sleeplessdog.pimi.settings.LanguageLevel { *; }
+-keep class com.sleeplessdog.pimi.settings.DifficultyLevel { *; }
+-keepnames enum com.sleeplessdog.pimi.settings.Language {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+-keepnames enum com.sleeplessdog.pimi.settings.LanguageLevel {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+-keepnames enum com.sleeplessdog.pimi.settings.DifficultyLevel {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+# ===== PAYMENTS =====
+-keep class com.sleeplessdog.pimi.payments.** { *; }
+
+# ===== SYNC CONTROLLER =====
+-keep class com.sleeplessdog.pimi.dictionary.dictionary_screen.DatabaseSyncController { *; }
+-keep class com.sleeplessdog.pimi.dictionary.authorisation.** { *; }

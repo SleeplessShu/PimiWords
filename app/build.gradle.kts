@@ -146,4 +146,6 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling:1.6.2")
 
     implementation("com.android.billingclient:billing-ktx:7.0.0")
+
+    implementation("androidx.lifecycle:lifecycle-process:2.8.7")
 }

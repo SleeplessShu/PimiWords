@@ -15,6 +15,7 @@ import com.sleeplessdog.pimi.games.domain.usecases.ObserveAllGroupsForDictionary
 import com.sleeplessdog.pimi.games.domain.usecases.RenameUserGroupUC
 import com.sleeplessdog.pimi.payments.PremiumGate
 import com.sleeplessdog.pimi.utils.ConstantsPaths.TAG_AUTH
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -195,6 +196,11 @@ class DictionaryViewModel(
         createUserGroup(
             groupName = groupName,
         )
+        viewModelScope.launch {
+            delay(100)
+            refreshGroups()
+        }
+
     }
 
 

@@ -32,6 +32,7 @@ object ConstantsPaths {
     const val SHARED_PREFS_DATABASE_SETTINGS = "db_prefs"
     const val GLOBAL_DATABASE_DICTIONARY_DATE = "global_db_date"
     const val USER_DATABASE_DICTIONARY_DATE = "user_db_date"
+    const val USER_DATABASE_DICTIONARY_IS_DIRTY = "isDirty"
 
     //---Intent navigation---
     const val EXTRA_NAVIGATE_TO = "extra_navigate_to"

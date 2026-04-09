@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.core.content.edit
 import androidx.core.net.toUri
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageException
@@ -13,7 +14,9 @@ import com.sleeplessdog.pimi.database.user.UserGroupEntity
 import com.sleeplessdog.pimi.dictionary.authorisation.DataTransferStatus
 import com.sleeplessdog.pimi.dictionary.authorisation.DatabaseInstance
 import com.sleeplessdog.pimi.dictionary.authorisation.DatabaseSyncState
+import com.sleeplessdog.pimi.games.data.repository.AppPrefs
 import com.sleeplessdog.pimi.utils.ConstantsPaths
+import com.sleeplessdog.pimi.utils.ConstantsPaths.PREFS_NAME
 import com.sleeplessdog.pimi.utils.DictionaryDestinations.DICTIONARY_TEMP_ASSETS
 import com.sleeplessdog.pimi.utils.DictionaryDestinations.DICTIONARY_TEMP_GLOBAL
 import com.sleeplessdog.pimi.utils.DictionaryDestinations.DICTIONARY_TEMP_USER_DB
@@ -30,6 +33,7 @@ import java.io.FileOutputStream
 class DatabaseSyncController(
     private val context: Context,
     private val databaseProvider: AppDatabaseProvider,
+    private val appPrefs: AppPrefs,
 ) {
     private val storage = Firebase.storage
 
@@ -46,14 +50,15 @@ class DatabaseSyncController(
     private val globalRef =
         storage.reference.child(ConstantsPaths.NETWORK_DATABASE_PATH_ON_FIREBASE)
 
+    private val _pendingDeployReady = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    val pendingDeployReady: SharedFlow<Unit> = _pendingDeployReady
+
     private val _deployCompleted = MutableSharedFlow<DatabaseInstance>(extraBufferCapacity = 1)
     val deployCompleted: SharedFlow<DatabaseInstance> = _deployCompleted
 
     fun getUid() = currentUid ?: "unknown"
 
-    private val prefs = context.getSharedPreferences(
-        ConstantsPaths.SHARED_PREFS_DATABASE_SETTINGS, Context.MODE_PRIVATE
-    )
+    private val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
     private val globalDbFile =
         context.getDatabasePath(ConstantsPaths.GLOBAL_DATABASE_DICTIONARY_NAME)
@@ -124,25 +129,33 @@ class DatabaseSyncController(
         try {
             val metadata = ref.metadata.await()
             val serverDate = metadata.updatedTimeMillis
-
+            val needToUpload = appPrefs.getLocalDatabaseDirty()
+            Log.d(
+                TAG_SYNC,
+                "localExists=$localExists localDate=$localDate fileSize=${userDbFile.length()}"
+            )
             when {
+
                 !localExists -> {
                     Log.d(TAG_SYNC, "local empty — downloading from server")
                     _syncState.update { it.copy(userDb = DataTransferStatus.DOWNLOADING) }
+                    Log.d("DEPLOY_DEBUG", "checkUserDatabase: downloading")
                     downloadUserDatabase(serverDate)
                     _syncState.update { it.copy(userDb = DataTransferStatus.NETWORK) }
                 }
 
-                localDate > serverDate -> {
+                localDate > serverDate && needToUpload -> {
                     Log.d(TAG_SYNC, "local newer — uploading to server")
                     _syncState.update { it.copy(userDb = DataTransferStatus.UPLOADING) }
-                    uploadUserDatabase(localDate)
+                    Log.d("DEPLOY_DEBUG", "checkUserDatabase: uploading")
+                    uploadUserDatabase()
                     _syncState.update { it.copy(userDb = DataTransferStatus.ASSETS) }
                 }
 
                 serverDate > localDate -> {
                     Log.d(TAG_SYNC, "server newer — downloading")
                     _syncState.update { it.copy(userDb = DataTransferStatus.DOWNLOADING) }
+                    Log.d("DEPLOY_DEBUG", "checkUserDatabase: downloading")
                     downloadUserDatabase(serverDate)
                     _syncState.update { it.copy(userDb = DataTransferStatus.NETWORK) }
                 }
@@ -158,7 +171,8 @@ class DatabaseSyncController(
                 e.errorCode == StorageException.ERROR_OBJECT_NOT_FOUND && localExists -> {
                     Log.d(TAG_SYNC, "not on server — uploading")
                     _syncState.update { it.copy(userDb = DataTransferStatus.UPLOADING) }
-                    uploadUserDatabase(localDate)
+                    Log.d("DEPLOY_DEBUG", "checkUserDatabase: uploading")
+                    uploadUserDatabase()
                     _syncState.update { it.copy(userDb = DataTransferStatus.ASSETS) }
                 }
 
@@ -225,14 +239,20 @@ class DatabaseSyncController(
 
 
     private suspend fun downloadUserDatabase(serverDate: Long) {
-        val ref = userRef
-        if (ref == null) {
+        val ref = userRef ?: run {
             _syncState.update { it.copy(userDb = DataTransferStatus.ERROR) }
             return
         }
-        val temp = File(context.cacheDir, DICTIONARY_TEMP_USER_DB)
 
+        val temp = File(context.cacheDir, DICTIONARY_TEMP_USER_DB)
         ref.getFile(temp).await()
+
+        if (!temp.exists() || temp.length() < 1024) {
+            Log.e(TAG_SYNC, "downloaded file too small: ${temp.length()}")
+            temp.delete()
+            _syncState.update { it.copy(userDb = DataTransferStatus.ERROR) }
+            return
+        }
 
         deployDatabase(temp, userDbFile, DatabaseInstance.USER)
 
@@ -240,46 +260,84 @@ class DatabaseSyncController(
             putLong(ConstantsPaths.USER_DATABASE_DICTIONARY_DATE, serverDate)
         }
 
-        _syncState.update {
-            it.copy(userDb = DataTransferStatus.NETWORK)
-        }
-
+        _syncState.update { it.copy(userDb = DataTransferStatus.NETWORK) }
         temp.delete()
     }
 
 
-    private suspend fun uploadUserDatabase(localDate: Long) {
-        val ref = userRef
-        if (ref == null) {
+    private suspend fun uploadUserDatabase() {
+        val ref = userRef ?: run {
             _syncState.update { it.copy(userDb = DataTransferStatus.ERROR) }
             return
         }
 
-        val uid = currentUid ?: run {
-            _syncState.update { it.copy(userDb = DataTransferStatus.ERROR) }
-            return
-        }
         val temp = File(context.cacheDir, "upload_user_db")
-        Log.d(TAG_SYNC, "UPLOAD PATH user/$uid/${ConstantsPaths.USER_DATABASE_DICTIONARY_NAME}")
-        databaseProvider.withUserDatabaseLock {
 
-            databaseProvider.closeUserDatabase()
+        try {
+            val db = databaseProvider.getUserDatabase()
+            val supportDb = db.openHelper.writableDatabase
+            val dbPath = supportDb.path
 
-            File(userDbFile.path + "-wal").delete()
-            File(userDbFile.path + "-shm").delete()
+            // сначала пробуем TRUNCATE checkpoint
+            val cursor = supportDb.query(SimpleSQLiteQuery("PRAGMA wal_checkpoint(TRUNCATE)"))
+            val row = if (cursor.moveToFirst()) {
+                Triple(cursor.getInt(0), cursor.getInt(1), cursor.getInt(2))
+            } else null
+            cursor.close()
 
-            userDbFile.copyTo(temp, overwrite = true)
+            Log.d(
+                TAG_SYNC,
+                "checkpoint result: blocked=${row?.first} written=${row?.second} remaining=${row?.third}"
+            )
 
-            databaseProvider.openUserDatabase()
+            val mainFile = File(dbPath)
+            val walFile = File("$dbPath-wal")
+
+            mainFile.copyTo(temp, overwrite = true)
+
+            if (walFile.exists() && walFile.length() > 0) {
+
+                val walCopy = File(context.cacheDir, "upload_wal")
+                walFile.copyTo(walCopy, overwrite = true)
+
+                val tempCopy = File(context.cacheDir, "upload_copy.db")
+                mainFile.copyTo(tempCopy, overwrite = true)
+                walCopy.copyTo(File(tempCopy.path + "-wal"), overwrite = true)
+
+                val copyDb = android.database.sqlite.SQLiteDatabase.openDatabase(
+                    tempCopy.path, null, android.database.sqlite.SQLiteDatabase.OPEN_READWRITE
+                )
+                copyDb.execSQL("PRAGMA wal_checkpoint(TRUNCATE)")
+                copyDb.close()
+
+                tempCopy.copyTo(temp, overwrite = true)
+
+                walCopy.delete()
+                tempCopy.delete()
+                File(tempCopy.path + "-wal").delete()
+                File(tempCopy.path + "-shm").delete()
+            }
+
+        } catch (e: Exception) {
+            Log.e(TAG_SYNC, "upload preparation failed: $e")
+            _syncState.update { it.copy(userDb = DataTransferStatus.ERROR) }
+            return
+        }
+
+        if (!temp.exists() || temp.length() < 1024) {
+            _syncState.update { it.copy(userDb = DataTransferStatus.ERROR) }
+            return
         }
 
         ref.putFile(temp.toUri()).await()
 
         prefs.edit {
-            putLong(ConstantsPaths.USER_DATABASE_DICTIONARY_DATE, localDate)
+            putLong(ConstantsPaths.USER_DATABASE_DICTIONARY_DATE, System.currentTimeMillis())
         }
-
+        Log.d(TAG_SYNC, "upload complete, size=${temp.length()}")
+        appPrefs.markLocalDatabaseClear()
         temp.delete()
+
     }
 
 
@@ -317,31 +375,22 @@ class DatabaseSyncController(
             }
 
             DatabaseInstance.USER -> {
+                Log.d("DEPLOY_DEBUG", "deployDatabase USER called from:")
+                Log.d("DEPLOY_DEBUG", Thread.currentThread().stackTrace.take(10).joinToString("\n"))
+                _syncState.update { it.copy(userDb = DataTransferStatus.DEPLOYING) }
 
-                _syncState.update {
-                    it.copy(userDb = DataTransferStatus.DEPLOYING)
+                val pendingFile = File(context.cacheDir, "pending_user_db")
+                temp.copyTo(pendingFile, overwrite = true)
+
+                prefs.edit {
+                    putBoolean("pending_user_db_deploy", true)
                 }
-
-                databaseProvider.withUserDatabaseLock {
-
-                    databaseProvider.closeUserDatabase()
-
-                    val wal = File(target.path + "-wal")
-                    val shm = File(target.path + "-shm")
-
-                    wal.delete()
-                    shm.delete()
-
-                    target.parentFile?.mkdirs()
-
-                    temp.copyTo(target, overwrite = true)
-
-                    databaseProvider.openUserDatabase()
-                }
+                _pendingDeployReady.emit(Unit)
+                _deployCompleted.emit(type)
             }
         }
-        _deployCompleted.emit(type)
     }
+
 
     suspend fun ensureSavedWordsGroup() {
         val userDao = databaseProvider.getUserDatabase().userDao()
@@ -356,4 +405,33 @@ class DatabaseSyncController(
             )
         }
     }
+
+    fun applyPendingDeploy(): Boolean {
+        val hasPending = prefs.getBoolean("pending_user_db_deploy", false)
+        if (!hasPending) return false
+
+        val pendingFile = File(context.cacheDir, "pending_user_db")
+
+        if (!pendingFile.exists() || pendingFile.length() < 1024) {
+            Log.d(TAG_SYNC, "pending deploy: file invalid, skipping")
+            prefs.edit { putBoolean("pending_user_db_deploy", false) }
+        }
+
+        Log.d(TAG_SYNC, "applying pending deploy, size=${pendingFile.length()}")
+
+        val wal = File(userDbFile.path + "-wal")
+        val shm = File(userDbFile.path + "-shm")
+        wal.delete()
+        shm.delete()
+
+        userDbFile.parentFile?.mkdirs()
+        pendingFile.copyTo(userDbFile, overwrite = true)
+        pendingFile.delete()
+
+        prefs.edit { putBoolean("pending_user_db_deploy", false) }
+
+        Log.d(TAG_SYNC, "pending deploy applied successfully")
+        return true
+    }
+
 }

@@ -74,6 +74,7 @@ val presentationModule = module {
             appPrefs = get(),
             addSingleWordToSavedWords = get(),
             premiumGate = get(),
+            app = get(),
         )
     }
     viewModel {
@@ -125,7 +126,7 @@ val presentationModule = module {
         )
         settingsViewModel
     }
-
+    single { DatabaseSyncController(get(), get(), get()) }
     single<AppPrefs> {
         AppPrefsImpl(
             context = get(),
@@ -142,6 +143,6 @@ val presentationModule = module {
     single { ProgressController() }
     single { GroupSettingsUiMapper(get()) }
     single { GroupDictionaryUiMapper(get()) }
-    single { DatabaseSyncController(get(), get()) }
+
     single { FirebaseAuthController(get()) }
 }

@@ -17,6 +17,7 @@ import com.sleeplessdog.pimi.utils.ConstantsPaths
 
 class WordsRepository(
     private val databaseProvider: AppDatabaseProvider,
+    private val appPrefs: AppPrefs,
 ) {
 
     suspend fun getWordPairs(
@@ -133,6 +134,7 @@ class WordsRepository(
                 )
             )
         }
+        appPrefs.markLocalDatabaseDirty()
     }
 
     suspend fun addSingleWordToSavedWordsUC(word: WordUi) {
@@ -155,6 +157,7 @@ class WordsRepository(
                 serbian = globalEntity?.serbian
             )
         )
+        appPrefs.markLocalDatabaseDirty()
     }
 
     suspend fun addWordUserDB(
@@ -184,6 +187,7 @@ class WordsRepository(
                 serbian = fields.serbian
             )
         )
+        appPrefs.markLocalDatabaseDirty()
     }
 
     suspend fun editWordUserDB(
@@ -212,16 +216,19 @@ class WordsRepository(
             armenian = fields.armenian,
             serbian = fields.serbian
         )
+        appPrefs.markLocalDatabaseDirty()
     }
 
     suspend fun deleteWord(groupId: String, wordId: Long) {
         val userDao = databaseProvider.getUserDatabase().userDao()
         userDao.deleteWordByGroupIdAndWordId(groupId, wordId)
+        appPrefs.markLocalDatabaseDirty()
     }
 
     suspend fun moveWord(wordId: Long, targetGroupId: String) {
         val userDao = databaseProvider.getUserDatabase().userDao()
         userDao.moveWordToGroup(wordId, targetGroupId)
+        appPrefs.markLocalDatabaseDirty()
     }
 
     private fun CombinedWord.toWord(language: Language): Word {
@@ -310,5 +317,6 @@ class WordsRepository(
                 armenian = entry.armenian,
             )
         )
+        appPrefs.markLocalDatabaseDirty()
     }
 }

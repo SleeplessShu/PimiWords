@@ -16,17 +16,13 @@ class AppDatabaseProvider(
     private val dbgMutex = Mutex()
 
     @Volatile
+    private var isUserDbLocked = false
+
+    @Volatile
     private var globalDb: GlobalDatabase? = null
 
     @Volatile
     private var userDb: UserDatabase? = null
-
-
-    suspend fun <T> withUserDatabaseLock(block: suspend () -> T): T {
-        return dbuMutex.withLock {
-            block()
-        }
-    }
 
     suspend fun <T> withGlobalDatabaseLock(block: suspend () -> T): T {
         return dbgMutex.withLock {
@@ -43,10 +39,11 @@ class AppDatabaseProvider(
     }
 
     suspend fun getUserDatabase(): UserDatabase {
+        while (isUserDbLocked) {
+            kotlinx.coroutines.delay(50)
+        }
         return dbuMutex.withLock {
-            userDb ?: createUserDatabase().also {
-                userDb = it
-            }
+            userDb ?: createUserDatabase().also { userDb = it }
         }
     }
 
@@ -55,10 +52,8 @@ class AppDatabaseProvider(
         if (globalDb == null) {
             globalDb = GlobalDatabase.create(context)
         }
-
         return globalDb!!.globalDao()
     }
-
 
     fun getUserDao(): UserDao {
 
@@ -66,21 +61,25 @@ class AppDatabaseProvider(
             userDb = UserDatabase.create(context)
 
         }
-
         return userDb!!.userDao()
     }
 
 
     private fun createGlobalDatabase(): GlobalDatabase {
+
         return GlobalDatabase.create(context)
+
     }
 
     private fun createUserDatabase(): UserDatabase {
+
         return UserDatabase.create(context)
+
     }
 
 
-    suspend fun closeGlobalDatabase() {
+    fun closeGlobalDatabase() {
+
         globalDb?.let {
             if (it.isOpen) {
                 it.close()
@@ -89,31 +88,18 @@ class AppDatabaseProvider(
         globalDb = null
     }
 
-    suspend fun closeUserDatabase() {
-        userDb?.let {
-            if (it.isOpen) {
-                it.close()
-            }
-        }
-        userDb = null
-    }
 
-
-    suspend fun openGlobalDatabase() {
-
+    fun openGlobalDatabase() {
 
         if (globalDb == null) {
             globalDb = createGlobalDatabase()
         }
-
     }
 
-    suspend fun openUserDatabase() {
-
+    fun openUserDatabase() {
 
         if (userDb == null) {
             userDb = createUserDatabase()
         }
-
     }
 }

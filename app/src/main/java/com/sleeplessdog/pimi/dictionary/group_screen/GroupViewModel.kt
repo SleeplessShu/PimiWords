@@ -1,5 +1,6 @@
 package com.sleeplessdog.pimi.dictionary.group_screen
 
+import android.app.Application
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,6 +17,7 @@ import com.sleeplessdog.pimi.payments.PremiumGate
 import com.sleeplessdog.pimi.utils.DictionaryDestinations.ARG_GROUP_ID
 import com.sleeplessdog.pimi.utils.DictionaryDestinations.ARG_GROUP_NAME
 import com.sleeplessdog.pimi.utils.DictionaryDestinations.ARG_GROUP_TYPE
+import com.sleeplessdog.pimi.utils.groupTitleRes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -35,6 +37,7 @@ class GroupViewModel(
     private val deleteWordFromUserGroup: DeleteWordFromUserGroupUC,
     private val moveWordToUserGroup: MoveWordToUserGroupUC,
     private val appPrefs: AppPrefs,
+    private val app: Application,
     private val premiumGate: PremiumGate,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -110,12 +113,13 @@ class GroupViewModel(
     private fun loadGlobalGroupOnce() {
         viewModelScope.launch {
             val words = getGlobalGroupWordsOnce(groupId, ui = ui, study = study)
-
+            val titleRes = app.groupTitleRes(groupId)
             _state.update { current ->
                 current.copy(
                     groupType = groupType,
                     groupId = groupId,
                     groupTitle = groupTitle,
+                    groupTitleRes = titleRes,
                     words = words,
                     wordsCount = words.size,
                     loading = false

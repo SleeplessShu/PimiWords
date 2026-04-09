@@ -5,6 +5,29 @@
     android:id="@+id/main_navigation_graph"
     app:startDestination="@id/gameSelectFragment">
 
+    <action
+        android:id="@+id/action_global_to_gameSelect"
+        app:destination="@id/gameSelectFragment"
+        app:popUpTo="@id/gameSelectFragment"
+        app:popUpToInclusive="true" />
+
+    <action
+        android:id="@+id/action_global_to_dictionary"
+        app:destination="@id/dictionaryComposeFragment"
+        app:popUpTo="@id/gameSelectFragment"
+        app:popUpToInclusive="false" />
+
+    <action
+        android:id="@+id/action_global_to_score"
+        app:destination="@id/scoreFragment"
+        app:popUpTo="@id/gameSelectFragment"
+        app:popUpToInclusive="false" />
+
+    <action
+        android:id="@+id/action_global_to_settings"
+        app:destination="@id/settingsFragment"
+        app:popUpTo="@id/gameSelectFragment"
+        app:popUpToInclusive="false" />
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.sleeplessdog.pimi.settings.SettingsFragment"
@@ -20,8 +43,7 @@
             android:name="gameType"
             app:argType="com.sleeplessdog.pimi.games.presentation.models.GameType"
             app:nullable="false" />
-
-        <!-- добавили groupKey -->
+        
         <argument
             android:name="groupKey"
             app:argType="string"

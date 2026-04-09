@@ -4,6 +4,7 @@ import com.sleeplessdog.pimi.database.AppDatabaseProvider
 import com.sleeplessdog.pimi.database.global.toUi
 import com.sleeplessdog.pimi.database.user.UserGroupEntity
 import com.sleeplessdog.pimi.database.user.toUi
+import com.sleeplessdog.pimi.dictionary.authorisation.DatabaseInstance
 import com.sleeplessdog.pimi.dictionary.group_screen.GroupType
 import com.sleeplessdog.pimi.dictionary.group_screen.WordUi
 import com.sleeplessdog.pimi.games.domain.models.CombinedGroupsDictionaryDomain
@@ -11,65 +12,97 @@ import com.sleeplessdog.pimi.games.domain.models.GlobalGroupDBEntity
 import com.sleeplessdog.pimi.games.domain.models.GroupDictionaryDomain
 import com.sleeplessdog.pimi.games.domain.models.GroupPresentationSettingsEntity
 import com.sleeplessdog.pimi.settings.Language
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 
 class GroupsRepository(
     private val databaseProvider: AppDatabaseProvider,
+    private val deployCompleted: SharedFlow<DatabaseInstance>,
+    private val appPrefs: AppPrefs,
 ) {
 
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun observeAllGroupsForDictionary(): Flow<CombinedGroupsDictionaryDomain> {
-        val globalDao = databaseProvider.getGlobalDao()
-        val userDao = databaseProvider.getUserDao()
-        return combine(
-            userDao.observeUserGroups(), globalDao.observeAllGroupKeys()
-        ) { userGroups, globalKeys ->
+        return deployCompleted
+            .onStart { emit(DatabaseInstance.USER) }
+            .flatMapLatest {
+                val globalDao = databaseProvider.getGlobalDao()
+                val userDao = databaseProvider.getUserDao()
+                combine(
+                    userDao.observeUserGroups(), globalDao.observeAllGroupKeys()
+                ) { userGroups, globalKeys ->
 
 
-            val globalCategories = globalKeys.map { key ->
-                GroupDictionaryDomain(
-                    key = key,
-                    title = key,
-                    wordsInGroup = getWordsCountGlobalGroup(key),
-                    isUser = false
-                )
+                    val globalCategories = globalKeys.map { key ->
+                        GroupDictionaryDomain(
+                            key = key,
+                            title = key,
+                            wordsInGroup = getWordsCountGlobalGroup(key),
+                            isUser = false
+                        )
+                    }
+
+                    val userCategories = userGroups.map { g ->
+                        GroupDictionaryDomain(
+                            key = g.groupKey,
+                            title = g.title,
+                            wordsInGroup = getWordsCountUserGroup(g.groupKey),
+                            isUser = true
+                        )
+                    }
+
+                    CombinedGroupsDictionaryDomain(
+                        userGroups = userCategories, globalGroups = globalCategories
+                    )
+                }
             }
-
-            val userCategories = userGroups.map { g ->
-                GroupDictionaryDomain(
-                    key = g.groupKey,
-                    title = g.title,
-                    wordsInGroup = getWordsCountUserGroup(g.groupKey),
-                    isUser = true
-                )
-            }
-
-            CombinedGroupsDictionaryDomain(
-                userGroups = userCategories, globalGroups = globalCategories
-            )
-        }
     }
 
     fun observeUserGroupsForDictionary(): Flow<List<GroupDictionaryDomain>> {
-        val userDao = databaseProvider.getUserDao()
-        return userDao.observeUserGroups().map { list ->
-            list.map { group ->
-                GroupDictionaryDomain(
-                    key = group.groupKey,
-                    title = group.title,
-                    wordsInGroup = getWordsCountUserGroup(group.groupKey),
-                    isUser = true
-                )
+        return deployCompleted
+            .onStart { emit(DatabaseInstance.USER) }
+            .flatMapLatest {
+                val userDao = databaseProvider.getUserDao()
+                userDao.observeUserGroups().map { list ->
+                    list.map { group ->
+                        GroupDictionaryDomain(
+                            key = group.groupKey,
+                            title = group.title,
+                            wordsInGroup = getWordsCountUserGroup(group.groupKey),
+                            isUser = true
+                        )
+                    }
+                }
             }
-        }
     }
 
-
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun observeUserGroups(): Flow<List<UserGroupEntity>> {
-        val userDao = databaseProvider.getUserDao()
-        return userDao.observeUserGroups()
+        return deployCompleted
+            .onStart { emit(DatabaseInstance.USER) }
+            .flatMapLatest {
+                val userDao = databaseProvider.getUserDao()
+                userDao.observeUserGroups()
+            }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun observeWordsInUserGroup(
+        groupId: String, ui: Language, study: Language,
+    ): Flow<List<WordUi>> {
+        return deployCompleted
+            .onStart { emit(DatabaseInstance.USER) }
+            .flatMapLatest {
+                val userDao = databaseProvider.getUserDao()
+                userDao.observeWordsInUserGroup(groupId)
+                    .map { list -> list.map { it.toUi(ui, study) } }
+            }
     }
 
     suspend fun getGlobalGroupsOnce(): List<GlobalGroupDBEntity> {
@@ -96,6 +129,7 @@ class GroupsRepository(
                 groupKey = key, title = groupName
             )
         )
+        appPrefs.markLocalDatabaseDirty()
     }
 
     suspend fun renameUserGroup(
@@ -106,6 +140,7 @@ class GroupsRepository(
         userDao.updateGroupTitle(
             groupKey = groupKey, newTitle = newName
         )
+        appPrefs.markLocalDatabaseDirty()
     }
 
     suspend fun deleteUserGroup(
@@ -115,6 +150,7 @@ class GroupsRepository(
         userDao.deleteGroupByKey(
             groupKey = groupKey,
         )
+        appPrefs.markLocalDatabaseDirty()
     }
 
     suspend fun getWordsCount(group: GroupPresentationSettingsEntity): Int {
@@ -136,14 +172,6 @@ class GroupsRepository(
     private suspend fun getWordsCountGlobalGroup(groupKey: String): Int {
         val globalDao = databaseProvider.getGlobalDatabase().globalDao()
         return globalDao.countWordsByGroup(groupKey)
-    }
-
-    fun observeWordsInUserGroup(
-        groupId: String, ui: Language, study: Language,
-    ): Flow<List<WordUi>> {
-        val userDao = databaseProvider.getUserDao()
-        return userDao.observeWordsInUserGroup(groupId)
-            .map { list -> list.map { it.toUi(ui, study) } }
     }
 
     suspend fun getGlobalGroupWordsOnceUC(

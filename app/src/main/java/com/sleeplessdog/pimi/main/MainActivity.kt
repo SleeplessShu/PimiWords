@@ -1,7 +1,9 @@
 package com.sleeplessdog.pimi.main
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -38,18 +40,25 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                val currentUser = Firebase.auth.currentUser
+                val syncController: DatabaseSyncController = getKoin().get()
+                syncController.applyPendingDeploy()
 
+                val currentUser = Firebase.auth.currentUser
                 if (currentUser == null) {
                     Firebase.auth.signInAnonymously().await()
                 }
-
-                val syncController: DatabaseSyncController = getKoin().get()
                 syncController.prepareGlobalDatabaseOnly()
-
             } catch (e: Exception) {
+                Log.e("MainActivity", "startup error: $e")
             }
         }
+        lifecycleScope.launch {
+            val syncController: DatabaseSyncController = getKoin().get()
+            syncController.pendingDeployReady.collect {
+                showUpdateBanner()
+            }
+        }
+
         setupNavigation()
 
         intent.getStringExtra(EXTRA_NAVIGATE_TO)?.let { destination ->
@@ -89,33 +98,22 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.setupWithNavController(navController)
 
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
-            if (item.itemId == navController.currentDestination?.id) return@setOnItemSelectedListener true
-
-            val navOptions = androidx.navigation.navOptions {
-                popUpTo(R.id.gameSelectFragment) {
-                    saveState = false
-                    inclusive = false
-                }
-                launchSingleTop = true
-                restoreState = false
+            if (item.itemId == navController.currentDestination?.id) {
+                return@setOnItemSelectedListener true
             }
 
             when (item.itemId) {
-                R.id.gameSelectFragment -> {
-                    navController.popBackStack(R.id.gameSelectFragment, false)
-                }
+                R.id.gameSelectFragment ->
+                    navController.navigate(R.id.action_global_to_gameSelect)
 
-                R.id.dictionaryComposeFragment -> {
-                    navController.navigate(R.id.dictionaryComposeFragment, null, navOptions)
-                }
+                R.id.dictionaryComposeFragment ->
+                    navController.navigate(R.id.action_global_to_dictionary)
 
-                R.id.scoreFragment -> {
-                    navController.navigate(R.id.scoreFragment, null, navOptions)
-                }
+                R.id.scoreFragment ->
+                    navController.navigate(R.id.action_global_to_score)
 
-                R.id.settingsFragment -> {
-                    navController.navigate(R.id.settingsFragment, null, navOptions)
-                }
+                R.id.settingsFragment ->
+                    navController.navigate(R.id.action_global_to_settings)
             }
             true
         }
@@ -130,4 +128,30 @@ class MainActivity : AppCompatActivity() {
     fun setBottomNavVisibility(isVisible: Boolean) {
         binding.bottomNavigationView.isVisible = isVisible
     }
+
+    private fun showUpdateBanner() {
+        binding.updateBanner.isVisible = true
+        binding.btnRestart.setOnClickListener {
+            restartApp()
+        }
+    }
+
+    private fun restartApp() {
+        val intent = packageManager.getLaunchIntentForPackage(packageName)
+        intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        android.os.Process.killProcess(android.os.Process.myPid())
+    }
+
+    /*override fun onStop() {
+        super.onStop()
+        Log.d("MAIN ON STOP", "onStop: deploying")
+        val syncController: DatabaseSyncController = getKoin().get()
+        lifecycleScope.launch {
+            try {
+                syncController.checkUserDatabase()
+            } catch (e: Exception) {
+            }
+        }
+    }*/
 }

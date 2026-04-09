@@ -23,7 +23,14 @@ class ScoreViewModel(
     fun loadData() {
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true)
-            _state.value = getScoreUiState()
+            repeat(3) { attempt ->
+                try {
+                    _state.value = getScoreUiState()
+                    return@launch
+                } catch (e: android.database.sqlite.SQLiteDiskIOException) {
+                    if (attempt < 2) kotlinx.coroutines.delay(300L * (attempt + 1))
+                }
+            }
         }
     }
 }

@@ -10,8 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sleeplessdog.pimi.R
-import com.sleeplessdog.pimi.databinding.EndGameFragmentBinding
 import com.sleeplessdog.pimi.animation.LottieAnimationController
+import com.sleeplessdog.pimi.databinding.EndGameFragmentBinding
 import com.sleeplessdog.pimi.games.presentation.GameFragmentDirections
 import com.sleeplessdog.pimi.games.presentation.GameViewModel
 import com.sleeplessdog.pimi.games.presentation.controller.PimiRecyclerViewAdapter

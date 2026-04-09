@@ -2,9 +2,11 @@ package com.sleeplessdog.pimi.games.data.repository
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import com.sleeplessdog.pimi.settings.DifficultyLevel
 import com.sleeplessdog.pimi.settings.Language
 import com.sleeplessdog.pimi.settings.LanguageLevel
+import com.sleeplessdog.pimi.utils.ConstantsPaths
 import com.sleeplessdog.pimi.utils.ConstantsPaths.IS_PREMIUM
 import com.sleeplessdog.pimi.utils.ConstantsPaths.KEY_DIFFICULTY
 import com.sleeplessdog.pimi.utils.ConstantsPaths.KEY_LEVELS
@@ -12,6 +14,7 @@ import com.sleeplessdog.pimi.utils.ConstantsPaths.KEY_STUDY_LANG
 import com.sleeplessdog.pimi.utils.ConstantsPaths.KEY_UI_LANG
 import com.sleeplessdog.pimi.utils.ConstantsPaths.PREFS_NAME
 import com.sleeplessdog.pimi.utils.ConstantsPaths.PREMIUM_STATUS
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -33,6 +36,10 @@ interface AppPrefs {
 
     fun setPremium(value: Boolean)
     fun isPremium(): Boolean
+
+    fun markLocalDatabaseDirty()
+    fun markLocalDatabaseClear()
+    fun getLocalDatabaseDirty(): Boolean
 }
 
 class AppPrefsImpl(
@@ -41,7 +48,9 @@ class AppPrefsImpl(
 
     private val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun observeUiLanguage(): Flow<Language> = callbackFlow {
+
         trySend(getUiLanguage())
 
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
@@ -129,5 +138,24 @@ class AppPrefsImpl(
     }
 
     override fun isPremium(): Boolean = prefs.getBoolean(IS_PREMIUM, false)
+
+    override fun markLocalDatabaseDirty() {
+        Log.d("Preference repo", "markLocalDatabaseDirty: true")
+        prefs.edit()
+            .putLong(ConstantsPaths.USER_DATABASE_DICTIONARY_DATE, System.currentTimeMillis())
+            .apply()
+        prefs.edit().putBoolean(ConstantsPaths.USER_DATABASE_DICTIONARY_IS_DIRTY, true).apply()
+
+    }
+
+    override fun markLocalDatabaseClear() {
+        Log.d("Preference repo", "markLocalDatabaseDirty: false")
+        prefs.edit().putBoolean(ConstantsPaths.USER_DATABASE_DICTIONARY_IS_DIRTY, false).apply()
+
+    }
+
+    override fun getLocalDatabaseDirty(): Boolean {
+        return prefs.getBoolean(ConstantsPaths.USER_DATABASE_DICTIONARY_IS_DIRTY, false)
+    }
 }
 

@@ -1,5 +1,6 @@
 package com.sleeplessdog.pimi.score.domain
 
+import android.util.Log
 import com.sleeplessdog.pimi.database.global.GlobalDao
 import com.sleeplessdog.pimi.database.user.AwardProgressEntity
 import com.sleeplessdog.pimi.database.user.SessionLogEntity
@@ -24,10 +25,14 @@ class AwardEngine(
     )
 
     suspend fun processGameResult(result: GameResult) {
-        val newlyLearnedCount = updateWordProgress(result)
-        updateStats(result, newlyLearnedCount)
-        updateStreak(result.durationMinutes)
-        checkAllAwards(result)
+        try {
+            val newlyLearnedCount = updateWordProgress(result)
+            updateStats(result, newlyLearnedCount)
+            updateStreak(result.durationMinutes)
+            checkAllAwards(result)
+        } catch (e: Exception) {
+            Log.e("AwardEngine", "processGameResult failed: $e")
+        }
     }
 
     private suspend fun updateWordProgress(result: GameResult): Int {

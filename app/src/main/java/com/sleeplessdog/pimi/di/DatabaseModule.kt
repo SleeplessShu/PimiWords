@@ -4,6 +4,7 @@ package com.sleeplessdog.pimi.di
 import com.sleeplessdog.pimi.database.AppDatabaseProvider
 import com.sleeplessdog.pimi.database.global.GlobalDatabase
 import com.sleeplessdog.pimi.database.user.UserDatabase
+import com.sleeplessdog.pimi.dictionary.dictionary_screen.DatabaseSyncController
 import com.sleeplessdog.pimi.dictionary.word_packs.GetWordPacksUC
 import com.sleeplessdog.pimi.dictionary.word_packs.InstallWordPackUC
 import com.sleeplessdog.pimi.endGame.ReportWordMistakeUC
@@ -68,13 +69,15 @@ val databaseModule = module {
     // -------- Repository --------
     single {
         WordsRepository(
-            get()
+            get(),
+            appPrefs = get(),
         )
     }
 
     single {
         StatsRepository(
-            databaseProvider = get()
+            databaseProvider = get(),
+            appPrefs = get(),
         )
     }
 
@@ -87,14 +90,25 @@ val databaseModule = module {
 
     single { AppDatabaseProvider(get()) }
 
-    single { SettingsRepository(get()) }
+    single {
+        SettingsRepository(
+            get(),
+            deployCompleted = get<DatabaseSyncController>().deployCompleted
+        )
+    }
     single { SettingsToggleCategoryUC(get()) }
     single { SettingsSaveSelectionUC(get()) }
     single { SettingsSaveLevelsUC(get()) }
     single { SettingsObserveLevelsUC(get()) }
     single { ObserveAllGroupsForSettingsUC(get()) }
 
-    single { GroupsRepository(get()) }
+    single {
+        GroupsRepository(
+            get(),
+            deployCompleted = get<DatabaseSyncController>().deployCompleted,
+            get()
+        )
+    }
     single { CreateUserGroupUC(get()) }
     single { GetSelectedGroupsUC(get()) }
     single { GetWordsCountForGroupUC(get()) }

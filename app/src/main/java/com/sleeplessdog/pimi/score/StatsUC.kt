@@ -1,6 +1,6 @@
 package com.sleeplessdog.pimi.score
 
-import com.sleeplessdog.pimi.database.global.GlobalDao
+import com.sleeplessdog.pimi.database.AppDatabaseProvider
 import com.sleeplessdog.pimi.database.user.UserStatsEntity
 import com.sleeplessdog.pimi.database.user.WordProgressDao
 import com.sleeplessdog.pimi.score.domain.AwardEngine
@@ -37,8 +37,8 @@ class ProcessGameResultUC(
 }
 
 class GetScoreUiStateUC(
+    private val databaseProvider: AppDatabaseProvider,
     private val statsRepository: StatsRepository,
-    private val globalDao: GlobalDao,
     private val wordProgressDao: WordProgressDao,
 ) {
     suspend operator fun invoke(): ScoreUiState {
@@ -72,6 +72,7 @@ class GetScoreUiStateUC(
     }
 
     private suspend fun calculateLevel(): LanguageLevel {
+        val globalDao = databaseProvider.getGlobalDao()
         val learnedIds = wordProgressDao.getLearnedWordIds().toSet()
 
         var playerLevel = LanguageLevel.A1
@@ -97,6 +98,7 @@ class GetScoreUiStateUC(
 
 
     private suspend fun countLearnedCategories(): Int {
+        val globalDao = databaseProvider.getGlobalDao()
         val allGroups = globalDao.getAllGroupKeys()
         return allGroups.count { key ->
             val total = globalDao.countWordsByGroup(key)

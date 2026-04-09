@@ -269,4 +269,5 @@ class DictionaryComposeFragment : Fragment() {
             )
         findNavController().navigate(action)
     }
+
 }

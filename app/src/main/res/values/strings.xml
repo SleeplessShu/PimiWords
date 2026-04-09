@@ -305,4 +305,7 @@
     <string name="word_packs_empty">Наборы для этой пары языков не найдены</string>
     <string name="word_pack_install">Установить</string>
     <string name="word_pack_installed">«%s» добавлен в словарь</string>
+
+    <string name="update_ready_message">Обновление готово к установке</string>
+    <string name="update_restart_button">Перезапустить</string>
 </resources>
