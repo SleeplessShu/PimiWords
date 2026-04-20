@@ -10,6 +10,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageException
 import com.google.firebase.storage.ktx.storage
 import com.sleeplessdog.pimi.database.AppDatabaseProvider
+import com.sleeplessdog.pimi.database.global.GlobalDictionaryEntity
 import com.sleeplessdog.pimi.database.user.UserGroupEntity
 import com.sleeplessdog.pimi.dictionary.authorisation.DataTransferStatus
 import com.sleeplessdog.pimi.dictionary.authorisation.DatabaseInstance
@@ -354,6 +355,8 @@ class DatabaseSyncController(
                     it.copy(globalDb = DataTransferStatus.DEPLOYING)
                 }
 
+                validateAndPatchSchema(temp)
+                
                 databaseProvider.withGlobalDatabaseLock {
 
                     delay(100)
@@ -431,6 +434,49 @@ class DatabaseSyncController(
 
         Log.d(TAG_SYNC, "pending deploy applied successfully")
         return true
+    }
+
+    private fun validateAndPatchSchema(tempFile: File): Boolean {
+        return try {
+            val expectedColumns = GlobalDictionaryEntity::class.java.declaredFields
+                .mapNotNull { field ->
+                    field.getAnnotation(androidx.room.ColumnInfo::class.java)?.name
+                        ?: field.name.takeIf { !it.startsWith("$") }
+                }
+                .toSet()
+
+            val db = android.database.sqlite.SQLiteDatabase.openDatabase(
+                tempFile.path, null,
+                android.database.sqlite.SQLiteDatabase.OPEN_READWRITE
+            )
+            val cursor = db.rawQuery("PRAGMA table_info(GlobalDictionary)", null)
+            val actualColumns = mutableSetOf<String>()
+            while (cursor.moveToNext()) {
+                actualColumns.add(cursor.getString(1))
+            }
+            cursor.close()
+
+            val missingColumns = expectedColumns - actualColumns
+            if (missingColumns.isNotEmpty()) {
+                Log.w(TAG_SYNC, "Missing columns in downloaded DB: $missingColumns — patching")
+                missingColumns.forEach { column ->
+                    try {
+                        db.execSQL("ALTER TABLE GlobalDictionary ADD COLUMN $column TEXT")
+                        Log.d(TAG_SYNC, "Added column: $column")
+                    } catch (e: Exception) {
+                        Log.e(TAG_SYNC, "Failed to add column $column: $e")
+                    }
+                }
+            } else {
+                Log.d(TAG_SYNC, "Schema OK — no missing columns")
+            }
+
+            db.close()
+            true
+        } catch (e: Exception) {
+            Log.e(TAG_SYNC, "Schema validation failed: $e")
+            false
+        }
     }
 
 }
