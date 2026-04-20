@@ -11,7 +11,7 @@ import com.sleeplessdog.pimi.utils.ConstantsPaths.GLOBAL_DATABASE_DICTIONARY_NAM
 
 @Database(
     entities = [GlobalDictionaryEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(GlobalDbConverters::class)

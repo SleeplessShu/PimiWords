@@ -152,3 +152,9 @@
 # ===== SYNC CONTROLLER =====
 -keep class com.sleeplessdog.pimi.dictionary.dictionary_screen.DatabaseSyncController { *; }
 -keep class com.sleeplessdog.pimi.dictionary.authorisation.** { *; }
+
+-keep class com.sleeplessdog.pimi.dictionary.word_packs.WordPacksViewModel$State { *; }
+-keep class com.sleeplessdog.pimi.dictionary.word_packs.WordPacksViewModel$State$* { *; }
+-keep class com.sleeplessdog.pimi.dictionary.word_packs.WordPacksViewModel$InstallState { *; }
+-keep class com.sleeplessdog.pimi.dictionary.word_packs.WordPacksViewModel$InstallState$* { *; }
+-keep class com.sleeplessdog.pimi.**$* { *; }

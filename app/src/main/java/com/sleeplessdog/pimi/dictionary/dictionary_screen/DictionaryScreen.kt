@@ -186,7 +186,7 @@ fun HeaderDictionary(
         )
 
         Icon(
-            painter = painterResource(R.drawable.ic_add_pack),
+            painter = painterResource(R.drawable.ic_add_pack_2),
             tint = White,
             contentDescription = null,
             modifier = Modifier
