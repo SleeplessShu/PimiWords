@@ -21,6 +21,7 @@ data class GlobalDictionaryEntity(
     val german: String?,
     val armenian: String?,
     val serbian: String?,
+    val armTranslit: String?,
 )
 
 fun GlobalDictionaryEntity.toUi(
