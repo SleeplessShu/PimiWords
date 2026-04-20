@@ -17,8 +17,8 @@ android {
         applicationId = "com.sleeplessdog.pimi"
         minSdk = 28
         targetSdk = 35
-        versionCode = 11
-        versionName = "1.011"
+        versionCode = 12
+        versionName = "1.012"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
