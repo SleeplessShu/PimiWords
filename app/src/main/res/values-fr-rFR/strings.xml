@@ -297,4 +297,10 @@
     <string name="word_packs_empty">Aucun pack trouvé pour cette paire de langues</string>
     <string name="word_pack_install">Installer</string>
     <string name="word_pack_installed">"%s" ajouté au dictionnaire</string>
+
+    <string name="arm_script_hayeren">Հայերեն</string>
+    <string name="arm_script_latin">Armenian</string>
+
+    <string name="update_ready_message">Mise à jour prête à installer</string>
+    <string name="update_restart_button">Redémarrer</string>
 </resources>

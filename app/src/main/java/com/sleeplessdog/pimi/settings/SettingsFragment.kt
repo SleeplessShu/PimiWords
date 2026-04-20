@@ -127,6 +127,7 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
     }
 
     private fun setupObservers() {
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vm.state.collect { state ->
@@ -209,10 +210,25 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
 
         vm.studyLanguage.observe(viewLifecycleOwner) { study ->
             binding.ivFlagStudy.setImageResource(study.toFlagLargeRes())
+            updateArmToggleVisibility()
         }
 
         vm.uiLanguage.observe(viewLifecycleOwner) { uiLang ->
             binding.ivFlagUi.setImageResource(uiLang.toFlagLargeRes())
+            updateArmToggleVisibility()
+        }
+
+        vm.armScriptHayeren.observe(viewLifecycleOwner) { isHayeren ->
+            binding.btnArmHay.isChecked = isHayeren
+            binding.btnArmLatin.isChecked = !isHayeren
+        }
+
+        binding.btnArmHay.setOnClickListener {
+            vm.onArmScriptPicked(true)
+        }
+
+        binding.btnArmLatin.setOnClickListener {
+            vm.onArmScriptPicked(false)
         }
 
         vm.uiLanguageList.observe(viewLifecycleOwner) { list ->
@@ -343,6 +359,14 @@ class SettingsFragment : Fragment(R.layout.settings_fragment) {
         }
         (requireActivity() as? MainActivity)?.setBottomNavVisibility(true)
     }
+
+    private fun updateArmToggleVisibility() {
+        val ui = vm.uiLanguage.value
+        val study = vm.studyLanguage.value
+        val show = ui == Language.ARMENIAN || study == Language.ARMENIAN
+        binding.armLanguageToggle.isVisible = show
+    }
+
 
     override fun onDestroyView() {
         _binding = null

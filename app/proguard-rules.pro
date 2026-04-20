@@ -158,3 +158,8 @@
 -keep class com.sleeplessdog.pimi.dictionary.word_packs.WordPacksViewModel$InstallState { *; }
 -keep class com.sleeplessdog.pimi.dictionary.word_packs.WordPacksViewModel$InstallState$* { *; }
 -keep class com.sleeplessdog.pimi.**$* { *; }
+
+-keep class com.sleeplessdog.pimi.database.global.GlobalDictionaryEntity { *; }
+-keepclassmembers class com.sleeplessdog.pimi.database.global.GlobalDictionaryEntity {
+    <fields>;
+}

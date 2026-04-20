@@ -10,6 +10,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageException
 import com.google.firebase.storage.ktx.storage
 import com.sleeplessdog.pimi.database.AppDatabaseProvider
+import com.sleeplessdog.pimi.database.global.GlobalDictionaryEntity
 import com.sleeplessdog.pimi.database.user.UserGroupEntity
 import com.sleeplessdog.pimi.dictionary.authorisation.DataTransferStatus
 import com.sleeplessdog.pimi.dictionary.authorisation.DatabaseInstance
@@ -87,16 +88,19 @@ class DatabaseSyncController(
             val localDate = prefs.getLong(ConstantsPaths.GLOBAL_DATABASE_DICTIONARY_DATE, 0)
 
             if (serverDate > localDate) {
+                val globalDeployed = downloadGlobalDatabase(serverDate)
+                if (globalDeployed) {
+                    _syncState.update { it.copy(globalDb = DataTransferStatus.NETWORK) }
+                } else {
 
-                downloadGlobalDatabase(serverDate)
-
+                    Log.w(TAG_SYNC, "Deploy failed — keeping existing local DB")
+                    _syncState.update { it.copy(globalDb = DataTransferStatus.ASSETS) }
+                }
             } else {
 
-                _syncState.update {
-                    it.copy(globalDb = DataTransferStatus.ASSETS)
-                }
+                _syncState.update { it.copy(globalDb = DataTransferStatus.ASSETS) }
             }
-
+            
         } catch (e: Exception) {
 
             if (!globalDbFile.exists()) {
@@ -190,7 +194,7 @@ class DatabaseSyncController(
     }
 
 
-    private suspend fun downloadGlobalDatabase(serverDate: Long) {
+    private suspend fun downloadGlobalDatabase(serverDate: Long): Boolean {
 
         _syncState.update {
             it.copy(globalDb = DataTransferStatus.DOWNLOADING)
@@ -200,17 +204,26 @@ class DatabaseSyncController(
 
         globalRef.getFile(temp).await()
 
-        deployDatabase(temp, globalDbFile, DatabaseInstance.GLOBAL)
+        val deployingResult = deployDatabase(temp, globalDbFile, DatabaseInstance.GLOBAL)
 
         prefs.edit {
             putLong(ConstantsPaths.GLOBAL_DATABASE_DICTIONARY_DATE, serverDate)
         }
 
-        _syncState.update {
-            it.copy(globalDb = DataTransferStatus.NETWORK)
+        if (deployingResult) {
+            _syncState.update {
+                it.copy(globalDb = DataTransferStatus.NETWORK)
+            }
+
+        } else {
+            _syncState.update {
+                it.copy(globalDb = DataTransferStatus.ERROR)
+            }
         }
 
         temp.delete()
+
+        return deployingResult
     }
 
 
@@ -333,18 +346,16 @@ class DatabaseSyncController(
         prefs.edit {
             putLong(ConstantsPaths.USER_DATABASE_DICTIONARY_DATE, System.currentTimeMillis())
         }
-        Log.d(TAG_SYNC, "upload complete, size=${temp.length()}")
+
         appPrefs.markLocalDatabaseClear()
         temp.delete()
 
     }
 
 
-    private suspend fun deployDatabase(temp: File, target: File, type: DatabaseInstance) {
+    private suspend fun deployDatabase(temp: File, target: File, type: DatabaseInstance): Boolean {
 
-        Log.d(TAG_SYNC, "deployDatabase START type=$type")
-        Log.d(TAG_SYNC, "temp exists=${temp.exists()} size=${temp.length()}")
-        Log.d(TAG_SYNC, "target path=${target.absolutePath}")
+        var result = false
 
         when (type) {
 
@@ -354,28 +365,36 @@ class DatabaseSyncController(
                     it.copy(globalDb = DataTransferStatus.DEPLOYING)
                 }
 
-                databaseProvider.withGlobalDatabaseLock {
+                val isSchemaCorrect = checkCopability(temp)
 
-                    delay(100)
-                    databaseProvider.closeGlobalDatabase()
+                if (isSchemaCorrect) {
+                    databaseProvider.withGlobalDatabaseLock {
 
-                    val wal = File(target.path + "-wal")
-                    val shm = File(target.path + "-shm")
+                        delay(100)
+                        databaseProvider.closeGlobalDatabase()
 
-                    wal.delete()
-                    shm.delete()
+                        val wal = File(target.path + "-wal")
+                        val shm = File(target.path + "-shm")
 
-                    target.parentFile?.mkdirs()
+                        wal.delete()
+                        shm.delete()
 
-                    temp.copyTo(target, overwrite = true)
+                        target.parentFile?.mkdirs()
 
-                    databaseProvider.openGlobalDatabase()
+                        temp.copyTo(target, overwrite = true)
+
+                        databaseProvider.openGlobalDatabase()
+                    }
+                    result = true
+                } else {
+                    _syncState.update {
+                        it.copy(globalDb = DataTransferStatus.ASSETS)
+                    }
                 }
             }
 
             DatabaseInstance.USER -> {
-                Log.d("DEPLOY_DEBUG", "deployDatabase USER called from:")
-                Log.d("DEPLOY_DEBUG", Thread.currentThread().stackTrace.take(10).joinToString("\n"))
+
                 _syncState.update { it.copy(userDb = DataTransferStatus.DEPLOYING) }
 
                 val pendingFile = File(context.cacheDir, "pending_user_db")
@@ -386,8 +405,11 @@ class DatabaseSyncController(
                 }
                 _pendingDeployReady.emit(Unit)
                 _deployCompleted.emit(type)
+                result = true
             }
         }
+
+        return result
     }
 
 
@@ -416,8 +438,6 @@ class DatabaseSyncController(
             prefs.edit { putBoolean("pending_user_db_deploy", false) }
         }
 
-        Log.d(TAG_SYNC, "applying pending deploy, size=${pendingFile.length()}")
-
         val wal = File(userDbFile.path + "-wal")
         val shm = File(userDbFile.path + "-shm")
         wal.delete()
@@ -429,8 +449,40 @@ class DatabaseSyncController(
 
         prefs.edit { putBoolean("pending_user_db_deploy", false) }
 
-        Log.d(TAG_SYNC, "pending deploy applied successfully")
         return true
     }
 
+    private fun checkCopability(tempFile: File): Boolean {
+        return try {
+
+            val allFields = GlobalDictionaryEntity::class.java.declaredFields
+
+            val expectedColumns = allFields.mapNotNull { field ->
+                val columnInfo = field.getAnnotation(androidx.room.ColumnInfo::class.java)
+                val name =
+                    columnInfo?.name?.takeIf { it != androidx.room.ColumnInfo.INHERIT_FIELD_NAME }
+                        ?: field.name.takeIf {
+                            !it.startsWith("$") && !it.contains("_") && field.name != "serialVersionUID"
+                        }
+                name
+            }.toSet()
+
+            val db = android.database.sqlite.SQLiteDatabase.openDatabase(
+                tempFile.path, null, android.database.sqlite.SQLiteDatabase.OPEN_READONLY
+            )
+            val cursor = db.rawQuery("PRAGMA table_info(GlobalDictionary)", null)
+            val actualColumns = mutableSetOf<String>()
+            while (cursor.moveToNext()) {
+                actualColumns.add(cursor.getString(1))
+            }
+            cursor.close()
+            db.close()
+
+            val matches = expectedColumns == actualColumns
+            matches
+
+        } catch (e: Exception) {
+            false
+        }
+    }
 }

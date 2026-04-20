@@ -39,13 +39,7 @@ class App : Application(), DefaultLifecycleObserver {
     }
 
     override fun onStop(owner: LifecycleOwner) {
-        /*val syncController: DatabaseSyncController = get()
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                syncController.checkUserDatabase()
-            } catch (e: Exception) {
-            }
-        }*/
+
     }
 
     private fun setupCrashlytics() {

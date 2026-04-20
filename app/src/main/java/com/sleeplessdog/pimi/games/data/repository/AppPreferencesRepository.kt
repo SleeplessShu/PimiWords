@@ -40,6 +40,9 @@ interface AppPrefs {
     fun markLocalDatabaseDirty()
     fun markLocalDatabaseClear()
     fun getLocalDatabaseDirty(): Boolean
+
+    fun getArmScript(): Boolean
+    fun saveArmScript(isHayeren: Boolean)
 }
 
 class AppPrefsImpl(
@@ -156,6 +159,13 @@ class AppPrefsImpl(
 
     override fun getLocalDatabaseDirty(): Boolean {
         return prefs.getBoolean(ConstantsPaths.USER_DATABASE_DICTIONARY_IS_DIRTY, false)
+    }
+
+    override fun getArmScript(): Boolean =
+        prefs.getBoolean("arm_script_hayeren", false)
+
+    override fun saveArmScript(isHayeren: Boolean) {
+        prefs.edit().putBoolean("arm_script_hayeren", isHayeren).apply()
     }
 }
 

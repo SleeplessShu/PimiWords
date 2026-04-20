@@ -40,12 +40,16 @@ class WordsRepository(
         val isRandom = categories.contains(WordsGroupsList.RANDOM.toString())
                 || categories.isEmpty()
 
+        val useArmTranslit = appPrefs.getArmScript().not()
+
         Log.d("REPO_DEBUG", "categories: $categories")
         Log.d("REPO_DEBUG", "globalGroupKeys sample: ${globalGroupKeys.take(5)}")
         Log.d("REPO_DEBUG", "globalCategoryKeys: $globalCategoryKeys")
         Log.d("REPO_DEBUG", "userGroupKeys: $userGroupKeys")
         Log.d("REPO_DEBUG", "isRandom: $isRandom")
         Log.d("REPO_DEBUG", "levels: $levels")
+        Log.d("REPO_DEBUG", "useArmTranslit: $useArmTranslit")
+
 
         val globalWords = when {
             isRandom && globalCategoryKeys.isEmpty() -> globalDao.getWordsWOGroups(levels)
@@ -78,7 +82,8 @@ class WordsRepository(
                 french = u?.french ?: g.french,
                 german = u?.german ?: g.german,
                 armenian = u?.armenian ?: g.armenian,
-                serbian = u?.serbian ?: g.serbian
+                serbian = u?.serbian ?: g.serbian,
+                armTranslit = g.armTranslit,
             )
         }
 
@@ -92,15 +97,15 @@ class WordsRepository(
                 french = u.french,
                 german = u.german,
                 armenian = u.armenian,
-                serbian = u.serbian
+                serbian = u.serbian,
             )
         }
 
         val pool = (mergedGlobal + mergedUserGroup).shuffled().take(wordsNeeded)
 
         return pool.mapNotNull { w ->
-            val w1 = w.toWord(lang1)
-            val w2 = w.toWord(lang2)
+            val w1 = w.toWord(lang1, useArmTranslit = useArmTranslit)
+            val w2 = w.toWord(lang2, useArmTranslit = useArmTranslit)
             if (!w1.isValid || !w2.isValid) null
             else w1 to w2
         }
@@ -236,14 +241,14 @@ class WordsRepository(
         appPrefs.markLocalDatabaseDirty()
     }
 
-    private fun CombinedWord.toWord(language: Language): Word {
+    private fun CombinedWord.toWord(language: Language, useArmTranslit: Boolean = false): Word {
         val text = when (language) {
             Language.ENGLISH -> english
             Language.SPANISH -> spanish
             Language.RUSSIAN -> russian
             Language.FRENCH -> french
             Language.GERMAN -> german
-            Language.ARMENIAN -> armenian
+            Language.ARMENIAN -> if (useArmTranslit) armTranslit ?: armenian else armenian
             Language.SERBIAN -> serbian
         }
 
@@ -279,7 +284,7 @@ class WordsRepository(
                 french = u.french,
                 german = u.german,
                 armenian = u.armenian,
-                serbian = u.serbian
+                serbian = u.serbian,
             )
         }.shuffled().take(wordsNeeded)
 
@@ -289,16 +294,6 @@ class WordsRepository(
             if (!w1.isValid || !w2.isValid) null
             else w1 to w2
         }
-    }
-
-    fun valueFor(language: Language, value: String?): String? = when (language) {
-        Language.ENGLISH -> value
-        Language.SPANISH -> value
-        Language.RUSSIAN -> value
-        Language.FRENCH -> value
-        Language.GERMAN -> value
-        Language.ARMENIAN -> value
-        Language.SERBIAN -> value
     }
 
     private suspend fun getDefaultUserGroup(): UserGroupEntity {

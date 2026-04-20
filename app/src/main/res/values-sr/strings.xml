@@ -288,4 +288,10 @@
     <string name="word_packs_empty">Пакети за овај пар језика нису пронађени</string>
     <string name="word_pack_install">Инсталирај</string>
     <string name="word_pack_installed">«%s» је додат у речник</string>
+
+    <string name="arm_script_hayeren">Հայերեն</string>
+    <string name="arm_script_latin">Armenian</string>
+
+    <string name="update_ready_message">Ažuriranje spremno za instalaciju</string>
+    <string name="update_restart_button">Ponovo pokrenuti</string>
 </resources>

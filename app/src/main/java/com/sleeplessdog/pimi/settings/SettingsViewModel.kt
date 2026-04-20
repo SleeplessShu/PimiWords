@@ -51,6 +51,8 @@ class SettingsViewModel(
     private val _difficulty = MutableLiveData<DifficultyLevel>()
     val difficulty: LiveData<DifficultyLevel> = _difficulty
 
+    private val _armScriptHayeren = MutableLiveData(appPrefs.getArmScript())
+    val armScriptHayeren: LiveData<Boolean> = _armScriptHayeren
 
     val state: StateFlow<CombinedGroupsSettingsUi> = observeAllGroups().map { domain ->
         CombinedGroupsSettingsUi(
@@ -154,6 +156,11 @@ class SettingsViewModel(
             saveLevelsUC(new)
             appPrefs.saveLevels(new)
         }
+    }
+
+    fun onArmScriptPicked(isHayeren: Boolean) {
+        _armScriptHayeren.value = isHayeren
+        appPrefs.saveArmScript(isHayeren)
     }
 
     private fun rebuild(ui: Language, study: Language) {

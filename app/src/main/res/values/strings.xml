@@ -308,4 +308,7 @@
 
     <string name="update_ready_message">Обновление готово к установке</string>
     <string name="update_restart_button">Перезапустить</string>
+
+    <string name="arm_script_hayeren">Հայերեն</string>
+    <string name="arm_script_latin">Armenian</string>
 </resources>

@@ -66,6 +66,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/settingsHeader">
 
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -85,6 +86,31 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_end="20dp" />
 
+            <LinearLayout
+                android:id="@+id/armLanguageToggle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@id/rightBorderInner"
+                app:layout_constraintStart_toStartOf="@id/leftBorderInner"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/btnArmHay"
+                    style="@style/Settings.Level.Button"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/arm_script_hayeren" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/btnArmLatin"
+                    style="@style/Settings.Level.Button"
+                    android:text="@string/arm_script_latin" />
+
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/tv_words_category"
                 style="@style/Text.H3.HeadlineSmall"
@@ -96,7 +122,7 @@
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="@id/rightBorderInner"
                 app:layout_constraintStart_toStartOf="@id/leftBorderInner"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/armLanguageToggle" />
 
             <LinearLayout
                 android:id="@+id/words_groups_chips"

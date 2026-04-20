@@ -297,4 +297,10 @@
     <string name="word_packs_empty">Lezu-i zаrki mej pаketer chеn gtnvel</string>
     <string name="word_pack_install">Tаreger</string>
     <string name="word_pack_installed">«%s» аvelаtsvеl е bаrаrаnum</string>
+
+    <string name="arm_script_hayeren">Հայերեն</string>
+    <string name="arm_script_latin">Armenian</string>
+
+    <string name="update_ready_message">Թարմացումը պատրաստ է տեղադրման</string>
+    <string name="update_restart_button">Վերագործարկել</string>
 </resources>

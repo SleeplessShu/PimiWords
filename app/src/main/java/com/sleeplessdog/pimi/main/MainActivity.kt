@@ -142,16 +142,4 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
         android.os.Process.killProcess(android.os.Process.myPid())
     }
-
-    /*override fun onStop() {
-        super.onStop()
-        Log.d("MAIN ON STOP", "onStop: deploying")
-        val syncController: DatabaseSyncController = getKoin().get()
-        lifecycleScope.launch {
-            try {
-                syncController.checkUserDatabase()
-            } catch (e: Exception) {
-            }
-        }
-    }*/
 }
