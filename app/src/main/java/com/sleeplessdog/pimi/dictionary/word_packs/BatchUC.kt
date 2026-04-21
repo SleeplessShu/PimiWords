@@ -22,7 +22,8 @@ class GetWordPacksUC(
             val json = String(bytes)
 
             val type = object : TypeToken<List<WordPackMeta>>() {}.type
-            val allPacks: List<WordPackMeta> = Gson().fromJson(json, type)
+            val allPacks: List<WordPackMeta> =
+                Gson().fromJson(json, Array<WordPackMeta>::class.java).toList()
 
             Result.success(allPacks)
         } catch (e: Exception) {
